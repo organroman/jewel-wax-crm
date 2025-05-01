@@ -7,8 +7,8 @@ import {
 } from "../types/user.types";
 
 export const UserModel = {
-  async getAll() {
-    return await db("users").select("*");
+  async getAll(): Promise <SafeUser[]> {
+    return await db("users").select(["id", "full_name", "email", "role", "is_active", "created_at"]);
   },
 
   async findById(userId: string) {
