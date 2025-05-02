@@ -1,4 +1,4 @@
-export type UserRole = "super_admin" | "admin" | "modeller" | "miller";
+import { UserRole } from "../constants/user-roles";
 
 export interface User {
   id: number;
