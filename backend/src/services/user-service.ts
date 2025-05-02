@@ -1,4 +1,4 @@
-import { CreateUserInput } from "../types/user.types";
+import { CreateUserInput, UpdateUserInput } from "../types/user.types";
 
 import bcryptjs from "bcryptjs";
 
@@ -17,5 +17,17 @@ export const UserService = {
       role: data.role,
       password: hashedPassword,
     });
+  },
+
+  async getUserById(userId: number) {
+    return await UserModel.findById(userId);
+  },
+
+  async updateUser(userId: number, data: UpdateUserInput) {
+    return await UserModel.update(userId, data);
+  },
+
+  async deleteUser(userId: number) {
+    return await UserModel.delete(userId);
   },
 };

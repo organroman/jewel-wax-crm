@@ -6,11 +6,23 @@ import AppError from "../utils/AppError";
 import ERROR_MESSAGES from "../constants/error-messages";
 
 export const UserController = {
-  
   async getAllUsers(req: Request, res: Response, next: NextFunction) {
     try {
       const users = await UserService.getAllUsers();
       res.status(200).json(users);
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  async getUserById(req: Request, res: Response, next: NextFunction) {
+    try {
+      const user = await UserService.getUserById(Number(req.params.id));
+      if (!user) {
+        throw new AppError(ERROR_MESSAGES.ITEM_NOT_FOUND, 404);
+      }
+
+      res.status(200).json(user);
     } catch (error) {
       next(error);
     }
@@ -36,6 +48,34 @@ export const UserController = {
         return next(new AppError(ERROR_MESSAGES.EMAIL_EXISTS, 409));
       }
 
+      next(error);
+    }
+  },
+
+  async updateUser(req: Request, res: Response, next: NextFunction) {
+    try {
+      const updatedUser = await UserService.updateUser(
+        Number(req.params.id),
+        req.body
+      );
+
+      if (!updatedUser) {
+        throw new AppError(ERROR_MESSAGES.ITEM_NOT_FOUND, 404);
+      }
+      res.status(200).json(updatedUser);
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  async deleteUser(req: Request, res: Response, next: NextFunction) {
+    try {
+      const deletedCount = await UserService.deleteUser(Number(req.params.id));
+      if (!deletedCount) {
+        throw new AppError(ERROR_MESSAGES.ITEM_NOT_FOUND, 404);
+      }
+      res.status(204).send();
+    } catch (error) {
       next(error);
     }
   },
