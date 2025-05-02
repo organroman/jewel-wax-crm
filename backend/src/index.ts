@@ -1,9 +1,10 @@
 import express from "express";
+import morgan from "morgan";
 
-import db from "./db/db";
-
-import userRoutes from "./routes/user-routes";
 import errorHandler from "./middlewares/error-handler-middleware";
+
+import personRoutes from "./routes/person-routes";
+import enumRoutes from "./routes/enum-routes";
 
 const app = express();
 const PORT = process.env.PORT || 8000;
@@ -15,10 +16,15 @@ app.get("/", (req, res) => {
   res.send("CRM backend is running");
 });
 
-app.use("/users", userRoutes);
+app.use("/enums", enumRoutes);
+app.use("/persons", personRoutes);
 
 app.use(errorHandler);
 
+if (process.env.NODE_ENV !== "production") {
+  app.use(morgan("dev"));
+}
+
 app.listen(PORT, async () => {
-  console.log(`Server is running on port ${PORT}`)
+  console.log(`Server is running on port ${PORT}`);
 });

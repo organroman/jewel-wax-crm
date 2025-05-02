@@ -1,14 +1,14 @@
 import { Request, Response, NextFunction } from "express";
 
-import { UserService } from "../services/user-service";
+import { PersonService } from "../services/person-service";
 
 import AppError from "../utils/AppError";
 import ERROR_MESSAGES from "../constants/error-messages";
 
-export const UserController = {
+export const PersonController = {
   async getAllUsers(req: Request, res: Response, next: NextFunction) {
     try {
-      const users = await UserService.getAllUsers();
+      const users = await PersonService.getAll();
       res.status(200).json(users);
     } catch (error) {
       next(error);
@@ -17,7 +17,7 @@ export const UserController = {
 
   async getUserById(req: Request, res: Response, next: NextFunction) {
     try {
-      const user = await UserService.getUserById(Number(req.params.id));
+      const user = await PersonService.getById(Number(req.params.id));
       if (!user) {
         throw new AppError(ERROR_MESSAGES.ITEM_NOT_FOUND, 404);
       }
@@ -28,20 +28,9 @@ export const UserController = {
     }
   },
 
-  async createUser(req: Request, res: Response, next: NextFunction) {
+  async createPerson(req: Request, res: Response, next: NextFunction) {
     try {
-      const { full_name, password, email, role } = req.body;
-
-      if (!full_name || !email || !password || !role) {
-        throw new AppError(ERROR_MESSAGES.MISSING_REQUIRED_FIELDS, 400);
-      }
-
-      const newUser = await UserService.createUser({
-        full_name,
-        password,
-        email,
-        role,
-      });
+      const newUser = await PersonService.create(req.body);
       res.status(201).json(newUser);
     } catch (error: any) {
       if (error.code === "23505") {
@@ -52,17 +41,17 @@ export const UserController = {
     }
   },
 
-  async updateUser(req: Request, res: Response, next: NextFunction) {
+  async updatePerson(req: Request, res: Response, next: NextFunction) {
     try {
-      const updatedUser = await UserService.updateUser(
+      const updatedPerson = await PersonService.update(
         Number(req.params.id),
         req.body
       );
 
-      if (!updatedUser) {
+      if (!updatedPerson) {
         throw new AppError(ERROR_MESSAGES.ITEM_NOT_FOUND, 404);
       }
-      res.status(200).json(updatedUser);
+      res.status(200).json(updatedPerson);
     } catch (error) {
       next(error);
     }
@@ -70,7 +59,7 @@ export const UserController = {
 
   async deleteUser(req: Request, res: Response, next: NextFunction) {
     try {
-      const deletedCount = await UserService.deleteUser(Number(req.params.id));
+      const deletedCount = await PersonService.delete(Number(req.params.id));
       if (!deletedCount) {
         throw new AppError(ERROR_MESSAGES.ITEM_NOT_FOUND, 404);
       }
