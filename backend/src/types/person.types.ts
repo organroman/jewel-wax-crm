@@ -5,11 +5,22 @@ export interface DeliveryAddress {
   address_line: string;
 }
 
+export interface Phone {
+  id?: number;
+  person_id?: number;
+  number: string;
+  is_main: boolean;
+  created_at?: Date;
+  updated_at?: Date;
+}
+
 export interface Person {
   id: number;
-  full_name: string;
-  email: string;
-  phone?: string;
+  first_name: string;
+  last_name: string;
+  patronymic?: string;
+  email?: string;
+  phones: Phone[];
   role: PersonRole;
   city?: string;
   password?: string;
@@ -20,33 +31,30 @@ export interface Person {
 }
 
 export interface CreatePersonInput {
-  full_name: string;
+  first_name: string;
+  last_name: string;
+  patronymic?: string;
   email?: string;
-  phone: string;
   city?: string;
   role: PersonRole;
   password?: string;
+  phones: Phone[];
   delivery_addresses?: DeliveryAddress[];
 }
 
-export interface UpdatePersonInput {
-  full_name?: string;
-  email?: string;
-  phone?: string;
-  city?: string;
-  role?: PersonRole;
-  is_active?: boolean;
-  delivery_addresses?: DeliveryAddress[];
-}
+export interface UpdatePersonInput extends Partial<CreatePersonInput> {}
 
 export interface SafePerson {
   id: number;
-  full_name: string;
-  email: string;
-  phone?: string;
+  first_name: string;
+  last_name: string;
+  patronymic?: string;
+  email?: string;
   city?: string;
   role: PersonRole;
   is_active: boolean;
   created_at: Date;
+  updated_at: Date;
+  phones: Phone[];
   delivery_addresses?: DeliveryAddress[];
 }

@@ -6,7 +6,7 @@ import AppError from "../utils/AppError";
 import ERROR_MESSAGES from "../constants/error-messages";
 
 export const PersonController = {
-  async getAllUsers(req: Request, res: Response, next: NextFunction) {
+  async getAllPersons(req: Request, res: Response, next: NextFunction) {
     try {
       const users = await PersonService.getAll();
       res.status(200).json(users);
@@ -15,7 +15,7 @@ export const PersonController = {
     }
   },
 
-  async getUserById(req: Request, res: Response, next: NextFunction) {
+  async getPersonById(req: Request, res: Response, next: NextFunction) {
     try {
       const user = await PersonService.getById(Number(req.params.id));
       if (!user) {
@@ -33,10 +33,6 @@ export const PersonController = {
       const newUser = await PersonService.create(req.body);
       res.status(201).json(newUser);
     } catch (error: any) {
-      if (error.code === "23505") {
-        return next(new AppError(ERROR_MESSAGES.EMAIL_EXISTS, 409));
-      }
-
       next(error);
     }
   },
@@ -57,7 +53,7 @@ export const PersonController = {
     }
   },
 
-  async deleteUser(req: Request, res: Response, next: NextFunction) {
+  async deletePerson(req: Request, res: Response, next: NextFunction) {
     try {
       const deletedCount = await PersonService.delete(Number(req.params.id));
       if (!deletedCount) {

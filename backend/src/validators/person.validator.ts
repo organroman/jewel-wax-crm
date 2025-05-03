@@ -5,22 +5,30 @@ import VALIDATION_MESSAGES from "../constants/validation-messages";
 
 const roleEnum = z.enum(PERSON_ROLES);
 
+const phoneSchema = z.object({
+  number: z.string().min(5),
+  is_main: z.boolean(),
+});
+
 const deliveryAddressSchema = z.object({
-  label: z.string().optional(),
-  city: z.string().min(2, "City is required"),
-  address_line: z.string().min(5, "Address line is required"),
+  address_line: z.string().min(5, VALIDATION_MESSAGES.ADDRESS),
 });
 
 export const createPersonSchema = z.object({
-  full_name: z.string().min(2, "Full name is required"),
-  email: z.string().email("Invalid email").optional(),
-  phone: z.string(),
+  first_name: z.string().min(2),
+  last_name: z.string().min(2),
+  patronymic: z.string().optional(),
+  email: z.string().email().optional(),
   city: z.string().optional(),
   role: roleEnum,
-  password: z
-    .string()
-    .min(6, "Password must be at least 6 characters")
-    .optional(),
+  password: z.string().min(6).optional(),
+  phones: z
+    .array(phoneSchema)
+    .min(1, VALIDATION_MESSAGES.MIN_ONE_PHONE)
+    .refine((phones) => phones.some((p) => p.is_main), {
+      message: VALIDATION_MESSAGES.MIN_ONE_MAIN_PHONE,
+    }),
+
   delivery_addresses: z.array(deliveryAddressSchema).optional(),
 });
 

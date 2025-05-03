@@ -8,11 +8,15 @@ import {
 
 const router = Router();
 
-router.get("/", PersonController.getAllUsers);
+router.get("/", PersonController.getAllPersons);
 
-router.get("/:id", PersonController.getUserById);
+router.get("/:id", PersonController.getPersonById);
 
-router.post("/", validateBody(createPersonSchema), PersonController.createPerson);
+router.post(
+  "/",
+  validateBody(createPersonSchema),
+  PersonController.createPerson
+);
 
 router.patch(
   "/:id",
@@ -20,6 +24,6 @@ router.patch(
   PersonController.updatePerson
 );
 
-router.delete("/:id", PersonController.deleteUser);
+router.delete("/:id", PersonController.deletePerson);
 
 export default router;

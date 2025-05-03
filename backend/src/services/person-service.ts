@@ -17,16 +17,20 @@ export const PersonService = {
   },
 
   async create(data: CreatePersonInput) {
-    const existing = await PersonModel.findByEmailOrPhone(data.email, data.phone)
+    const numbers = data.phones.map((p) => p.number);
+    const existingPhone = await PersonModel.findByPhone(numbers);
 
-    if (existing) {
-      if (existing.email === data.email) {
+    if (data.email) {
+      const existingEmail = await PersonModel.findByEmail(data.email);
+      if (existingEmail) {
         throw new AppError(ERROR_MESSAGES.EMAIL_EXISTS, 409);
       }
-      if (existing.phone === data.phone) {
-        throw new AppError(ERROR_MESSAGES.PHONE_EXISTS, 409);
-      }
     }
+
+    if (existingPhone) {
+      throw new AppError(ERROR_MESSAGES.PHONE_EXISTS, 409);
+    }
+
     const hashedPassword = data.password
       ? await bcryptjs.hash(data.password, 10)
       : undefined;
