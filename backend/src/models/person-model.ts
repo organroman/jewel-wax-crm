@@ -127,7 +127,7 @@ export const PersonModel = {
     return await db("persons").where("id", personId).del();
   },
 
-  async findByEmail(email: string | undefined) {
+  async findByEmail(email: string | undefined): Promise<Person | null> {
     return db("persons").where("email", email).first();
   },
 

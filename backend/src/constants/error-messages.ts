@@ -10,6 +10,9 @@ const ERROR_MESSAGES = {
   EMAIL_EXISTS: "Person with this email already exists",
   PHONE_EXISTS: "Person with this phone already exists",
   INVALID_REQUEST: "Invalid request",
+  ACCESS_DENIED: "Access denied",
+  INVALID_CREDENTIALS: "Incorrect email or password",
+  PASSWORD_EMAIL_REQUIRED: "Password and email are required",
 };
 
 export default ERROR_MESSAGES;

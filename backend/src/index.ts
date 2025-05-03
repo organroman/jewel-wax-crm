@@ -5,6 +5,8 @@ import errorHandler from "./middlewares/error-handler-middleware";
 
 import personRoutes from "./routes/person-routes";
 import enumRoutes from "./routes/enum-routes";
+import authRoutes from "./routes/auth-rotes";
+import { verifyToken } from "./middlewares/auth-middleware";
 
 const app = express();
 const PORT = process.env.PORT || 8000;
@@ -16,8 +18,9 @@ app.get("/", (req, res) => {
   res.send("CRM backend is running");
 });
 
-app.use("/enums", enumRoutes);
-app.use("/persons", personRoutes);
+app.use("/auth", authRoutes);
+app.use("/enums", verifyToken, enumRoutes);
+app.use("/persons", verifyToken, personRoutes);
 
 app.use(errorHandler);
 
