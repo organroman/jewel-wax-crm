@@ -20,7 +20,7 @@ app.get("/", (req, res) => {
 
 app.use("/auth", authRoutes);
 app.use("/enums", verifyToken, enumRoutes);
-app.use("/persons", verifyToken, personRoutes);
+app.use("/persons", personRoutes);
 
 app.use(errorHandler);
 

@@ -5,7 +5,8 @@ export const PERSON_ROLES = [
   "miller",
   "client",
   "lead",
-  "print"
+  "print",
 ] as const;
 
 export type PersonRole = (typeof PERSON_ROLES)[number];
+
