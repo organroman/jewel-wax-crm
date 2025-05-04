@@ -1,4 +1,8 @@
-import { CreatePersonInput, UpdatePersonInput } from "../types/person.types";
+import {
+  CreatePersonInput,
+  SafePerson,
+  UpdatePersonInput,
+} from "../types/person.types";
 
 import bcryptjs from "bcryptjs";
 
@@ -10,15 +14,18 @@ import ERROR_MESSAGES from "../constants/error-messages";
 import { LOG_ACTIONS, LOG_TARGET } from "../constants/activity-log";
 
 export const PersonService = {
-  async getAll() {
+  async getAll(): Promise<SafePerson[]> {
     return await PersonModel.getAll();
   },
 
-  async getById(userId: number) {
+  async getById(userId: number): Promise<SafePerson | null> {
     return await PersonModel.findById(userId);
   },
 
-  async create(data: CreatePersonInput, authorId?: number) {
+  async create(
+    data: CreatePersonInput,
+    authorId?: number
+  ): Promise<SafePerson> {
     const numbers = data.phones.map((p) => p.number);
     const existingPhone = await PersonModel.findByPhone(numbers);
 
@@ -54,7 +61,11 @@ export const PersonService = {
     return person;
   },
 
-  async update(personId: number, data: UpdatePersonInput, actorId?: number) {
+  async update(
+    personId: number,
+    data: UpdatePersonInput,
+    actorId?: number
+  ): Promise<SafePerson | null> {
     const updatedPerson = await PersonModel.update(personId, data);
 
     await ActivityLogModel.logAction({
@@ -70,7 +81,7 @@ export const PersonService = {
     return updatedPerson;
   },
 
-  async delete(personId: number, actorId?: number) {
+  async delete(personId: number, actorId?: number): Promise<number> {
     const result = await PersonModel.delete(personId);
     await ActivityLogModel.logAction({
       actor_id: actorId || null,

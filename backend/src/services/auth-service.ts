@@ -50,6 +50,15 @@ export const AuthService = {
     };
   },
 
+  async logout(refreshToken: string): Promise<void> {
+    const tokenRecord = AuthModel.findValidRefreshToken(refreshToken);
+
+    if (!tokenRecord) {
+      throw new AppError(ERROR_MESSAGES.INVALID_REFRESH_TOKEN, 403);
+    }
+    await AuthModel.invalidateRefreshToken(refreshToken);
+  },
+
   async refreshAccessToken(refreshToken: string) {
     const tokenRecord = await AuthModel.findValidRefreshToken(refreshToken);
 

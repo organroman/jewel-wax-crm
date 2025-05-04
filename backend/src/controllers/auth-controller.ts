@@ -18,6 +18,21 @@ export const AuthController = {
       next(error);
     }
   },
+
+  async logout(req: Request, res: Response, next: NextFunction) {
+    try {
+      const refreshToken = req.body;
+
+      if (!refreshToken) {
+        throw new AppError(ERROR_MESSAGES.MISSING_REFRESH_TOKEN, 400);
+      }
+
+      await AuthService.logout(refreshToken);
+      res.status(200).json({ message: INFO_MESSAGES.SUCCESS_LOGOUT });
+    } catch (error) {
+      next(error);
+    }
+  },
   async refreshToken(req: Request, res: Response, next: NextFunction) {
     try {
       const { refresh_token } = req.body;
@@ -57,7 +72,7 @@ export const AuthController = {
       await AuthService.resetPassword(token, new_password);
       res.status(200).json({ message: INFO_MESSAGES.PASSWORD_HAS_BEEN_RESET });
     } catch (error) {
-      next(error)
+      next(error);
     }
   },
 };
