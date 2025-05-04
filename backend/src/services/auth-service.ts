@@ -74,4 +74,33 @@ export const AuthService = {
       person,
     };
   },
+
+  async createResetPasswordRequest(
+    email: string
+  ): Promise<{ reset_token: string }> {
+    const person = await PersonModel.findByEmail(email);
+    if (!person) {
+      throw new AppError(ERROR_MESSAGES.PERSON_NOT_FOUND, 404);
+    }
+
+    const resetToken = randomBytes(32).toString("hex");
+    const expiresAt = new Date(Date.now() + 1000 * 60 * 30);
+
+    await AuthModel.createResetPasswordToken(person.id, resetToken, expiresAt);
+    //TODO: send email to user with token
+    return { reset_token: resetToken };
+  },
+
+  async resetPassword(token: string, newPassword: string): Promise<void> {
+    const tokenRecord = await AuthModel.findValidResetPasswordToken(token);
+    if (!tokenRecord) {
+      throw new AppError(ERROR_MESSAGES.INVALID_RESET_TOKEN, 400);
+    }
+
+    const hashedPassword = await bcryptjs.hash(String(newPassword), 10);
+    await PersonModel.updatePassword(tokenRecord.person_id, hashedPassword);
+
+    await AuthModel.markResetPasswordTokenAsUsed(token);
+    await AuthModel.invalidateAllTokensForUser(tokenRecord.person_id);
+  },
 };

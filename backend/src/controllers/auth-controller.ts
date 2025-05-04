@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import AppError from "../utils/AppError";
 import ERROR_MESSAGES from "../constants/error-messages";
+import INFO_MESSAGES from "../constants/info-messages";
 import { AuthService } from "../services/auth-service";
 
 export const AuthController = {
@@ -29,6 +30,34 @@ export const AuthController = {
       res.status(200).json(result);
     } catch (error) {
       next(error);
+    }
+  },
+  async resetPasswordToken(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { email } = req.body;
+
+      if (!email) {
+        throw new AppError(ERROR_MESSAGES.MISSING_REQUIRED_FIELDS, 400);
+      }
+
+      const result = await AuthService.createResetPasswordRequest(email);
+      res.status(201).json(result);
+    } catch (error) {
+      next(error);
+    }
+  },
+  async resetPassword(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { token, new_password } = req.body;
+
+      if (!token || !new_password) {
+        throw new AppError(ERROR_MESSAGES.MISSING_REQUIRED_FIELDS, 400);
+      }
+
+      await AuthService.resetPassword(token, new_password);
+      res.status(200).json({ message: INFO_MESSAGES.PASSWORD_HAS_BEEN_RESET });
+    } catch (error) {
+      next(error)
     }
   },
 };

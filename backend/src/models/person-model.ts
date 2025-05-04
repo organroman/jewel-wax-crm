@@ -123,6 +123,14 @@ export const PersonModel = {
 
     return await PersonModel.findById(personId);
   },
+
+  async updatePassword(personId: number, hashedPassword: string) {
+    await db("persons").where("id", personId).update({
+      password: hashedPassword,
+      updated_at: new Date(),
+    });
+  },
+
   async delete(personId: number): Promise<number> {
     return await db("persons").where("id", personId).del();
   },
