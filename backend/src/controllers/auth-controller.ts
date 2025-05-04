@@ -17,4 +17,18 @@ export const AuthController = {
       next(error);
     }
   },
+  async refreshToken(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { refresh_token } = req.body;
+
+      if (!refresh_token) {
+        throw new AppError(ERROR_MESSAGES.MISSING_REFRESH_TOKEN, 400);
+      }
+
+      const result = await AuthService.refreshAccessToken(refresh_token);
+      res.status(200).json(result);
+    } catch (error) {
+      next(error);
+    }
+  },
 };

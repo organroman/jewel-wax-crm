@@ -13,6 +13,9 @@ const ERROR_MESSAGES = {
   ACCESS_DENIED: "Access denied",
   INVALID_CREDENTIALS: "Incorrect email or password",
   PASSWORD_EMAIL_REQUIRED: "Password and email are required",
+  MISSING_REFRESH_TOKEN: "Missing refresh token",
+  INVALID_REFRESH_TOKEN: "Invalid refresh token",
+  PERSON_NOT_FOUND: "Person not found",
 };
 
 export default ERROR_MESSAGES;
