@@ -30,7 +30,8 @@ export const PersonController = {
 
   async createPerson(req: Request, res: Response, next: NextFunction) {
     try {
-      const newUser = await PersonService.create(req.body);
+      const currentUser = req.user?.id;
+      const newUser = await PersonService.create(req.body, currentUser);
       res.status(201).json(newUser);
     } catch (error: any) {
       next(error);
@@ -39,9 +40,11 @@ export const PersonController = {
 
   async updatePerson(req: Request, res: Response, next: NextFunction) {
     try {
+      const currentUser = req.user?.id;
       const updatedPerson = await PersonService.update(
         Number(req.params.id),
-        req.body
+        req.body,
+        currentUser
       );
 
       if (!updatedPerson) {
