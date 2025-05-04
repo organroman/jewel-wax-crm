@@ -1,8 +1,10 @@
 import { NextFunction, Request, Response } from "express";
+
+import { AuthService } from "../services/auth-service";
+
 import AppError from "../utils/AppError";
 import ERROR_MESSAGES from "../constants/error-messages";
 import INFO_MESSAGES from "../constants/info-messages";
-import { AuthService } from "../services/auth-service";
 
 export const AuthController = {
   async login(req: Request, res: Response, next: NextFunction) {

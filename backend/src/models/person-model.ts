@@ -1,6 +1,3 @@
-import db from "../db/db";
-
-import { stripPassword } from "../utils/helpers";
 
 import {
   CreatePersonInput,
@@ -8,6 +5,10 @@ import {
   SafePerson,
   UpdatePersonInput,
 } from "../types/person.types";
+
+import db from "../db/db";
+
+import { stripPassword } from "../utils/helpers";
 import AppError from "../utils/AppError";
 import ERROR_MESSAGES from "../constants/error-messages";
 

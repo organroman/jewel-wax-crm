@@ -11,7 +11,7 @@ import { ActivityLogModel } from "../models/activity-log-model";
 
 import AppError from "../utils/AppError";
 import ERROR_MESSAGES from "../constants/error-messages";
-import { LOG_ACTIONS, LOG_TARGET } from "../constants/activity-log";
+import { LOG_ACTIONS, LOG_TARGETS } from "../constants/activity-log";
 
 export const PersonService = {
   async getAll(): Promise<SafePerson[]> {
@@ -52,7 +52,7 @@ export const PersonService = {
     await ActivityLogModel.logAction({
       actor_id: authorId || null,
       action: LOG_ACTIONS.CREATE_PERSON,
-      target_type: LOG_TARGET.PERSON,
+      target_type: LOG_TARGETS.PERSON,
       target_id: person.id,
       details: {
         person,
@@ -71,7 +71,7 @@ export const PersonService = {
     await ActivityLogModel.logAction({
       actor_id: actorId || null,
       action: LOG_ACTIONS.UPDATE_PERSON,
-      target_type: LOG_TARGET.PERSON,
+      target_type: LOG_TARGETS.PERSON,
       target_id: personId,
       details: {
         data,
@@ -83,10 +83,11 @@ export const PersonService = {
 
   async delete(personId: number, actorId?: number): Promise<number> {
     const result = await PersonModel.delete(personId);
+    
     await ActivityLogModel.logAction({
       actor_id: actorId || null,
       action: LOG_ACTIONS.DELETE_PERSON,
-      target_type: LOG_TARGET.PERSON,
+      target_type: LOG_TARGETS.PERSON,
       target_id: personId,
     });
 

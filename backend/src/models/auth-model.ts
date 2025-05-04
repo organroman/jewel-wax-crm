@@ -1,4 +1,5 @@
 import { PasswordResetToken, RefreshTokenRecord } from "../types/auth.types";
+
 import db from "../db/db";
 
 export const AuthModel = {

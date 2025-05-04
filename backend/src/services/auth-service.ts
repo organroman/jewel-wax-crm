@@ -1,14 +1,18 @@
+import { SafePerson } from "../types/person.types";
+
 import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { randomBytes } from "crypto";
 
 import { PersonModel } from "../models/person-model";
+import { AuthModel } from "../models/auth-model";
+import { ActivityLogModel } from "../models/activity-log-model";
 
 import AppError from "../utils/AppError";
-import ERROR_MESSAGES from "../constants/error-messages";
 import { stripPassword } from "../utils/helpers";
-import { SafePerson } from "../types/person.types";
-import { AuthModel } from "../models/auth-model";
+import ERROR_MESSAGES from "../constants/error-messages";
+import { LOG_ACTIONS } from "../constants/activity-log";
+import { LOG_TARGETS } from "../constants/activity-log";
 
 export const AuthService = {
   async login(email: string, password: string) {
@@ -42,6 +46,13 @@ export const AuthService = {
       refreshToken,
       expiresAt
     );
+
+    await ActivityLogModel.logAction({
+      actor_id: person.id,
+      action: LOG_ACTIONS.LOGIN,
+      target_type: LOG_TARGETS.PERSON,
+      target_id: person.id,
+    });
 
     return {
       token,
@@ -108,6 +119,13 @@ export const AuthService = {
 
     const hashedPassword = await bcryptjs.hash(String(newPassword), 10);
     await PersonModel.updatePassword(tokenRecord.person_id, hashedPassword);
+
+    await ActivityLogModel.logAction({
+      actor_id: tokenRecord.person_id,
+      action: LOG_ACTIONS.LOGIN,
+      target_type: LOG_TARGETS.PERSON,
+      target_id: tokenRecord.id,
+    });
 
     await AuthModel.markResetPasswordTokenAsUsed(token);
     await AuthModel.invalidateAllTokensForUser(tokenRecord.person_id);
