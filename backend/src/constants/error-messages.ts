@@ -17,6 +17,6 @@ const ERROR_MESSAGES = {
   PASSWORD_EMAIL_REQUIRED: "Password and email are required",
   PERSON_NOT_FOUND: "Person not found",
   UNAUTHORIZED: "Unauthorized access",
-};
+} as const;
 
 export default ERROR_MESSAGES;

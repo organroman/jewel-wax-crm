@@ -1,4 +1,3 @@
-
 export const formatLabel = (value: string): string => {
   return value
     .split("_")
@@ -9,4 +8,22 @@ export const formatLabel = (value: string): string => {
 export function stripPassword<T extends { password?: string }>(person: T) {
   const { password, ...safe } = person;
   return safe;
+}
+
+export type SortDirection = "asc" | "desc";
+
+export function parseSortParams<T extends readonly string[]>(
+  sortByRaw: string | undefined,
+  orderRaw: string | undefined,
+  allowedFields: T,
+  defaultSortBy: T[number]
+): { sortBy: T[number]; order: SortDirection } {
+  const sortBy = allowedFields.includes(sortByRaw as T[number])
+    ? (sortByRaw as T[number])
+    : defaultSortBy;
+
+  const order: SortDirection =
+    orderRaw === "asc" || orderRaw === "desc" ? orderRaw : "desc";
+
+  return { sortBy, order };
 }

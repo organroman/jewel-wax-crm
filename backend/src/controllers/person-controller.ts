@@ -3,12 +3,39 @@ import { Request, Response, NextFunction } from "express";
 import { PersonService } from "../services/person-service";
 
 import AppError from "../utils/AppError";
+import { parseSortParams } from "../utils/helpers";
 import ERROR_MESSAGES from "../constants/error-messages";
+import { PERSON_SORT_FIELDS } from "../constants/sortable-fields";
 
 export const PersonController = {
   async getAllPersons(req: Request, res: Response, next: NextFunction) {
     try {
-      const users = await PersonService.getAll();
+      const { page, limit, role, city, is_active, search } = req.query;
+
+      const { sortBy, order } = parseSortParams(
+        req.query.sortBy as string,
+        req.query.order as string,
+        PERSON_SORT_FIELDS,
+        "created_at"
+      );
+
+      const users = await PersonService.getAll({
+        page: Number(page),
+        limit: Number(limit),
+        filters: {
+          role: role as string,
+          city: city as string,
+          is_active:
+            is_active === "true"
+              ? true
+              : is_active === "false"
+              ? false
+              : undefined,
+        },
+        search: search as string,
+        sortBy: sortBy as string,
+        order: (order as "asc" | "desc") || "desc",
+      });
       res.status(200).json(users);
     } catch (error) {
       next(error);

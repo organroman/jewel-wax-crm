@@ -8,4 +8,4 @@ export const PERMISSIONS: PermissionMap = {
     UPDATE: ["admin", "super_admin", "miller"],
     DELETE: ["super_admin"],
   },
-};
+} as const ;

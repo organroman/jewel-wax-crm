@@ -1,4 +1,9 @@
-import { PersonRole } from "../constants/person-roles";
+import { PERSON_SORT_FIELDS } from "../constants/sortable-fields";
+import { PERSON_ROLES } from "../constants/person-roles";
+
+export type PersonRole = (typeof PERSON_ROLES)[number];
+
+export type PersonSortField = (typeof PERSON_SORT_FIELDS)[number];
 
 export interface DeliveryAddress {
   id?: number;
@@ -57,4 +62,24 @@ export interface SafePerson {
   updated_at: Date;
   phones: Phone[];
   delivery_addresses?: DeliveryAddress[];
+}
+
+export interface GetAllPersonsOptions {
+  page?: number;
+  limit?: number;
+  filters?: {
+    role?: string;
+    city?: string;
+    is_active?: boolean;
+  };
+  search?: string;
+  sortBy?: string;
+  order?: "asc" | "desc";
+}
+
+export interface PaginatedSafePersons {
+  data: SafePerson[];
+  page: number;
+  limit: number;
+  total: number;
 }
