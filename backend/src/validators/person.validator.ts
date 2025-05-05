@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { PERSON_ROLES } from "../constants/person-roles";
+import { PERSON_ROLES } from "../constants/enums";
 import VALIDATION_MESSAGES from "../constants/validation-messages";
 
 const roleEnum = z.enum(PERSON_ROLES);

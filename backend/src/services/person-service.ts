@@ -3,8 +3,8 @@ import {
   GetAllPersonsOptions,
   SafePerson,
   UpdatePersonInput,
-  PaginatedSafePersons,
 } from "../types/person.types";
+import { PaginatedResult } from "../types/shared.types";
 
 import bcryptjs from "bcryptjs";
 
@@ -22,11 +22,16 @@ export const PersonService = {
     filters,
     search,
     sortBy,
-    order
-  }: GetAllPersonsOptions): Promise<PaginatedSafePersons> {
-    {
-      return await PersonModel.getAll({ page, limit, filters, search });
-    }
+    order,
+  }: GetAllPersonsOptions): Promise<PaginatedResult<SafePerson>> {
+    return await PersonModel.getAll({
+      page,
+      limit,
+      filters,
+      search,
+      sortBy,
+      order,
+    });
   },
 
   async getById(userId: number): Promise<SafePerson | null> {

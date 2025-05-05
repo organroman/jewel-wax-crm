@@ -4,8 +4,8 @@ import {
   SafePerson,
   UpdatePersonInput,
   GetAllPersonsOptions,
-  PaginatedSafePersons,
 } from "../types/person.types";
+import { PaginatedResult } from "../types/shared.types";
 
 import db from "../db/db";
 
@@ -21,7 +21,7 @@ export const PersonModel = {
     search,
     sortBy = "created_at",
     order = "desc",
-  }: GetAllPersonsOptions): Promise<PaginatedSafePersons> {
+  }: GetAllPersonsOptions): Promise<PaginatedResult<SafePerson>> {
     const offset = (page - 1) * limit;
     const baseQuery = db("persons").select("*");
 

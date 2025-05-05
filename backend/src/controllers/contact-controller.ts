@@ -1,97 +1,92 @@
+import { ContactSource } from "../types/contact.types";
 import { SortOrder } from "../types/shared.types";
 
 import { Request, Response, NextFunction } from "express";
 
-import { PersonService } from "../services/person-service";
+import { ContactService } from "../services/contact-service";
 
-import AppError from "../utils/AppError";
 import { parseSortParams } from "../utils/helpers";
-import ERROR_MESSAGES from "../constants/error-messages";
-import { PERSON_SORT_FIELDS } from "../constants/sortable-fields";
+import AppError from "../utils/AppError";
 
-export const PersonController = {
-  async getAllPersons(req: Request, res: Response, next: NextFunction) {
+import { CONTACT_SORT_FIELDS } from "../constants/sortable-fields";
+import ERROR_MESSAGES from "../constants/error-messages";
+
+export const ContactController = {
+  async getAllContacts(req: Request, res: Response, next: NextFunction) {
     try {
-      const { page, limit, role, city, is_active, search } = req.query;
+      const { page, limit, source, search } = req.query;
 
       const { sortBy, order } = parseSortParams(
         req.query.sortBy as string,
         req.query.order as string,
-        PERSON_SORT_FIELDS,
+        CONTACT_SORT_FIELDS,
         "created_at"
       );
 
-      const users = await PersonService.getAll({
+      const contacts = await ContactService.getAll({
         page: Number(page),
         limit: Number(limit),
         filters: {
-          role: role as string,
-          city: city as string,
-          is_active:
-            is_active === "true"
-              ? true
-              : is_active === "false"
-              ? false
-              : undefined,
+          source: source as ContactSource,
         },
         search: search as string,
         sortBy: sortBy as string,
         order: (order as SortOrder) || "desc",
       });
-      res.status(200).json(users);
+      res.status(200).json(contacts);
     } catch (error) {
       next(error);
     }
   },
-
-  async getPersonById(req: Request, res: Response, next: NextFunction) {
+  async getById(req: Request, res: Response, next: NextFunction) {
     try {
-      const user = await PersonService.getById(Number(req.params.id));
-      if (!user) {
+      const contact = await ContactService.getById(Number(req.params.id));
+
+      if (!contact) {
         throw new AppError(ERROR_MESSAGES.ITEM_NOT_FOUND, 404);
       }
 
-      res.status(200).json(user);
+      res.status(200).json(contact);
     } catch (error) {
       next(error);
     }
   },
-
-  async createPerson(req: Request, res: Response, next: NextFunction) {
+  async create(req: Request, res: Response, next: NextFunction) {
     try {
       const currentUser = req.user?.id;
-      const newUser = await PersonService.create(req.body, currentUser);
-      res.status(201).json(newUser);
+      const newContact = await ContactService.findOrCreate(
+        req.body,
+        currentUser
+      );
+      res.status(201).json(newContact);
     } catch (error) {
       next(error);
     }
   },
-
-  async updatePerson(req: Request, res: Response, next: NextFunction) {
+  async update(req: Request, res: Response, next: NextFunction) {
     try {
       const currentUser = req.user?.id;
-      const updatedPerson = await PersonService.update(
+      const updatedContact = await ContactService.update(
         Number(req.params.id),
         req.body,
         currentUser
       );
-
-      if (!updatedPerson) {
+      if (!updatedContact) {
         throw new AppError(ERROR_MESSAGES.ITEM_NOT_FOUND, 404);
       }
-      res.status(200).json(updatedPerson);
+      res.status(200).json(updatedContact);
     } catch (error) {
       next(error);
     }
   },
-
-  async deletePerson(req: Request, res: Response, next: NextFunction) {
+  async delete(req: Request, res: Response, next: NextFunction) {
     try {
       const currentUser = req.user?.id;
-      const deletedCount = await PersonService.delete(
+      const deletedCount = await ContactService.delete(
         Number(req.params.id),
         currentUser
       );
+
       if (!deletedCount) {
         throw new AppError(ERROR_MESSAGES.ITEM_NOT_FOUND, 404);
       }

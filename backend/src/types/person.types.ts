@@ -1,5 +1,5 @@
 import { PERSON_SORT_FIELDS } from "../constants/sortable-fields";
-import { PERSON_ROLES } from "../constants/person-roles";
+import { PERSON_ROLES } from "../constants/enums";
 
 export type PersonRole = (typeof PERSON_ROLES)[number];
 
@@ -77,9 +77,4 @@ export interface GetAllPersonsOptions {
   order?: "asc" | "desc";
 }
 
-export interface PaginatedSafePersons {
-  data: SafePerson[];
-  page: number;
-  limit: number;
-  total: number;
-}
+

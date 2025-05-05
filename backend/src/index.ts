@@ -4,6 +4,7 @@ import morgan from "morgan";
 import errorHandler from "./middlewares/error-handler-middleware";
 
 import personRoutes from "./routes/person-routes";
+import contactRoutes from "./routes/contact-routes";
 import enumRoutes from "./routes/enum-routes";
 import authRoutes from "./routes/auth-rotes";
 import { verifyToken } from "./middlewares/auth-middleware";
@@ -21,6 +22,7 @@ app.get("/", (req, res) => {
 app.use("/auth", authRoutes);
 app.use("/enums", verifyToken, enumRoutes);
 app.use("/persons", personRoutes);
+app.use("/contacts", contactRoutes);
 
 app.use(errorHandler);
 
