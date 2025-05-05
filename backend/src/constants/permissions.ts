@@ -1,11 +1,10 @@
-import { PermissionMap } from "../types/permission.types"
-
+import { PermissionMap } from "../types/permission.types";
 
 export const PERMISSIONS: PermissionMap = {
   PERSONS: {
-    VIEW: ["admin", "super_admin", "miller"],
-    CREATE: ["super_admin", "admin"],
-    UPDATE: ["admin", "super_admin", "miller"],
+    VIEW: ["super_admin"],
+    CREATE: ["super_admin"],
+    UPDATE: ["super_admin"],
     DELETE: ["super_admin"],
   },
-} as const ;
+} as const;

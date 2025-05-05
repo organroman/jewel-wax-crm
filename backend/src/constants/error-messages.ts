@@ -1,5 +1,6 @@
 const ERROR_MESSAGES = {
   ACCESS_DENIED: "Access denied",
+  ACCOUNT_INACTIVE: "Account is inactive",
   EMAIL_EXISTS: "Person with this email already exists",
   FAILED_TO_FETCH: "Failed to fetch data",
   FAILED_TO_LOAD_AFTER_CREATION: "Failed to load item after creation",

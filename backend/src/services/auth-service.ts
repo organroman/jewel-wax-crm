@@ -28,6 +28,10 @@ export const AuthService = {
       throw new AppError(ERROR_MESSAGES.ACCESS_DENIED, 403);
     }
 
+    if (!person.is_active) {
+      throw new AppError(ERROR_MESSAGES.ACCOUNT_INACTIVE, 403)
+    }
+
     const isMatch = await bcryptjs.compare(password, person.password);
 
     if (!isMatch) {
