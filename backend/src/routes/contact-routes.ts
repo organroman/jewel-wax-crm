@@ -20,7 +20,12 @@ router.get(
   ContactController.getAllContacts
 );
 
-router.get("/:id", verifyToken, checkPermission("CONTACTS", "VIEW"));
+router.get(
+  "/:id",
+  verifyToken,
+  checkPermission("CONTACTS", "VIEW"),
+  ContactController.getById
+);
 
 router.post(
   "/",
