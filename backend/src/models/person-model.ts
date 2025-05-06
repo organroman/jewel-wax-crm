@@ -11,23 +11,23 @@ import db from "../db/db";
 
 import { stripPassword } from "../utils/helpers";
 import AppError from "../utils/AppError";
+import { paginateQuery } from "../utils/pagination";
 import ERROR_MESSAGES from "../constants/error-messages";
 
 export const PersonModel = {
   async getAll({
-    page = 1,
-    limit = 10,
-    filters = {},
+    page,
+    limit,
+    filters,
     search,
     sortBy = "created_at",
     order = "desc",
   }: GetAllPersonsOptions): Promise<PaginatedResult<SafePerson>> {
-    const offset = (page - 1) * limit;
-    const baseQuery = db("persons").select("*");
+    const baseQuery = db<Person>("persons").select("*");
 
-    if (filters.role) baseQuery.where("role", filters.role);
-    if (filters.city) baseQuery.whereILike("city", `%${filters.city}%`);
-    if (typeof filters.is_active === "boolean")
+    if (filters?.role) baseQuery.where("role", filters.role);
+    if (filters?.city) baseQuery.whereILike("city", `%${filters.city}%`);
+    if (typeof filters?.is_active === "boolean")
       baseQuery.where("is_active", filters.is_active);
 
     if (search) {
@@ -44,16 +44,15 @@ export const PersonModel = {
       });
     }
 
-    const countQuery = baseQuery.clone().clearSelect().count("* as total");
-
-    baseQuery.offset(offset).limit(limit).orderBy(sortBy, order);
-
-    const persons = await baseQuery;
-    const countResult = await countQuery;
-    const total = parseInt(String(countResult[0].total), 10);
+    const paginated = await paginateQuery<Person>(baseQuery, {
+      page,
+      limit,
+      order,
+      sortBy,
+    });
 
     const enriched = await Promise.all(
-      persons.map(async (person) => {
+      paginated.data.map(async (person) => {
         const phones = await db("phones").where("person_id", person.id);
         const addresses = await db("delivery_addresses").where(
           "person_id",
@@ -68,15 +67,15 @@ export const PersonModel = {
     );
 
     return {
+      ...paginated,
       data: enriched,
-      total,
-      limit,
-      page,
     };
   },
 
   async findById(personId: number): Promise<SafePerson | null> {
-    const [person] = await db("persons").where("id", personId).select("*");
+    const [person] = await db<Person>("persons")
+      .where("id", personId)
+      .select("*");
 
     if (!person) {
       return null;
@@ -95,7 +94,7 @@ export const PersonModel = {
   },
 
   async create(data: CreatePersonInput): Promise<SafePerson> {
-    const [newPerson] = await db("persons")
+    const [newPerson] = await db<Person>("persons")
       .insert({
         first_name: data.first_name,
         last_name: data.last_name,
@@ -136,7 +135,7 @@ export const PersonModel = {
     data: UpdatePersonInput
   ): Promise<SafePerson | null> {
     const { phones, delivery_addresses, ...personFields } = data;
-    const [updatedPerson] = await db("persons")
+    const [updatedPerson] = await db<Person>("persons")
       .where("id", personId)
       .update({ ...personFields, updated_at: new Date() })
       .returning<Person[]>("*");
@@ -176,7 +175,7 @@ export const PersonModel = {
   },
 
   async delete(personId: number): Promise<number> {
-    return await db("persons").where("id", personId).del();
+    return await db<Person>("persons").where("id", personId).del();
   },
 
   async findByEmail(email: string | undefined): Promise<Person | null> {

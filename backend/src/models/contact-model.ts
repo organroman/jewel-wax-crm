@@ -8,6 +8,7 @@ import {
 import { PaginatedResult } from "../types/shared.types";
 
 import db from "../db/db";
+import { paginateQuery } from "../utils/pagination";
 
 export const ContactModel = {
   async findByExternalId(
@@ -23,17 +24,16 @@ export const ContactModel = {
   },
 
   async getAll({
-    page = 1,
-    limit = 10,
-    filters = {},
+    page,
+    limit,
+    filters,
     search,
-    sortBy = "created_at",
-    order = "desc",
+    sortBy,
+    order,
   }: GetAllContactsOptions): Promise<PaginatedResult<Contact>> {
-    const offset = (page - 1) * limit;
     const baseQuery = db<Contact>("contacts").select("*");
 
-    if (filters.source) baseQuery.where("source", filters.source);
+    if (filters?.source) baseQuery.where("source", filters.source);
 
     if (search) {
       baseQuery.where((qb) => {
@@ -43,20 +43,12 @@ export const ContactModel = {
       });
     }
 
-    const countQuery = baseQuery.clone().clearSelect().count("*");
-
-    baseQuery.offset(offset).limit(limit).orderBy(sortBy, order);
-
-    const contacts = await baseQuery;
-    const countResult = await countQuery;
-    const total = parseInt(countResult[0]);
-
-    return {
-      data: contacts,
-      total,
-      limit,
+    return await paginateQuery<Contact>(baseQuery, {
       page,
-    };
+      limit,
+      sortBy,
+      order,
+    });
   },
   async findById(contactId: number): Promise<Contact | null> {
     const [contact] = await db<Contact>("contacts")

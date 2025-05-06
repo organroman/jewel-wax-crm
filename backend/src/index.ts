@@ -3,10 +3,11 @@ import morgan from "morgan";
 
 import errorHandler from "./middlewares/error-handler-middleware";
 
+import authRoutes from "./routes/auth-rotes";
+import enumRoutes from "./routes/enum-routes";
 import personRoutes from "./routes/person-routes";
 import contactRoutes from "./routes/contact-routes";
-import enumRoutes from "./routes/enum-routes";
-import authRoutes from "./routes/auth-rotes";
+import requestRoutes from "./routes/request-routes";
 import { verifyToken } from "./middlewares/auth-middleware";
 
 const app = express();
@@ -23,6 +24,7 @@ app.use("/auth", authRoutes);
 app.use("/enums", verifyToken, enumRoutes);
 app.use("/persons", personRoutes);
 app.use("/contacts", contactRoutes);
+app.use("/requests", requestRoutes);
 
 app.use(errorHandler);
 

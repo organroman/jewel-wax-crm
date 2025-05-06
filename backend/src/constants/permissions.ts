@@ -13,4 +13,10 @@ export const PERMISSIONS: PermissionMap = {
     UPDATE: ["super_admin"],
     DELETE: ["super_admin"],
   },
+  REQUESTS: {
+    VIEW: ["super_admin"],
+    CREATE: ["super_admin"],
+    UPDATE: ["super_admin"],
+    DELETE: ["super_admin"],
+  },
 } as const;

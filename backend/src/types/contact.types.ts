@@ -1,4 +1,5 @@
 import { CONTACT_SOURCE } from "../constants/enums";
+import { GetAllOptions } from "./shared.types";
 
 export type ContactSource = (typeof CONTACT_SOURCE)[number];
 
@@ -23,16 +24,9 @@ export interface CreateContactInput {
   person_id?: number;
 }
 
-export interface GetAllContactsOptions {
-  page?: number;
-  limit?: number;
-  filters?: {
-    source?: ContactSource;
-  };
-  search?: string;
-  sortBy?: string;
-  order?: "asc" | "desc";
-}
+export type GetAllContactsOptions = GetAllOptions<{
+  source?: ContactSource;
+}>;
 
 export interface UpdateContactInput {
   username?: string;

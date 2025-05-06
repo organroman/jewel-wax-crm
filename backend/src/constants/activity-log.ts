@@ -1,6 +1,7 @@
 export const LOG_TARGETS = {
   PERSON: "person",
-  CONTACT: "contact"
+  CONTACT: "contact",
+  REQUEST: "request",
 } as const;
 
 export const LOG_ACTIONS = {
@@ -10,5 +11,8 @@ export const LOG_ACTIONS = {
   CREATE_CONTACT: "create_contact",
   UPDATE_CONTACT: "update_contact",
   DELETE_CONTACT: "delete_contact",
+  CREATE_REQUEST: "create_request",
+  UPDATE_REQUEST: "update_request",
+  DELETE_REQUEST: "delete_request",
   LOGIN: "login",
 } as const;

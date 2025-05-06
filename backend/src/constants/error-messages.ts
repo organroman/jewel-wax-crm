@@ -17,6 +17,7 @@ const ERROR_MESSAGES = {
   PHONE_EXISTS: "Person with this phone already exists",
   PASSWORD_EMAIL_REQUIRED: "Password and email are required",
   PERSON_NOT_FOUND: "Person not found",
+  REQUEST_EXISTS: "Request already exists",
   UNAUTHORIZED: "Unauthorized access",
 } as const;
 

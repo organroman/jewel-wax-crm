@@ -1,5 +1,6 @@
 import { PERSON_SORT_FIELDS } from "../constants/sortable-fields";
 import { PERSON_ROLES } from "../constants/enums";
+import { GetAllOptions } from "./shared.types";
 
 export type PersonRole = (typeof PERSON_ROLES)[number];
 
@@ -64,17 +65,8 @@ export interface SafePerson {
   delivery_addresses?: DeliveryAddress[];
 }
 
-export interface GetAllPersonsOptions {
-  page?: number;
-  limit?: number;
-  filters?: {
-    role?: string;
-    city?: string;
-    is_active?: boolean;
-  };
-  search?: string;
-  sortBy?: string;
-  order?: "asc" | "desc";
-}
-
-
+export type GetAllPersonsOptions = GetAllOptions<{
+  role?: string;
+  city?: string;
+  is_active?: boolean;
+}>;
