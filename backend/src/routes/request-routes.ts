@@ -19,7 +19,7 @@ router.get(
 );
 
 router.get(
-  "/",
+  "/:id",
   verifyToken,
   checkPermission("REQUESTS", "VIEW"),
   RequestController.getById
