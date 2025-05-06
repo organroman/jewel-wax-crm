@@ -15,4 +15,32 @@ export const EnumController = {
       next(new AppError(ERROR_MESSAGES.FAILED_TO_FETCH, 500));
     }
   },
+  async getRequestStatuses(req: Request, res: Response, next: NextFunction) {
+    try {
+      const statuses = await EnumService.getRequestStatuses();
+
+      res.status(200).json(statuses);
+    } catch (error) {
+      next(error);
+    }
+  },
+  async getRequestSources(req: Request, res: Response, next: NextFunction) {
+    try {
+      const sources = await EnumService.getRequestSources();
+
+      res.status(200).json(sources);
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  async getContactSources(req: Request, res: Response, next: NextFunction) {
+    try {
+      const sources = await EnumService.getContactSources();
+
+      res.status(200).json(sources);
+    } catch (error) {
+      next(error);
+    }
+  },
 };

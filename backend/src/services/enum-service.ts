@@ -7,4 +7,16 @@ export const EnumService = {
       value,
     }));
   },
+  async getRequestStatuses() {
+    const values = await EnumModel.getEnumValues("request_status");
+    return values;
+  },
+  async getRequestSources() {
+    const values = await EnumModel.getEnumValues("request_source");
+    return values;
+  },
+  async getContactSources() {
+    const values = await EnumModel.getEnumValues("contact_source");
+    return values;
+  },
 };
