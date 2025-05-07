@@ -1,5 +1,6 @@
 import express from "express";
 import morgan from "morgan";
+import cors from "cors";
 
 import errorHandler from "./middlewares/error-handler-middleware";
 
@@ -14,6 +15,12 @@ const app = express();
 const PORT = process.env.PORT || 8000;
 
 app.use(express.json());
+app.use(
+  cors({
+    origin: ["http://localhost:8000", "http://localhost:3000"],
+    credentials: true,
+  })
+);
 
 app.get("/", (req, res) => {
   console.log("home page");

@@ -2,6 +2,8 @@ import Router from "express";
 import { AuthController } from "../controllers/auth-controller";
 
 import { validateBody } from "../middlewares/validation-middleware";
+import { verifyToken } from "../middlewares/auth-middleware";
+
 import {
   emailSchema,
   loginSchema,
@@ -18,6 +20,7 @@ router.post(
   validateBody(refreshTokenSchema),
   AuthController.refreshToken
 );
+router.get("/me", verifyToken, AuthController.getMe);
 router.post(
   "/reset-password-token",
   validateBody(emailSchema),

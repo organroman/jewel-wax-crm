@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 
 import { AuthService } from "../services/auth-service";
+import { PersonService } from "../services/person-service";
 
 import AppError from "../utils/AppError";
 import ERROR_MESSAGES from "../constants/error-messages";
@@ -73,6 +74,23 @@ export const AuthController = {
 
       await AuthService.resetPassword(token, new_password);
       res.status(200).json({ message: INFO_MESSAGES.PASSWORD_HAS_BEEN_RESET });
+    } catch (error) {
+      next(error);
+    }
+  },
+  async getMe(req: Request, res: Response, next: NextFunction) {
+    try {
+      const userId = req.user?.id;
+      if (!userId) {
+        throw new AppError(ERROR_MESSAGES.UNAUTHORIZED, 401);
+      }
+      const person = await PersonService.getById(Number(userId));
+
+      if (!person) {
+        throw new AppError(ERROR_MESSAGES.ITEM_NOT_FOUND, 404);
+      }
+
+      res.status(200).json(person);
     } catch (error) {
       next(error);
     }
