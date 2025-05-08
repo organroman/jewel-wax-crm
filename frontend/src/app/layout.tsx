@@ -5,6 +5,7 @@ import { QueryProvider } from "@/providers/query-provider";
 import { Toaster } from "sonner";
 import { ThemeProvider } from "@/providers/theme-provider";
 import { AuthProvider } from "@/providers/auth-provider";
+import { cookies } from "next/headers";
 
 const inter = Inter({
   variable: "--font-inter-sans",
@@ -17,15 +18,17 @@ export const metadata: Metadata = {
   description: "Jewel Wax CRM",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const cookieStore = await cookies();
+  const token = cookieStore.get("token");
   return (
     <html lang="ua" suppressHydrationWarning>
       <body className={`${inter.variable} antialiased`}>
-        <AuthProvider>
+        <AuthProvider token={token}>
           <ThemeProvider
             attribute="class"
             defaultTheme="system"

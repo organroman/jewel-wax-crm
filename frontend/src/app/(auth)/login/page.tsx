@@ -1,13 +1,17 @@
 "use client";
 
-import { loginSchema, LoginSchema } from "@/validators/login-schema";
-import React, { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import Image from "next/image";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { UseAuth } from "@/api/auth/use-auth";
 import Cookies from "js-cookie";
+import { Loader } from "lucide-react";
+
+import { loginSchema, LoginSchema } from "@/validators/login-schema";
+
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
+import { UseAuth } from "@/api/auth/use-auth";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Form,
@@ -19,18 +23,9 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Loader } from "lucide-react";
-import Link from "next/link";
 
 const LoginPage = () => {
   const router = useRouter();
-
-  useEffect(() => {
-    const accessToken = Cookies.get("token");
-    if (accessToken) {
-      router.replace("/dashboard");
-    }
-  }, []);
 
   const form = useForm<LoginSchema>({
     resolver: zodResolver(loginSchema),
@@ -46,6 +41,7 @@ const LoginPage = () => {
       onSuccess: ({ token }) => {
         Cookies.set("token", token);
         toast.success("Welcome back!");
+
         router.push("/dashboard");
       },
       onError: (error) => {
@@ -56,10 +52,17 @@ const LoginPage = () => {
 
   return (
     <Card className="w-full h-full md:w-[487px] shadow-md">
-      <CardHeader className="flex items-center justify-center text-center p-6">
-        <CardTitle className="text-2xl text-stone-900">
-          З поверненням!
-        </CardTitle>
+      <CardHeader className="flex flex-col gap-6 items-center justify-center text-center p-6">
+        <Image
+          src="/img/logo.png"
+          alt="logo"
+          width={80}
+          height={80}
+          className="text-center"
+        />
+        {/* <CardTitle className="text-3xl font-bold text-stone-900">
+          З поверненням в CRM
+        </CardTitle> */}
       </CardHeader>
       <CardContent>
         <Form {...form}>
@@ -101,7 +104,7 @@ const LoginPage = () => {
             />
             <div className="w-full">
               <Button
-                className="w-full mt-6"
+                className="w-full mt-6 bg-lime-600 hover:bg-lime-700 transition"
                 size="lg"
                 disabled={loginMutation.isPending}
               >
@@ -122,10 +125,12 @@ const LoginPage = () => {
             </div>
           </form>
         </Form>
-        <p>
+        <p className="mt-5 text-sm text-stone-900 text-center">
           Забули пароль?
           <Link href="/reset-password-token">
-            <span className="text-blue-700">&nbsp;Відновити пароль</span>
+            <span className="text-lime-600 font-bold underline hover:text-lime-700 transition">
+              &nbsp;Відновити пароль
+            </span>
           </Link>
         </p>
       </CardContent>

@@ -1,25 +1,16 @@
-"use client";
-import { useAuthContext } from "@/providers/auth-provider";
-import Image from "next/image";
-import { useRouter } from "next/navigation";
-import React, { useEffect } from "react";
-interface Props {
-  children: React.ReactNode;
-}
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
-const AuthLayout = ({ children }: Props) => {
-  const { isAuthenticated, loading } = useAuthContext();
-  const router = useRouter();
+const AuthLayout = async ({ children }: { children: React.ReactNode }) => {
+  const cookiesStore = await cookies();
+  const token = cookiesStore.get("token");
 
-  useEffect(() => {
-    if (!loading && isAuthenticated) {
-      router.push("/dashboard");
-    }
-  }, [isAuthenticated, loading, router]);
+  if (token) {
+    redirect("/dashboard");
+  }
   return (
-    <main className="min-h-screen w-full flex flex-col items-center justify-center bg-gray-100">
-      <Image src="/img/logo.png" alt="logo" width={80} height={80} />
-      <div className="mx-auto h-full max-w-screen-2xl p-4">{children}</div>
+    <main className="h-screen w-full flex flex-col justify-center bg-gray-100">
+      <div className="mx-auto h-fit max-w-screen-2xl">{children}</div>
     </main>
   );
 };

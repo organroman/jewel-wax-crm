@@ -5,7 +5,6 @@ export const UseAuth = {
   login() {
     return useMutation({
       mutationFn: AuthService.login,
-      
     });
   },
 };
