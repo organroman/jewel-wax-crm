@@ -18,7 +18,7 @@ export const AuthService = {
   async login(email: string, password: string) {
     const jwtSecret = process.env.JWT_SECRET as string;
 
-    const person = await PersonModel.findByEmail(email);
+    const person = await PersonModel.findByEmail([email]);
 
     if (!person) {
       throw new AppError(ERROR_MESSAGES.INVALID_CREDENTIALS, 401);
@@ -102,7 +102,7 @@ export const AuthService = {
   async createResetPasswordRequest(
     email: string
   ): Promise<{ reset_token: string }> {
-    const person = await PersonModel.findByEmail(email);
+    const person = await PersonModel.findByEmail([email]);
     if (!person) {
       throw new AppError(ERROR_MESSAGES.PERSON_NOT_FOUND, 404);
     }
