@@ -10,7 +10,7 @@ import {
 } from "../ui/select";
 
 const Sort = ({
-  param = "sort",
+  param = "sortBy",
   options = [],
 }: {
   param?: string;
