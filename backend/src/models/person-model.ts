@@ -32,13 +32,12 @@ export const PersonModel = {
 
     if (search) {
       baseQuery.where((qb) => {
-        qb.whereRaw("LOWER(first_name || ' ' || last_name) LIKE ?", [
-          `%${search.toLowerCase()}%`,
-        ])
+        qb.whereILike("first_name", `%${search}%`)
+          .orWhereILike("last_name", `%${search}%`)
           .orWhereIn("id", function () {
             this.select("person_id")
-              .from("emails")
-              .whereILike("email", `%${search})%`);
+              .from("person_emails")
+              .whereILike("email", `%${search}%`);
           })
           .orWhereIn("id", function () {
             this.select("person_id")
