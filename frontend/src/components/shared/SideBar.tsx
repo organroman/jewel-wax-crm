@@ -18,7 +18,7 @@ const SideBar = () => {
         height={30}
         className="w-auto h-auto px-2 text-center mt-6 mb-15"
       />
-      <Separator className="w-full" />
+      <Separator className="w-full bg-ui-border" />
       <ul className="flex flex-col">
         {MENU_LIST.map((route) => {
           const pathnameParts = pathName.split("/");
@@ -33,9 +33,9 @@ const SideBar = () => {
             <Link key={route.href} href={route.href}>
               <div
                 className={cn(
-                  "flex flex-col gap-0.5 items-center py-4.5 w-full text-xs hover:bg-emerald-100",
+                  "flex flex-col gap-0.5 items-center py-4.5 w-full text-xs transition hover:bg-brand-default",
                   isActive &&
-                    "bg-emerald-200 shadow-sm hover:opacity-80 text-stone-900"
+                    "bg-brand-menu shadow-sm hover:bg-brand-default text-stone-900"
                 )}
               >
                 <Image src={route.icon} alt="logo" width={24} height={24} />

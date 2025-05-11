@@ -6,6 +6,7 @@ import { Toaster } from "sonner";
 import { ThemeProvider } from "@/providers/theme-provider";
 import { AuthProvider } from "@/providers/auth-provider";
 import { cookies } from "next/headers";
+import AppDataContainer from "@/containers/app-data-contaienr";
 
 const inter = Inter({
   variable: "--font-inter-sans",
@@ -36,8 +37,10 @@ export default async function RootLayout({
             disableTransitionOnChange
           >
             <QueryProvider>
-              {children}
-              <Toaster />
+              <AppDataContainer>
+                {children}
+                <Toaster />
+              </AppDataContainer>
             </QueryProvider>
           </ThemeProvider>
         </AuthProvider>

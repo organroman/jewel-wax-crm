@@ -21,7 +21,7 @@ const ProtectedLayout = async ({ children }: { children: React.ReactNode }) => {
         <aside className="hidden lg:block lg:w-[84px] h-full">
           <SideBar />
         </aside>
-        <div className="bg-gray-100 w-full h-full">
+        <div className="bg-ui-screen w-full h-full">
           <main className="h-full w-full max-w-screen-2xl m-auto overflow-y-auto px-8 pt-6">
             {children}
           </main>

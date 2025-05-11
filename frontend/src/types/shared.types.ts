@@ -22,3 +22,11 @@ export interface GetAllOptions<TFilters = Record<string, any>> {
   sortBy?: string;
   order?: SortOrder;
 }
+
+export interface EnumItem {
+  value: string;
+  label: string;
+  type: string;
+}
+
+export interface FilterOption extends Omit<EnumItem, "type"> {}

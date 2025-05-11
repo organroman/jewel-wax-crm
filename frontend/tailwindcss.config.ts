@@ -1,13 +1,11 @@
 /** @type {import('tailwindcss').Config} */
 const config = {
   content: [
-    "./src/app/**/*.{ts,tsx}", // ✅ App directory
-    "./src/components/**/*.{ts,tsx}", // ✅ Your components
-    "./src/pages/**/*.{ts,tsx}", // (if using pages dir)
+    "./src/app/**/*.{ts,tsx}",
+    "./src/components/**/*.{ts,tsx}",
+    "./src/pages/**/*.{ts,tsx}",
   ],
-  theme: {
-    extend: {},
-  },
+  theme: {},
   plugins: [],
 };
 
