@@ -9,7 +9,7 @@ const AuthLayout = async ({ children }: { children: React.ReactNode }) => {
     redirect("/dashboard");
   }
   return (
-    <main className="h-screen w-full flex flex-col justify-center bg-gray-100">
+    <main className="h-screen w-full flex flex-col justify-center bg-ui-screen">
       <div className="mx-auto h-fit max-w-screen-2xl">{children}</div>
     </main>
   );

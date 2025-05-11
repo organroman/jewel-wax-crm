@@ -104,13 +104,13 @@ const LoginPage = () => {
             />
             <div className="w-full">
               <Button
-                className="w-full mt-6 bg-lime-600 hover:bg-lime-700 transition"
+                className="w-full mt-6 bg-brand-default hover:opacity-80 transition"
                 size="lg"
                 disabled={loginMutation.isPending}
               >
                 {loginMutation.isPending ? (
                   <div className="flex flex-row">
-                    <Loader className="size-6 animate-spin text-muted-foreground mr-2" />
+                    <Loader className="size-6 animate-spin text-white mr-2" />
                     <span>Please wait...</span>
                   </div>
                 ) : (
@@ -118,7 +118,7 @@ const LoginPage = () => {
                 )}
               </Button>
               {loginMutation.isError && (
-                <span className="text-sm text-red-500">
+                <span className="text-sm text-action-alert">
                   {loginMutation.error.message}
                 </span>
               )}
@@ -128,7 +128,7 @@ const LoginPage = () => {
         <p className="mt-5 text-sm text-stone-900 text-center">
           Забули пароль?
           <Link href="/reset-password-token">
-            <span className="text-lime-600 font-bold underline hover:text-lime-700 transition">
+            <span className="text-brand-default font-bold underline hover:opacity-80 transition">
               &nbsp;Відновити пароль
             </span>
           </Link>
