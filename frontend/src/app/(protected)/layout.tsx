@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 
 import SideBar from "@/components/shared/SideBar";
 import TopBar from "@/components/shared/TopBar";
+import AppDataContainer from "@/containers/app-data-contaienr";
 
 const ProtectedLayout = async ({ children }: { children: React.ReactNode }) => {
   const cookieStore = await cookies();
@@ -22,8 +23,8 @@ const ProtectedLayout = async ({ children }: { children: React.ReactNode }) => {
           <SideBar />
         </aside>
         <div className="bg-ui-screen w-full h-full">
-          <main className="h-full w-full max-w-screen-2xl m-auto overflow-y-auto px-8 pt-6">
-            {children}
+          <main className="h-full w-full max-w-screen-2xl m-auto overflow-y-auto px-8 py-6">
+            <AppDataContainer>{children}</AppDataContainer>
           </main>
         </div>
       </div>
