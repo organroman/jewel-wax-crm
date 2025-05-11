@@ -5,7 +5,7 @@ import LanguageSelector from "./LanguageSelector";
 
 const TopBar = () => {
   return (
-    <div className=" bg-stone-800">
+    <div className=" bg-brand-dark">
       <div className="w-full py-3 max-w-screen-2xl mx-auto flex gap-5 justify-end">
         <Image
           src="/img/notification-bing.svg"
