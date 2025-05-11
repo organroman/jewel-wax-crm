@@ -1,4 +1,5 @@
 const ERROR_MESSAGES = {
+  SOMETHING_WENT_WRONG: "Something went wrong",
   ACCESS_DENIED: "Access denied",
   ACCOUNT_INACTIVE: "Account is inactive",
   EMAIL_EXISTS: "Person with this email already exists",

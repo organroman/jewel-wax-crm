@@ -6,7 +6,7 @@ export const PERSON_ROLES = [
   "print",
 ] as const;
 
-export const CONTACT_SOURCE = [
+export const CHANEL_SOURCE = [
   "telegram",
   "viber",
   "facebook",
@@ -16,14 +16,9 @@ export const CONTACT_SOURCE = [
   "manually",
 ] as const;
 
-export const REQUEST_SOURCE = [
-  "telegram",
-  "viber",
-  "facebook",
-  "instagram",
-  "whatsapp",
-  "form",
-  "manually",
+export const REQUEST_STATUS = [
+  "new",
+  "in_progress",
+  "done",
+  "canceled",
 ] as const;
-
-export const REQUEST_STATUS = ["new", "new", "in_progress", "done", "canceled"] as const;

@@ -1,3 +1,7 @@
+import { CHANEL_SOURCE } from "@/constants/enums";
+
+export type ChanelSource = (typeof CHANEL_SOURCE)[number];
+
 export interface PaginatedResult<T> {
   data: T[];
   page: number;
