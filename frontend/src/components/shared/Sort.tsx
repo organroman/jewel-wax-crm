@@ -28,7 +28,7 @@ const Sort = ({
   };
 
   return (
-    <div className="flex w-[146px] items-center gap-2">
+    <div className="flex w-[164px] items-center gap-2">
       <span className="text-xs text-text-light font-semibold focus-visible:outline-none">
         Сортування:
       </span>

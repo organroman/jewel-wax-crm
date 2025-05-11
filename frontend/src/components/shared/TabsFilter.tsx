@@ -33,7 +33,7 @@ const TabsFilter = ({ param, options }: TabsFilterProps) => {
       onValueChange={handleChange}
       className="mt-7.5"
     >
-      <TabsList className="w-full justify-start gap-4 border-none  bg-transparent p-0">
+      <TabsList className="w-full justify-start gap-6 border-none  bg-transparent p-0">
         {options.map(({ value, label }) => (
           <TabsTrigger
             key={value}

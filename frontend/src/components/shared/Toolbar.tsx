@@ -25,7 +25,7 @@ const Toolbar = ({
   filterOptions,
 }: ToolbarFilterProps) => {
   return (
-    <div className="flex flex-col md:flex-row md:items-center md:justify-between py-4 mt-12">
+    <div className="flex flex-col md:flex-row md:items-center md:justify-between mt-8">
       <div className="flex flex-1 items-center gap-8 flex-wrap">
         {sortOptions.length > 0 && <Sort options={sortOptions} />}
         {showFilterButton && <FilterDropdown filters={filterOptions} />}
