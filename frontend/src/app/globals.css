@@ -3,27 +3,23 @@
 
 @custom-variant dark (&:is(.dark *));
 @theme {
-  --color-brand-default: oklch(
-    64.71% 0.169 148.53
-  ); /* "#29A94F", Основний акцент */
-  --color-brand-dark: oklch(
-    34.78% 0.015 264.36
-  ); /* "#363A42", Темний брендовий */
-  --color-brand-menu: oklch(85.24% 0.067 154.19); /* "#ADDCBB", Панель меню */
+  --color-brand-default: oklch(0.65 0.1687 148.53); /* "#29A94F", Основний акцент */
+  --color-brand-dark: oklch(0.35 0.015 264.36); /* "#363A42", Темний брендовий */
+  --color-brand-menu: oklch(0.85 0.0669 154.19); /* "#ADDCBB", Панель меню */
 
-  --color-action-plus: oklch(48.31% 0.193 276.36); /* "#4848C8", Плюсові дії */
-  --color-action-minus: oklch(58.69% 0.229 25.07); /* "#E5172B", Мінусові дії */
+  --color-action-plus: oklch(0.48 0.1933 276.36); /* "#4848C8", Плюсові дії */
+  --color-action-minus: oklch(0.59 0.2294 25.07); /* "#E5172B", Мінусові дії */
   --color-action-alert: oklch(
     53.83% 0.216 28.72
   ); /* "#CE0D0D", Сповіщення системи */
 
-  --color-accent-yellow: oklch(78.12% 0.15 83.85); /* "#E5AE28" */
-  --color-accent-blue: oklch(60.09% 0.153 245.93); /* "#0686D5" */
-  --color-accent-lightgreen: oklch(90.88% 0.161 225); /* "#D3F0D3" */
-  --color-accent-lavender: oklch(92.63% 0.049 145.16); /* "#CFE7F6" */
-  --color-accent-peach: oklch(93.96% 0.042 87.36); /* "#F7EACC" */
-  --color-accent-pink: oklch(91.17% 0.031 15.28); /* "#F6DADB" */
-  --color-accent-red: oklch(70.7% 0.169 20.27); /* "#F86E73" */
+  --color-accent-lavender: oklch(0.91 0.0327 235.2); /* "#CFE7F6" */
+  --color-accent-lightgreen: oklch(0.93 0.0493 145.16); /* "#D3F0D3" */
+  --color-accent-blue: oklch(0.6 0.1527 245.93); /* "#0686D5" */
+  --color-accent-yellow: oklch(0.78 0.1505 83.85); /* "#E5AE28" */
+  --color-accent-peach: oklch(0.94 0.0418 87.36); /* "#F7EACC" */
+  --color-accent-pink: oklch(0.91 0.0311 15.28); /* "#F6DADB" */
+  --color-accent-red: oklch(0.71 0.1694 20.27); /* "#F86E73" */
 
   --color-ui-screen: oklch(96.67% 0.002 247.84); /*"#F3F4F5" Фон екрана  */
   --color-ui-row: oklch(96.72% 0 0); /* "#F4F4F4", Фон строка */
