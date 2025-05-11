@@ -22,3 +22,10 @@ export interface GetAllOptions<TFilters = Record<string, any>> {
   sortBy?: string;
   order?: SortOrder;
 }
+
+export interface EnumItem {
+  type: string;
+  value: string;
+  label: string;
+  sort_order?: number;
+}

@@ -26,4 +26,4 @@ export const REQUEST_SOURCE = [
   "manually",
 ] as const;
 
-export const REQUEST_STATUS = ["new", "new", "in_progress", "done", "canceled"] as const;
+export const REQUEST_STATUS = ["new", "in_progress", "done", "canceled"] as const;

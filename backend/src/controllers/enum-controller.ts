@@ -6,6 +6,15 @@ import AppError from "../utils/AppError";
 import ERROR_MESSAGES from "../constants/error-messages";
 
 export const EnumController = {
+  async getAllEnumsGrouped(req: Request, res: Response, next: NextFunction) {
+    try {
+      const enums = await EnumService.getAllEnumsGrouped();
+      res.status(200).json(enums);
+    } catch (error) {
+      next(error);
+    }
+  },
+
   async getUserRoles(req: Request, res: Response, next: NextFunction) {
     try {
       const roles = await EnumService.getUserRoles();

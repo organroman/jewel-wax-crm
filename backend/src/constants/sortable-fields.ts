@@ -4,7 +4,6 @@ export const PERSON_SORT_FIELDS = [
   "created_at",
   "updated_at",
   "role",
-  "city",
 ] as const;
 
 export const CONTACT_SORT_FIELDS = [
