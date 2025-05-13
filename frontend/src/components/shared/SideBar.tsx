@@ -21,13 +21,7 @@ const SideBar = () => {
       <Separator className="w-full bg-ui-border" />
       <ul className="flex flex-col">
         {MENU_LIST.map((route) => {
-          const pathnameParts = pathName.split("/");
-          const pathNameForCompare =
-            "/" +
-            pathnameParts[1] +
-            (pathnameParts[2] ? "/" + pathnameParts[2] : "");
-
-          const isActive = pathNameForCompare === route.href;
+          const isActive = pathName.includes(route.href);
           return (
             // hasPermission(route.permission, role) && (
             <Link key={route.href} href={route.href}>
