@@ -11,11 +11,11 @@ import EntityTitle from "@/components/shared/EntityTitle";
 import TabsFilter from "@/components/shared/TabsFilter";
 import Toolbar from "@/components/shared/Toolbar";
 import { DataTable } from "@/components/shared/DataTable";
+import { personsColumns } from "@/components/persons/persons-columns";
 
-import { personsColumns } from "@/features/persons/persons-columns";
 import ERROR_MESSAGES from "@/constants/error-messages";
 import { PERSON_FILTERS, PERSON_ROLE_ALL } from "@/constants/persons.constants";
-import { Loader } from "lucide-react";
+
 
 const PersonsClient = ({ token }: { token: string }) => {
   const sortFields = useEnumStore((s) => s.getByType("person_sort_fields"));
@@ -33,13 +33,6 @@ const PersonsClient = ({ token }: { token: string }) => {
 
   const { data: persons = [], total = 0 } = data ?? {};
 
-  if (!ready) {
-    return (
-      <div className="flex items-center justify-center h-full">
-        <Loader className="animate-spin text-brand-default" />
-      </div>
-    );
-  }
 
   if (error) {
     return <p>{ERROR_MESSAGES.SOMETHING_WENT_WRONG}</p>;

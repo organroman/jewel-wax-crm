@@ -15,31 +15,41 @@ import { Button } from "@/components/ui/button";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import { SlidersHorizontal } from "lucide-react";
-import { EnumItem, FilterOption } from "@/types/shared.types";
+import { EnumItem, FilterGroup, FilterOption } from "@/types/shared.types";
 import { Checkbox } from "../ui/checkbox";
 
 interface FilterDropdownProps {
-  filters: FilterOption[];
+  filters: FilterGroup[];
   placeholder?: string;
 }
-
+//TODO
 const FilterDropdown = ({
   filters,
   placeholder = "Фільтри",
 }: FilterDropdownProps) => {
-
-  //TODO: COMPLETE FILTER LOGIC
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const handleChange = (param: string, value: string) => {
-    const params = new URLSearchParams(searchParams);
-    if (value === "all") {
-      params.delete(param);
+  const toggleParam = (param: string, value: string | boolean) => {
+    const current = new URLSearchParams(searchParams.toString());
+    const valueStr = String(value);
+    const values = current.get(param)?.split(",").filter(Boolean) || [];
+
+    const updated = values.includes(valueStr)
+      ? values.filter((v) => v !== valueStr)
+      : [...values, valueStr];
+
+    if (updated.length > 0) {
+      current.set(param, updated.join(","));
     } else {
-      params.set(param, value);
+      current.delete(param);
     }
-    router.push(`?${params.toString()}`);
+    router.push(`?${current.toString()}`);
+  };
+
+  const isChecked = (param: string, value: string | boolean) => {
+    const current = searchParams.get(param)?.split(",") || [];
+    return current.includes(String(value));
   };
 
   return (
@@ -50,21 +60,31 @@ const FilterDropdown = ({
           className="focus-visible:ring-0 cursor-pointer  p-0 has-[>svg]:px-0"
         >
           <SlidersHorizontal className="size-4" />
-          <span className="text-xs text-text-light font-medium">Фільтри</span>
+          <span className="text-xs text-text-light font-medium">
+            {placeholder}
+          </span>
         </Button>
       </DropdownMenuTrigger>
 
       <DropdownMenuContent className="w-[220px] max-h-[300px] overflow-y-auto p-1">
-        {filters.map((opt) => (
-          <DropdownMenuCheckboxItem
-            key={opt.value}
-            //   onClick={() => handleChange(opt.value)}
-            className="text-xs"
-          >
-            {/* <DropdownCh
-            <Checkbox id={opt.value} />
-            <label htmlFor={opt.value}> {opt.label}</label> */}
-          </DropdownMenuCheckboxItem>
+        {filters.map((group) => (
+          <DropdownMenuSub key={group.param}>
+            <DropdownMenuSubTrigger className="cursor-pointer">
+              {group.label}
+            </DropdownMenuSubTrigger>
+            <DropdownMenuSubContent className="w-48">
+              {group.options.map((option) => (
+                <DropdownMenuCheckboxItem
+                  className="border-ui-border data-[state=checked]:bg-brand-default"
+                  key={`${group.param}_${option.value}`}
+                  checked={isChecked(group.param, option.value)}
+                  onCheckedChange={() => toggleParam(group.param, option.value)}
+                >
+                  {option.label}
+                </DropdownMenuCheckboxItem>
+              ))}
+            </DropdownMenuSubContent>
+          </DropdownMenuSub>
         ))}
       </DropdownMenuContent>
     </DropdownMenu>

@@ -1,4 +1,4 @@
-import { EnumItem, FilterOption } from "@/types/shared.types";
+import { EnumItem, FilterGroup } from "@/types/shared.types";
 import { Plus } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -13,7 +13,7 @@ interface ToolbarFilterProps {
   addLabel?: string;
   onAdd?: () => void;
   showFilterButton?: boolean;
-  filterOptions: FilterOption[];
+  filterOptions: FilterGroup[];
 }
 
 const Toolbar = ({

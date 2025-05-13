@@ -1,4 +1,4 @@
-export const PERSON_ROLES = [
+export const PERSON_ROLE_VALUES = [
   "super_admin",
   "modeller",
   "miller",

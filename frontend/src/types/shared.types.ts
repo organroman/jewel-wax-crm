@@ -1,4 +1,4 @@
-import { CHANEL_SOURCE } from "@/constants/enums";
+import { CHANEL_SOURCE } from "@/constants/enums.constants";
 
 export type ChanelSource = (typeof CHANEL_SOURCE)[number];
 
@@ -33,4 +33,13 @@ export interface EnumItem {
   type: string;
 }
 
-export interface FilterOption extends Omit<EnumItem, "type"> {}
+export interface FilterOption {
+  label: string;
+  value: string | boolean;
+}
+
+export interface FilterGroup {
+  label: string;
+  param: string;
+  options: FilterOption[];
+}

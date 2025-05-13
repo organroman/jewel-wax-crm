@@ -1,9 +1,14 @@
-import { PERSON_ROLES } from "@/constants/enums";
+import { PERSON_ROLE_VALUES } from "@/constants/enums.constants";
 import { PERSON_SORT_FIELDS } from "@/constants/sortable-fields";
 import { ChanelSource, GetAllOptions } from "./shared.types";
 import { Contact } from "./contact.types";
 
-export type PersonRole = (typeof PERSON_ROLES)[number];
+export type PersonRoleValue = (typeof PERSON_ROLE_VALUES)[number];
+
+export type PersonRole = {
+  value: PersonRoleValue;
+  label: string;
+};
 
 export type PersonSortField = (typeof PERSON_SORT_FIELDS)[number];
 

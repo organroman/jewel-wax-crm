@@ -56,6 +56,7 @@ export const PersonModel = {
 
     const enriched = await Promise.all(
       paginated.data.map(async (person) => {
+        const role = await db("enums").where("value", person.role).first().select("value", "label");
         const phones = await db("phones").where("person_id", person.id);
         const emails = await db("person_emails").where("person_id", person.id);
         const messengers = await db("person_messengers").where(
@@ -81,6 +82,7 @@ export const PersonModel = {
 
         return {
           ...(stripPassword(person) as SafePerson),
+          role,
           delivery_addresses: delivery_addresses,
           phones,
           emails,

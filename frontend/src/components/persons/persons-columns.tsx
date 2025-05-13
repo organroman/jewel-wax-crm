@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { ColumnDef } from "@tanstack/react-table";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { PERSON_ROLES } from "@/constants/persons.constants";
+import { PERSON_ROLE_COLORS } from "@/constants/persons.constants";
 import { cn } from "@/lib/utils";
 
 export const personsColumns: ColumnDef<Person>[] = [
@@ -92,9 +92,12 @@ export const personsColumns: ColumnDef<Person>[] = [
       const role = row.original.role;
       return (
         <Badge
-          className={cn("text-[10px] rounded-md", PERSON_ROLES[role].color)}
+          className={cn(
+            "text-[10px] rounded-md",
+            PERSON_ROLE_COLORS[role.value]
+          )}
         >
-          {PERSON_ROLES[role].label}
+          {role.label}
         </Badge>
       );
     },

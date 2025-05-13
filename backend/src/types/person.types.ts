@@ -4,6 +4,10 @@ import { GetAllOptions } from "./shared.types";
 import { Contact, ContactSource } from "./contact.types";
 
 export type PersonRole = (typeof PERSON_ROLES)[number];
+export interface EnrichedRole {
+  type: PersonRole;
+  label: string;
+}
 
 export type PersonSortField = (typeof PERSON_SORT_FIELDS)[number];
 
@@ -101,9 +105,13 @@ export interface CreatePersonInput {
   bank_details?: BankDetails[];
 }
 
+const omitPersonFields = ["role", "password"];
 export interface UpdatePersonInput extends Partial<CreatePersonInput> {}
 
-export interface SafePerson extends Omit<Person, "password"> {}
+export interface SafePerson extends Omit<Person, "password" | "role"> {}
+export interface SafePersonWithRole extends SafePerson {
+  role: EnrichedRole;
+}
 
 export type GetAllPersonsOptions = GetAllOptions<{
   role?: string;
