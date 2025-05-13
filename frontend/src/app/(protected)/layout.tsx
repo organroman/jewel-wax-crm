@@ -1,8 +1,8 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
-import SideBar from "@/components/shared/SideBar";
-import TopBar from "@/components/shared/TopBar";
+import SideBar from "@/components/shared/side-bar";
+import TopBar from "@/components/shared/top-bar";
 import AppDataContainer from "@/containers/app-data-contaienr";
 
 const ProtectedLayout = async ({ children }: { children: React.ReactNode }) => {

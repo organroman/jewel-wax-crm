@@ -7,10 +7,10 @@ import { useQueryParams } from "@/hooks/use-query-params";
 
 import { Separator } from "@/components/ui/separator";
 
-import EntityTitle from "@/components/shared/EntityTitle";
-import TabsFilter from "@/components/shared/TabsFilter";
-import Toolbar from "@/components/shared/Toolbar";
-import { DataTable } from "@/components/shared/DataTable";
+import EntityTitle from "@/components/shared/entity-title";
+import TabsFilter from "@/components/shared/tabs-filter";
+import Toolbar from "@/components/shared/tool-bar";
+import { DataTable } from "@/components/shared/data-table";
 import { personsColumns } from "@/components/persons/persons-columns";
 
 import ERROR_MESSAGES from "@/constants/error-messages";

@@ -8,7 +8,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { PERSON_ROLE_COLORS } from "@/constants/persons.constants";
-import { cn } from "@/lib/utils";
+import { cn, getInitials } from "@/lib/utils";
 
 export const personsColumns: ColumnDef<Person>[] = [
   {
@@ -36,9 +36,10 @@ export const personsColumns: ColumnDef<Person>[] = [
     header: "Фото",
     cell: ({ row }) => {
       const avatarUrl = row.original.avatar_url;
-      const initials =
-        row.original.first_name.charAt(0).toUpperCase() +
-        row.original.last_name.charAt(0).toUpperCase();
+      const initials = getInitials(
+        row.original.first_name,
+        row.original.last_name
+      );
 
       return (
         <Avatar>
@@ -76,7 +77,7 @@ export const personsColumns: ColumnDef<Person>[] = [
           <div className="">
             <span className="mr-2">{mainPhone.number}</span>
             {phonesQuantity >= 2 && (
-              <Badge className="p-0.5 rounded-4xl text-[10px]">
+              <Badge className="pr-1 px-1 justify-start rounded-full text-[10px] gap-0">
                 +{phonesQuantity - 1}
               </Badge>
             )}
