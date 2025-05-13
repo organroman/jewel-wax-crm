@@ -1,7 +1,7 @@
-import React from "react";
+import PersonClient from "./person-client";
 
-const PersonPage = ({ params }: { params: { id: string } }) => {
-  return <div>PersonPage. Person ID- {params.id}</div>;
+const PersonPage = async ({ params }: { params: { id: string } }) => {
+  return <PersonClient id={params.id} />;
 };
 
 export default PersonPage;

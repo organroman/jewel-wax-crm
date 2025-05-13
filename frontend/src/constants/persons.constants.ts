@@ -8,6 +8,7 @@ export const PERSON_FILTERS = [
     ],
   },
 ];
+
 export const PERSON_ROLE_ALL = {
   label: "Всі контрагенти",
   value: "all",
@@ -20,4 +21,27 @@ export const PERSON_ROLE_COLORS = {
   miller: "bg-gray-100 text-black",
   client: "bg-accent-lightgreen text-brand-default",
   print: "text-accent-yellow bg-accent-peach",
+};
+
+export const PERSON_CARD_TABS_LIST = [
+  {
+    label: "Загальна інформація",
+    value: "general_info",
+  },
+  {
+    label: "Історія змін",
+    value: "changes_history",
+  },
+  {
+    label: "Історія замовлень",
+    value: "orders_history",
+  },
+];
+
+export const MESSENGERS_SOURCE_ICONS = {
+  telegram: "/img/telegram.svg",
+  viber: "/img/viber.svg",
+  facebook: "/img/facebook.svg",
+  instagram: "/img/insta.svg",
+  whatsapp: "/img/whatsApp.svg",
 };
