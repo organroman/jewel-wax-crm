@@ -10,4 +10,5 @@ export interface Contact {
   person_id?: number;
   created_at: Date;
   updated_at: Date;
+  avatar_url: string;
 }

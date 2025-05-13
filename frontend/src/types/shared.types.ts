@@ -43,3 +43,8 @@ export interface FilterGroup {
   param: string;
   options: FilterOption[];
 }
+
+export interface TabOption {
+  value: string;
+  label: string;
+}

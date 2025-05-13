@@ -28,6 +28,7 @@ export interface PersonContact
 
 export interface PersonMessenger {
   id: number;
+  phone_id: number;
   person_id: number;
   platform: ChanelSource;
 }
@@ -44,6 +45,7 @@ export interface BankDetails {
 }
 export interface DeliveryAddress {
   id?: number;
+  is_main: boolean;
   address_line: string;
 }
 
@@ -66,7 +68,7 @@ export interface Phone {
 }
 
 export interface Email {
-  id?: number;
+  id: number;
   person_id: number;
   email: string;
   is_main: boolean;
