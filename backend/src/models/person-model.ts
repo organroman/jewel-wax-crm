@@ -4,6 +4,7 @@ import {
   SafePerson,
   UpdatePersonInput,
   GetAllPersonsOptions,
+  SafePersonWithRole,
 } from "../types/person.types";
 import { PaginatedResult } from "../types/shared.types";
 
@@ -56,7 +57,10 @@ export const PersonModel = {
 
     const enriched = await Promise.all(
       paginated.data.map(async (person) => {
-        const role = await db("enums").where("value", person.role).first().select("value", "label");
+        const role = await db("enums")
+          .where("value", person.role)
+          .first()
+          .select("value", "label");
         const phones = await db("phones").where("person_id", person.id);
         const emails = await db("person_emails").where("person_id", person.id);
         const messengers = await db("person_messengers").where(
@@ -98,7 +102,7 @@ export const PersonModel = {
     };
   },
 
-  async findById(personId: number): Promise<SafePerson | null> {
+  async findById(personId: number): Promise<SafePersonWithRole | null> {
     const [person] = await db<Person>("persons")
       .where("id", personId)
       .select("*");
@@ -106,7 +110,10 @@ export const PersonModel = {
     if (!person) {
       return null;
     }
-
+    const role = await db("enums")
+      .where("value", person.role)
+      .first()
+      .select("value", "label");
     const phones = await db("phones").where("person_id", person.id);
     const emails = await db("person_emails").where("person_id", person.id);
     const locations = await db("person_locations")
@@ -146,8 +153,11 @@ export const PersonModel = {
       person.id
     );
 
-    return {
-      ...(stripPassword(person) as SafePerson),
+    const base = stripPassword(person);
+
+    const safePerson: SafePersonWithRole = {
+      ...base,
+      role,
       delivery_addresses: addresses,
       phones,
       emails,
@@ -156,6 +166,8 @@ export const PersonModel = {
       messengers,
       bank_details,
     };
+
+    return safePerson;
   },
 
   async create(data: CreatePersonInput): Promise<SafePerson> {

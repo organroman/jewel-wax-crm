@@ -44,6 +44,7 @@ export interface BankDetails {
 export interface DeliveryAddress {
   id?: number;
   address_line: string;
+  is_main: boolean;
 }
 
 export interface Location {

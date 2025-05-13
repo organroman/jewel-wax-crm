@@ -43,7 +43,7 @@ export const PersonService = {
     authorId?: number
   ): Promise<SafePerson> {
     const numbers = data.phones.map((p) => p.number);
-    const emails = data.emails?.map((e)=> e.email );
+    const emails = data.emails?.map((e) => e.email);
     const existingPhone = await PersonModel.findByPhone(numbers);
 
     if (emails) {
@@ -84,7 +84,7 @@ export const PersonService = {
     actorId?: number
   ): Promise<SafePerson | null> {
     const updatedPerson = await PersonModel.update(personId, data);
-console.log(actorId)
+
     await ActivityLogModel.logAction({
       actor_id: actorId || null,
       action: LOG_ACTIONS.UPDATE_PERSON,
