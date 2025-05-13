@@ -1,11 +1,7 @@
-import { cookies } from "next/headers";
-import PersonsClient from "./PersonsClient";
+import PersonsClient from "./persons-client";
 
 const PersonsPage = async () => {
-  const cookieStore = await cookies();
-  const token = cookieStore.get("token")?.value || "";
-
-  return <PersonsClient token={token} />;
+  return <PersonsClient />;
 };
 
 export default PersonsPage;

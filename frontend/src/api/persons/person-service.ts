@@ -3,13 +3,13 @@ import apiService from "../api-service";
 import { PaginatedResult } from "@/types/shared.types";
 
 export const personService = {
-  getAll: async (token: string, query: string) => {
-    return await apiService.get<PaginatedResult<Person>>(`persons?${query}`, {
-      Authorization: token,
-    });
+  getAll: async (query: string) => {
+    return await apiService.get<PaginatedResult<Person>>(`persons?${query}`);
   },
 
-  // getById: (id: number) => apiService.get<SafePerson>(`/persons/${id}`),
+  getById: async (id: number) => {
+    return await apiService.get<Person>(`persons/${id}`);
+  },
 
   // create: (data: CreatePersonInput) =>
   //   apiService.post<SafePerson>("/persons", data),

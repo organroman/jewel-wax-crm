@@ -3,19 +3,22 @@ import { personService } from "./person-service";
 
 export const usePerson = {
   getPaginatedPersons: ({
-    token,
     query,
     enabled,
   }: {
-    token: string;
-
     query: string;
     enabled: boolean;
   }) => {
     return useQuery({
       queryKey: ["persons", query],
-      queryFn: () => personService.getAll(token, query),
+      queryFn: () => personService.getAll(query),
       enabled,
+    });
+  },
+  getPersonById: ({ id }: { id: string }) => {
+    return useQuery({
+      queryKey: ["person", id],
+      queryFn: () => personService.getById(Number(id)),
     });
   },
 };
