@@ -19,7 +19,7 @@ import {
   TableRow,
 } from "../ui/table";
 
-import { PaginationControls } from "./PaginationControls";
+import { PaginationControls } from "./pagination-controls";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];

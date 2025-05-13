@@ -3,9 +3,10 @@ import { Plus } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 
-import SearchInput from "./SearchInput";
+import SearchInput from "./search-input";
+
+import FilterDropdown from "./filter-dropdown";
 import Sort from "./Sort";
-import FilterDropdown from "./FilterDropdown";
 
 interface ToolbarFilterProps {
   sortOptions?: EnumItem[];
