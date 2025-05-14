@@ -12,6 +12,7 @@ import PersonLabeledList from "./person-details/person-labeled-list";
 import PersonType from "./person-details/person-type";
 import PersonContacts from "./person-details/person-contacts";
 import PersonDeliveryAddresses from "./person-details/person-delivery-addresses";
+import PersonBankDetails from "./person-details/person-bank";
 
 import {
   formatPhone,
@@ -58,22 +59,22 @@ const PersonDetails = ({ person }: PersonDetailsProps) => {
   }));
 
   return (
-    <div className="w-full h-full bg-white rounded-md p-6">
-      <div className="w-full h-fit flex gap-5">
-        <div className="w-3/4 flex-1 border-r border-ui-border">
+    <div className="w-full h-full bg-white rounded-md">
+      <div className="w-full h-fit flex gap-4">
+        <div className="flex-2 border-r border-ui-border">
           <PersonMetaHeader
             createdAt={person.created_at}
             isActive={person.is_active}
             id={person.id}
           />
-          <div className="flex mt-6 gap-12">
+          <div className="flex w-full mt-6 gap-12">
             <Avatar className="w-37 h-37">
               <AvatarImage src={person.avatar_url} />
               <AvatarFallback className="text-6xl">
                 {getInitials(person.last_name, person.first_name)}
               </AvatarFallback>
             </Avatar>
-            <div>
+            <div className="w-full">
               <PersonFullName
                 fullName={getFullName(
                   person.first_name,
@@ -88,7 +89,7 @@ const PersonDetails = ({ person }: PersonDetailsProps) => {
                 items={phones}
               />
 
-              {locations?.length && (
+              {locations && locations.length > 0 && (
                 <PersonLabeledList
                   mainLabel="Основна адреса:"
                   secondaryLabel="Інша адреса:"
@@ -96,7 +97,7 @@ const PersonDetails = ({ person }: PersonDetailsProps) => {
                 />
               )}
               <PersonType value={person.role.value} label={person.role.label} />
-              {emails?.length && (
+              {emails && emails?.length > 0 && (
                 <PersonLabeledList
                   mainLabel="Основний email:"
                   secondaryLabel="Інший email:"
@@ -107,14 +108,19 @@ const PersonDetails = ({ person }: PersonDetailsProps) => {
           </div>
         </div>
         <Separator className="border-ui-border w-1" orientation="vertical" />
-        <div className="w-1/4">
+        <div className="flex-1">
           <p className="text-sm font-medium">Прив'язані контакти:</p>
-          {person.contacts?.length && (
+          {person.contacts && person.contacts.length > 0 && (
             <PersonContacts contacts={person.contacts} />
           )}
         </div>
       </div>
-      <PersonDeliveryAddresses addresses={person.delivery_addresses || []} />
+      {person.delivery_addresses && person.delivery_addresses?.length > 0 && (
+        <PersonDeliveryAddresses addresses={person.delivery_addresses || []} />
+      )}
+      {person.bank_details && (
+        <PersonBankDetails bankDetails={person.bank_details} />
+      )}
     </div>
   );
 };

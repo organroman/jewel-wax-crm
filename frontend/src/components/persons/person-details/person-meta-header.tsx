@@ -17,7 +17,7 @@ const PersonMetaHeader = ({
   return (
     <div className="flex items-center gap-2.5">
       <p className="text-text-muted text-xs">
-        Дата створення:{" "}
+        Дата створення:
         <span className="text-black font-medium">
           {dayjs(createdAt).format("DD.MM.YYYY")}
         </span>

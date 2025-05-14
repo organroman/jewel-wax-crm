@@ -5,6 +5,7 @@ import { parsePhoneNumberFromString } from "libphonenumber-js";
 import { ChanelSource } from "@/types/shared.types";
 
 import { MESSENGERS_SOURCE_ICONS } from "@/constants/persons.constants";
+import { toast } from "sonner";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -40,4 +41,14 @@ export const getMessengerIcon = (platform: ChanelSource): string | null => {
 export const formatPhone = (raw: string): string => {
   const phone = parsePhoneNumberFromString(raw);
   return phone?.formatInternational() ?? raw;
+};
+
+export const copyToClipboard = async (text: string): Promise<boolean> => {
+  try {
+    await navigator.clipboard.writeText(text);
+    return true;
+  } catch (err) {
+    toast.error("Failed to copy");
+    return false;
+  }
 };

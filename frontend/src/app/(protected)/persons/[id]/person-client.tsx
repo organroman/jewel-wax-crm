@@ -1,17 +1,22 @@
 "use client";
+
+import { ChevronLeftIcon, Loader } from "lucide-react";
+import { useRouter } from "next/navigation";
+
 import { usePerson } from "@/api/persons/use-person";
-import PersonDetails from "@/components/persons/person-details";
 import CustomTabs from "@/components/shared/custom-tabs";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { PERSON_CARD_TABS_LIST } from "@/constants/persons.constants";
-import { ChevronLeftIcon, Loader } from "lucide-react";
-import { useRouter } from "next/navigation";
-import React from "react";
 
-const PersonClient = ({ id }: { id: string }) => {
+import { PERSON_CARD_TABS_LIST } from "@/constants/persons.constants";
+
+const PersonClient = ({ id }: { id: number; enabled: boolean }) => {
   const router = useRouter();
-  const { data: person, isLoading, error } = usePerson.getPersonById({ id });
+  const {
+    data: person,
+    isLoading,
+    error,
+  } = usePerson.getPersonById({ id, enabled: true });
 
   if (isLoading) {
     return <Loader />;
@@ -20,7 +25,6 @@ const PersonClient = ({ id }: { id: string }) => {
   if (error || !person) {
     return <p>{error?.message || "person not found"}</p>;
   }
-
 
   return (
     <div className="h-full flex flex-col">
@@ -33,9 +37,9 @@ const PersonClient = ({ id }: { id: string }) => {
       </Button>
       <CustomTabs isModal={false} tabsOptions={PERSON_CARD_TABS_LIST} />
       <Separator className="bg-ui-border h-0.5 data-[orientation=horizontal]:h-0.5" />
-      <div className="mt-6 flex-1">
+      {/* <div className="mt-6 flex-1">
         <PersonDetails person={person} />
-      </div>
+      </div> */}
     </div>
   );
 };

@@ -18,7 +18,7 @@ const PersonContacts = ({ contacts }: PersonContactsProps) => {
         return (
           <div
             key={contact.id}
-            className="py-3.5 px-5 bg-ui-row border-ui-border rounded-md flex justify-between items-center"
+            className="py-3.5 px-5 bg-ui-row border-ui-border rounded-md flex gap-5 items-center w-full"
           >
             <div className="flex flex-col gap-1">
               <div className="flex gap-1 items-center">

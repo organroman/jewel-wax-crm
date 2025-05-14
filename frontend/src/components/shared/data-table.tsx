@@ -72,6 +72,7 @@ DataTableProps<TData, TValue> & {
                   return (
                     <TableHead
                       key={header.id}
+                      style={{ width: header.getSize() }}
                       className="border-r-2 last:border-r-0 border-ui-border"
                     >
                       {header.isPlaceholder
@@ -110,6 +111,7 @@ DataTableProps<TData, TValue> & {
                       <TableCell
                         key={cell.id}
                         className=" border-r last:border-r-0 border-ui-border "
+                        style={{ width: cell.column.getSize() }}
                       >
                         {flexRender(
                           cell.column.columnDef.cell,

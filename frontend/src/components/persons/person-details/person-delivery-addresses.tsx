@@ -23,6 +23,7 @@ const PersonDeliveryAddresses = ({
         mainLabel="Основна адреса :"
         secondaryLabel="Інша адреса :"
         items={delAddresses}
+        width="w-50"
       />
     </div>
   );

@@ -15,10 +15,11 @@ export const usePerson = {
       enabled,
     });
   },
-  getPersonById: ({ id }: { id: string }) => {
+  getPersonById: ({ id, enabled }: { id: number; enabled: boolean }) => {
     return useQuery({
       queryKey: ["person", id],
       queryFn: () => personService.getById(Number(id)),
+      enabled,
     });
   },
 };
