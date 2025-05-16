@@ -1,3 +1,6 @@
+"use client";
+
+import Image from "next/image";
 import { Control, FieldValues, Path } from "react-hook-form";
 import {
   FormControl,
@@ -8,13 +11,12 @@ import {
 } from "../ui/form";
 import { Textarea } from "../ui/textarea";
 import { Input } from "../ui/input";
-import Image from "next/image";
 
 type FormInputProps<T extends FieldValues> = {
-  name: Path<T>; 
+  name: Path<T>;
   label?: string;
   placeholder?: string;
-  control: Control<T>; 
+  control: Control<T>;
   fieldType?: "input" | "textarea";
   type?: string;
   rows?: number;
@@ -38,9 +40,7 @@ const FormInput = <T extends FieldValues>({
       <FormItem className=" flex gap-2.5">
         {label && (
           <div className="flex mt-1.5 items-start justify-end gap-1 w-full">
-            <FormLabel className="text-text-muted font-normal text-sm">
-              {label}
-            </FormLabel>
+            <FormLabel className=" text-sm">{label}</FormLabel>
             {required && (
               <Image
                 src="/img/star-required.svg"

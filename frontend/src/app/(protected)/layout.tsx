@@ -14,16 +14,17 @@ const ProtectedLayout = async ({ children }: { children: React.ReactNode }) => {
   }
 
   return (
-    <div className="flex flex-col h-screen w-full overflow-hidden">
+    <div className="flex flex-col h-screen w-full overflow-y-hidden">
       <div className="w-full shrink-0">
         <TopBar />
       </div>
-      <div className="flex grow h-0 w-full">
-        <aside className="hidden lg:block lg:w-[84px] h-full">
+      <div className="flex h-full flex-1 w-full overflow-y-hidden">
+        <aside className="hidden lg:block lg:w-[84px] h-full overflow-y-hidden">
           <SideBar />
         </aside>
-        <div className="bg-ui-screen w-full h-full">
-          <main className="h-full w-full max-w-screen-2xl m-auto overflow-y-auto px-8 py-6">
+
+        <div className="bg-ui-screen h-full flex-1 w-full overflow-y-hidden">
+          <main className="h-full w-full max-w-screen-2xl m-auto px-8 py-6">
             <AppDataContainer>{children}</AppDataContainer>
           </main>
         </div>

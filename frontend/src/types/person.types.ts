@@ -2,26 +2,21 @@ import { PERSON_ROLE_VALUES } from "@/constants/enums.constants";
 import { PERSON_SORT_FIELDS } from "@/constants/sortable-fields";
 import { ChanelSource, GetAllOptions } from "./shared.types";
 import { Contact } from "./contact.types";
+import { z } from "zod";
+import {
+  createPersonSchema,
+  updatePersonSchema,
+} from "@/validators/person.validator";
 
 export type PersonRoleValue = (typeof PERSON_ROLE_VALUES)[number];
 
 export type PersonRole = {
   value: PersonRoleValue;
   label: string;
+  type?: string
 };
 
 export type PersonSortField = (typeof PERSON_SORT_FIELDS)[number];
-
-export interface Country {
-  id: number;
-  name: string;
-}
-
-export interface City {
-  id: number;
-  country_id: number;
-  name: string;
-}
 
 export interface PersonContact
   extends Omit<Contact, "created_at" | "updated_at"> {}
@@ -55,7 +50,7 @@ export interface Location {
   country_id: number;
   country_name: string;
   is_main: boolean;
-  id: number;
+  id?: number;
 }
 
 export interface Phone {
@@ -68,7 +63,7 @@ export interface Phone {
 }
 
 export interface Email {
-  id: number;
+  id?: number;
   person_id: number;
   email: string;
   is_main: boolean;
@@ -76,15 +71,15 @@ export interface Email {
   updated_at?: Date;
 }
 export interface Person {
-  id: number;
+  id?: number;
   role: PersonRole;
   first_name: string;
   last_name: string;
   patronymic?: string;
   avatar_url?: string;
   is_active: boolean;
-  created_at: Date;
-  updated_at: Date;
+  created_at?: Date;
+  updated_at?: Date;
   emails?: Email[];
   phones: Phone[];
   locations?: Location[];
@@ -94,34 +89,8 @@ export interface Person {
   bank_details?: BankDetails[];
 }
 
-// export interface CreatePersonInput {
-//   first_name: string;
-//   last_name: string;
-//   patronymic?: string;
-//   email?: string;
-//   city?: string;
-//   role: PersonRole;
-//   password?: string;
-//   phones: Phone[];
-//   delivery_addresses?: DeliveryAddress[];
-// }
-
-// export interface UpdatePersonInput extends Partial<CreatePersonInput> {}
-
-// export interface SafePerson {
-//   id: number;
-//   first_name: string;
-//   last_name: string;
-//   patronymic?: string;
-//   email?: string;
-//   city?: string;
-//   role: PersonRole;
-//   is_active: boolean;
-//   created_at: Date;
-//   updated_at: Date;
-//   phones: Phone[];
-//   delivery_addresses?: DeliveryAddress[];
-// }
+export type UpdatePersonSchema = z.infer<typeof updatePersonSchema>;
+export type CreatePersonSchema = z.infer<typeof createPersonSchema>;
 
 export type GetAllPersonsOptions = GetAllOptions<{
   role?: string;

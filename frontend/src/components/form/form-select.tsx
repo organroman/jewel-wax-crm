@@ -8,18 +8,14 @@ import {
   FormLabel,
   FormMessage,
 } from "../ui/form";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
 import { cn } from "@/lib/utils";
-
-// type FormSelectProps<T extends FieldValues> = {
-//   name: Path<T>;
-//   label?: string;
-//   placeholder?: string;
-//   control: Control<T>;
-//   selectContent: React.ReactNode;
-//   required?: boolean;
-//   className?: string;
-// };
 
 type Option<T> = {
   label: string;
@@ -42,7 +38,6 @@ const FormSelect = <T extends FieldValues, O>({
   label,
   placeholder,
   control,
-  // selectContent,
   options,
   required = false,
   className,
@@ -52,7 +47,6 @@ const FormSelect = <T extends FieldValues, O>({
       control={control}
       name={name}
       render={({ field }) => {
-        console.log(field);
         return (
           <FormItem className=" flex items-center gap-2.5">
             {label && (

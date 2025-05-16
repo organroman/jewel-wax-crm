@@ -9,21 +9,15 @@ import {
   useWatch,
 } from "react-hook-form";
 import { Button } from "@/components/ui/button";
-import { Trash2, Plus } from "lucide-react";
+import { Trash2 } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
-import FormInput from "./form-input";
+
 import FormPhoneInput from "./form-phone-input";
 import { Label } from "../ui/label";
 import { PersonMessenger } from "@/types/person.types";
 import InfoLabel from "../shared/typography/info-label";
 import { getMessengerIcon } from "@/lib/utils";
 import Image from "next/image";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "../ui/tooltip";
 
 interface FormArrayPhoneProps<T extends FieldValues> {
   name: ArrayPath<T>;
@@ -32,7 +26,7 @@ interface FormArrayPhoneProps<T extends FieldValues> {
   label?: string;
   placeholder?: string;
   required?: boolean;
-  fieldKey?: string; // default is "value"
+  fieldKey?: string;
   showIsMain?: boolean;
   messengers?: PersonMessenger[];
 }
@@ -66,8 +60,6 @@ const FormArrayPhone = <T extends FieldValues>({
 
   return (
     <div className="space-y-4">
-      {/* {label && <p className="text-sm font-medium mb-1">{label}</p>} */}
-
       {fields.map((field, index) => {
         const isMain = watchedFields?.[index]?.is_main ?? false;
         const phoneMessengers = messengers?.filter(
@@ -120,9 +112,8 @@ const FormArrayPhone = <T extends FieldValues>({
 
             <Button
               type="button"
-              variant="ghost"
-              size="icon"
-              className="text-text-light hover:text-action-minus"
+              variant="ghostDestructive"
+              size="sm"
               onClick={() => remove(index)}
             >
               <Trash2 className="size-4" />

@@ -8,10 +8,13 @@ import {
   UseFormSetValue,
   useWatch,
 } from "react-hook-form";
+import { Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Trash2, Plus } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
-import FormInput from "./form-input";
+
+import { FormLabel } from "../ui/form";
+import FormArrayInputItem from "./form-array-input-item";
+
 
 interface FormArrayInputProps<T extends FieldValues> {
   name: ArrayPath<T>;
@@ -34,6 +37,7 @@ const FormArrayInput = <T extends FieldValues>({
   fieldKey = "value",
   showIsMain = false,
 }: FormArrayInputProps<T>) => {
+
   const { fields, append, remove } = useFieldArray({ control, name });
   const watchedFields = useWatch({ name: name as Path<T>, control });
 
@@ -51,29 +55,35 @@ const FormArrayInput = <T extends FieldValues>({
   };
 
   return (
-    <div className="space-y-2">
-      {label && <p className="text-sm font-medium mb-1">{label}</p>}
-
+    <div className="space-y-2 flex flex-wrap gap-5">
       {fields.map((field, index) => {
         const isMain = watchedFields?.[index]?.is_main ?? false;
 
+        const inputName = `${name}.${index}.${fieldKey}` as Path<T>;
+
         return (
           <div key={field.id} className="flex items-center gap-2">
-            <FormInput
+            <FormArrayInputItem
+              key={field.id}
+              name={inputName}
               control={control}
-              name={`${name}.${index}.${fieldKey}` as Path<T>}
+              label={label}
               placeholder={placeholder}
               required={required && index === 0}
             />
+
             {showIsMain && (
-              <Switch
-                checked={isMain}
-                onCheckedChange={() => handleToggleMain(index)}
-              />
+              <div className="flex items-center gap-2">
+                <Switch
+                  checked={isMain}
+                  onCheckedChange={() => handleToggleMain(index)}
+                />
+                <FormLabel className="text-xs">Основний</FormLabel>
+              </div>
             )}
             <Button
               type="button"
-              variant="ghost"
+              variant="ghostDestructive"
               size="icon"
               onClick={() => remove(index)}
             >
@@ -83,8 +93,13 @@ const FormArrayInput = <T extends FieldValues>({
         );
       })}
 
-      <Button type="button" variant="outline" size="sm" onClick={handleAppend}>
-        <Plus className="size-4 mr-1" />
+      <Button
+        type="button"
+        variant="link"
+        size="sm"
+        className="text-action-plus text-xs"
+        onClick={handleAppend}
+      >
         Додати ще
       </Button>
     </div>
