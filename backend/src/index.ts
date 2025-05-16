@@ -3,13 +3,14 @@ import morgan from "morgan";
 import cors from "cors";
 
 import errorHandler from "./middlewares/error-handler-middleware";
+import { verifyToken } from "./middlewares/auth-middleware";
 
 import authRoutes from "./routes/auth-rotes";
 import enumRoutes from "./routes/enum-routes";
 import personRoutes from "./routes/person-routes";
 import contactRoutes from "./routes/contact-routes";
 import requestRoutes from "./routes/request-routes";
-import { verifyToken } from "./middlewares/auth-middleware";
+import locationRoutes from "./routes/location-routes";
 
 const app = express();
 const PORT = process.env.PORT || 8000;
@@ -32,6 +33,7 @@ app.use("/enums", verifyToken, enumRoutes);
 app.use("/persons", personRoutes);
 app.use("/contacts", contactRoutes);
 app.use("/requests", requestRoutes);
+app.use("/locations", locationRoutes);
 
 app.use(errorHandler);
 

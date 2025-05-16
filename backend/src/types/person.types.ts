@@ -2,6 +2,7 @@ import { PERSON_SORT_FIELDS } from "../constants/sortable-fields";
 import { PERSON_ROLES } from "../constants/enums";
 import { GetAllOptions } from "./shared.types";
 import { Contact, ContactSource } from "./contact.types";
+import { City, Country } from "./location-types";
 
 export type PersonRole = (typeof PERSON_ROLES)[number];
 export interface EnrichedRole {
@@ -11,16 +12,6 @@ export interface EnrichedRole {
 
 export type PersonSortField = (typeof PERSON_SORT_FIELDS)[number];
 
-export interface Country {
-  id: number;
-  name: string;
-}
-
-export interface City {
-  id: number;
-  country_id: number;
-  name: string;
-}
 
 export interface PersonContact
   extends Omit<Contact, "created_at" | "updated_at"> {}
