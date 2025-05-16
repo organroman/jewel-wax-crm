@@ -21,11 +21,11 @@ import {
 } from "@/lib/utils";
 import CustomAvatar from "../shared/custom-avatar";
 
-interface PersonDetailsProps {
+interface PersonInfoProps {
   person: Person;
 }
 
-const PersonDetails = ({ person }: PersonDetailsProps) => {
+const PersonInfo = ({ person }: PersonInfoProps) => {
   const phones = person.phones.map((phone) => ({
     id: phone.id!,
     value: formatPhone(phone.number),
@@ -127,4 +127,4 @@ const PersonDetails = ({ person }: PersonDetailsProps) => {
   );
 };
 
-export default PersonDetails;
+export default PersonInfo;
