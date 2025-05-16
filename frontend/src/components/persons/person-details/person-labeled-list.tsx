@@ -1,8 +1,8 @@
 import React from "react";
 
 export interface LabeledListItem<T = unknown> {
-  id: string | number;
-  //   label: string;
+  id: string | number | undefined;
+
   value: string;
   isMain?: boolean;
   icons?: React.ReactNode[];

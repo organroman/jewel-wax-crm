@@ -4,7 +4,6 @@ import { Person } from "@/types/person.types";
 import Image from "next/image";
 
 import { Separator } from "../ui/separator";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
 import PersonMetaHeader from "./person-details/person-meta-header";
 import PersonFullName from "./person-details/person-fullname";
@@ -20,6 +19,7 @@ import {
   getInitials,
   getMessengerIcon,
 } from "@/lib/utils";
+import CustomAvatar from "../shared/custom-avatar";
 
 interface PersonDetailsProps {
   person: Person;
@@ -68,12 +68,14 @@ const PersonDetails = ({ person }: PersonDetailsProps) => {
             id={person.id}
           />
           <div className="flex w-full mt-6 gap-12">
-            <Avatar className="w-37 h-37">
-              <AvatarImage src={person.avatar_url} />
-              <AvatarFallback className="text-6xl">
-                {getInitials(person.last_name, person.first_name)}
-              </AvatarFallback>
-            </Avatar>
+            <CustomAvatar
+              className="w-37 h-37"
+              avatarUrl={person?.avatar_url}
+              fallback={
+                person ? getInitials(person?.last_name, person?.first_name) : ""
+              }
+              fallbackClassName="text-6xl"
+            />
             <div className="w-full">
               <PersonFullName
                 fullName={getFullName(

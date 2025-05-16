@@ -13,6 +13,8 @@ import Modal from "../shared/modal/modal";
 import PersonDetails from "./person-details";
 
 import { PERSON_CARD_TABS_LIST } from "@/constants/persons.constants";
+import { useState } from "react";
+import { TabOption } from "@/types/shared.types";
 
 interface ViewEntityItemProps {
   id: number;
@@ -20,6 +22,9 @@ interface ViewEntityItemProps {
 
 const ViewPersonDetails = ({ id }: ViewEntityItemProps) => {
   const { dialogOpen, setDialogOpen } = useDialog();
+  const [selectedTab, setSelectedTab] = useState<TabOption>(
+    PERSON_CARD_TABS_LIST[0]
+  );
 
   const {
     data: person,
@@ -42,7 +47,11 @@ const ViewPersonDetails = ({ id }: ViewEntityItemProps) => {
           {isLoading && <Loader />}
           {!isLoading && person && (
             <>
-              <CustomTabs isModal={true} tabsOptions={PERSON_CARD_TABS_LIST} />
+              <CustomTabs
+                isModal={true}
+                tabsOptions={PERSON_CARD_TABS_LIST}
+                selectedTab={selectedTab}
+              />
               <Separator className="bg-ui-border h-0.5 data-[orientation=horizontal]:h-0.5" />
               {/* <div className="w-full"> */}
               <PersonDetails person={person} />

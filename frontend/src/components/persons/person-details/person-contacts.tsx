@@ -1,4 +1,4 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import CustomAvatar from "@/components/shared/custom-avatar";
 import { Badge } from "@/components/ui/badge";
 import { PersonContact } from "@/types/person.types";
 
@@ -14,6 +14,7 @@ const PersonContacts = ({ contacts }: PersonContactsProps) => {
         const initials = fullNameArr?.map((item) =>
           item.charAt(0).toUpperCase()
         );
+        const initialsStr = initials?.join("");
 
         return (
           <div
@@ -32,10 +33,12 @@ const PersonContacts = ({ contacts }: PersonContactsProps) => {
                 <p className="text-sm font-medium"> {contact.full_name}</p>
               </div>
             </div>
-            <Avatar className="w-16 h-16">
-              <AvatarImage src={contact.avatar_url} />
-              <AvatarFallback className="text-2xl">{initials}</AvatarFallback>
-            </Avatar>
+            <CustomAvatar
+              className="w-16 h-16"
+              avatarUrl={contact.avatar_url}
+              fallback={initialsStr || ""}
+              fallbackClassName="text-2xl"
+            />
           </div>
         );
       })}
