@@ -15,7 +15,6 @@ import {
 } from "react-hook-form";
 import { Trash2 } from "lucide-react";
 
-
 import { useLocation } from "@/api/locations/use-location";
 import { Button } from "@/components/ui/button";
 import {
@@ -26,7 +25,6 @@ import {
   SelectItem,
 } from "@/components/ui/select";
 import { FormLabel } from "../ui/form";
-
 
 import { Switch } from "../ui/switch";
 import { Label } from "../ui/label";
@@ -49,6 +47,7 @@ const FormArrayLocation = <T extends FieldValues>({
   onCreateCity,
 }: FormArrayLocationProps<T>) => {
   const { fields, append, remove } = useFieldArray({ control, name });
+  console.log("🚀 ~ fields:", fields.length);
   const watchedFields = useWatch({ name: name as Path<T>, control });
 
   // 👇 build list of countryIds per index (memoized)
@@ -116,6 +115,7 @@ const FormArrayLocation = <T extends FieldValues>({
         const selectedCityId = watchedFields?.[index]?.city_id;
         const cityOptions = cityQueries[index]?.data || [];
         const isLoading = cityQueries[index]?.isLoading;
+        console.log("location length", fields.length);
 
         return (
           <div key={field.id} className="flex items-center gap-5">
@@ -224,6 +224,17 @@ const FormArrayLocation = <T extends FieldValues>({
           </div>
         );
       })}
+      {fields.length === 0 && (
+        <Button
+          type="button"
+          variant="link"
+          size="sm"
+          className="text-action-plus text-xs"
+          onClick={handleAppend}
+        >
+          Додати ще
+        </Button>
+      )}
     </div>
   );
 };
