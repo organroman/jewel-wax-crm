@@ -8,34 +8,12 @@ import { ColumnDef } from "@tanstack/react-table";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import ViewPersonDetails from "./view-person";
+import PersonActionsMenu from "./person-actions-menu";
 
 import { cn, getInitials } from "@/lib/utils";
 import { PERSON_ROLE_COLORS } from "@/constants/persons.constants";
 
-
-
 export const personsColumns: ColumnDef<Person>[] = [
-  //TODO: REMOVE
-  // {
-  //   id: "select",
-  //   header: ({ table }) => (
-  //     <Checkbox
-  //       checked={table.getIsAllPageRowsSelected()}
-  //       onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-  //       aria-label="Select all"
-  //     />
-  //   ),
-  //   cell: ({ row }) => (
-  //     <Checkbox
-  //       checked={row.getIsSelected()}
-  //       onCheckedChange={(value) => row.toggleSelected(!!value)}
-  //       aria-label="Select row"
-  //     />
-  //   ),
-  //   enableSorting: false,
-  //   enableHiding: false,
-  //   size: 100,
-  // },
   {
     id: "view",
     header: () => <InfoIcon size={20} className="text-text-muted" />,
@@ -146,5 +124,17 @@ export const personsColumns: ColumnDef<Person>[] = [
       const formattedDate = dayjs(date).format("DD.MM.YYYY");
       return <span>{formattedDate}</span>;
     },
+  },
+  {
+    id: "actions",
+    header: () => <div className="text-center">Дії</div>,
+    cell: ({ row }) => {
+      return (
+        <div className="text-center">
+          <PersonActionsMenu person={row.original} />
+        </div>
+      );
+    },
+    size: 28,
   },
 ];
