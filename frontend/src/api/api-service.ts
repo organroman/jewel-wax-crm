@@ -53,14 +53,16 @@ const makeRequest = async <T>(
       ...headers,
       ...(token && { Authorization: `Bearer ${token}` }),
     },
-    credentials: "include", // send cookies (for refresh token)
+    credentials: "include",
     body: isBodyAllowed && body ? JSON.stringify(body) : undefined,
   });
 
   let data;
 
   try {
-    data = await res.json();
+    if (res.status !== 204) {
+      data = await res.json();
+    }
   } catch (error) {
     console.error("Error parsing response:", error);
     throw new AppError(ERROR_MESSAGES.INTERNAL_SERVER_ERROR, 500);
