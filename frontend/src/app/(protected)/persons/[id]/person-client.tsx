@@ -2,7 +2,7 @@
 import { TabOption } from "@/types/shared.types";
 
 import { ChevronLeftIcon, Loader } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 
 import { usePerson } from "@/api/persons/use-person";
@@ -15,14 +15,16 @@ import { Separator } from "@/components/ui/separator";
 
 import { PERSON_CARD_TABS_LIST } from "@/constants/persons.constants";
 
-
-
-
-const PersonClient = ({ id }: { id: number; enabled: boolean }) => {
+const PersonClient = ({ id }: { id: number }) => {
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const tabParam = searchParams.get("tab");
+
+  const currentTab = PERSON_CARD_TABS_LIST.find((t) => t.value === tabParam);
 
   const [selectedTab, setSelectedTab] = useState<TabOption>(
-    PERSON_CARD_TABS_LIST[0]
+    currentTab || PERSON_CARD_TABS_LIST[0]
   );
 
   const handleChange = (value: string) => {
@@ -39,7 +41,7 @@ const PersonClient = ({ id }: { id: number; enabled: boolean }) => {
     data: person,
     isLoading,
     error,
-  } = usePerson.getPersonById({ id, enabled: true });
+  } = usePerson.getPersonById({ id, enabled: id ? true : false });
 
   if (isLoading) {
     return <Loader />;
