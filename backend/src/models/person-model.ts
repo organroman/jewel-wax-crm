@@ -201,8 +201,8 @@ export const PersonModel = {
       await db("person_locations").insert(
         data.locations.map((location) => ({
           person_id: newPerson.id,
-          city_id: location.city.id,
-          country_id: location.city.country_id,
+          city_id: location.city_id,
+          country_id: location.country_id,
           is_main: location.is_main,
         }))
       );

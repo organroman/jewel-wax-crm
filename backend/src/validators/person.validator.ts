@@ -21,7 +21,7 @@ export const createPersonSchema = z.object({
   email: z.string().email().optional(),
   city: z.string().optional(),
   role: roleEnum,
-  password: z.string().min(6).optional(),
+  password: z.string().min(6, VALIDATION_MESSAGES.PASSWORD).optional(),
   phones: z
     .array(phoneSchema)
     .min(1, VALIDATION_MESSAGES.MIN_ONE_PHONE)

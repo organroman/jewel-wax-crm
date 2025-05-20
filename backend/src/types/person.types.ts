@@ -12,7 +12,6 @@ export interface EnrichedRole {
 
 export type PersonSortField = (typeof PERSON_SORT_FIELDS)[number];
 
-
 export interface PersonContact
   extends Omit<Contact, "created_at" | "updated_at"> {}
 
@@ -39,8 +38,10 @@ export interface DeliveryAddress {
 }
 
 export interface Location {
-  country: Country;
-  city: City;
+  country_id: number;
+  country_name: string;
+  city_id: number;
+  city_name: string;
   is_main: boolean;
   id: number;
 }
@@ -97,7 +98,6 @@ export interface CreatePersonInput {
   bank_details?: BankDetails[];
 }
 
-const omitPersonFields = ["role", "password"];
 export interface UpdatePersonInput extends Partial<CreatePersonInput> {}
 
 export interface SafePerson extends Omit<Person, "password" | "role"> {}

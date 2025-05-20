@@ -35,6 +35,9 @@ export const PersonService = {
   },
 
   async getById(userId: number): Promise<SafePerson | null> {
+    if (Number.isNaN(userId)) {
+      throw new AppError(ERROR_MESSAGES.INVALID_DATA, 400);
+    }
     return await PersonModel.findById(userId);
   },
 
