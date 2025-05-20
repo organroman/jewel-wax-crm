@@ -1,5 +1,7 @@
-import { useQuery } from "@tanstack/react-query";
+import { QueryClient, useMutation, useQuery } from "@tanstack/react-query";
 import { personService } from "./person-service";
+import { CreatePersonSchema, Person } from "@/types/person.types";
+import { toast } from "sonner";
 
 export const usePerson = {
   getPaginatedPersons: ({
@@ -21,5 +23,47 @@ export const usePerson = {
       queryFn: () => personService.getById(Number(id)),
       enabled,
     });
+  },
+  createPerson: ({
+    queryClient,
+    handleOnSuccess,
+  }: {
+    queryClient: QueryClient;
+    handleOnSuccess?: (data: Person) => void;
+  }) => {
+    const mutation = useMutation<Person, Error, CreatePersonSchema>({
+      mutationFn: async (data) => personService.create(data),
+      onSuccess: (data) => {
+        toast.success("Контрагента створено");
+        queryClient.invalidateQueries({
+          queryKey: ["persons"],
+        });
+        handleOnSuccess && data && handleOnSuccess(data);
+      },
+      onError: (error) => {
+        toast.error(error.message);
+      },
+    });
+    return { createPersonMutation: mutation };
+  },
+  deletePerson: ({
+    queryClient,
+    closeDialog,
+  }: {
+    queryClient: QueryClient;
+    closeDialog: () => void;
+  }) => {
+    const mutation = useMutation({
+      mutationFn: async (id: number) => personService.delete(id),
+      onSuccess: () => {
+        toast.success("Контрагента видалено"),
+          closeDialog(),
+          queryClient.invalidateQueries({
+            queryKey: ["persons"],
+          });
+      },
+      onError: (error) => toast.error(error.message),
+    });
+    return { deletePersonMutation: mutation };
   },
 };
