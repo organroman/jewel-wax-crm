@@ -64,7 +64,7 @@ export const PaginationControls = ({
             aria-disabled={currentPage <= 1}
             size="sm"
             className={cn(
-              "text-xs mr-2 py-1 rounded-sm",
+              "text-xs mr-2 py-1 rounded-sm cursor-pointer",
               currentPage <= 1 ? "pointer-events-none opacity-50" : ""
             )}
           />
@@ -96,8 +96,8 @@ export const PaginationControls = ({
             aria-disabled={currentPage >= totalPages}
             size="sm"
             className={cn(
-              "text-xs ml-2",
-              currentPage <= 1 ? "pointer-events-none opacity-50" : ""
+              "text-xs ml-2 cursor-pointer",
+              currentPage >= totalPages ? "pointer-events-none opacity-50" : ""
             )}
           />
         </PaginationItem>
