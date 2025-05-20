@@ -15,3 +15,10 @@ export interface ModalFooterProps {
   buttonActionTitleContinuous: string;
   destructive?: boolean;
 }
+
+export interface ModalProps {
+  header?: ModalHeaderProps;
+  children?: React.ReactNode;
+  footer?: ModalFooterProps;
+  destructive?: boolean;
+}

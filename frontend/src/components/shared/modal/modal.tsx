@@ -1,4 +1,4 @@
-import { ModalFooterProps, ModalHeaderProps } from "@/types/modal.types";
+import { ModalProps } from "@/types/modal.types";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 
 import { DialogContent, DialogTitle } from "@/components/ui/dialog";
@@ -6,16 +6,9 @@ import { DialogContent, DialogTitle } from "@/components/ui/dialog";
 import ModalHeader from "./modal-header";
 import ModalFooter from "./modal-footer";
 
-interface ModalProps {
-  header?: ModalHeaderProps;
-  children?: React.ReactNode;
-  footer?: ModalFooterProps;
-  destructive?: boolean;
-}
-
 const Modal = ({ header, children, footer, destructive }: ModalProps) => {
   return (
-    <DialogContent className="sm:max-w-md max-h-[90vh] max-w-lg min-w-fit overflow-y-auto">
+    <DialogContent className="sm:max-w-md max-h-[90vh] min-w-fit w-full max-w-lg overflow-y-auto">
       {!header?.title && (
         <DialogTitle asChild>
           <VisuallyHidden>Modal</VisuallyHidden>

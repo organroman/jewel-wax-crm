@@ -18,15 +18,15 @@ const ModalHeader = ({
       <DialogTitle
         className={cn(
           "text-center text-xl",
-          destructive ? "text-red-500" : "text-primary"
+          destructive ? "text-action-alert" : "text-black"
         )}
       >
         {title}
       </DialogTitle>
-      <DialogDescription className="text-center text-md">
+      <DialogDescription className="text-center text-text-muted text-lg">
         {descriptionFirst}
       </DialogDescription>
-      <DialogDescription className="text-sm font-bold text-center">
+      <DialogDescription className="text-md text-text-light font-bold text-center">
         {descriptionSecond}
       </DialogDescription>
     </DialogHeader>

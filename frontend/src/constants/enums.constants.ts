@@ -1,9 +1,17 @@
+import { PersonRoleValue } from "@/types/person.types";
+
 export const PERSON_ROLE_VALUES = [
   "super_admin",
   "modeller",
   "miller",
   "client",
   "print",
+] as const;
+
+export const ALLOWED_ROLES_FOR_CRM_USER = [
+  "super_admin",
+  "modeller",
+  "miller",
 ] as const;
 
 export const CHANEL_SOURCE = [
