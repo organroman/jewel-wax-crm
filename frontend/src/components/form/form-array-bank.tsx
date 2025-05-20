@@ -1,26 +1,19 @@
+import { FormArrayBankDetailsProps } from "@/types/form.types";
+
 import {
-  ArrayPath,
-  Control,
   FieldValues,
   Path,
   PathValue,
   useFieldArray,
-  UseFormSetValue,
   useWatch,
 } from "react-hook-form";
+import { Trash2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { Plus, Trash2 } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
-import FormArrayInputItem from "./form-array-input-item";
-import { FormLabel } from "../ui/form";
+import { Label } from "@/components/ui/label";
 
-interface FormArrayBankDetailsProps<T extends FieldValues> {
-  name: ArrayPath<T>;
-  control: Control<T>;
-  setValue: UseFormSetValue<T>;
-  required?: boolean;
-}
+import FormArrayInputItem from "./form-array-input-item";
 
 const FormArrayBankDetails = <T extends FieldValues>({
   name,
@@ -38,7 +31,7 @@ const FormArrayBankDetails = <T extends FieldValues>({
       iban: "",
       tax_id: "",
       card_number: "",
-      is_main: false,
+      is_main: !watchedFields || watchedFields.length === 0 ? true : false,
     } as any);
   };
 
@@ -52,7 +45,7 @@ const FormArrayBankDetails = <T extends FieldValues>({
   };
 
   return (
-    <div className="flex justify-between">
+    <div className="flex justify-between flex-wrap gap-5">
       {fields.map((field, index) => {
         const base = `${name}.${index}` as Path<T>;
         const isMain = watchedFields?.[index]?.is_main ?? false;
@@ -63,26 +56,26 @@ const FormArrayBankDetails = <T extends FieldValues>({
               <FormArrayInputItem
                 control={control}
                 name={`${base}.bank_name` as Path<T>}
-                placeholder="Назва банку"
+                placeholder="Введіть назву банку"
                 label="Банк"
                 required={required}
               />
               <FormArrayInputItem
                 control={control}
                 name={`${base}.bank_code` as Path<T>}
-                placeholder="МФО"
+                placeholder="Введіть МФО"
                 label="МФО"
               />
               <FormArrayInputItem
                 control={control}
                 name={`${base}.tax_id` as Path<T>}
-                placeholder="ІПН/ЄДРПОУ"
+                placeholder="Введіть ІПН/ЄДРПОУ"
                 label="ІПН/ЄДРПОУ"
               />
               <FormArrayInputItem
                 control={control}
                 name={`${base}.iban` as Path<T>}
-                placeholder="IBAN"
+                placeholder="Введіть IBAN"
                 label="IBAN"
                 required={required}
                 inputClassName="min-w-[278px]"
@@ -90,7 +83,7 @@ const FormArrayBankDetails = <T extends FieldValues>({
               <FormArrayInputItem
                 control={control}
                 name={`${base}.card_number` as Path<T>}
-                placeholder="1111 1111 1111 1111"
+                placeholder="Введіть номер карти"
                 label="Номер карти"
                 required={required}
               />
@@ -100,7 +93,7 @@ const FormArrayBankDetails = <T extends FieldValues>({
                 checked={isMain}
                 onCheckedChange={() => handleToggleMain(index)}
               />
-              <FormLabel className="text-xs">Основний</FormLabel>
+              <Label className="text-xs">Основний</Label>
             </div>
 
             <div className="flex justify-end">
@@ -113,19 +106,32 @@ const FormArrayBankDetails = <T extends FieldValues>({
                 <Trash2 className="size-4" />
               </Button>
             </div>
+            {fields.length === index + 1 && (
+              <Button
+                type="button"
+                variant="link"
+                size="sm"
+                onClick={handleAppend}
+                className="text-action-plus text-xs px-0"
+              >
+                Додати ще
+              </Button>
+            )}
           </div>
         );
       })}
 
-      <Button
-        type="button"
-        variant="link"
-        size="sm"
-        onClick={handleAppend}
-        className="text-action-plus text-xs"
-      >
-        Додати ще
-      </Button>
+      {fields.length === 0 && (
+        <Button
+          type="button"
+          variant="link"
+          size="sm"
+          onClick={handleAppend}
+          className="text-action-plus text-xs px-0"
+        >
+          Додати
+        </Button>
+      )}
     </div>
   );
 };

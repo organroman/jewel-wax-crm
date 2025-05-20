@@ -1,10 +1,15 @@
-import { FormSwitchProps } from "@/types/form.typse";
+import { FormSwitchProps } from "@/types/form.types";
 
 import { FieldValues } from "react-hook-form";
 
-import { FormControl, FormField, FormItem } from "../ui/form";
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "../ui/form";
 import { Switch } from "../ui/switch";
-import { Label } from "../ui/label";
 
 const FormSwitch = <T extends FieldValues>({
   checkedLabel,
@@ -17,7 +22,7 @@ const FormSwitch = <T extends FieldValues>({
       name={name}
       control={control}
       render={({ field }) => (
-        <FormItem>
+        <FormItem className="">
           <FormControl>
             <div className="flex items-center gap-2">
               <Switch
@@ -25,13 +30,14 @@ const FormSwitch = <T extends FieldValues>({
                 checked={field.value}
                 onCheckedChange={field.onChange}
               />
-              <Label htmlFor={name} className="text-xs">
+              <FormLabel htmlFor={name} className="text-xs">
                 {!unCheckedLabel && checkedLabel}
                 {unCheckedLabel &&
                   (field.value === true ? checkedLabel : unCheckedLabel)}
-              </Label>
+              </FormLabel>
             </div>
           </FormControl>
+          <FormMessage />
         </FormItem>
       )}
     />

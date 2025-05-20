@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { Control, FieldValues, Path } from "react-hook-form";
+import { FieldValues } from "react-hook-form";
 import {
   FormControl,
   FormField,
@@ -11,17 +11,7 @@ import {
 } from "../ui/form";
 import { Textarea } from "../ui/textarea";
 import { Input } from "../ui/input";
-
-type FormInputProps<T extends FieldValues> = {
-  name: Path<T>;
-  label?: string;
-  placeholder?: string;
-  control: Control<T>;
-  fieldType?: "input" | "textarea";
-  type?: string;
-  rows?: number;
-  required?: boolean;
-};
+import { FormInputProps } from "@/types/form.types";
 
 const FormInput = <T extends FieldValues>({
   name,
@@ -65,7 +55,7 @@ const FormInput = <T extends FieldValues>({
               />
             )}
           </FormControl>
-          <FormMessage className="text-xs" />
+          <FormMessage />
         </div>
       </FormItem>
     )}

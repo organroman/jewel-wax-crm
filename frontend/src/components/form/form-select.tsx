@@ -1,4 +1,6 @@
-import { Control, FieldValues, Path } from "react-hook-form";
+import { FormSelectProps } from "@/types/form.types";
+
+import { FieldValues } from "react-hook-form";
 import Image from "next/image";
 
 import {
@@ -16,22 +18,6 @@ import {
   SelectValue,
 } from "../ui/select";
 import { cn } from "@/lib/utils";
-
-type Option<T> = {
-  label: string;
-  value: string;
-  data?: T;
-};
-
-type FormSelectProps<T extends FieldValues, O> = {
-  name: Path<T>;
-  label?: string;
-  placeholder?: string;
-  control: Control<T>;
-  options: Option<O>[];
-  required?: boolean;
-  className?: string;
-};
 
 const FormSelect = <T extends FieldValues, O>({
   name,
@@ -66,7 +52,7 @@ const FormSelect = <T extends FieldValues, O>({
               </div>
             )}
             <Select
-              value={field.value?.value}
+              value={field.value?.value ?? ""}
               onValueChange={(val) => {
                 const selected = options.find((opt) => opt.value === val);
                 if (selected) {
@@ -84,9 +70,9 @@ const FormSelect = <T extends FieldValues, O>({
                     className
                   )}
                 >
-                  <SelectValue placeholder={placeholder || "Make your choice"}>
-                    {field.value?.label}
-                  </SelectValue>
+                  <SelectValue
+                    placeholder={placeholder || "Make your choice"}
+                  />
                 </SelectTrigger>
               </FormControl>
 

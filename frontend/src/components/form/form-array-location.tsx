@@ -1,42 +1,24 @@
-import { Country, City } from "@/types/location.types";
 import { Location } from "@/types/person.types";
+import { FormArrayLocationProps } from "@/types/form.types";
 
-import { useMemo } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { useQueries } from "@tanstack/react-query";
 import {
-  ArrayPath,
-  Control,
   FieldValues,
   Path,
   useFieldArray,
   useWatch,
-  UseFormSetValue,
   PathValue,
 } from "react-hook-form";
 import { Trash2 } from "lucide-react";
 
 import { useLocation } from "@/api/locations/use-location";
+
 import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem,
-} from "@/components/ui/select";
-import { FormLabel } from "../ui/form";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
 
-import { Switch } from "../ui/switch";
-import { Label } from "../ui/label";
-
-interface FormArrayLocationProps<T extends FieldValues> {
-  name: ArrayPath<T>;
-  control: Control<T>;
-  setValue: UseFormSetValue<T>;
-  countries: Country[];
-  onCreateCountry?: () => void;
-  onCreateCity?: (countryId: number) => void;
-}
+import FormCombobox from "./form-combobox";
 
 const FormArrayLocation = <T extends FieldValues>({
   name,
@@ -45,12 +27,12 @@ const FormArrayLocation = <T extends FieldValues>({
   countries,
   onCreateCountry,
   onCreateCity,
+  required,
 }: FormArrayLocationProps<T>) => {
   const { fields, append, remove } = useFieldArray({ control, name });
-  console.log("🚀 ~ fields:", fields.length);
   const watchedFields = useWatch({ name: name as Path<T>, control });
+  const hasAppended = useRef(false);
 
-  // 👇 build list of countryIds per index (memoized)
   const countryIds = useMemo(
     () =>
       (watchedFields as Location[])?.map(
@@ -59,43 +41,35 @@ const FormArrayLocation = <T extends FieldValues>({
     [watchedFields]
   );
 
-  // 👇 batch queries for each selected country
   const cityQueries = useQueries({
     queries: countryIds.map((countryId) =>
       useLocation.getCitiesByCountryQuery(countryId)
     ),
   });
 
+  useEffect(() => {
+    const noData = (!watchedFields || watchedFields.length === 0) && required;
+
+    if (!hasAppended.current && fields.length === 0 && noData) {
+      append({
+        country_id: null,
+        country_name: "",
+        city_id: null,
+        city_name: "",
+        is_main: true,
+      } as any);
+      hasAppended.current = true;
+    }
+  }, [append, fields.length, watchedFields]);
+
   const handleAppend = () => {
     append({
-      country_id: "",
+      country_id: null,
       country_name: "",
-      city_id: "",
+      city_id: null,
       city_name: "",
+      is_main: !watchedFields || watchedFields.length === 0 ? true : false,
     } as any);
-  };
-
-  const handleCountryChange = (index: number, countryId: number) => {
-    const country = countries.find((c) => c.id === countryId);
-    setValue(
-      `${name}.${index}.country_id` as any,
-      countryId as PathValue<T, any>
-    );
-    setValue(
-      `${name}.${index}.country_name` as any,
-      (country?.name || "") as PathValue<T, any>
-    );
-    setValue(`${name}.${index}.city_id` as any, "" as PathValue<T, any>);
-    setValue(`${name}.${index}.city_name` as any, "" as PathValue<T, any>);
-  };
-
-  const handleCityChange = (index: number, cityId: number) => {
-    const city = cityQueries[index]?.data?.find((c: City) => c.id === cityId);
-    setValue(`${name}.${index}.city_id` as any, cityId as PathValue<T, any>);
-    setValue(
-      `${name}.${index}.city_name` as any,
-      (city?.name || "") as PathValue<T, any>
-    );
   };
 
   const handleToggleMain = (index: number) => {
@@ -112,81 +86,70 @@ const FormArrayLocation = <T extends FieldValues>({
       {fields.map((field, index) => {
         const isMain = watchedFields?.[index]?.is_main ?? false;
         const selectedCountryId = watchedFields?.[index]?.country_id;
-        const selectedCityId = watchedFields?.[index]?.city_id;
         const cityOptions = cityQueries[index]?.data || [];
         const isLoading = cityQueries[index]?.isLoading;
-        console.log("location length", fields.length);
 
         return (
-          <div key={field.id} className="flex items-center gap-5">
-            {/* Country Select */}
-            <div className="flex items-center gap-2.5">
-              <FormLabel className=" text-xs">Країна</FormLabel>
-              <div className="flex items-center">
-                <Select
-                  onValueChange={(val) => handleCountryChange(index, +val)}
-                  value={selectedCountryId?.toString() || ""}
-                >
-                  <SelectTrigger
-                    className="w-40 rounded-tr-none rounded-br-none"
-                    size="sm"
-                  >
-                    <SelectValue placeholder="Країна" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {countries.map((country) => (
-                      <SelectItem
-                        key={country.id}
-                        value={country.id.toString()}
-                      >
-                        {country.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="rounded-tl-none rounded-bl-none"
-                  onClick={onCreateCountry}
-                >
-                  Додати
-                </Button>
-              </div>
+          <div key={field.id} className="flex items-start gap-5">
+            <div className="flex items-start">
+              <FormCombobox
+                name={`${name}.${index}.country_id` as Path<T>}
+                label="Країна"
+                placeholder="Оберіть країну"
+                control={control}
+                options={
+                  (countries &&
+                    countries.map((c) => ({
+                      label: c.name || "",
+                      value: c.id,
+                      data: c,
+                    }))) ||
+                  []
+                }
+                displayKey="name"
+                valueKey="id"
+                saveOnlyValue={true}
+              />
+              <Button
+                variant="outline"
+                size="sm"
+                className="rounded-tl-none rounded-bl-none"
+                onClick={onCreateCountry}
+              >
+                Додати
+              </Button>
             </div>
 
-            {/* City Select */}
-            <div className="flex items-center gap-2.5">
-              <FormLabel className=" text-xs">Місто</FormLabel>
-              <div className="flex items-center">
-                <Select
-                  onValueChange={(val) => {
-                    handleCityChange(index, +val);
-                  }}
-                  value={selectedCityId?.toString() || ""}
-                  disabled={!selectedCountryId || isLoading}
-                >
-                  <SelectTrigger className="w-40" size="sm">
-                    <SelectValue placeholder="Місто" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {cityOptions.map((city: City) => (
-                      <SelectItem key={city.id} value={city.id.toString()}>
-                        {city.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="rounded-tl-none rounded-bl-none"
-                  onClick={() => onCreateCity?.(selectedCountryId)}
-                >
-                  Додати
-                </Button>
-              </div>
+            <div className="flex items-start">
+              <FormCombobox
+                name={`${name}.${index}.city_id` as Path<T>}
+                label="Місто"
+                placeholder="Оберіть місто"
+                control={control}
+                options={
+                  (cityOptions &&
+                    cityOptions.map((c) => ({
+                      label: c.name || "",
+                      value: c.id,
+                      data: c,
+                    }))) ||
+                  []
+                }
+                displayKey="name"
+                valueKey="id"
+                saveOnlyValue={true}
+                disabled={!selectedCountryId || isLoading}
+              />
+              <Button
+                variant="outline"
+                size="sm"
+                className="rounded-tl-none rounded-bl-none"
+                onClick={() => onCreateCity?.(selectedCountryId)}
+              >
+                Додати
+              </Button>
             </div>
+
             <div className="flex items-center gap-2 mt-1.5">
               <Switch
                 id={`${name}.${index}`}
@@ -215,7 +178,7 @@ const FormArrayLocation = <T extends FieldValues>({
                 type="button"
                 variant="link"
                 size="sm"
-                className="text-action-plus text-xs"
+                className="text-action-plus text-xs p-0"
                 onClick={handleAppend}
               >
                 Додати ще
@@ -229,10 +192,10 @@ const FormArrayLocation = <T extends FieldValues>({
           type="button"
           variant="link"
           size="sm"
-          className="text-action-plus text-xs"
+          className="text-action-plus text-xs p-0"
           onClick={handleAppend}
         >
-          Додати ще
+          Додати
         </Button>
       )}
     </div>
