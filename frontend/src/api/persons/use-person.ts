@@ -48,16 +48,16 @@ export const usePerson = {
   },
   deletePerson: ({
     queryClient,
-    closeDialog,
+    handleSuccess,
   }: {
     queryClient: QueryClient;
-    closeDialog: () => void;
+    handleSuccess?: () => void;
   }) => {
     const mutation = useMutation({
       mutationFn: async (id: number) => personService.delete(id),
       onSuccess: () => {
         toast.success("Контрагента видалено"),
-          closeDialog(),
+          handleSuccess && handleSuccess(),
           queryClient.invalidateQueries({
             queryKey: ["persons"],
           });

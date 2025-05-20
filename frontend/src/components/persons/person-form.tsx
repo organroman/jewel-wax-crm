@@ -42,6 +42,9 @@ import {
 } from "@/constants/enums.constants";
 
 import { getInitials } from "@/lib/utils";
+import { Dialog } from "../ui/dialog";
+import Modal from "../shared/modal/modal";
+import { SetStateAction } from "react";
 
 const schemaMap = {
   create: createPersonSchema,
@@ -55,9 +58,18 @@ interface PersonFormProps {
     CreatePersonSchema | UpdatePersonSchema
   >;
   person?: Person;
+  deletePersonMutation?: UseMutationResult<unknown, Error, number>;
+  isDialogOpen?: boolean;
+  setIsDialogOpen?: (v: SetStateAction<boolean>) => void;
 }
 
-const PersonForm = ({ person, mutation }: PersonFormProps) => {
+const PersonForm = ({
+  person,
+  mutation,
+  deletePersonMutation,
+  isDialogOpen,
+  setIsDialogOpen,
+}: PersonFormProps) => {
   const roles = useEnumStore((e) => e.getByType("person_role"));
   const schema = person ? schemaMap.update : schemaMap.create;
   const { data: countries, isLoading, error } = useLocation.getCountries();
@@ -291,15 +303,35 @@ const PersonForm = ({ person, mutation }: PersonFormProps) => {
                 placeholder="Оберіть контакт"
               />
             </div>
-            {person && (
+            {person && setIsDialogOpen && (
               <div className="mt-6 border-t border-ui-border flex justify-end">
                 <Button
                   variant="link"
                   size="sm"
                   className="text-action-minus text-xs mt-4"
+                  onClick={() => setIsDialogOpen(true)}
                 >
                   Видалити контрагента
                 </Button>
+                {deletePersonMutation && (
+                  <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                    <Modal
+                      destructive
+                      header={{
+                        title: "Видалення контрагента",
+                        descriptionFirst: "Ви впевненні, що бажаєте видалити?",
+                        descriptionSecond: "Цю дію неможливо відмінити!",
+                      }}
+                      footer={{
+                        buttonActionTitleContinuous: "Видалення",
+                        buttonActionTitle: "Видалити",
+                        actionId: person.id,
+                        isPending: deletePersonMutation.isPending,
+                        action: () => deletePersonMutation.mutate(person.id),
+                      }}
+                    />
+                  </Dialog>
+                )}
               </div>
             )}
           </div>

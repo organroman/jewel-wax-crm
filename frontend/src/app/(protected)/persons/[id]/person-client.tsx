@@ -4,6 +4,7 @@ import { TabOption } from "@/types/shared.types";
 import { ChevronLeftIcon, Loader } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 
 import { usePerson } from "@/api/persons/use-person";
 
@@ -14,10 +15,28 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 
 import { PERSON_CARD_TABS_LIST } from "@/constants/persons.constants";
+import { useDialog } from "@/hooks/use-dialog";
 
 const PersonClient = ({ id }: { id: number }) => {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const searchParams = useSearchParams();
+
+  const {
+    dialogOpen: isDeleteDialogOpen,
+    setDialogOpen,
+    closeDialog,
+  } = useDialog();
+
+  const handleSuccess = () => {
+    closeDialog();
+    router.replace("/persons");
+  };
+
+  const { deletePersonMutation } = usePerson.deletePerson({
+    queryClient,
+    handleSuccess,
+  });
 
   const tabParam = searchParams.get("tab");
 
@@ -67,7 +86,14 @@ const PersonClient = ({ id }: { id: number }) => {
       />
       <Separator className="bg-ui-border h-0.5 data-[orientation=horizontal]:h-0.5" />
       <div className="mt-4 flex-1 overflow-y-hidden">
-        {selectedTab.value === "general_info" && <PersonForm person={person} />}
+        {selectedTab.value === "general_info" && (
+          <PersonForm
+            person={person}
+            deletePersonMutation={deletePersonMutation}
+            isDialogOpen={isDeleteDialogOpen}
+            setIsDialogOpen={setDialogOpen}
+          />
+        )}
       </div>
     </div>
   );

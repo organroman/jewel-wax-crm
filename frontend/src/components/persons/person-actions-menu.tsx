@@ -29,7 +29,7 @@ const PersonActionsMenu = ({ person }: { person: Person }) => {
 
   const { deletePersonMutation } = usePerson.deletePerson({
     queryClient,
-    closeDialog: closeDeleteDialog,
+    handleSuccess: closeDeleteDialog,
   });
   return (
     <>
