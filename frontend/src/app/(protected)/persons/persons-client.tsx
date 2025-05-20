@@ -1,4 +1,5 @@
 "use client";
+import { useRouter } from "next/navigation";
 
 import { useEnumStore } from "@/stores/use-enums-store";
 
@@ -17,6 +18,7 @@ import ERROR_MESSAGES from "@/constants/error-messages";
 import { PERSON_FILTERS, PERSON_ROLE_ALL } from "@/constants/persons.constants";
 
 const PersonsClient = () => {
+  const router = useRouter();
   const sortFields = useEnumStore((s) => s.getByType("person_sort_fields"));
   const roles = useEnumStore((s) => s.getByType("person_role"));
 
@@ -45,7 +47,7 @@ const PersonsClient = () => {
         searchPlaceholder="Пошук контрагента"
         addLabel="Додати контрагента"
         filterOptions={PERSON_FILTERS}
-        onAdd={() => console.log("create new")}
+        onAdd={() => router.push("persons/new")}
       />
       <div className="flex-1 overflow-hidden flex flex-col mt-2">
         <DataTable

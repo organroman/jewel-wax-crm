@@ -1,36 +1,47 @@
 import {
+  AllowedRolesForCrmUser,
   CreatePersonSchema,
   Person,
-  PersonRole,
   UpdatePersonSchema,
 } from "@/types/person.types";
+
+import { zodResolver } from "@hookform/resolvers/zod";
+import { UseMutationResult } from "@tanstack/react-query";
+import { useForm, useWatch } from "react-hook-form";
+import dayjs from "dayjs";
+import { toast } from "sonner";
+import { Loader } from "lucide-react";
+
 import {
   createPersonSchema,
   updatePersonSchema,
 } from "@/validators/person.validator";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { UseMutationResult } from "@tanstack/react-query";
-import { useForm } from "react-hook-form";
-import { Form } from "../ui/form";
-import { Button } from "../ui/button";
-import dayjs from "dayjs";
 
-import FormSwitch from "../form/form-switch";
-
-import InfoLabel from "../shared/typography/info-label";
-import InfoValue from "../shared/typography/info-value";
-import { Avatar } from "../ui/avatar";
-import CustomAvatar from "../shared/custom-avatar";
-import { getInitials } from "@/lib/utils";
-import FormInput from "../form/form-input";
-import FormSelect from "../form/form-select";
-import { useEnumStore } from "@/stores/use-enums-store";
-import FormArrayInput from "../form/form-array-input";
-import FormArrayPhone from "../form/form-array-phone";
 import { useLocation } from "@/api/locations/use-location";
-import FormArrayLocation from "../form/form-array-location";
-import { toast } from "sonner";
-import FormArrayBankDetails from "../form/form-array-bank";
+import { useEnumStore } from "@/stores/use-enums-store";
+
+import { Form } from "@/components/ui/form";
+import { Button } from "@/components/ui/button";
+
+import FormSwitch from "@/components/form/form-switch";
+import FormInput from "@/components/form/form-input";
+import FormSelect from "@/components/form/form-select";
+import FormArrayInput from "@/components/form/form-array-input";
+import FormArrayPhone from "@/components/form/form-array-phone";
+import FormArrayBankDetails from "@/components/form/form-array-bank";
+import FormArrayLocation from "@/components/form/form-array-location";
+import FormArrayCombobox from "@components/form/form-array-combobox";
+
+import InfoLabel from "@/components/shared/typography/info-label";
+import InfoValue from "@/components/shared/typography/info-value";
+import CustomAvatar from "@/components/shared/custom-avatar";
+
+import {
+  ALLOWED_ROLES_FOR_CRM_USER,
+  PERSON_ROLE_VALUES,
+} from "@/constants/enums.constants";
+
+import { getInitials } from "@/lib/utils";
 
 const schemaMap = {
   create: createPersonSchema,
@@ -51,32 +62,39 @@ const PersonForm = ({ person, mutation }: PersonFormProps) => {
   const schema = person ? schemaMap.update : schemaMap.create;
   const { data: countries, isLoading, error } = useLocation.getCountries();
 
-  console.log("", person);
-
   const form = useForm<UpdatePersonSchema | CreatePersonSchema>({
     resolver: zodResolver(schema),
     defaultValues: {
       id: person?.id,
-      role: person?.role || {},
+      role: person
+        ? person?.role
+        : { value: PERSON_ROLE_VALUES[3], label: "Замовник" },
       first_name: person?.first_name || "",
       last_name: person?.last_name || "",
       patronymic: person?.patronymic || "",
       is_active: person?.is_active || true,
-      emails: person?.emails || [],
+      emails: person ? person.emails : [],
       phones: person?.phones || [],
       locations: person?.locations || [],
-      delivery_addresses: person?.locations || [],
+      delivery_addresses: person?.delivery_addresses || [],
       contacts: person?.contacts || [],
       bank_details: person?.bank_details || [],
-      password: "",
+      password: undefined,
     },
   });
-  const onSubmit = (formData: Person) => {
-    //     mutation.mutate({ ...formData });
-    console.log(formData);
-  };
 
-  console.log("form values", form.getValues());
+  const watchedRole = useWatch({
+    control: form.control,
+    name: "role",
+  });
+
+  const isCrmUser = ALLOWED_ROLES_FOR_CRM_USER.includes(
+    watchedRole.value as AllowedRolesForCrmUser
+  );
+
+  const onSubmit = (formData: UpdatePersonSchema | CreatePersonSchema) => {
+    mutation?.mutate({ ...formData });
+  };
 
   //TODO: implement print
   const handlePrint = () => {
@@ -110,10 +128,20 @@ const PersonForm = ({ person, mutation }: PersonFormProps) => {
                 unCheckedLabel="Неактивний"
               />
             </div>
-            <Button type="submit">Зберігти зміни</Button>
+            <Button
+              type="submit"
+              form="personForm"
+              disabled={mutation?.isPending}
+              className="flex items-center gap-2"
+            >
+              {person ? "Зберігти зміни" : "Створити"}
+              {mutation?.isPending && (
+                <Loader className="size-4 animate-spin text-white" />
+              )}
+            </Button>
           </div>
           <div className="flex-1 overflow-auto pr-1 mt-6">
-            <div className="flex w-full justify-between sm:flex-col sm:gap-y-4 lg:flex-row">
+            <div className="flex w-full justify-between sm:flex-col sm:gap-y-4 md:flex-wrap lg:flex-row lg:flex-nowrap">
               <div className="flex gap-6 w-1/2 md:w-full">
                 <CustomAvatar
                   className="w-37 h-37"
@@ -129,21 +157,21 @@ const PersonForm = ({ person, mutation }: PersonFormProps) => {
                   <FormInput
                     name="last_name"
                     label="Прізвище:"
-                    placeholder="Іванов"
+                    placeholder="Введіть прізвище"
                     control={form.control}
                     required
                   />
                   <FormInput
                     name="first_name"
                     label="Імʼя:"
-                    placeholder="Степан"
+                    placeholder="Введіть імʼя"
                     control={form.control}
                     required
                   />
                   <FormInput
                     name="patronymic"
                     label="По батькові:"
-                    placeholder="Олегович"
+                    placeholder="Введіть по батькові"
                     control={form.control}
                   />
                   <FormSelect
@@ -155,13 +183,23 @@ const PersonForm = ({ person, mutation }: PersonFormProps) => {
                     className="mt-2.5"
                     options={roles}
                   />
-                  <Button
-                    onClick={handlePrint}
-                    variant="secondary"
-                    className="mt-2.5 min-w-[240px] self-end"
-                  >
-                    Друк етикетки
-                  </Button>
+                  {!person && isCrmUser && (
+                    <FormInput
+                      name="password"
+                      label="Пароль"
+                      control={form.control}
+                      placeholder="Введіть пароль"
+                    />
+                  )}
+                  {person && (
+                    <Button
+                      onClick={handlePrint}
+                      variant="secondary"
+                      className="mt-2.5 min-w-[240px] self-end"
+                    >
+                      Друк етикетки
+                    </Button>
+                  )}
                 </div>
               </div>
               <div className="flex w-1/2 md:w-full">
@@ -178,6 +216,7 @@ const PersonForm = ({ person, mutation }: PersonFormProps) => {
                 />
               </div>
             </div>
+
             <div className="mt-6 ">
               <p className="pb-3 border-b font-medium border-ui-border mb-2.5">
                 Адреса
@@ -189,18 +228,35 @@ const PersonForm = ({ person, mutation }: PersonFormProps) => {
                 countries={countries || []}
               />
             </div>
-            <div className="mt-6 ">
-              <p className="pb-3 border-b font-medium border-ui-border mb-2.5">
-                Електрона адреса
-              </p>
-              <FormArrayInput
-                name="emails"
-                control={form.control}
-                setValue={form.setValue}
-                label="Email"
-                fieldKey="email"
-                showIsMain
-              />
+            <div className="flex justify-between gap-20 w-full">
+              <div className="mt-6 w-1/2 ">
+                <p className="pb-3 border-b font-medium border-ui-border mb-2.5">
+                  Електрона адреса
+                </p>
+                <FormArrayInput
+                  name="emails"
+                  control={form.control}
+                  setValue={form.setValue}
+                  placeholder="Введіть email"
+                  label="Email"
+                  fieldKey="email"
+                  showIsMain
+                />
+              </div>
+              <div className="mt-6 w-1/2">
+                <p className="pb-3 border-b font-medium border-ui-border mb-2.5">
+                  Адреса доставки
+                </p>
+                <FormArrayInput
+                  name="delivery_addresses"
+                  control={form.control}
+                  setValue={form.setValue}
+                  placeholder="Введіть адресу"
+                  fieldKey="address_line"
+                  showIsMain
+                  inputClassName="min-w[460px]"
+                />
+              </div>
             </div>
             <div className="mt-6 ">
               <p className="pb-3 border-b font-medium border-ui-border mb-2.5">
@@ -212,15 +268,40 @@ const PersonForm = ({ person, mutation }: PersonFormProps) => {
                 setValue={form.setValue}
               />
             </div>
-            <div className="mt-6 border-t border-ui-border flex justify-end">
-              <Button
-                variant="link"
-                size="sm"
-                className="text-action-minus text-xs mt-4"
-              >
-                Видалити контрагента
-              </Button>
+            <div className="mt-6 ">
+              <p className="pb-3 border-b font-medium border-ui-border mb-2.5">
+                Привʼязані контакти
+              </p>
+              <FormArrayCombobox
+                name="contacts"
+                control={form.control}
+                options={
+                  (person?.contacts &&
+                    person?.contacts.map((c) => ({
+                      label: c.full_name || "",
+                      value: c.id,
+                      data: c,
+                    }))) ||
+                  []
+                }
+                label="Контакт"
+                displayKey="full_name"
+                valueKey="id"
+                saveFullObject
+                placeholder="Оберіть контакт"
+              />
             </div>
+            {person && (
+              <div className="mt-6 border-t border-ui-border flex justify-end">
+                <Button
+                  variant="link"
+                  size="sm"
+                  className="text-action-minus text-xs mt-4"
+                >
+                  Видалити контрагента
+                </Button>
+              </div>
+            )}
           </div>
         </form>
       </Form>

@@ -1,4 +1,7 @@
-import { PERSON_ROLE_VALUES } from "@/constants/enums.constants";
+import {
+  ALLOWED_ROLES_FOR_CRM_USER,
+  PERSON_ROLE_VALUES,
+} from "@/constants/enums.constants";
 import { PERSON_SORT_FIELDS } from "@/constants/sortable-fields";
 import { ChanelSource, GetAllOptions } from "./shared.types";
 import { Contact } from "./contact.types";
@@ -9,11 +12,13 @@ import {
 } from "@/validators/person.validator";
 
 export type PersonRoleValue = (typeof PERSON_ROLE_VALUES)[number];
+export type AllowedRolesForCrmUser =
+  (typeof ALLOWED_ROLES_FOR_CRM_USER)[number];
 
 export type PersonRole = {
   value: PersonRoleValue;
   label: string;
-  type?: string
+  type?: string;
 };
 
 export type PersonSortField = (typeof PERSON_SORT_FIELDS)[number];
@@ -71,22 +76,38 @@ export interface Email {
   updated_at?: Date;
 }
 export interface Person {
-  id?: number;
+  id: number;
+  role: PersonRole;
+  first_name: string;
+  last_name: string;
+  patronymic: string;
+  avatar_url: string;
+  is_active: boolean;
+  created_at: Date;
+  updated_at: Date;
+  emails: Email[];
+  phones: Phone[];
+  locations: Location[];
+  delivery_addresses: DeliveryAddress[];
+  contacts: PersonContact[];
+  messengers: PersonMessenger[];
+  bank_details: BankDetails[];
+}
+
+export interface PersonCreateInput {
   role: PersonRole;
   first_name: string;
   last_name: string;
   patronymic?: string;
-  avatar_url?: string;
   is_active: boolean;
-  created_at?: Date;
-  updated_at?: Date;
-  emails?: Email[];
   phones: Phone[];
-  locations?: Location[];
-  delivery_addresses?: DeliveryAddress[];
-  contacts?: PersonContact[];
-  messengers?: PersonMessenger[];
-  bank_details?: BankDetails[];
+  emails: Email[];
+  locations: Location[];
+  delivery_addresses: DeliveryAddress[];
+  contacts: PersonContact[];
+  bank_details: BankDetails[];
+  messengers: PersonMessenger[];
+  password?: string;
 }
 
 export type UpdatePersonSchema = z.infer<typeof updatePersonSchema>;
