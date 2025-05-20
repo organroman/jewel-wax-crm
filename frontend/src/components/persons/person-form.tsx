@@ -82,8 +82,8 @@ const PersonForm = ({
         ? person?.role
         : { value: PERSON_ROLE_VALUES[3], label: "Замовник" },
       first_name: person?.first_name || "",
-      last_name: person?.last_name || "",
       patronymic: person?.patronymic || "",
+      last_name: person?.last_name || "",
       is_active: person?.is_active || true,
       emails: person ? person.emails : [],
       phones: person?.phones || [],

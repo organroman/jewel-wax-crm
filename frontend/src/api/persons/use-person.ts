@@ -1,6 +1,10 @@
 import { QueryClient, useMutation, useQuery } from "@tanstack/react-query";
 import { personService } from "./person-service";
-import { CreatePersonSchema, Person } from "@/types/person.types";
+import {
+  CreatePersonSchema,
+  Person,
+  UpdatePersonSchema,
+} from "@/types/person.types";
 import { toast } from "sonner";
 
 export const usePerson = {
@@ -45,6 +49,32 @@ export const usePerson = {
       },
     });
     return { createPersonMutation: mutation };
+  },
+  updatePerson: ({
+    queryClient,
+    handleOnSuccess,
+  }: {
+    queryClient: QueryClient;
+    handleOnSuccess?: (data: Person) => void;
+  }) => {
+    const mutation = useMutation<
+      Person,
+      Error,
+      UpdatePersonSchema 
+    >({
+      mutationFn: async (data) => personService.update(data),
+      onSuccess: (data) => {
+        toast.success("Контрагента оновлено");
+        queryClient.invalidateQueries({
+          queryKey: ["persons"],
+        });
+        handleOnSuccess && handleOnSuccess(data);
+      },
+      onError: (error) => {
+        toast.error(error.message);
+      },
+    });
+    return { updateMutation: mutation };
   },
   deletePerson: ({
     queryClient,

@@ -61,8 +61,8 @@ const phoneSchema = z.object({
   person_id: z.number().optional(),
   number: z.string().min(5, VALIDATION_MESSAGES.INVALID_PHONE),
   is_main: z.boolean(),
-  created_at: z.date().optional(),
-  updated_at: z.date().optional(),
+  // created_at: z.string().optional(),
+  // updated_at: z.string().optional(),
 });
 
 const emailSchema = z.object({

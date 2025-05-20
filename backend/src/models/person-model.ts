@@ -263,7 +263,7 @@ export const PersonModel = {
       return null;
     }
 
-    if (phones) {
+    if (phones?.length) {
       await db("phones").where("person_id", personId).del();
       await db("phones").insert(
         phones.map((phone) => ({
@@ -273,7 +273,7 @@ export const PersonModel = {
       );
     }
 
-    if (emails) {
+    if (emails?.length) {
       await db("person_emails").where("person_id", personId).del();
       await db("person_emails").insert(
         emails.map((email) => ({
@@ -282,7 +282,7 @@ export const PersonModel = {
         }))
       );
     }
-    if (delivery_addresses) {
+    if (delivery_addresses?.length) {
       await db("delivery_addresses").where({ person_id: personId }).del();
       await db("delivery_addresses").insert(
         delivery_addresses.map((address) => ({
@@ -292,17 +292,20 @@ export const PersonModel = {
       );
     }
 
-    if (locations) {
+    if (locations?.length) {
       await db("person_locations").where("person_id", personId).del();
       await db("person_locations").insert(
         locations.map((location) => ({
-          ...location,
+          id: location.id,
+          is_main: location.is_main,
+          city_id: location.city_id,
+          country_id: location.country_id,
           person_id: personId,
         }))
       );
     }
 
-    if (contacts) {
+    if (contacts?.length) {
       await db("person_contacts").where("person_id", personId).del();
       await db("person_contacts").insert(
         contacts.map((contact) => ({
@@ -312,7 +315,7 @@ export const PersonModel = {
       );
     }
 
-    if (bank_details) {
+    if (bank_details?.length) {
       await db("person_bank_accounts").where("person_id", personId).del();
       await db("person_bank_accounts").insert(
         bank_details.map((bank) => ({

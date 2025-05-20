@@ -1,4 +1,8 @@
-import { CreatePersonSchema, Person } from "@/types/person.types";
+import {
+  CreatePersonSchema,
+  Person,
+  UpdatePersonSchema,
+} from "@/types/person.types";
 import apiService from "../api-service";
 import { PaginatedResult } from "@/types/shared.types";
 
@@ -14,8 +18,10 @@ export const personService = {
   create: (data: CreatePersonSchema) =>
     apiService.post<Person>("persons", { ...data, role: data.role.value }),
 
-  // update: (id: number, data: UpdatePersonInput) =>
-  //   apiService.patch<SafePerson>(`/persons/${id}`, data),
+  update: (data: UpdatePersonSchema) => {
+    const payload = { ...data, role: data.role.value };
+    return apiService.patch<Person>(`persons/${data.id}`, payload);
+  },
 
   delete: (id: number) => apiService.delete(`persons/${id}`),
 };

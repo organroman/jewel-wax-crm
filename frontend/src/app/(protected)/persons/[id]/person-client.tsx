@@ -33,6 +33,8 @@ const PersonClient = ({ id }: { id: number }) => {
     router.replace("/persons");
   };
 
+  const { updateMutation } = usePerson.updatePerson({ queryClient });
+
   const { deletePersonMutation } = usePerson.deletePerson({
     queryClient,
     handleSuccess,
@@ -89,6 +91,7 @@ const PersonClient = ({ id }: { id: number }) => {
         {selectedTab.value === "general_info" && (
           <PersonForm
             person={person}
+            mutation={updateMutation}
             deletePersonMutation={deletePersonMutation}
             isDialogOpen={isDeleteDialogOpen}
             setIsDialogOpen={setDialogOpen}

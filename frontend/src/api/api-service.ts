@@ -60,9 +60,11 @@ const makeRequest = async <T>(
   let data;
 
   try {
-    if (res.status !== 204) {
-      data = await res.json();
-    }
+    const text = await res.text();
+    data = text ? JSON.parse(text) : null;
+    // if (res.status !== 204) {
+    //   data = await res.json();
+    // }
   } catch (error) {
     console.error("Error parsing response:", error);
     throw new AppError(ERROR_MESSAGES.INTERNAL_SERVER_ERROR, 500);
