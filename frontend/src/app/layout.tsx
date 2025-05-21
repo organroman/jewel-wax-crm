@@ -4,6 +4,7 @@ import "./globals.css";
 import { QueryProvider } from "@/providers/query-provider";
 import { Toaster } from "sonner";
 import { ThemeProvider } from "@/providers/theme-provider";
+import { CircleCheck } from "lucide-react";
 const inter = Inter({
   variable: "--font-inter-sans",
   subsets: ["cyrillic", "latin"],
@@ -31,7 +32,16 @@ export default async function RootLayout({
         >
           <QueryProvider>
             {children}
-            <Toaster />
+            <Toaster
+              position="top-right"
+              offset={{ top: "10vh", right: "36px" }}
+              richColors
+              toastOptions={{
+                classNames: {
+                  toast: "!py-3",
+                },
+              }}
+            />
           </QueryProvider>
         </ThemeProvider>
       </body>
