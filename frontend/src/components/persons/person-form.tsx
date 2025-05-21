@@ -205,6 +205,7 @@ const PersonForm = ({
                   )}
                   {person && (
                     <Button
+                      type="button"
                       onClick={handlePrint}
                       variant="secondary"
                       className="mt-2.5 min-w-[240px] self-end"
@@ -307,6 +308,7 @@ const PersonForm = ({
               <div className="mt-6 border-t border-ui-border flex justify-end">
                 <Button
                   variant="link"
+                  type="button"
                   size="sm"
                   className="text-action-minus text-xs mt-4"
                   onClick={() => setIsDialogOpen(true)}
