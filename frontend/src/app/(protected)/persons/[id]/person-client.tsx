@@ -75,7 +75,7 @@ const PersonClient = ({ id }: { id: number }) => {
   return (
     <div className="h-full flex flex-1 flex-col overflow-y-hidden">
       <Button
-        onClick={() => router.back()}
+        onClick={() => router.push("/persons")}
         variant="link"
         className="w-fit has-[>svg]:p-0 text-text-light h-4"
       >

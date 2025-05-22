@@ -91,7 +91,7 @@ const PersonForm = ({
       delivery_addresses: person?.delivery_addresses || [],
       contacts: person?.contacts || [],
       bank_details: person?.bank_details || [],
-      password: undefined,
+      password: "",
     },
   });
 
