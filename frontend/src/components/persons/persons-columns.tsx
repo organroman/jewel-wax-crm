@@ -86,7 +86,7 @@ export const personsColumns: ColumnDef<Person>[] = [
       return (
         <Badge
           className={cn(
-            "text-[10px] rounded-md",
+            "text-xs rounded-2xl font-medium px-3.5 py-1.5",
             PERSON_ROLE_COLORS[role.value]
           )}
         >
@@ -94,6 +94,7 @@ export const personsColumns: ColumnDef<Person>[] = [
         </Badge>
       );
     },
+    size: 76,
   },
   {
     accessorKey: "city",
