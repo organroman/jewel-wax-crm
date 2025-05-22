@@ -4,6 +4,7 @@ import {
   CreateCityInput,
   CreateCountryInput,
 } from "../types/location-types";
+import { PaginatedResult } from "../types/shared.types";
 
 import { ActivityLogModel } from "../models/activity-log-model";
 import { LocationModel } from "../models/location-model";
@@ -21,6 +22,10 @@ export const LocationService = {
 
   async getCitiesByCountry(countryId: number): Promise<City[]> {
     return await LocationModel.getCitiesByCountry(countryId);
+  },
+
+  async getPaginatedCities(search: string): Promise<PaginatedResult<City>> {
+    return await LocationModel.getPaginatedCities({ search });
   },
 
   async getCityById(cityId: number): Promise<City | null> {

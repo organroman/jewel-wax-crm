@@ -21,4 +21,10 @@ export const useLocation = {
       enabled: !!countryId,
     });
   },
+  getCities: (query: string) => {
+    return useQuery({
+      queryKey: ["cities", query],
+      queryFn: () => locationService.getAllCities(query),
+    });
+  },
 };

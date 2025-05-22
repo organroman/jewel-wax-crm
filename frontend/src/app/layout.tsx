@@ -34,7 +34,7 @@ export default async function RootLayout({
             {children}
             <Toaster
               position="top-right"
-              offset={{ top: "10vh", right: "36px" }}
+              offset={{ top: "5vh", right: "36px" }}
               richColors
               toastOptions={{
                 classNames: {

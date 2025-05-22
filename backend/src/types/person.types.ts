@@ -107,6 +107,7 @@ export interface SafePersonWithRole extends SafePerson {
 
 export type GetAllPersonsOptions = GetAllOptions<{
   role?: string;
-  city?: string;
+  city?: number;
+  country?: number;
   is_active?: boolean;
 }>;

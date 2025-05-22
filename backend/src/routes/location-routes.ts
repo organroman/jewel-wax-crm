@@ -18,6 +18,7 @@ router.get(
   verifyToken,
   LocationController.getCitiesByCountry
 );
+router.get("/cities", verifyToken, LocationController.getCities);
 router.post(
   "/countries",
   verifyToken,

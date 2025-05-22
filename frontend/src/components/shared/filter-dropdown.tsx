@@ -1,50 +1,32 @@
 "use client";
+import { FilterGroup } from "@/types/shared.types";
 
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
-  DropdownMenuItem,
-  DropdownMenuCheckboxItem,
-} from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useState } from "react";
-import { SlidersHorizontal } from "lucide-react";
-import { EnumItem, FilterGroup, FilterOption } from "@/types/shared.types";
-import { Checkbox } from "../ui/checkbox";
+
+import { toggleParam } from "@/lib/utils";
+
+import StaticCombobox from "./static-combobox";
+import AsyncComboBox from "./async-combobox";
 
 interface FilterDropdownProps {
   filters: FilterGroup[];
-  placeholder?: string;
 }
-//TODO
-const FilterDropdown = ({
-  filters,
-  placeholder = "Фільтри",
-}: FilterDropdownProps) => {
+
+const FilterDropdown = ({ filters }: FilterDropdownProps) => {
+  const [openStates, setOpenStates] = useState<Record<string, boolean>>({});
+
+  const handleOpenChange = (param: string, value: boolean) => {
+    setOpenStates((prev) => ({
+      ...prev,
+      [param]: value,
+    }));
+  };
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const toggleParam = (param: string, value: string | boolean) => {
-    const current = new URLSearchParams(searchParams.toString());
-    const valueStr = String(value);
-    const values = current.get(param)?.split(",").filter(Boolean) || [];
-
-    const updated = values.includes(valueStr)
-      ? values.filter((v) => v !== valueStr)
-      : [...values, valueStr];
-
-    if (updated.length > 0) {
-      current.set(param, updated.join(","));
-    } else {
-      current.delete(param);
-    }
-    router.push(`?${current.toString()}`);
+  const handleSelect = (param: string, value: string) => {
+    toggleParam(searchParams.toString(), param, value, router);
   };
 
   const isChecked = (param: string, value: string | boolean) => {
@@ -53,41 +35,37 @@ const FilterDropdown = ({
   };
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button
-          variant="ghost"
-          className="focus-visible:ring-0 cursor-pointer  p-0 has-[>svg]:px-0"
-        >
-          <SlidersHorizontal className="size-4" />
-          <span className="text-xs text-text-light font-medium">
-            {placeholder}
-          </span>
-        </Button>
-      </DropdownMenuTrigger>
-
-      <DropdownMenuContent className="w-[220px] max-h-[300px] overflow-y-auto p-1">
-        {filters.map((group) => (
-          <DropdownMenuSub key={group.param}>
-            <DropdownMenuSubTrigger className="cursor-pointer">
-              {group.label}
-            </DropdownMenuSubTrigger>
-            <DropdownMenuSubContent className="w-48">
-              {group.options.map((option) => (
-                <DropdownMenuCheckboxItem
-                  className="border-ui-border data-[state=checked]:bg-brand-default"
-                  key={`${group.param}_${option.value}`}
-                  checked={isChecked(group.param, option.value)}
-                  onCheckedChange={() => toggleParam(group.param, option.value)}
-                >
-                  {option.label}
-                </DropdownMenuCheckboxItem>
-              ))}
-            </DropdownMenuSubContent>
-          </DropdownMenuSub>
-        ))}
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <div className="flex gap-5">
+      {filters.map((group) => (
+        <div className="flex" key={group.param}>
+          {group.async ? (
+            <AsyncComboBox
+              open={openStates[group.param]}
+              handleOpenChange={(value) => handleOpenChange(group.param, value)}
+              label={group.label}
+              options={group.options || []}
+              isLoading={group.isLoading}
+              searchQuery={group.searchQuery}
+              setSearchQuery={group.setSearchQuery}
+              param={group.param}
+              handleSelect={handleSelect}
+              isChecked={(value) => isChecked(group.param, value)}
+            />
+          ) : (
+            <StaticCombobox
+              open={openStates[group.param]}
+              handleOpenChange={(value) => handleOpenChange(group.param, value)}
+              label={group.label}
+              hasSearch={group.hasSearch}
+              options={group.options || []}
+              param={group.param}
+              handleSelect={handleSelect}
+              isChecked={(value) => isChecked(group.param, value)}
+            />
+          )}
+        </div>
+      ))}
+    </div>
   );
 };
 

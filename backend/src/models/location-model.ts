@@ -1,6 +1,8 @@
 import { CreateCityInput, CreateCountryInput } from "../types/location-types";
 import db from "../db/db";
 import { City, Country } from "./../types/location-types";
+import { PaginatedResult } from "../types/shared.types";
+import { paginateQuery } from "../utils/pagination";
 
 export const LocationModel = {
   async getAllCountries(): Promise<Country[]> {
@@ -15,6 +17,24 @@ export const LocationModel = {
       .where("id", id)
       .select("*");
     return country;
+  },
+
+  async getPaginatedCities({
+    search,
+  }: {
+    search?: string;
+  }): Promise<PaginatedResult<City>> {
+    const baseQuery = db<City>("cities").select("*");
+
+    if (search) {
+      baseQuery.where((qb) => {
+        qb.whereILike("name", `%${search}%`);
+      });
+    }
+    return await paginateQuery<City>(baseQuery, {
+      page: 1,
+      limit: 10,
+    });
   },
 
   async getCitiesByCountry(countryId: number): Promise<City[]> {
@@ -39,5 +59,4 @@ export const LocationModel = {
     const [city] = await db<City>("cities").insert(data).returning("*");
     return city;
   },
-  
 };

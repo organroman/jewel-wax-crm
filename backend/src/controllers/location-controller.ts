@@ -25,6 +25,17 @@ export const LocationController = {
       next(error);
     }
   },
+  async getCities(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { search } = req.query;
+
+      const cities = await LocationService.getPaginatedCities(search as string);
+
+      res.status(200).json(cities);
+    } catch (error) {
+      next(error);
+    }
+  },
   async getCitiesByCountry(req: Request, res: Response, next: NextFunction) {
     try {
       const cities = await LocationService.getCitiesByCountry(

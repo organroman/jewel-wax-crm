@@ -27,9 +27,26 @@ export const PersonModel = {
     const baseQuery = db<Person>("persons").select("*");
 
     if (filters?.role) baseQuery.where("role", filters.role);
-    // if (filters?.city) baseQuery.whereILike("city", `%${filters.city}%`);
     if (typeof filters?.is_active === "boolean")
       baseQuery.where("is_active", filters.is_active);
+
+    if (filters?.city)
+      baseQuery.where((qb) => {
+        qb.whereIn("id", function () {
+          this.select("person_id")
+            .from("person_locations")
+            .where("city_id", filters.city);
+        });
+      });
+
+    if (filters?.country)
+      baseQuery.where((qb) => {
+        qb.whereIn("id", function () {
+          this.select("person_id")
+            .from("person_locations")
+            .where("country_id", filters.country);
+        });
+      });
 
     if (search) {
       baseQuery.where((qb) => {

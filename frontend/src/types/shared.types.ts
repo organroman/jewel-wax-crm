@@ -1,4 +1,5 @@
 import { CHANEL_SOURCE } from "@/constants/enums.constants";
+import { Dispatch, SetStateAction } from "react";
 
 export type ChanelSource = (typeof CHANEL_SOURCE)[number];
 
@@ -35,13 +36,18 @@ export interface EnumItem<T> {
 
 export interface FilterOption {
   label: string;
-  value: string | boolean;
+  value: string | boolean | number;
 }
 
 export interface FilterGroup {
   label: string;
   param: string;
-  options: FilterOption[];
+  options?: FilterOption[];
+  async?: boolean;
+  isLoading?: boolean;
+  searchQuery?: string;
+  hasSearch?: boolean;
+  setSearchQuery?: Dispatch<SetStateAction<string>>;
 }
 
 export interface TabOption {

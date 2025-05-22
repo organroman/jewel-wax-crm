@@ -1,4 +1,4 @@
-export const PERSON_FILTERS = [
+export const STATIC_PERSON_FILTERS = [
   {
     param: "is_active",
     label: "Статус",
@@ -38,7 +38,9 @@ export const PERSON_CARD_TABS_LIST = [
   },
 ];
 
-export const PERSON_CARD_NEW_TAB = [{ label: "Новий контрагент", value: "new" }];
+export const PERSON_CARD_NEW_TAB = [
+  { label: "Новий контрагент", value: "new" },
+];
 
 export const MESSENGERS_SOURCE_ICONS = {
   telegram: "/img/telegram.svg",

@@ -37,7 +37,7 @@ const locationsSchema = z
       });
 
       addresses.forEach((address, index) => {
-        if (!address?.city_name) {
+        if (!address?.city_id) {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
             path: [index, "city_id"],

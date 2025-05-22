@@ -1,3 +1,4 @@
+import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { parsePhoneNumberFromString } from "libphonenumber-js";
@@ -51,4 +52,26 @@ export const copyToClipboard = async (text: string): Promise<boolean> => {
     toast.error("Failed to copy");
     return false;
   }
+};
+
+export const toggleParam = (
+  searchParams: string,
+  param: string,
+  value: string | boolean,
+  router: AppRouterInstance
+) => {
+  const current = new URLSearchParams(searchParams);
+  const valueStr = String(value);
+  const values = current.get(param)?.split(",").filter(Boolean) || [];
+
+  const updated = values.includes(valueStr)
+    ? values.filter((v) => v !== valueStr)
+    : [...values, valueStr];
+
+  if (updated.length > 0) {
+    current.set(param, updated.join(","));
+  } else {
+    current.delete(param);
+  }
+  router.push(`?${current.toString()}`);
 };

@@ -12,7 +12,7 @@ import { PERSON_SORT_FIELDS } from "../constants/sortable-fields";
 export const PersonController = {
   async getAllPersons(req: Request, res: Response, next: NextFunction) {
     try {
-      const { page, limit, role, city, is_active, search } = req.query;
+      const { page, limit, role, city, country, is_active, search } = req.query;
 
       const { sortBy, order } = parseSortParams(
         req.query.sortBy as string,
@@ -26,7 +26,8 @@ export const PersonController = {
         limit: Number(limit),
         filters: {
           role: role as string,
-          city: city as string,
+          city: Number(city) as number,
+          country: Number(country) as number,
           is_active:
             is_active === "true"
               ? true

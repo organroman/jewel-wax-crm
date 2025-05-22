@@ -1,5 +1,6 @@
 import { City, Country } from "@/types/location.types";
 import apiService from "../api-service";
+import { PaginatedResult } from "@/types/shared.types";
 
 export const locationService = {
   getCountries: async () => {
@@ -8,6 +9,11 @@ export const locationService = {
   getCitiesByCountry: async (countryId: number) => {
     return await apiService.get<City[]>(
       `locations/countries/${countryId}/cities`
+    );
+  },
+  getAllCities: async (query: string) => {
+    return await apiService.get<PaginatedResult<City>>(
+      `locations/cities?${query}`
     );
   },
 };
