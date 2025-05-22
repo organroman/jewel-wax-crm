@@ -54,6 +54,7 @@ export const personsColumns: ColumnDef<Person>[] = [
 
       return <span>{full_name}</span>;
     },
+    size: 40,
   },
   {
     accessorKey: "phone",
@@ -77,6 +78,7 @@ export const personsColumns: ColumnDef<Person>[] = [
         );
       }
     },
+    size: 30,
   },
   {
     accessorKey: "role",
@@ -86,7 +88,7 @@ export const personsColumns: ColumnDef<Person>[] = [
       return (
         <Badge
           className={cn(
-            "text-xs rounded-2xl font-medium px-3.5 py-1.5",
+            "text-xs rounded-2xl font-medium px-3.5 py-[5px]",
             PERSON_ROLE_COLORS[role.value]
           )}
         >
@@ -94,7 +96,7 @@ export const personsColumns: ColumnDef<Person>[] = [
         </Badge>
       );
     },
-    size: 76,
+    size: 30,
   },
   {
     accessorKey: "city",
@@ -106,6 +108,7 @@ export const personsColumns: ColumnDef<Person>[] = [
         return <span>{main?.city_name}</span>;
       }
     },
+    size: 40
   },
   {
     accessorKey: "post",
@@ -125,6 +128,7 @@ export const personsColumns: ColumnDef<Person>[] = [
       const formattedDate = dayjs(date).format("DD.MM.YYYY");
       return <span>{formattedDate}</span>;
     },
+    size: 30
   },
   {
     id: "actions",

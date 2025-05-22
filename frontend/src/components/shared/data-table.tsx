@@ -105,12 +105,12 @@ DataTableProps<TData, TValue> & {
                   <TableRow
                     key={row.id}
                     data-state={row.getIsSelected() && "selected"}
-                    className="h-10 bg-white even:bg-ui-row"
+                    className="h-10 bg-white even:bg-ui-row hover:bg-ui-border"
                   >
                     {row.getVisibleCells().map((cell) => (
                       <TableCell
                         key={cell.id}
-                        className=" border-r last:border-r-0 border-ui-border "
+                        className=" border-r last:border-r-0 border-ui-border box-border "
                         style={{ width: cell.column.getSize() }}
                       >
                         {flexRender(
