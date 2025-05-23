@@ -9,6 +9,7 @@ import {
   Path,
   UseFormSetValue,
 } from "react-hook-form";
+import { Dispatch, SetStateAction } from "react";
 
 export interface FormSwitchProps<T extends FieldValues> {
   control: Control<T>;
@@ -93,8 +94,7 @@ export interface FormArrayBankDetailsProps<T extends FieldValues> {
   required?: boolean;
 }
 
-
-export type FormComboboxProps<T extends FieldValues, O> = {
+export interface FormComboboxProps<T extends FieldValues, O> {
   name: Path<T>;
   label?: string;
   placeholder?: string;
@@ -107,7 +107,14 @@ export type FormComboboxProps<T extends FieldValues, O> = {
   saveFullObject?: boolean;
   saveOnlyValue?: boolean;
   disabled?: boolean;
-};
+}
+
+export interface FormAsyncComboboxProps<T extends FieldValues, O>
+  extends FormComboboxProps<T, O> {
+  searchQuery?: string;
+  setSearchQuery?: Dispatch<SetStateAction<string>>;
+  isOptionsLoading?: boolean;
+}
 
 export interface FormArrayComboboxProps<T extends FieldValues, O> {
   name: ArrayPath<T>;
@@ -122,4 +129,7 @@ export interface FormArrayComboboxProps<T extends FieldValues, O> {
   saveFullObject?: boolean;
   saveOnlyValue?: boolean;
   isShownEmptyInput?: boolean;
+  searchQuery?: string;
+  setSearchQuery?: Dispatch<SetStateAction<string>>;
+  isOptionsLoading?: boolean;
 }

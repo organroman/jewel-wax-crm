@@ -6,9 +6,9 @@ import { useEffect, useRef } from "react";
 import { Trash2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import FormCombobox from "./form-combobox"; // the one we created before
+import FormAsyncCombobox from "./form-async-combobox ";
 
-const FormArrayCombobox = <T extends FieldValues, O>({
+const FormArrayAsyncCombobox = <T extends FieldValues, O>({
   name,
   control,
   label,
@@ -20,6 +20,9 @@ const FormArrayCombobox = <T extends FieldValues, O>({
   valueKey,
   saveFullObject,
   isShownEmptyInput = false,
+  searchQuery,
+  setSearchQuery,
+  isOptionsLoading,
 }: FormArrayComboboxProps<T, O>) => {
   const { fields, append, remove } = useFieldArray({ control, name });
   const hasAppended = useRef(false);
@@ -44,7 +47,7 @@ const FormArrayCombobox = <T extends FieldValues, O>({
 
         return (
           <div key={field.id} className="flex w-full items-start gap-2.5">
-            <FormCombobox
+            <FormAsyncCombobox
               name={inputName}
               control={control}
               placeholder={placeholder}
@@ -54,6 +57,9 @@ const FormArrayCombobox = <T extends FieldValues, O>({
               displayKey={displayKey}
               valueKey={valueKey}
               saveFullObject={saveFullObject}
+              searchQuery={searchQuery}
+              setSearchQuery={setSearchQuery}
+              isOptionsLoading={isOptionsLoading}
             />
             <Button
               type="button"
@@ -93,4 +99,4 @@ const FormArrayCombobox = <T extends FieldValues, O>({
   );
 };
 
-export default FormArrayCombobox;
+export default FormArrayAsyncCombobox;

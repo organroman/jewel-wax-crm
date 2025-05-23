@@ -149,9 +149,9 @@ const personContactSchema = z.object({
   external_id: z.string().optional(),
   username: z.string().optional(),
   full_name: z.string().optional(),
-  phone: z.string().optional(),
-  person_id: z.number().optional(),
-  avatar_url: z.string().optional(),
+  phone: z.nullable(z.string()),
+  person_id: z.number().nullable().optional(),
+  avatar_url: z.string().nullable().optional(),
 });
 
 const personContactsSchema = z

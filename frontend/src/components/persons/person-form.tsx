@@ -12,7 +12,9 @@ import { useForm, useWatch } from "react-hook-form";
 import dayjs from "dayjs";
 import { toast } from "sonner";
 import { Loader } from "lucide-react";
-import { SetStateAction } from "react";
+import { SetStateAction, useState } from "react";
+
+import { useContact } from "@/api/contacts/use-contact";
 
 import {
   createPersonSchema,
@@ -32,7 +34,7 @@ import FormArrayInput from "@/components/form/form-array-input";
 import FormArrayPhone from "@/components/form/form-array-phone";
 import FormArrayBankDetails from "@/components/form/form-array-bank";
 import FormArrayLocation from "@/components/form/form-array-location";
-import FormArrayCombobox from "@components/form/form-array-combobox";
+import FormArrayCombobox from "@/components/form/form-array-async-combobox";
 
 import InfoLabel from "@/components/shared/typography/info-label";
 import InfoValue from "@/components/shared/typography/info-value";
@@ -45,7 +47,6 @@ import {
 } from "@/constants/enums.constants";
 
 import { getInitials } from "@/lib/utils";
-
 
 const schemaMap = {
   create: createPersonSchema,
@@ -79,6 +80,13 @@ const PersonForm = ({
 }: PersonFormProps) => {
   const roles = useEnumStore((e) => e.getByType("person_role"));
   const schema = person ? schemaMap.update : schemaMap.create;
+
+  const [contactQuery, setContactQuery] = useState<string>("");
+  const { data: contacts, isLoading: contactsLoading } = useContact.getContacts(
+    {
+      query: contactQuery,
+    }
+  );
 
   const form = useForm<UpdatePersonSchema | CreatePersonSchema>({
     resolver: zodResolver(schema),
@@ -297,19 +305,20 @@ const PersonForm = ({
                 name="contacts"
                 control={form.control}
                 options={
-                  (person?.contacts &&
-                    person?.contacts.map((c) => ({
-                      label: c.full_name || "",
-                      value: c.id,
-                      data: c,
-                    }))) ||
-                  []
+                  contacts?.data?.map((c) => ({
+                    label: c.full_name || "",
+                    value: c.id,
+                    data: c,
+                  })) || []
                 }
                 label="Контакт"
                 displayKey="full_name"
                 valueKey="id"
                 saveFullObject
                 placeholder="Оберіть контакт"
+                searchQuery={contactQuery}
+                setSearchQuery={setContactQuery}
+                isOptionsLoading={contactsLoading}
               />
             </div>
             {person && setIsDialogOpen && (
