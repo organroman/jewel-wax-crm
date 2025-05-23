@@ -1,4 +1,9 @@
-import { City, Country } from "@/types/location.types";
+import {
+  City,
+  Country,
+  CreateCitySchema,
+  CreateCountrySchema,
+} from "@/types/location.types";
 import apiService from "../api-service";
 import { PaginatedResult } from "@/types/shared.types";
 
@@ -15,5 +20,11 @@ export const locationService = {
     return await apiService.get<PaginatedResult<City>>(
       `locations/cities?${query}`
     );
+  },
+  createCity: async (data: CreateCitySchema) => {
+    return await apiService.post<City>("locations/cities", data);
+  },
+  createCountry: async (data: CreateCountrySchema) => {
+    return await apiService.post<Country>("locations/countries", data);
   },
 };
