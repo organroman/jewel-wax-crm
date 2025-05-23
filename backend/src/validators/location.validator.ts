@@ -6,5 +6,8 @@ export const createCountrySchema = z.object({
 
 export const createCitySchema = z.object({
   name: z.string(),
-  country_id: z.number(),
+  country: z.object({
+    value: z.number(),
+    label: z.string(),
+  }),
 });

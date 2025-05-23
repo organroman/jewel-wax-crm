@@ -10,6 +10,8 @@ import { ActivityLogModel } from "../models/activity-log-model";
 import { LocationModel } from "../models/location-model";
 
 import { LOG_ACTIONS, LOG_TARGETS } from "../constants/activity-log";
+import ERROR_MESSAGES from "../constants/error-messages";
+import AppError from "../utils/AppError";
 
 export const LocationService = {
   async getAllCountries(): Promise<Country[]> {
@@ -35,7 +37,13 @@ export const LocationService = {
     data: CreateCountryInput,
     authorId?: number
   ): Promise<Country> {
+    const existing = await LocationModel.findCountryByName(data.name);
+
+    if (existing) {
+      throw new AppError(ERROR_MESSAGES.COUNTRY_EXISTS, 409);
+    }
     const newCountry = await LocationModel.createCountry(data);
+
     await ActivityLogModel.logAction({
       actor_id: authorId || null,
       action: LOG_ACTIONS.CREATE_COUNTRY,
@@ -48,6 +56,12 @@ export const LocationService = {
     return newCountry;
   },
   async createCity(data: CreateCityInput, authorId?: number): Promise<City> {
+    const existing = await LocationModel.findCityByName(data.name);
+
+    if (existing) {
+      throw new AppError(ERROR_MESSAGES.CITY_EXISTS, 409);
+    }
+
     const city = await LocationModel.createCity(data);
     await ActivityLogModel.logAction({
       actor_id: authorId || null,

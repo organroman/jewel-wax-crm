@@ -18,6 +18,8 @@ const ERROR_MESSAGES = {
   PASSWORD_EMAIL_REQUIRED: "Password and email are required",
   PERSON_NOT_FOUND: "Person not found",
   REQUEST_EXISTS: "Request already exists",
+  CITY_EXISTS: "City already exists",
+  COUNTRY_EXISTS: "Country already exists",
   UNAUTHORIZED: "Unauthorized access",
 } as const;
 

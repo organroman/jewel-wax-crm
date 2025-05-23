@@ -15,5 +15,8 @@ export interface CreateCountryInput {
 
 export interface CreateCityInput {
   name: string;
-  country_id: number;
+  country: {
+    label: string;
+    value: number;
+  };
 }

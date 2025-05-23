@@ -18,6 +18,12 @@ export const LocationModel = {
       .select("*");
     return country;
   },
+  async findCountryByName(countryName: string): Promise<Country | null> {
+    const [country] = await db<Country>("countries")
+      .where("name", countryName)
+      .select("*");
+    return country;
+  },
 
   async getPaginatedCities({
     search,
@@ -55,8 +61,15 @@ export const LocationModel = {
       .returning("*");
     return country;
   },
+
+  async findCityByName(cityName: string): Promise<City> {
+    const [city] = await db<City>("cities").where("name", cityName).select("*");
+    return city;
+  },
   async createCity(data: CreateCityInput) {
-    const [city] = await db<City>("cities").insert(data).returning("*");
+    const [city] = await db<City>("cities")
+      .insert({ name: data.name, country_id: data.country.value })
+      .returning("*");
     return city;
   },
 };
