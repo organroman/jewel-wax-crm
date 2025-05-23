@@ -62,7 +62,7 @@ DataTableProps<TData, TValue> & {
   });
 
   return (
-    <div className="flex flex-col h-full mt-4">
+    <div className="flex flex-col h-full justify-between">
       <div className="flex-1 overflow-auto border border-ui-border rounded-sm">
         <Table className="text-xs w-full ">
           <TableHeader className="w-full bg-ui-column">

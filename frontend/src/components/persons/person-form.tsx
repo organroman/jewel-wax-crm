@@ -4,6 +4,7 @@ import {
   Person,
   UpdatePersonSchema,
 } from "@/types/person.types";
+import { Country } from "@/types/location.types";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { UseMutationResult } from "@tanstack/react-query";
@@ -11,17 +12,18 @@ import { useForm, useWatch } from "react-hook-form";
 import dayjs from "dayjs";
 import { toast } from "sonner";
 import { Loader } from "lucide-react";
+import { SetStateAction } from "react";
 
 import {
   createPersonSchema,
   updatePersonSchema,
 } from "@/validators/person.validator";
 
-import { useLocation } from "@/api/locations/use-location";
 import { useEnumStore } from "@/stores/use-enums-store";
 
 import { Form } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
+import { Dialog } from "@components/ui/dialog";
 
 import FormSwitch from "@/components/form/form-switch";
 import FormInput from "@/components/form/form-input";
@@ -35,6 +37,7 @@ import FormArrayCombobox from "@components/form/form-array-combobox";
 import InfoLabel from "@/components/shared/typography/info-label";
 import InfoValue from "@/components/shared/typography/info-value";
 import CustomAvatar from "@/components/shared/custom-avatar";
+import Modal from "@/components/shared/modal/modal";
 
 import {
   ALLOWED_ROLES_FOR_CRM_USER,
@@ -42,9 +45,7 @@ import {
 } from "@/constants/enums.constants";
 
 import { getInitials } from "@/lib/utils";
-import { Dialog } from "../ui/dialog";
-import Modal from "../shared/modal/modal";
-import { SetStateAction } from "react";
+
 
 const schemaMap = {
   create: createPersonSchema,
@@ -61,6 +62,9 @@ interface PersonFormProps {
   deletePersonMutation?: UseMutationResult<unknown, Error, number>;
   isDialogOpen?: boolean;
   setIsDialogOpen?: (v: SetStateAction<boolean>) => void;
+  countries: Country[];
+  onCreateCity: (v: number) => void;
+  onCreateCountry: () => void;
 }
 
 const PersonForm = ({
@@ -69,10 +73,12 @@ const PersonForm = ({
   deletePersonMutation,
   isDialogOpen,
   setIsDialogOpen,
+  countries = [],
+  onCreateCity,
+  onCreateCountry,
 }: PersonFormProps) => {
   const roles = useEnumStore((e) => e.getByType("person_role"));
   const schema = person ? schemaMap.update : schemaMap.create;
-  const { data: countries, isLoading, error } = useLocation.getCountries();
 
   const form = useForm<UpdatePersonSchema | CreatePersonSchema>({
     resolver: zodResolver(schema),
@@ -143,7 +149,7 @@ const PersonForm = ({
             <Button
               type="submit"
               form="personForm"
-              disabled={mutation?.isPending}
+              disabled={mutation?.isPending || !form.formState.isDirty}
               className="flex items-center gap-2"
             >
               {person ? "Зберігти зміни" : "Створити"}
@@ -239,6 +245,8 @@ const PersonForm = ({
                 control={form.control}
                 setValue={form.setValue}
                 countries={countries || []}
+                onCreateCity={onCreateCity}
+                onCreateCountry={onCreateCountry}
               />
             </div>
             <div className="flex justify-between gap-20 w-full">

@@ -14,8 +14,10 @@ export const VALIDATION_MESSAGES = {
 
   MIN_ONE_MAIN_DELIVERY_ADDRESS: "One address must be main",
   PASSWORD_REQUIRED: "Password required",
+  REQUIRED_NAME: "Name is required",
   REQUIRED_COUNTRY: "Choose the country",
   REQUIRED_CITY: "Choose the city",
   REQUIRED_CONTACT: "Choose the contact",
   REQUIRED_EMAIL: "Enter email",
+  SELECT_COUNTRY: "Choose the country",
 };

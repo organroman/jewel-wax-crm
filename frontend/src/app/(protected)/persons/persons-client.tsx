@@ -96,7 +96,7 @@ const PersonsClient = () => {
         filterOptions={personFilters}
         onAdd={() => router.push("persons/new")}
       />
-      <div className="flex-1 overflow-hidden flex flex-col mt-2">
+      <div className="flex-1 overflow-hidden flex flex-col mt-4">
         <DataTable
           columns={personsColumns}
           data={persons}

@@ -113,6 +113,7 @@ const FormArrayLocation = <T extends FieldValues>({
               <Button
                 variant="outline"
                 size="sm"
+                type="button"
                 className="rounded-tl-none rounded-bl-none"
                 onClick={onCreateCountry}
               >
@@ -143,6 +144,7 @@ const FormArrayLocation = <T extends FieldValues>({
               <Button
                 variant="outline"
                 size="sm"
+                type="button"
                 className="rounded-tl-none rounded-bl-none"
                 onClick={() => onCreateCity?.(selectedCountryId)}
               >

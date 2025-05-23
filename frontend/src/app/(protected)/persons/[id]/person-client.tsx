@@ -1,5 +1,6 @@
 "use client";
 import { TabOption } from "@/types/shared.types";
+import { Country } from "@/types/location.types";
 
 import { ChevronLeftIcon, Loader } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -7,12 +8,16 @@ import { useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 
 import { usePerson } from "@/api/persons/use-person";
+import { useLocation } from "@/api/locations/use-location";
 
 import CustomTabs from "@/components/shared/custom-tabs";
 import PersonForm from "@/components/persons/person-form";
+import CountryForm from "@/components/persons/location/country-form";
+import CityForm from "@/components/persons/location/city-form";
 
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { Dialog } from "@/components/ui/dialog";
 
 import { PERSON_CARD_TABS_LIST } from "@/constants/persons.constants";
 import { useDialog } from "@/hooks/use-dialog";
@@ -22,11 +27,43 @@ const PersonClient = ({ id }: { id: number }) => {
   const queryClient = useQueryClient();
   const searchParams = useSearchParams();
 
+  const [selectedCountry, setSelectedCountry] = useState<Country | undefined>(
+    undefined
+  );
+  const {
+    data: countries,
+    isLoading: countriesLoading,
+    error: countriesError,
+  } = useLocation.getCountries();
+
   const {
     dialogOpen: isDeleteDialogOpen,
     setDialogOpen,
     closeDialog,
   } = useDialog();
+
+  const {
+    dialogOpen: createCityDialogOpen,
+    setDialogOpen: createCitySetDialogOpen,
+  } = useDialog();
+
+  const {
+    dialogOpen: createCountryDialogOpen,
+    setDialogOpen: createCountrySetDialogOpen,
+  } = useDialog();
+
+  const onCreateCity = (countryId: number) => {
+    if (countryId) {
+      const country = countries?.find((c) => c.id === countryId);
+
+      setSelectedCountry(country);
+    }
+    createCitySetDialogOpen(true);
+  };
+
+  const onCreateCountry = () => {
+    createCountrySetDialogOpen(true);
+  };
 
   const handleSuccess = () => {
     closeDialog();
@@ -95,9 +132,28 @@ const PersonClient = ({ id }: { id: number }) => {
             deletePersonMutation={deletePersonMutation}
             isDialogOpen={isDeleteDialogOpen}
             setIsDialogOpen={setDialogOpen}
+            countries={countries || []}
+            onCreateCity={onCreateCity}
+            onCreateCountry={onCreateCountry}
           />
         )}
       </div>
+      <Dialog
+        open={createCityDialogOpen}
+        onOpenChange={createCitySetDialogOpen}
+      >
+        <CityForm
+          countries={countries || []}
+          setIsDialogOpen={createCitySetDialogOpen}
+          country={selectedCountry}
+        />
+      </Dialog>
+      <Dialog
+        open={createCountryDialogOpen}
+        onOpenChange={createCountrySetDialogOpen}
+      >
+        <CountryForm setIsDialogOpen={createCountrySetDialogOpen} />
+      </Dialog>
     </div>
   );
 };
