@@ -82,7 +82,7 @@ const FormArrayLocation = <T extends FieldValues>({
   };
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-6">
       {fields.map((field, index) => {
         const isMain = watchedFields?.[index]?.is_main ?? false;
         const selectedCountryId = watchedFields?.[index]?.country_id;
@@ -90,8 +90,11 @@ const FormArrayLocation = <T extends FieldValues>({
         const isLoading = cityQueries[index]?.isLoading;
 
         return (
-          <div key={field.id} className="flex items-start gap-5">
-            <div className="flex items-start">
+          <div
+            key={field.id}
+            className="flex flex-col lg:flex-row lg:items-start gap-3 lg:gap-5"
+          >
+            <div className="flex items-end lg:items-start">
               <FormCombobox
                 name={`${name}.${index}.country_id` as Path<T>}
                 label="Країна"
@@ -121,7 +124,7 @@ const FormArrayLocation = <T extends FieldValues>({
               </Button>
             </div>
 
-            <div className="flex items-start">
+            <div className="flex items-end lg:items-start">
               <FormCombobox
                 name={`${name}.${index}.city_id` as Path<T>}
                 label="Місто"
@@ -150,37 +153,42 @@ const FormArrayLocation = <T extends FieldValues>({
               >
                 Додати
               </Button>
-            </div>
+              <div className="flex items-center gap-2 mx-2 lg:mx-4 mb-1.5 lg:mb-0 lg:mt-1.5">
+                <Switch
+                  id={`${name}.${index}`}
+                  checked={isMain}
+                  onCheckedChange={() => handleToggleMain(index)}
+                />
+                <Label
+                  htmlFor={`${name}.${index}`}
+                  className="hidden lg:block text-xs text-text-muted font-normal"
+                >
+                  Основний
+                </Label>
+                <Label
+                  htmlFor={`${name}.${index}`}
+                  className="lg:hidden text-xs text-text-muted font-normal"
+                >
+                  Осн.
+                </Label>
+              </div>
 
-            <div className="flex items-center gap-2 mt-1.5">
-              <Switch
-                id={`${name}.${index}`}
-                checked={isMain}
-                onCheckedChange={() => handleToggleMain(index)}
-              />
-              <Label
-                htmlFor={`${name}.${index}`}
-                className="text-xs text-text-muted font-normal"
+              <Button
+                type="button"
+                variant="ghostDestructive"
+                onClick={() => remove(index)}
+                size="sm"
               >
-                Основний
-              </Label>
+                <Trash2 className="size-4" />
+              </Button>
             </div>
-
-            <Button
-              type="button"
-              variant="ghostDestructive"
-              onClick={() => remove(index)}
-              size="sm"
-            >
-              <Trash2 className="size-4" />
-            </Button>
 
             {fields.length === index + 1 && (
               <Button
                 type="button"
                 variant="link"
                 size="sm"
-                className="text-action-plus text-xs p-0"
+                className="text-action-plus text-xs p-0 self-start"
                 onClick={handleAppend}
               >
                 Додати ще

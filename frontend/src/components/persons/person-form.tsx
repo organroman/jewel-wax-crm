@@ -132,9 +132,9 @@ const PersonForm = ({
         <form
           id="personForm"
           onSubmit={form.handleSubmit(onSubmit)}
-          className="flex flex-col h-full"
+          className="flex flex-col h-full flex-1 overflow-hidden"
         >
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col lg:flex-row gap-y-2 lg:items-center lg:justify-between">
             <div className="flex items-center gap-2.5">
               <InfoLabel>Дата створення</InfoLabel>
               <InfoValue>
@@ -147,38 +147,52 @@ const PersonForm = ({
                   ID: {person?.id}
                 </InfoValue>
               )}
-              <FormSwitch
-                name="is_active"
-                control={form.control}
-                checkedLabel="Активний"
-                unCheckedLabel="Неактивний"
-              />
+              <div className="hidden lg:flex">
+                <FormSwitch
+                  name="is_active"
+                  control={form.control}
+                  checkedLabel="Активний"
+                  unCheckedLabel="Неактивний"
+                />
+              </div>
             </div>
-            <Button
-              type="submit"
-              form="personForm"
-              disabled={mutation?.isPending || !form.formState.isDirty}
-              className="flex items-center gap-2"
-            >
-              {person ? "Зберігти зміни" : "Створити"}
-              {mutation?.isPending && (
-                <Loader className="size-4 animate-spin text-white" />
-              )}
-            </Button>
+            <div className="flex items-center w-full lg:w-fit justify-between">
+              <div className="flex lg:hidden">
+                <FormSwitch
+                  name="is_active"
+                  control={form.control}
+                  checkedLabel="Активний"
+                  unCheckedLabel="Неактивний"
+                />
+              </div>
+              <Button
+                type="submit"
+                form="personForm"
+                disabled={mutation?.isPending || !form.formState.isDirty}
+                className="flex items-center gap-2"
+              >
+                {person ? "Зберігти зміни" : "Створити"}
+                {mutation?.isPending && (
+                  <Loader className="size-4 animate-spin text-white" />
+                )}
+              </Button>
+            </div>
           </div>
           <div className="flex-1 overflow-auto pr-1 mt-6">
-            <div className="flex w-full justify-between sm:flex-col sm:gap-y-4 md:flex-wrap lg:flex-row lg:flex-nowrap">
-              <div className="flex gap-6 w-1/2 md:w-full">
-                <CustomAvatar
-                  className="w-37 h-37"
-                  avatarUrl={person?.avatar_url}
-                  fallback={
-                    person
-                      ? getInitials(person?.last_name, person?.first_name)
-                      : ""
-                  }
-                  fallbackClassName="text-6xl"
-                />
+            <div className="flex w-full justify-between flex-col sm:gap-y-4 md:flex-wrap lg:flex-row lg:flex-nowrap">
+              <div className="flex flex-col items-center lg:flex-row gap-6 md:w-1/2 w-full">
+                <div className="w-full lg:w-fit flex justify-center lg:justify-start">
+                  <CustomAvatar
+                    className="w-37 h-37"
+                    avatarUrl={person?.avatar_url}
+                    fallback={
+                      person
+                        ? getInitials(person?.last_name, person?.first_name)
+                        : ""
+                    }
+                    fallbackClassName="text-6xl"
+                  />
+                </div>
                 <div className="flex flex-col gap-2.5">
                   <FormInput
                     name="last_name"
@@ -229,7 +243,7 @@ const PersonForm = ({
                   )}
                 </div>
               </div>
-              <div className="flex w-1/2 md:w-full">
+              <div className="flex lg:w-1/2 w-full mt-8 lg:mt-0">
                 <FormArrayPhone
                   name="phones"
                   control={form.control}
@@ -257,8 +271,8 @@ const PersonForm = ({
                 onCreateCountry={onCreateCountry}
               />
             </div>
-            <div className="flex justify-between gap-20 w-full">
-              <div className="mt-6 w-1/2 ">
+            <div className="flex flex-col lg:flex-row justify-between gap-5 lg:gap-20 w-full">
+              <div className="mt-6 lg:w-1/2 ">
                 <p className="pb-3 border-b font-medium border-ui-border mb-2.5">
                   Електрона адреса
                 </p>
@@ -272,7 +286,7 @@ const PersonForm = ({
                   showIsMain
                 />
               </div>
-              <div className="mt-6 w-1/2">
+              <div className="lg:mt-6 lg:w-1/2">
                 <p className="pb-3 border-b font-medium border-ui-border mb-2.5">
                   Адреса доставки
                 </p>
@@ -282,8 +296,9 @@ const PersonForm = ({
                   setValue={form.setValue}
                   placeholder="Введіть адресу"
                   fieldKey="address_line"
+                  label="Адреса"
                   showIsMain
-                  inputClassName="min-w[460px]"
+                  inputClassName="min-w-[188px] lg:min-w[460px]"
                 />
               </div>
             </div>

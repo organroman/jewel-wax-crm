@@ -75,10 +75,10 @@ const FormAsyncCombobox = <T extends FieldValues, O>({
         })();
 
         return (
-          <FormItem className="flex gap-2.5">
+          <FormItem className="flex flex-col lg:flex-row gap-0.5 lg:gap-2.5">
             {label && (
               <div className="flex items-start justify-between">
-                <FormLabel className="text-sm mt-1.5">{label}</FormLabel>
+                <FormLabel className="text-xs lg:text-sm mt-1.5">{label}</FormLabel>
                 {required && (
                   <Image
                     src="/img/star-required.svg"
@@ -114,7 +114,7 @@ const FormAsyncCombobox = <T extends FieldValues, O>({
                       </Button>
                     </PopoverTrigger>
 
-                    <PopoverContent className="w-[240px] p-0 max-h-64 overflow-y-auto">
+                    <PopoverContent className="lg:w-[240px] p-0 max-h-64 overflow-y-auto">
                       <Command
                         filter={(value, search) => {
                           const item = options.find((opt) =>

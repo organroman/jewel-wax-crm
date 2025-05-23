@@ -62,41 +62,46 @@ const FormArrayInput = <T extends FieldValues>({
 
         const inputName = `${name}.${index}.${fieldKey}` as Path<T>;
         return (
-          <div key={field.id} className="flex gap-2.5">
-            <FormArrayInputItem
-              key={field.id}
-              name={inputName}
-              control={control}
-              label={label}
-              placeholder={placeholder}
-              required={required && index === 0}
-              inputClassName={inputClassName}
-            />
+          <div
+            key={field.id}
+            className="flex flex-col lg:flex-row lg:items-center gap-2.5"
+          >
+            <div className="flex items-end lg:items-center gap-2.5">
+              <FormArrayInputItem
+                key={field.id}
+                name={inputName}
+                control={control}
+                label={label}
+                placeholder={placeholder}
+                required={required && index === 0}
+                inputClassName={inputClassName}
+              />
 
-            {showIsMain && (
-              <div className="flex items-center h-8 gap-2">
-                <Switch
-                  checked={isMain}
-                  onCheckedChange={() => handleToggleMain(index)}
-                />
-                <Label className="text-xs">Основний</Label>
-              </div>
-            )}
-            <Button
-              type="button"
-              variant="ghostDestructive"
-              size="icon"
-              className="h-8"
-              onClick={() => remove(index)}
-            >
-              <Trash2 className="size-4" />
-            </Button>
+              {showIsMain && (
+                <div className="flex items-center h-8 gap-2">
+                  <Switch
+                    checked={isMain}
+                    onCheckedChange={() => handleToggleMain(index)}
+                  />
+                  <Label className="text-xs">Основний</Label>
+                </div>
+              )}
+              <Button
+                type="button"
+                variant="ghostDestructive"
+                size="icon"
+                className="h-8"
+                onClick={() => remove(index)}
+              >
+                <Trash2 className="size-4" />
+              </Button>
+            </div>
             {fields.length === index + 1 && (
               <Button
                 type="button"
                 variant="link"
                 // size="sm"
-                className="text-action-plus text-xs h-8 px-0"
+                className="text-action-plus text-xs h-8 px-0 self-start "
                 onClick={handleAppend}
               >
                 Додати ще

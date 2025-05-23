@@ -22,10 +22,9 @@ const CustomTabs = ({
       defaultValue={selectedTab?.value}
       value={selectedTab?.value}
       onValueChange={handleChange}
-      // className="mt-7.5"
       className="mt-5"
     >
-      <TabsList className="w-full justify-start gap-6 border-none bg-transparent p-0">
+      <TabsList className="w-full justify-start gap-5 md:gap-6 border-none bg-transparent p-0">
         {isModal && (
           <TabsTrigger
             value={firstTab.value}

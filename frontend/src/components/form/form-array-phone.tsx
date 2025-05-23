@@ -64,14 +64,32 @@ const FormArrayPhone = <T extends FieldValues>({
         );
 
         return (
-          <div key={field.id} className="flex items-start gap-3">
+          <div key={field.id} className="flex lg:items-start gap-3">
             <div className="flex flex-col">
-              <FormPhoneInput
-                control={control}
-                name={`${name}.${index}.${fieldKey}` as Path<T>}
-                label={label}
-                required={required && index === 0}
-              />
+              <div className="flex items-center gap-2.5">
+                <FormPhoneInput
+                  control={control}
+                  name={`${name}.${index}.${fieldKey}` as Path<T>}
+                  label={label}
+                  required={required && index === 0}
+                />
+                {showIsMain && (
+                  <div className="flex items-center gap-2 mt-5 lg:mt-0">
+                    <Switch
+                      id={`${name}.${index}`}
+                      checked={isMain}
+                      onCheckedChange={() => handleToggleMain(index)}
+                    />
+                    <Label
+                      htmlFor={`${name}.${index}`}
+                      className="text-xs text-text-muted font-normal"
+                    >
+                      Основний
+                    </Label>
+                  </div>
+                )}
+              </div>
+
               {phoneMessengers?.length > 0 && (
                 <div className="flex mt-1.5 gap-2.5">
                   <InfoLabel className="text-sm w-[124px]">
@@ -94,8 +112,8 @@ const FormArrayPhone = <T extends FieldValues>({
                 </div>
               )}
             </div>
-            {showIsMain && (
-              <div className="flex items-center gap-2 mt-1.5">
+            {/* {showIsMain && (
+              <div className="flex items-center gap-2 mt-5 lg:mt-1.5">
                 <Switch
                   id={`${name}.${index}`}
                   checked={isMain}
@@ -108,13 +126,14 @@ const FormArrayPhone = <T extends FieldValues>({
                   Основний
                 </Label>
               </div>
-            )}
+            )} */}
 
             <Button
               type="button"
               variant="ghostDestructive"
               size="sm"
               onClick={() => remove(index)}
+              className="mt-5 lg:mt-0"
             >
               <Trash2 className="size-4" />
             </Button>

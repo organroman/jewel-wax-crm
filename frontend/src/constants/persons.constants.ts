@@ -25,7 +25,7 @@ export const PERSON_ROLE_COLORS = {
 
 export const PERSON_CARD_TABS_LIST = [
   {
-    label: "Загальна інформація",
+    label: "Інформація",
     value: "general_info",
   },
   {

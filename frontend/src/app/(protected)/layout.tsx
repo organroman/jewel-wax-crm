@@ -24,7 +24,7 @@ const ProtectedLayout = async ({ children }: { children: React.ReactNode }) => {
         </aside>
 
         <div className="bg-ui-screen h-full flex-1 w-full overflow-y-hidden">
-          <main className="h-full w-full max-w-screen-2xl m-auto px-8 py-6">
+          <main className="h-full w-full max-w-screen-2xl m-auto px-4 md:px-6 lg:px-8 py-5 md:py-6 flex flex-col overflow-hidden">
             <AppDataContainer>{children}</AppDataContainer>
           </main>
         </div>

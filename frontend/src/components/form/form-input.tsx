@@ -48,7 +48,7 @@ const FormInput = <T extends FieldValues>({
               <Textarea {...field} placeholder={placeholder} rows={rows} />
             ) : (
               <Input
-                className="min-w-[240px] font-medium rounded-xs h-8 px-2.5 border-ui-border text-xs focus-visible:ring-[1px]"
+                className="min-w-[240px] font-medium rounded-xs h-8 px-2.5 border-ui-border text-sm focus-visible:ring-[1px]"
                 {...field}
                 placeholder={placeholder}
                 type={type}

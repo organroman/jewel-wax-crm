@@ -17,6 +17,7 @@ interface FormArrayInputItemProps<T extends FieldValues> {
   required?: boolean;
   label?: string;
   inputClassName?: string;
+  labelClassName?: string;
 }
 
 const FormArrayInputItem = <T extends FieldValues>({
@@ -26,16 +27,22 @@ const FormArrayInputItem = <T extends FieldValues>({
   required,
   label,
   inputClassName,
+  labelClassName,
 }: FormArrayInputItemProps<T>) => {
   return (
     <FormField
       name={name}
       control={control}
       render={({ field }) => (
-        <FormItem className="flex items-start justify-between gap-2">
+        <FormItem className="flex flex-col w-full lg:w-fit lg:flex-row lg:items-start lg:justify-between gap-0.5 lg:gap-2">
           {label && (
-            <div className="flex items-start justify-end gap-1 w-full">
-              <FormLabel className="text-sm mt-1.5">
+            <div
+              className={cn(
+                "flex items-start lg:justify-end gap-1 w-full",
+                labelClassName
+              )}
+            >
+              <FormLabel className=" text-xs lg:text-sm lg:mt-1.5">
                 {label}
               </FormLabel>
               {required && (
@@ -55,7 +62,7 @@ const FormArrayInputItem = <T extends FieldValues>({
                 {...field}
                 placeholder={placeholder}
                 className={cn(
-                  "min-w-[278px] font-medium rounded-xs h-8 px-2.5 border-ui-border text-xs focus-visible:ring-[1px]",
+                  "min-w-[188px] lg:min-w-[278px] font-medium rounded-xs h-8 px-2.5 border-ui-border text-sm focus-visible:ring-[1px]",
                   inputClassName
                 )}
               />

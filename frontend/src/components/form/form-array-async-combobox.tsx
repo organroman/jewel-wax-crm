@@ -46,30 +46,31 @@ const FormArrayAsyncCombobox = <T extends FieldValues, O>({
         ) as Path<T>;
 
         return (
-          <div key={field.id} className="flex w-full items-start gap-2.5">
-            <FormAsyncCombobox
-              name={inputName}
-              control={control}
-              placeholder={placeholder}
-              options={options}
-              label={label}
-              required={required && index === 0}
-              displayKey={displayKey}
-              valueKey={valueKey}
-              saveFullObject={saveFullObject}
-              searchQuery={searchQuery}
-              setSearchQuery={setSearchQuery}
-              isOptionsLoading={isOptionsLoading}
-            />
-            <Button
-              type="button"
-              variant="ghostDestructive"
-              size="icon"
-              onClick={() => remove(index)}
-            >
-              <Trash2 className="size-4" />
-            </Button>
-
+          <div key={field.id} className="flex flex-col lg:flex-row w-full items-start lg:items-center gap-2.5">
+            <div className="flex items-end gap-2.5">
+              <FormAsyncCombobox
+                name={inputName}
+                control={control}
+                placeholder={placeholder}
+                options={options}
+                label={label}
+                required={required && index === 0}
+                displayKey={displayKey}
+                valueKey={valueKey}
+                saveFullObject={saveFullObject}
+                searchQuery={searchQuery}
+                setSearchQuery={setSearchQuery}
+                isOptionsLoading={isOptionsLoading}
+              />
+              <Button
+                type="button"
+                variant="ghostDestructive"
+                size="icon"
+                onClick={() => remove(index)}
+              >
+                <Trash2 className="size-4" />
+              </Button>
+            </div>
             {fields.length === index + 1 && (
               <Button
                 type="button"

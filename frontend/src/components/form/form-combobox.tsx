@@ -72,10 +72,10 @@ const FormCombobox = <T extends FieldValues, O>({
         })();
 
         return (
-          <FormItem className="flex gap-2.5">
+          <FormItem className="flex flex-col lg:flex-row gap-0.5 lg:gap-2.5">
             {label && (
               <div className="flex items-start justify-between">
-                <FormLabel className="text-sm mt-1.5">{label}</FormLabel>
+                <FormLabel className="text-xs lg:text-sm lg:mt-1.5">{label}</FormLabel>
                 {required && (
                   <Image
                     src="/img/star-required.svg"
@@ -99,7 +99,7 @@ const FormCombobox = <T extends FieldValues, O>({
                         variant="outline"
                         aria-invalid={fieldState.invalid}
                         className={cn(
-                          "min-w-[240px] justify-between h-8 rounded-xs text-sm font-semibold relative",
+                          " min-w-[160px] lg:min-w-[240px] justify-between h-8 rounded-xs text-sm font-semibold relative",
                           className
                         )}
                         disabled={disabled}

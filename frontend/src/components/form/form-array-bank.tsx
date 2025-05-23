@@ -51,26 +51,53 @@ const FormArrayBankDetails = <T extends FieldValues>({
         const isMain = watchedFields?.[index]?.is_main ?? false;
 
         return (
-          <div key={field.id} className="flex items-start gap-3">
-            <div className="flex flex-col gap-2.5">
-              <FormArrayInputItem
-                control={control}
-                name={`${base}.bank_name` as Path<T>}
-                placeholder="Введіть назву банку"
-                label="Банк"
-                required={required}
-              />
+          <div
+            key={field.id}
+            className="flex w-full lg:w-fit flex-col lg:flex-row items-start justify-start gap-3"
+          >
+            <div className="flex flex-col items-start gap-2.5">
+              <div className="flex items-end lg:items-center gap-2.5">
+                <FormArrayInputItem
+                  control={control}
+                  name={`${base}.bank_name` as Path<T>}
+                  placeholder="Введіть назву банку"
+                  label="Банк"
+                  required={required}
+                  labelClassName="lg:justify-start lg:w-[100px]"
+                />
+                <div className="flex items-center mb-1.5 gap-2">
+                  <Switch
+                    checked={isMain}
+                    onCheckedChange={() => handleToggleMain(index)}
+                  />
+                  <Label className="hidden lg:block text-xs">Основний</Label>
+                  <Label className="block lg:hidden text-xs">Осн.</Label>
+                </div>
+
+                <div className="flex justify-end">
+                  <Button
+                    type="button"
+                    variant="ghostDestructive"
+                    size="sm"
+                    onClick={() => remove(index)}
+                  >
+                    <Trash2 className="size-4" />
+                  </Button>
+                </div>
+              </div>
               <FormArrayInputItem
                 control={control}
                 name={`${base}.bank_code` as Path<T>}
                 placeholder="Введіть МФО"
                 label="МФО"
+                labelClassName="lg:justify-start lg:w-[100px]"
               />
               <FormArrayInputItem
                 control={control}
                 name={`${base}.tax_id` as Path<T>}
                 placeholder="Введіть ІПН/ЄДРПОУ"
                 label="ІПН/ЄДРПОУ"
+                labelClassName="lg:justify-start lg:w-[100px]"
               />
               <FormArrayInputItem
                 control={control}
@@ -78,7 +105,8 @@ const FormArrayBankDetails = <T extends FieldValues>({
                 placeholder="Введіть IBAN"
                 label="IBAN"
                 required={required}
-                inputClassName="min-w-[278px]"
+                inputClassName="min-w-[188px]"
+                labelClassName="lg:justify-start lg:w-[100px]"
               />
               <FormArrayInputItem
                 control={control}
@@ -86,14 +114,16 @@ const FormArrayBankDetails = <T extends FieldValues>({
                 placeholder="Введіть номер карти"
                 label="Номер карти"
                 required={required}
+                labelClassName="lg:justify-start lg:w-[100px]"
               />
             </div>
-            <div className="flex items-center mt-1.5 gap-2">
+            {/* <div className="flex items-end lg:items-center mt-1.5 gap-2">
               <Switch
                 checked={isMain}
                 onCheckedChange={() => handleToggleMain(index)}
               />
-              <Label className="text-xs">Основний</Label>
+              <Label className="hidden lg:block text-xs">Основний</Label>
+              <Label className="block lg:hidden text-xs">Осн.</Label>
             </div>
 
             <div className="flex justify-end">
@@ -105,7 +135,7 @@ const FormArrayBankDetails = <T extends FieldValues>({
               >
                 <Trash2 className="size-4" />
               </Button>
-            </div>
+            </div> */}
             {fields.length === index + 1 && (
               <Button
                 type="button"

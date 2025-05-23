@@ -110,11 +110,11 @@ const PersonClient = ({ id }: { id: number }) => {
   }
 
   return (
-    <div className="h-full flex flex-1 flex-col overflow-y-hidden">
+    <div className="h-full flex flex-col overflow-hidden">
       <Button
         onClick={() => router.push("/persons")}
         variant="link"
-        className="w-fit has-[>svg]:p-0 text-text-light h-4"
+        className=" w-fit has-[>svg]:p-0 text-text-light h-4"
       >
         <ChevronLeftIcon /> Повернутись до таблиці
       </Button>
@@ -124,7 +124,7 @@ const PersonClient = ({ id }: { id: number }) => {
         tabsOptions={PERSON_CARD_TABS_LIST}
       />
       <Separator className="bg-ui-border h-0.5 data-[orientation=horizontal]:h-0.5" />
-      <div className="mt-4 flex-1 overflow-y-hidden">
+      <div className="mt-4 h-full flex flex-1 flex-col overflow-hidden">
         {selectedTab.value === "general_info" && (
           <PersonForm
             person={person}

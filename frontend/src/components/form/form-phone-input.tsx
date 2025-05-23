@@ -48,10 +48,10 @@ const FormPhoneInput = <T extends FieldValues>({
         };
 
         return (
-          <FormItem className="flex justify-between gap-2.5">
+          <FormItem className="flex flex-col gap-0 justify-start lg:flex-row lg:justify-between lg:gap-2.5">
             {label && (
-              <div className="flex mt-1.5 items-start justify-end gap-1 w-full">
-                <FormLabel className="text-text-muted font-normal text-sm">
+              <div className="flex mt-1.5 items-start lg:justify-end gap-1 w-full">
+                <FormLabel className="text-text-muted font-normal text-xs lg:text-sm">
                   {label}
                 </FormLabel>
 
@@ -70,7 +70,7 @@ const FormPhoneInput = <T extends FieldValues>({
                   value={formattedValue}
                   onChange={handleChange}
                   placeholder="Введіть номер"
-                  className="min-w-[240px] font-medium rounded-xs h-8 px-2.5 border-ui-border text-xs focus-visible:ring-[1px]"
+                  className="lg:min-w-[240px] font-medium rounded-xs h-8 px-2.5 border-ui-border text-sm focus-visible:ring-[1px]"
                 />
               </FormControl>
               <FormMessage />

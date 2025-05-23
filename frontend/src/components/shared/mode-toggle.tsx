@@ -19,7 +19,7 @@ export default function ModeToggle() {
   if (!mounted) return null;
 
   return (
-    <div className="flex justify-center gap-1 items-center">
+    <div className="hidden md:flex justify-center gap-1 items-center ">
       <Button
         variant="ghost"
         onClick={() => setTheme("light")}
