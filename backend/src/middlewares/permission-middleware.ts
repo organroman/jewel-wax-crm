@@ -5,7 +5,7 @@ import ERROR_MESSAGES from "../constants/error-messages";
 import { PERMISSIONS } from "../constants/permissions";
 
 import { Module, Action } from "../types/permission.types";
-import { PersonRole } from "../constants/enums";
+import { PersonRole } from "../types/person.types";
 
 export const checkPermission = (module: Module, action: Action) => {
   return (req: Request, res: Response, next: NextFunction) => {

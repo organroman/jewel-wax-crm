@@ -1,16 +1,18 @@
+import { PERMISSIONS } from "./permissions.constants";
+
 export const MENU_LIST = [
   {
     label: "Дашбоард", // todo: messages
     href: "/dashboard",
     icon: "/img/dashboard.svg",
 
-    // permission: PERMISSIONS.dashboard,
+    permission: PERMISSIONS.DASHBOARD.VIEW,
   },
   {
     label: "Заявки",
     href: "/requests",
     icon: "/img/requests.svg",
-    //   permission: PERMISSIONS.products,
+    permission: PERMISSIONS.REQUESTS.VIEW,
   },
 
   {
@@ -18,34 +20,34 @@ export const MENU_LIST = [
     href: "/orders",
     icon: "/img/orders.svg",
 
-    //   permission: PERMISSIONS.orders,
+    permission: PERMISSIONS.ORDERS.VIEW,
   },
   {
     label: "Фінанси",
     href: "/finance",
     icon: "/img/finance.svg",
 
-    //   permission: PERMISSIONS.users,
+    permission: PERMISSIONS.FINANCE.VIEW,
   },
   {
     label: "Звіти",
     href: "/reports",
     icon: "/img/reports.svg",
 
-    //   permission: PERMISSIONS.categories,
+    permission: PERMISSIONS.REPORTS.VIEW,
   },
   {
     label: "Статистика",
     href: "/statistic",
     icon: "/img/statistics.svg",
 
-    //   permission: PERMISSIONS.categories,
+    permission: PERMISSIONS.STATISTIC.VIEW,
   },
   {
     label: "Контрагенти",
     href: "/persons",
     icon: "/img/persons.svg",
 
-    //   permission: PERMISSIONS.categories,
+    permission: PERMISSIONS.PERSONS.VIEW,
   },
 ];

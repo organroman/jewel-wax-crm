@@ -1,12 +1,16 @@
+import { PersonRoleValue } from "@/types/person.types";
+import { ChanelSource } from "@/types/shared.types";
+
+import jwt, { JwtPayload } from "jsonwebtoken";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { parsePhoneNumberFromString } from "libphonenumber-js";
-
-import { ChanelSource } from "@/types/shared.types";
-
-import { MESSENGERS_SOURCE_ICONS } from "@/constants/persons.constants";
 import { toast } from "sonner";
+
+import AppError from "./AppError";
+import { MESSENGERS_SOURCE_ICONS } from "@/constants/persons.constants";
+import ERROR_MESSAGES from "@/constants/error-messages";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -74,4 +78,40 @@ export const toggleParam = (
     current.delete(param);
   }
   router.push(`?${current.toString()}`);
+};
+
+export const checkPermission = (
+  allowedRoles: PersonRoleValue[],
+  role: PersonRoleValue
+) => {
+  if (!role) throw new AppError(ERROR_MESSAGES.UNAUTHORIZED, 401);
+
+  return allowedRoles.includes(role);
+};
+
+interface TokenPayload extends JwtPayload {
+  // userId: string;
+  role: PersonRoleValue;
+}
+
+const secret = process.env.NEXT_PUBLIC_JWT_SECRET;
+
+export const getRoleAndUserFromToken = (token: PersonRoleValue) => {
+  if (!token || typeof token !== "string") {
+    throw new Error("Invalid token provided");
+  }
+
+  if (!secret) {
+    throw new Error("Invalid token provided");
+  }
+
+  const decoded = jwt.verify(token, secret);
+
+  if (typeof decoded !== "object" || decoded === null || !("role" in decoded)) {
+    throw new Error("Invalid token payload: missing role");
+  }
+
+  const { role } = decoded as TokenPayload;
+
+  return role;
 };
