@@ -1,4 +1,4 @@
-import AppError from "@/lib/AppError";
+import AppError from "@/lib/app-error";
 import { API_URL } from "./config";
 import ERROR_MESSAGES from "@/constants/error-messages";
 import Cookies from "js-cookie";

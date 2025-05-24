@@ -10,6 +10,8 @@ import MobileNavBar from "@/components/shared/mobile-nav-bar";
 import AppDataContainer from "@/containers/app-data-contaienr";
 import { getRoleAndUserFromToken } from "@/lib/utils";
 
+import ClientOnly from "@/components/shared/client-only";
+
 const ProtectedLayout = async ({ children }: { children: React.ReactNode }) => {
   const cookieStore = await cookies();
   const token = cookieStore.get("token")?.value;
@@ -26,7 +28,9 @@ const ProtectedLayout = async ({ children }: { children: React.ReactNode }) => {
       </div>
       <div className="flex h-full flex-1 w-full overflow-y-hidden">
         <aside className="hidden lg:block lg:w-[84px] h-full overflow-y-hidden">
-          <SideBar role={role} />
+          <ClientOnly>
+            <SideBar role={role} />
+          </ClientOnly>
         </aside>
 
         <div className="bg-ui-screen h-full flex-1 w-full overflow-y-hidden">
@@ -36,7 +40,9 @@ const ProtectedLayout = async ({ children }: { children: React.ReactNode }) => {
         </div>
       </div>
       <div className="w-full overflow-x-auto flex lg:hidden">
-        <MobileNavBar role={role} />
+        <ClientOnly>
+          <MobileNavBar role={role} />
+        </ClientOnly>
       </div>
     </div>
   );

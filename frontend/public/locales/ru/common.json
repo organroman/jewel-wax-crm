@@ -1,0 +1,21 @@
+{
+  "types": {
+    "person": {
+      "first_name": "Имя"
+    },
+    "location": {
+      "city": "Город",
+      "country": "Страна"
+    }
+  },
+
+  "main_menu": {
+    "dashboard": "Дашбоард",
+    "requests": "Заявки",
+    "orders": "Задания",
+    "finance": "Финансы",
+    "reports": "Отчеты",
+    "statistic": "Статистика",
+    "persons": "Контрагенты"
+  }
+}

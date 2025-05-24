@@ -1,0 +1,102 @@
+{
+  "person": {
+    "person": "Контрагент",
+    "person_plural": "Контрагенти",
+    "add_person": "Додати контрагента",
+    "roles": {
+      "all": "Всі контрагенти",
+      "super_admin": "Супер Адмін",
+      "modeller": "Модельєр",
+      "miller": "Фрезерувальник",
+      "client": "Замовник",
+      "print": "3D друк"
+    },
+    "table_headers": {
+      "avatar_url": "$t(dictionary.photo)",
+      "full_name": "$t(dictionary.full_name)",
+      "phone": "$t(dictionary.phone)",
+      "role": "$t(dictionary.role)",
+      "city": "$t(dictionary.city)",
+      "post": "$t(dictionary.post)",
+      "created_at": "$t(dictionary.created_at)",
+      "actions": "$t(dictionary.actions)"
+    },
+    "filters": {
+      "status": "$t(dictionary.status)",
+      "options": {
+        "active": "Активні",
+        "inactive": "Неактивні"
+      }
+    },
+    "sorting": {
+      "first_name": "$t(dictionary.first_name)",
+      "last_name": "$t(dictionary.last_name)",
+      "created_at": "$t(dictionary.created_at)",
+      "role": "$t(dictionary.role)"
+    },
+    "tabs": {
+      "general_info": "$t(dictionary.info)",
+      "changes_history": "Історія змін",
+      "orders_history": "$t(dictionary.orders_history)",
+      "new": "Новий контрагент"
+    },
+    "actions": {
+      "view": "Переглянути контрагента",
+      "edit": "Редагувати контрагента",
+      "delete": "Видалити контрагента",
+      "orders_history": "$t(dictionary.orders_history)"
+    },
+    "modal": {
+      "delete": {
+        "title": "Видалення контрагента",
+        "desc_first": "Ви впевненні, що бажаєте видалити?",
+        "desc_second": "Цю дію неможливо відмінити!"
+      }
+    }
+  },
+  "main_menu": {
+    "dashboard": "Дашбоард",
+    "requests": "Заявки",
+    "orders": "Завдання",
+    "finance": "Фінанси",
+    "reports": "Звіти",
+    "statistic": "Статистика",
+    "persons": "Контрагенти"
+  },
+  "labels": {
+    "location": {
+      "city": "$t(dictionary.city)",
+      "country": "$t(dictionary.country)"
+    }
+  },
+  "placeholders": {
+    "search": "Пошук",
+    "search_person": "Пошук контрагента",
+    "filters": "Фільтри"
+  },
+  "info": {
+    "no_results": "Дані відсутні"
+  },
+  "buttons": {
+    "cancel": "Скасувати",
+    "delete": "Видалити",
+    "delete_continuous": "Видалення"
+  },
+  "dictionary": {
+    "city": "Місто",
+    "country": "Країна",
+    "photo": "Фото",
+    "first_name": "Ім'я",
+    "last_name": "Прізвище",
+    "full_name": "ПІБ",
+    "phone": "Телефон",
+    "role": "Роль",
+    "post": "Відділення пошти",
+    "created_at": "Створено",
+    "actions": "Дії",
+    "status": "Статус",
+    "info": "Інформація",
+    "orders_history": "Історія замовлень",
+    "sorting": "Сортування"
+  }
+}
