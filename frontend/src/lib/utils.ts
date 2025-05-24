@@ -8,7 +8,7 @@ import { twMerge } from "tailwind-merge";
 import { parsePhoneNumberFromString } from "libphonenumber-js";
 import { toast } from "sonner";
 
-import AppError from "./AppError";
+import AppError from "./app-error";
 import { MESSENGERS_SOURCE_ICONS } from "@/constants/persons.constants";
 import ERROR_MESSAGES from "@/constants/error-messages";
 
