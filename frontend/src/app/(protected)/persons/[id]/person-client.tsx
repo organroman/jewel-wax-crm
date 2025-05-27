@@ -24,6 +24,7 @@ import { Dialog } from "@/components/ui/dialog";
 
 import { PERSON_CARD_TABS_LIST } from "@/constants/persons.constants";
 import { translateKeyValueList } from "@/lib/translate-constant-labels";
+import PersonChangesHistory from "@/components/persons/person-changes-history";
 
 const PersonClient = ({ id }: { id: number }) => {
   const router = useRouter();
@@ -147,6 +148,9 @@ const PersonClient = ({ id }: { id: number }) => {
             onCreateCity={onCreateCity}
             onCreateCountry={onCreateCountry}
           />
+        )}
+        {selectedTab.value === "changes_history" && (
+          <PersonChangesHistory id={id} />
         )}
       </div>
       <Dialog
