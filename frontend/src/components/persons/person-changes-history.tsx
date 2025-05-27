@@ -50,10 +50,13 @@ const PersonChangesHistory = ({
         <p>{t("person.person_changes")}:</p>
         <p className="font-semibold text-brand-default">{personFullname}</p>
       </div>
-      <div className="flex flex-col flex-1 h-full overflow-y-auto border border-ui-border mt-10">
+      <div className="flex flex-col w-full flex-1 h-full overflow-auto border border-ui-border mt-10">
         {data.map((item) => (
-          <div key={item.id} className="w-full flex odd:bg-ui-row py-3 px-2.5 border-b border-ui-border ">
-            <div className="flex items-center gap-4 w-3/4">
+          <div
+            key={item.id}
+            className="min-w-fit overflow-x-visible gap-10 lg:gap-0 flex flex-row items-center justify-between odd:bg-ui-row py-3 px-2.5 border-b border-ui-border "
+          >
+            <div className="flex min-w-fit whitespace-nowrap items-center gap-4 lg:w-3/4">
               <p className="text-xs text-text-muted">
                 {t("log_actions.date")}:
               </p>
@@ -64,9 +67,9 @@ const PersonChangesHistory = ({
                 {t(`log_actions.${item.action}`)}
               </p>
             </div>
-            <div className="flex items-center justify-start gap-2.5">
-              <p className="text-xs text-action-alert">ID {item.actor_id}</p>
-              <p className="text-sm text-text-muted ">{item.actor_fullname}</p>
+            <div className="flex items-center min-w-fit whitespace-nowrap gap-2.5">
+              <p className="text-xs text-action-alert ">ID {item.actor_id}</p>
+              <p className="text-sm text-text-muted">{item.actor_fullname}</p>
             </div>
           </div>
         ))}

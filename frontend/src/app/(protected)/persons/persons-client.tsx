@@ -73,7 +73,7 @@ const PersonsClient = () => {
     ...staticFilters,
     {
       param: "city",
-      label: t("labels.location.city"),
+      label: t("location.labels.city"),
       async: true,
       options:
         cities && cities.data.map((c) => ({ value: c.id, label: c.name })),
@@ -83,7 +83,7 @@ const PersonsClient = () => {
     },
     {
       param: "country",
-      label: t("labels.location.country"),
+      label: t("location.labels.country"),
       hasSearch: true,
       options:
         countries && countries.map((c) => ({ value: c.id, label: c.name })),
