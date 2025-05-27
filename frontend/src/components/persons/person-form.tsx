@@ -47,7 +47,9 @@ import {
   PERSON_ROLE_VALUES,
 } from "@/constants/enums.constants";
 
-import { getInitials } from "@/lib/utils";
+import { getFullName, getInitials } from "@/lib/utils";
+import { pdf } from "@react-pdf/renderer";
+import LabelPDF from "./label-pdf";
 
 const schemaMap = {
   create: createPersonSchema,
@@ -123,8 +125,6 @@ const PersonForm = ({
     name: "role",
   });
 
-  console.log(form.formState.errors);
-
   const isCrmUser = ALLOWED_ROLES_FOR_CRM_USER.includes(
     watchedRole.value as AllowedRolesForCrmUser
   );
@@ -133,9 +133,27 @@ const PersonForm = ({
     mutation?.mutate({ ...formData });
   };
 
-  //TODO: implement print
-  const handlePrint = () => {
-    toast.success("print btn clicked ");
+  const handlePrint = async () => {
+    if (!person) {
+      return;
+    }
+    const fullName = getFullName(
+      person.first_name,
+      person.last_name,
+      person.patronymic
+    );
+    const mainPhone = person.phones.find((phone) => phone.is_main === true);
+    if (!mainPhone) return;
+    const blob = await pdf(
+      <LabelPDF
+        name={fullName}
+        phone={mainPhone.number}
+        date={dayjs(new Date()).format("DD.MM.YYYY HH:MM")}
+      />
+    ).toBlob();
+
+    const url = URL.createObjectURL(blob);
+    window.open(url, "_blank");
   };
   return (
     <div className="h-full w-full bg-white overflow-hidden rounded-md p-4 flex flex-col">

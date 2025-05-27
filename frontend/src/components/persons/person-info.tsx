@@ -21,6 +21,9 @@ import {
 } from "@/lib/utils";
 import CustomAvatar from "../shared/custom-avatar";
 import { useTranslation } from "react-i18next";
+import LabelPDF from "./label-pdf";
+import { pdf } from "@react-pdf/renderer";
+import dayjs from "dayjs";
 
 interface PersonInfoProps {
   person: Person;
@@ -62,6 +65,29 @@ const PersonInfo = ({ person }: PersonInfoProps) => {
     isMain: email.is_main,
   }));
 
+  const handlePrint = async () => {
+    if (!person) {
+      return;
+    }
+    const fullName = getFullName(
+      person.first_name,
+      person.last_name,
+      person.patronymic
+    );
+    const mainPhone = person.phones.find((phone) => phone.is_main === true);
+    if (!mainPhone) return;
+    const blob = await pdf(
+      <LabelPDF
+        name={fullName}
+        phone={mainPhone.number}
+        date={dayjs(new Date()).format("DD.MM.YYYY HH:MM")}
+      />
+    ).toBlob();
+
+    const url = URL.createObjectURL(blob);
+    window.open(url, "_blank");
+  };
+
   return (
     <div className="w-full h-full bg-white rounded-md">
       <div className="w-full h-fit flex flex-col lg:flex-row gap-4">
@@ -70,6 +96,7 @@ const PersonInfo = ({ person }: PersonInfoProps) => {
             createdAt={person.created_at}
             isActive={person.is_active}
             id={person.id}
+            handlePrint={handlePrint}
           />
           <div className="flex flex-col lg:flex-row w-full mt-6 gap-12">
             <div className="flex justify-center">
