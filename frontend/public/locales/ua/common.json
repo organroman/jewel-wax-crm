@@ -26,7 +26,8 @@
     "representative": "Представник",
     "password": "Пароль",
     "main": "Основний",
-    "contact": "Контакт"
+    "contact": "Контакт",
+    "date": "Дата"
   },
   "labels": {
     "main": "$t(dictionary.main)",
@@ -67,6 +68,7 @@
     "email_address": "Електронна адреса",
     "bank_details": "Банківські реквізити",
     "person_type": "Тип контрагента",
+    "person_changes": "Історія змін по контрагенту",
     "roles": {
       "all": "Всі контрагенти",
       "super_admin": "Супер Адмін",
@@ -180,6 +182,12 @@
       "enter_city": "Введіть місто",
       "address": "Введіть адресу"
     }
+  },
+  "log_actions": {
+    "date": "$t(dictionary.date)",
+    "login": "Вхід в систему (Login)",
+    "create_person": "Контрагента створено",
+    "update_person": "Контрагента оновлено"
   },
 
   "main_menu": {

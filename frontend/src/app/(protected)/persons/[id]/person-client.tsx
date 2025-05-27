@@ -150,7 +150,12 @@ const PersonClient = ({ id }: { id: number }) => {
           />
         )}
         {selectedTab.value === "changes_history" && (
-          <PersonChangesHistory id={id} />
+          <PersonChangesHistory
+            id={id}
+            lastName={person.last_name}
+            firstName={person.first_name}
+            patronymic={person.patronymic}
+          />
         )}
       </div>
       <Dialog

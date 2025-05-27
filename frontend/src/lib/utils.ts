@@ -23,15 +23,26 @@ export function getInitials(firstName: string, lastName: string) {
 export function getFullName(
   firstName: string,
   lastName: string,
-  surname: string | undefined
+  surname: string | undefined,
+  isUpperCase?: boolean
 ) {
-  let fullname = lastName.toUpperCase() + " " + firstName.toUpperCase();
+  if (isUpperCase) {
+    let fullname = lastName.toUpperCase() + " " + firstName.toUpperCase();
 
-  if (surname) {
-    fullname = fullname + " " + surname.toUpperCase;
+    if (surname) {
+      fullname = fullname + " " + surname.toUpperCase();
+    }
+
+    return fullname;
+  } else {
+    let fullname = lastName + " " + firstName;
+
+    if (surname) {
+      fullname = fullname + " " + surname;
+    }
+
+    return fullname;
   }
-
-  return fullname;
 }
 
 type SupportedMessengerPlatform = keyof typeof MESSENGERS_SOURCE_ICONS;

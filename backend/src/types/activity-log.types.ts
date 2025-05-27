@@ -12,6 +12,11 @@ export interface ActivityLog {
   target_type: string;
   target_id: number;
   details: Record<string, any> | null;
+  actor_id: number | null;
+}
+
+export interface ActivityLogWithActorFullName extends ActivityLog {
+  actor_fullname: string;
 }
 
 export interface GetActivityParams {

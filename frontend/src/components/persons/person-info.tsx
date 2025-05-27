@@ -89,7 +89,8 @@ const PersonInfo = ({ person }: PersonInfoProps) => {
                 fullName={getFullName(
                   person.first_name,
                   person.last_name,
-                  person.patronymic
+                  person.patronymic,
+                  true
                 )}
               />
               <PersonLabeledList
@@ -130,7 +131,7 @@ const PersonInfo = ({ person }: PersonInfoProps) => {
       {person.delivery_addresses && person.delivery_addresses?.length > 0 && (
         <PersonDeliveryAddresses addresses={person.delivery_addresses || []} />
       )}
-       {person.bank_details && person.bank_details?.length > 0 && (
+      {person.bank_details && person.bank_details?.length > 0 && (
         <PersonBankDetails bankDetails={person.bank_details} />
       )}
     </div>
