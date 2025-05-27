@@ -1,4 +1,8 @@
-import { ActivityLogInput } from "../types/activity-log.types";
+import {
+  ActivityLog,
+  ActivityLogInput,
+  GetActivityParams,
+} from "../types/activity-log.types";
 
 import db from "../db/db";
 
@@ -11,5 +15,16 @@ export const ActivityLogModel = {
       target_id: data.target_id,
       details: data.details ?? null,
     });
+  },
+  async getLogsByTargetAndTargetId({
+    target,
+    targetId,
+  }: GetActivityParams): Promise<ActivityLog[]> {
+    const logs = await db<ActivityLog>("activity_logs")
+      .where("target_type", target)
+      .andWhere("target_id", targetId)
+      .select("*");
+
+    return logs;
   },
 };

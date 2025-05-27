@@ -11,6 +11,7 @@ import personRoutes from "./routes/person-routes";
 import contactRoutes from "./routes/contact-routes";
 import requestRoutes from "./routes/request-routes";
 import locationRoutes from "./routes/location-routes";
+import activityLogRoutes from "./routes/activity-logs-routes";
 
 const app = express();
 const PORT = process.env.PORT || 8000;
@@ -34,6 +35,7 @@ app.use("/persons", personRoutes);
 app.use("/contacts", contactRoutes);
 app.use("/requests", requestRoutes);
 app.use("/locations", locationRoutes);
+app.use("/activity-logs", activityLogRoutes);
 
 app.use(errorHandler);
 

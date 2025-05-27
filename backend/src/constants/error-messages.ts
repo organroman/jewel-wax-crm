@@ -14,6 +14,7 @@ const ERROR_MESSAGES = {
   INVALID_RESET_TOKEN: "Invalid reset token",
   MISSING_REQUIRED_FIELDS: "Missing required fields",
   MISSING_REFRESH_TOKEN: "Missing refresh token",
+  MISSING_TARGET_AND_TARGET_ID: "Missing target type and target Id",
   PHONE_EXISTS: "Person with this phone already exists",
   PASSWORD_EMAIL_REQUIRED: "Password and email are required",
   PERSON_NOT_FOUND: "Person not found",

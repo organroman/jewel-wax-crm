@@ -1,7 +1,20 @@
 export interface ActivityLogInput {
   actor_id: number | null;
-  action: string;  // create, update etc
+  action: string; // create, update etc
   target_type: string; // e.g. "person"
   target_id: number;
-  details?: Record<string, any>; 
+  details?: Record<string, any>;
+}
+
+export interface ActivityLog {
+  id: number;
+  action: string;
+  target_type: string;
+  target_id: number;
+  details: Record<string, any> | null;
+}
+
+export interface GetActivityParams {
+  target: string;
+  targetId: number;
 }
