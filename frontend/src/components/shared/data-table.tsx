@@ -9,6 +9,7 @@ import {
 } from "@tanstack/react-table";
 import { Loader } from "lucide-react";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 import {
   Table,
@@ -44,6 +45,7 @@ DataTableProps<TData, TValue> & {
   onPageChange: (page: number) => void;
   //   onLimitChange: (limit: number) => void;
 }) {
+  const { t } = useTranslation();
   const totalPages = Math.ceil(totalItems / currentLimit);
   const [rowSelection, setRowSelection] = useState({});
   const table = useReactTable({
@@ -127,7 +129,7 @@ DataTableProps<TData, TValue> & {
                     colSpan={columns.length}
                     className="h-24 text-center"
                   >
-                    No results.
+                    {t("messages.info.no_results")}
                   </TableCell>
                 </TableRow>
               ))}

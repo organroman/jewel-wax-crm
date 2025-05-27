@@ -6,9 +6,12 @@ import { ChevronLeftIcon, Loader } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 
 import { usePerson } from "@/api/persons/use-person";
 import { useLocation } from "@/api/locations/use-location";
+
+import { useDialog } from "@/hooks/use-dialog";
 
 import CustomTabs from "@/components/shared/custom-tabs";
 import PersonForm from "@/components/persons/person-form";
@@ -20,12 +23,13 @@ import { Separator } from "@/components/ui/separator";
 import { Dialog } from "@/components/ui/dialog";
 
 import { PERSON_CARD_TABS_LIST } from "@/constants/persons.constants";
-import { useDialog } from "@/hooks/use-dialog";
+import { translateKeyValueList } from "@/lib/translate-constant-labels";
 
 const PersonClient = ({ id }: { id: number }) => {
   const router = useRouter();
   const queryClient = useQueryClient();
   const searchParams = useSearchParams();
+  const { t } = useTranslation();
 
   const [selectedCountry, setSelectedCountry] = useState<Country | undefined>(
     undefined
@@ -70,25 +74,32 @@ const PersonClient = ({ id }: { id: number }) => {
     router.replace("/persons");
   };
 
-  const { updateMutation } = usePerson.updatePerson({ queryClient });
+  const { updateMutation } = usePerson.updatePerson({ queryClient, t });
 
   const { deletePersonMutation } = usePerson.deletePerson({
     queryClient,
     handleSuccess,
+    t,
   });
 
   const tabParam = searchParams.get("tab");
 
-  const currentTab = PERSON_CARD_TABS_LIST.find((t) => t.value === tabParam);
+  const tabs = translateKeyValueList(
+    PERSON_CARD_TABS_LIST,
+    t,
+    "person.tabs"
+  ).filter((tab) => tab.value !== "new");
+
+  const currentTab = tabs.find((t) => t.value === tabParam);
 
   const [selectedTab, setSelectedTab] = useState<TabOption>(
-    currentTab || PERSON_CARD_TABS_LIST[0]
+    currentTab || tabs[0]
   );
 
   const handleChange = (value: string) => {
     if (selectedTab.value === value) return;
 
-    const selected = PERSON_CARD_TABS_LIST.find((t) => t.value === value);
+    const selected = tabs.find((t) => t.value === value);
     if (!selected) {
       return;
     }
@@ -116,12 +127,12 @@ const PersonClient = ({ id }: { id: number }) => {
         variant="link"
         className=" w-fit has-[>svg]:p-0 text-text-light h-4"
       >
-        <ChevronLeftIcon /> Повернутись до таблиці
+        <ChevronLeftIcon /> {t("buttons.back_to_table")}
       </Button>
       <CustomTabs
         selectedTab={selectedTab}
         handleChange={handleChange}
-        tabsOptions={PERSON_CARD_TABS_LIST}
+        tabsOptions={tabs}
       />
       <Separator className="bg-ui-border h-0.5 data-[orientation=horizontal]:h-0.5" />
       <div className="mt-4 h-full flex flex-1 flex-col overflow-hidden">

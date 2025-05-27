@@ -13,6 +13,7 @@ import dayjs from "dayjs";
 import { toast } from "sonner";
 import { Loader } from "lucide-react";
 import { SetStateAction, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 import { useContact } from "@/api/contacts/use-contact";
 
@@ -78,7 +79,12 @@ const PersonForm = ({
   onCreateCity,
   onCreateCountry,
 }: PersonFormProps) => {
-  const roles = useEnumStore((e) => e.getByType("person_role"));
+  const { t } = useTranslation();
+  const rolesEnum = useEnumStore((e) => e.getByType("person_role"));
+  const roles = rolesEnum.map((role) => ({
+    ...role,
+    label: t(`person.roles.${role.value}`),
+  }));
   const schema = person ? schemaMap.update : schemaMap.create;
 
   const [contactQuery, setContactQuery] = useState<string>("");
@@ -94,7 +100,10 @@ const PersonForm = ({
       id: person?.id,
       role: person
         ? person?.role
-        : { value: PERSON_ROLE_VALUES[3], label: "Замовник" },
+        : {
+            value: PERSON_ROLE_VALUES[3],
+            label: t(`person.roles.${PERSON_ROLE_VALUES[3]}`),
+          },
       first_name: person?.first_name || "",
       patronymic: person?.patronymic || "",
       last_name: person?.last_name || "",
@@ -113,6 +122,8 @@ const PersonForm = ({
     control: form.control,
     name: "role",
   });
+
+  console.log(form.formState.errors);
 
   const isCrmUser = ALLOWED_ROLES_FOR_CRM_USER.includes(
     watchedRole.value as AllowedRolesForCrmUser
@@ -136,7 +147,7 @@ const PersonForm = ({
         >
           <div className="flex flex-col lg:flex-row gap-y-2 lg:items-center lg:justify-between">
             <div className="flex items-center gap-2.5">
-              <InfoLabel>Дата створення</InfoLabel>
+              <InfoLabel>{t("person.labels.created_at")}</InfoLabel>
               <InfoValue>
                 {person
                   ? dayjs(person.created_at).format("DD.MM.YYYY")
@@ -151,8 +162,8 @@ const PersonForm = ({
                 <FormSwitch
                   name="is_active"
                   control={form.control}
-                  checkedLabel="Активний"
-                  unCheckedLabel="Неактивний"
+                  checkedLabel={t("person.labels.active")}
+                  unCheckedLabel={t("person.labels.inactive")}
                 />
               </div>
             </div>
@@ -161,8 +172,8 @@ const PersonForm = ({
                 <FormSwitch
                   name="is_active"
                   control={form.control}
-                  checkedLabel="Активний"
-                  unCheckedLabel="Неактивний"
+                  checkedLabel={t("person.labels.active")}
+                  unCheckedLabel={t("person.labels.inactive")}
                 />
               </div>
               <Button
@@ -171,7 +182,7 @@ const PersonForm = ({
                 disabled={mutation?.isPending || !form.formState.isDirty}
                 className="flex items-center gap-2"
               >
-                {person ? "Зберігти зміни" : "Створити"}
+                {person ? t("buttons.save_changes") : t("buttons.create")}
                 {mutation?.isPending && (
                   <Loader className="size-4 animate-spin text-white" />
                 )}
@@ -196,39 +207,39 @@ const PersonForm = ({
                 <div className="flex flex-col gap-2.5">
                   <FormInput
                     name="last_name"
-                    label="Прізвище:"
-                    placeholder="Введіть прізвище"
+                    label={`${t("person.labels.last_name")}:`}
+                    placeholder={t("person.placeholders.last_name")}
                     control={form.control}
                     required
                   />
                   <FormInput
                     name="first_name"
-                    label="Імʼя:"
-                    placeholder="Введіть імʼя"
+                    label={`${t("person.labels.first_name")}:`}
+                    placeholder={t("person.placeholders.first_name")}
                     control={form.control}
                     required
                   />
                   <FormInput
                     name="patronymic"
-                    label="По батькові:"
-                    placeholder="Введіть по батькові"
+                    label={`${t("person.labels.patronymic")}:`}
+                    placeholder={t("person.placeholders.patronymic")}
                     control={form.control}
                   />
                   <FormSelect
                     name="role"
-                    label="Роль"
+                    label={`${t("person.labels.role")}:`}
                     control={form.control}
                     required
-                    placeholder="Оберіть роль"
+                    placeholder={t("person.placeholders.role")}
                     className="mt-2.5"
                     options={roles}
                   />
                   {!person && isCrmUser && (
                     <FormInput
                       name="password"
-                      label="Пароль"
+                      label={`${t("labels.password")}:`}
                       control={form.control}
-                      placeholder="Введіть пароль"
+                      placeholder={t("placeholders.password")}
                     />
                   )}
                   {person && (
@@ -238,7 +249,7 @@ const PersonForm = ({
                       variant="secondary"
                       className="mt-2.5 min-w-[240px] self-end"
                     >
-                      Друк етикетки
+                      {t("person.buttons.print_label")}
                     </Button>
                   )}
                 </div>
@@ -248,19 +259,20 @@ const PersonForm = ({
                   name="phones"
                   control={form.control}
                   setValue={form.setValue}
-                  label="Номер телефону"
-                  placeholder="Введіть номер"
+                  label={`${t("person.labels.phone_number")}:`}
+                  placeholder={t("person.placeholders.phone")}
                   required
                   fieldKey="number"
                   messengers={person?.messengers}
                   showIsMain
+                  errors={form.formState.errors}
                 />
               </div>
             </div>
 
             <div className="mt-6 ">
               <p className="pb-3 border-b font-medium border-ui-border mb-2.5">
-                Адреса
+                {t("location.address")}
               </p>
               <FormArrayLocation
                 name="locations"
@@ -269,42 +281,45 @@ const PersonForm = ({
                 countries={countries || []}
                 onCreateCity={onCreateCity}
                 onCreateCountry={onCreateCountry}
+                errors={form.formState.errors}
               />
             </div>
             <div className="flex flex-col lg:flex-row justify-between gap-5 lg:gap-20 w-full">
               <div className="mt-6 lg:w-1/2 ">
                 <p className="pb-3 border-b font-medium border-ui-border mb-2.5">
-                  Електрона адреса
+                  {t("person.email_address")}
                 </p>
                 <FormArrayInput
                   name="emails"
                   control={form.control}
                   setValue={form.setValue}
-                  placeholder="Введіть email"
+                  placeholder={t("placeholders.email")}
                   label="Email"
                   fieldKey="email"
                   showIsMain
+                  errors={form.formState.errors}
                 />
               </div>
               <div className="lg:mt-6 lg:w-1/2">
                 <p className="pb-3 border-b font-medium border-ui-border mb-2.5">
-                  Адреса доставки
+                  {t("person.delivery_address")}
                 </p>
                 <FormArrayInput
                   name="delivery_addresses"
                   control={form.control}
                   setValue={form.setValue}
-                  placeholder="Введіть адресу"
+                  placeholder={t("location.placeholders.address")}
                   fieldKey="address_line"
-                  label="Адреса"
+                  label={t("location.labels.address")}
                   showIsMain
                   inputClassName="min-w-[188px] lg:min-w[460px]"
+                  errors={form.formState.errors}
                 />
               </div>
             </div>
             <div className="mt-6 ">
               <p className="pb-3 border-b font-medium border-ui-border mb-2.5">
-                Банківські реквізити
+                {t("person.bank_details")}
               </p>
               <FormArrayBankDetails
                 name="bank_details"
@@ -314,7 +329,7 @@ const PersonForm = ({
             </div>
             <div className="mt-6 ">
               <p className="pb-3 border-b font-medium border-ui-border mb-2.5">
-                Привʼязані контакти
+                {t("person.connected_contacts")}
               </p>
               <FormArrayCombobox
                 name="contacts"
@@ -326,14 +341,15 @@ const PersonForm = ({
                     data: c,
                   })) || []
                 }
-                label="Контакт"
+                label={t("person.labels.contact")}
                 displayKey="full_name"
                 valueKey="id"
                 saveFullObject
-                placeholder="Оберіть контакт"
+                placeholder={t("person.placeholders.contact")}
                 searchQuery={contactQuery}
                 setSearchQuery={setContactQuery}
                 isOptionsLoading={contactsLoading}
+                errors={form.formState.errors}
               />
             </div>
             {person && setIsDialogOpen && (
@@ -345,20 +361,22 @@ const PersonForm = ({
                   className="text-action-minus text-xs mt-4"
                   onClick={() => setIsDialogOpen(true)}
                 >
-                  Видалити контрагента
+                  {t("person.buttons.delete")}
                 </Button>
                 {deletePersonMutation && (
                   <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                     <Modal
                       destructive
                       header={{
-                        title: "Видалення контрагента",
-                        descriptionFirst: "Ви впевненні, що бажаєте видалити?",
-                        descriptionSecond: "Цю дію неможливо відмінити!",
+                        title: t("person.modal.delete.title"),
+                        descriptionFirst: t("person.modal.delete.desc_first"),
+                        descriptionSecond: t("person.modal.delete.desc_second"),
                       }}
                       footer={{
-                        buttonActionTitleContinuous: "Видалення",
-                        buttonActionTitle: "Видалити",
+                        buttonActionTitleContinuous: t(
+                          "buttons.delete_continuous"
+                        ),
+                        buttonActionTitle: t("buttons.delete"),
                         actionId: person.id,
                         isPending: deletePersonMutation.isPending,
                         action: () => deletePersonMutation.mutate(person.id),

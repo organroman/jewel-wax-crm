@@ -9,6 +9,7 @@ import {
   useFieldArray,
   useWatch,
   PathValue,
+  get,
 } from "react-hook-form";
 import { Trash2 } from "lucide-react";
 
@@ -19,6 +20,8 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 
 import FormCombobox from "./form-combobox";
+import { useTranslation } from "react-i18next";
+import { cn } from "@/lib/utils";
 
 const FormArrayLocation = <T extends FieldValues>({
   name,
@@ -28,10 +31,12 @@ const FormArrayLocation = <T extends FieldValues>({
   onCreateCountry,
   onCreateCity,
   required,
+  errors,
 }: FormArrayLocationProps<T>) => {
   const { fields, append, remove } = useFieldArray({ control, name });
   const watchedFields = useWatch({ name: name as Path<T>, control });
   const hasAppended = useRef(false);
+  const { t } = useTranslation();
 
   const countryIds = useMemo(
     () =>
@@ -89,16 +94,24 @@ const FormArrayLocation = <T extends FieldValues>({
         const cityOptions = cityQueries[index]?.data || [];
         const isLoading = cityQueries[index]?.isLoading;
 
+        const hasCountryError = !!get(errors, `${name}.${index}.country_id`);
+        const hasCityError = !!get(errors, `${name}.${index}.city_id`);
+
         return (
           <div
             key={field.id}
             className="flex flex-col lg:flex-row lg:items-start gap-3 lg:gap-5"
           >
-            <div className="flex items-end lg:items-start">
+            <div
+              className={cn(
+                "flex lg:items-start",
+                hasCountryError ? "items-center" : "items-end"
+              )}
+            >
               <FormCombobox
                 name={`${name}.${index}.country_id` as Path<T>}
-                label="Країна"
-                placeholder="Оберіть країну"
+                label={t("location.labels.country")}
+                placeholder={t("location.placeholders.choose_country")}
                 control={control}
                 options={
                   (countries &&
@@ -120,15 +133,20 @@ const FormArrayLocation = <T extends FieldValues>({
                 className="rounded-tl-none rounded-bl-none"
                 onClick={onCreateCountry}
               >
-                Додати
+                {t("buttons.add")}
               </Button>
             </div>
 
-            <div className="flex items-end lg:items-start">
+            <div
+              className={cn(
+                "flex lg:items-start",
+                hasCountryError ? "items-center" : "items-end"
+              )}
+            >
               <FormCombobox
                 name={`${name}.${index}.city_id` as Path<T>}
-                label="Місто"
-                placeholder="Оберіть місто"
+                label={t("location.labels.city")}
+                placeholder={t("location.placeholders.choose_city")}
                 control={control}
                 options={
                   (cityOptions &&
@@ -151,9 +169,14 @@ const FormArrayLocation = <T extends FieldValues>({
                 className="rounded-tl-none rounded-bl-none"
                 onClick={() => onCreateCity?.(selectedCountryId)}
               >
-                Додати
+                {t("buttons.add")}
               </Button>
-              <div className="flex items-center gap-2 mx-2 lg:mx-4 mb-1.5 lg:mb-0 lg:mt-1.5">
+              <div
+                className={cn(
+                  "flex items-center  gap-2 mx-2 lg:mx-4 lg:mb-0 lg:mt-1.5",
+                  hasCityError ? "mb-0" : "mb-1.5"
+                )}
+              >
                 <Switch
                   id={`${name}.${index}`}
                   checked={isMain}
@@ -163,13 +186,13 @@ const FormArrayLocation = <T extends FieldValues>({
                   htmlFor={`${name}.${index}`}
                   className="hidden lg:block text-xs text-text-muted font-normal"
                 >
-                  Основний
+                  {t("labels.main")}
                 </Label>
                 <Label
                   htmlFor={`${name}.${index}`}
                   className="lg:hidden text-xs text-text-muted font-normal"
                 >
-                  Осн.
+                  {t("labels.main_short")}
                 </Label>
               </div>
 
@@ -191,7 +214,7 @@ const FormArrayLocation = <T extends FieldValues>({
                 className="text-action-plus text-xs p-0 self-start"
                 onClick={handleAppend}
               >
-                Додати ще
+                {t("buttons.add_more")}
               </Button>
             )}
           </div>
@@ -205,7 +228,7 @@ const FormArrayLocation = <T extends FieldValues>({
           className="text-action-plus text-xs p-0"
           onClick={handleAppend}
         >
-          Додати
+          {t("buttons.add")}
         </Button>
       )}
     </div>

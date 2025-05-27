@@ -1,4 +1,5 @@
 import { Country, CreateCitySchema } from "@/types/location.types";
+import { useTranslation } from "react-i18next";
 
 import { SetStateAction, useEffect } from "react";
 import { useForm } from "react-hook-form";
@@ -22,6 +23,7 @@ interface CityFormProps {
 }
 
 const CityForm = ({ country, setIsDialogOpen, countries }: CityFormProps) => {
+  const { t } = useTranslation();
   const queryClient = useQueryClient();
   const form = useForm<CreateCitySchema>({
     resolver: zodResolver(createCitySchema),
@@ -38,13 +40,13 @@ const CityForm = ({ country, setIsDialogOpen, countries }: CityFormProps) => {
 
   const handleOnSuccess = () => {
     setIsDialogOpen && setIsDialogOpen(false);
-    form.reset()
+    form.reset();
   };
-
 
   const { createCityMutation } = useLocation.createCity({
     queryClient,
     handleOnSuccess,
+    t,
   });
 
   const onSubmit = (formData: CreateCitySchema) => {
@@ -53,12 +55,12 @@ const CityForm = ({ country, setIsDialogOpen, countries }: CityFormProps) => {
   return (
     <Modal
       header={{
-        title: "Створити місто",
-        descriptionFirst: "Заповніть поля і натисніть Зберігти",
+        title: t("location.modal.city_title"),
+        descriptionFirst: t("location.modal.desc_first"),
       }}
       footer={{
-        buttonActionTitle: "Зберігти",
-        buttonActionTitleContinuous: "Зберігаю",
+        buttonActionTitle: t("buttons.save"),
+        buttonActionTitleContinuous: t("buttons.save_continuous"),
         submit: true,
         formId: "cityForm",
         isPending: createCityMutation.isPending,
@@ -74,15 +76,15 @@ const CityForm = ({ country, setIsDialogOpen, countries }: CityFormProps) => {
             name="country"
             control={form.control}
             options={countries.map((c) => ({ label: c.name, value: c.id }))}
-            label="Країна"
-            placeholder="Оберіть країну"
+            label={t("location.labels.country")}
+            placeholder={t("location.placeholders.choose_country")}
             required
           />
           <FormInput
             name="name"
             control={form.control}
-            label="Місто"
-            placeholder="Введіть місто"
+            label={t("location.labels.city")}
+            placeholder={t("location.placeholders.enter_city")}
             required
           />
         </form>

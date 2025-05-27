@@ -8,7 +8,7 @@ import ModalFooter from "./modal-footer";
 
 const Modal = ({ header, children, footer, destructive }: ModalProps) => {
   return (
-    <DialogContent className="sm:max-w-md max-h-[90vh] min-w-fit w-full max-w-lg overflow-y-auto">
+    <DialogContent className="max-w-[95vw] max-h-[80vh] lg:max-h-[90vh] p-2.5 lg:p-5 min-w-fit w-full lg:max-w-lg overflow-y-auto">
       {!header?.title && (
         <DialogTitle asChild>
           <VisuallyHidden>Modal</VisuallyHidden>

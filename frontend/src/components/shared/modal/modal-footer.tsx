@@ -5,6 +5,7 @@ import { Loader } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { DialogClose, DialogFooter } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "react-i18next";
 
 const ModalFooter = ({
   isPending,
@@ -16,6 +17,7 @@ const ModalFooter = ({
   buttonActionTitleContinuous,
   buttonActionTitle,
 }: ModalFooterProps) => {
+  const { t } = useTranslation();
   return (
     <DialogFooter
       className={cn("sm:justify-start w-ful flex flex-row mt-4 space-x-2 ")}
@@ -27,7 +29,7 @@ const ModalFooter = ({
           className="flex-1 rounded-sm"
           disabled={isPending}
         >
-          Скасувати
+          {t("buttons.cancel")}
         </Button>
       </DialogClose>
       <Button

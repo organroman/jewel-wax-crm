@@ -1,7 +1,5 @@
-import { TabOption } from "@/types/shared.types";
-
 import { InfoIcon, Loader } from "lucide-react";
-import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 import { usePerson } from "@/api/persons/use-person";
 
@@ -16,8 +14,7 @@ import Modal from "../shared/modal/modal";
 import PersonInfo from "./person-info";
 
 import { PERSON_CARD_TABS_LIST } from "@/constants/persons.constants";
-
-
+import { translateKeyValueList } from "@/lib/translate-constant-labels";
 
 interface ViewEntityItemProps {
   id: number;
@@ -25,9 +22,13 @@ interface ViewEntityItemProps {
 
 const ViewPersonDetails = ({ id }: ViewEntityItemProps) => {
   const { dialogOpen, setDialogOpen } = useDialog();
-  const [selectedTab, setSelectedTab] = useState<TabOption>(
-    PERSON_CARD_TABS_LIST[0]
-  );
+  const { t } = useTranslation();
+
+  const tabs = translateKeyValueList(
+    PERSON_CARD_TABS_LIST,
+    t,
+    "person.tabs"
+  ).filter((t) => t.value === "general_info");
 
   const {
     data: person,
@@ -39,7 +40,7 @@ const ViewPersonDetails = ({ id }: ViewEntityItemProps) => {
     <>
       <Button
         variant="ghost"
-        className="has-[>svg]:p-0"
+        className="has-[>svg]:p-1.5"
         onClick={() => setDialogOpen(true)}
       >
         <InfoIcon className="text-text-muted size-5" />
@@ -52,13 +53,11 @@ const ViewPersonDetails = ({ id }: ViewEntityItemProps) => {
             <>
               <CustomTabs
                 isModal={true}
-                tabsOptions={PERSON_CARD_TABS_LIST}
-                selectedTab={selectedTab}
+                tabsOptions={tabs}
+                selectedTab={tabs[0]}
               />
               <Separator className="bg-ui-border h-0.5 data-[orientation=horizontal]:h-0.5" />
-              {/* <div className="w-full"> */}
               <PersonInfo person={person} />
-              {/* </div> */}
             </>
           )}
         </Modal>

@@ -5,9 +5,9 @@ import { shallow } from "zustand/shallow";
 import { EnumItem } from "@/types/shared.types";
 
 type EnumStore = {
-  enums: Record<string, EnumItem[]>;
-  setAllEnums: (all: Record<string, EnumItem[]>) => void;
-  getByType: (type: string) => EnumItem[];
+  enums: Record<string, EnumItem<string>[]>;
+  setAllEnums: (all: Record<string, EnumItem<string>[]>) => void;
+  getByType: (type: string) => EnumItem<string>[];
 };
 
 export const enumStore: StoreApi<EnumStore> = createStore<EnumStore>(

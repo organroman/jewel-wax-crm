@@ -2,52 +2,46 @@ import { PERMISSIONS } from "./permissions.constants";
 
 export const MENU_LIST = [
   {
-    label: "Дашбоард", // todo: messages
     href: "/dashboard",
     icon: "/img/dashboard.svg",
-
+    key: "dashboard",
     permission: PERMISSIONS.DASHBOARD.VIEW,
   },
   {
-    label: "Заявки",
     href: "/requests",
     icon: "/img/requests.svg",
+    key: "requests",
     permission: PERMISSIONS.REQUESTS.VIEW,
   },
 
   {
-    label: "Завдання",
     href: "/orders",
     icon: "/img/orders.svg",
-
+    key: "orders",
     permission: PERMISSIONS.ORDERS.VIEW,
   },
   {
-    label: "Фінанси",
     href: "/finance",
     icon: "/img/finance.svg",
-
+    key: "finance",
     permission: PERMISSIONS.FINANCE.VIEW,
   },
   {
-    label: "Звіти",
     href: "/reports",
     icon: "/img/reports.svg",
-
+    key: "reports",
     permission: PERMISSIONS.REPORTS.VIEW,
   },
   {
-    label: "Статистика",
     href: "/statistic",
     icon: "/img/statistics.svg",
-
+    key: "statistic",
     permission: PERMISSIONS.STATISTIC.VIEW,
   },
   {
-    label: "Контрагенти",
     href: "/persons",
     icon: "/img/persons.svg",
-
+    key: "persons",
     permission: PERMISSIONS.PERSONS.VIEW,
   },
 ];

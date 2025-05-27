@@ -12,19 +12,26 @@ import PersonActionsMenu from "./person-actions-menu";
 
 import { cn, getInitials } from "@/lib/utils";
 import { PERSON_ROLE_COLORS } from "@/constants/persons.constants";
+import { Button } from "../ui/button";
 
-export const personsColumns: ColumnDef<Person>[] = [
+export const getPersonsColumns = (
+  t: (key: string) => string
+): ColumnDef<Person>[] => [
   {
     id: "view",
-    header: () => <InfoIcon size={20} className="text-text-muted" />,
+    header: () => (
+      <Button variant="ghost" className="has-[>svg]:p-1.5 hover:bg-transparent">
+        <InfoIcon className="text-text-muted size-5" />
+      </Button>
+    ),
     cell: ({ row }) => {
       return <ViewPersonDetails id={row.original.id} />;
     },
-    size: 28,
+    size: 36,
   },
   {
     accessorKey: "avatar_url",
-    header: "Фото",
+    header: t("person.table_headers.avatar_url"),
     cell: ({ row }) => {
       const avatarUrl = row.original.avatar_url;
       const initials = getInitials(
@@ -39,11 +46,11 @@ export const personsColumns: ColumnDef<Person>[] = [
         </Avatar>
       );
     },
-    size: 48,
+    size: 65,
   },
   {
     accessorKey: "full_name",
-    header: "ПІБ",
+    header: t("person.table_headers.full_name"),
     cell: ({ row }) => {
       const lastName = row.original.last_name;
       const firstName = row.original.first_name.charAt(0);
@@ -54,11 +61,11 @@ export const personsColumns: ColumnDef<Person>[] = [
 
       return <span>{full_name}</span>;
     },
-    size: 40,
+    size: 100,
   },
   {
     accessorKey: "phone",
-    header: "Телефон",
+    header: t("person.table_headers.phone"),
     cell: ({ row }) => {
       const phonesQuantity = row.original.phones.length;
       const mainPhone = row.original.phones
@@ -82,7 +89,7 @@ export const personsColumns: ColumnDef<Person>[] = [
   },
   {
     accessorKey: "role",
-    header: "Роль",
+    header: t("person.table_headers.role"),
     cell: ({ row }) => {
       const role = row.original.role;
       return (
@@ -100,7 +107,7 @@ export const personsColumns: ColumnDef<Person>[] = [
   },
   {
     accessorKey: "city",
-    header: "Місто",
+    header: t("person.table_headers.city"),
     cell: ({ row }) => {
       const locations = row.original.locations;
       const main = locations?.find((location) => location.is_main === true);
@@ -108,11 +115,11 @@ export const personsColumns: ColumnDef<Person>[] = [
         return <span>{main?.city_name}</span>;
       }
     },
-    size: 40
+    size: 40,
   },
   {
     accessorKey: "post",
-    header: "Відділення пошти",
+    header: t("person.table_headers.post"),
     cell: ({ row }) => {
       return (
         <span> {row.original.delivery_addresses?.at(0)?.address_line}</span>
@@ -121,22 +128,24 @@ export const personsColumns: ColumnDef<Person>[] = [
   },
   {
     accessorKey: "created_at",
-    header: "Створено",
+    header: t("person.table_headers.created_at"),
     cell: ({ row }) => {
       const date = row.getValue("created_at") as Date;
 
       const formattedDate = dayjs(date).format("DD.MM.YYYY");
       return <span>{formattedDate}</span>;
     },
-    size: 30
+    size: 30,
   },
   {
     id: "actions",
-    header: () => <div className="text-center">Дії</div>,
+    header: () => (
+      <div className="text-center">{t("person.table_headers.actions")}</div>
+    ),
     cell: ({ row }) => {
       return (
         <div className="text-center">
-          <PersonActionsMenu person={row.original} />
+          <PersonActionsMenu id={row.original.id} />
         </div>
       );
     },

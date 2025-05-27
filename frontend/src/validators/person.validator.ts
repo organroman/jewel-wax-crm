@@ -1,5 +1,4 @@
 import { PersonRoleValue } from "@/types/person.types";
-import { VALIDATION_MESSAGES } from "@/constants/validation-messages.constants";
 import { z } from "zod";
 import { CHANEL_SOURCE, PERSON_ROLE_VALUES } from "@/constants/enums.constants";
 
@@ -21,7 +20,7 @@ const locationsSchema = z
       if (!hasMain) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          message: VALIDATION_MESSAGES.MIN_ONE_MAIN_DELIVERY_ADDRESS,
+          message: "messages.validation.min_one_main_location",
           path: [0, "country_id"],
         });
       }
@@ -31,7 +30,7 @@ const locationsSchema = z
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
             path: [index, "country_id"],
-            message: VALIDATION_MESSAGES.REQUIRED_COUNTRY,
+            message: "messages.validation.required_country",
           });
         }
       });
@@ -41,7 +40,7 @@ const locationsSchema = z
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
             path: [index, "city_id"],
-            message: VALIDATION_MESSAGES.REQUIRED_CITY,
+            message: "messages.validation.required_city",
           });
         }
       });
@@ -59,7 +58,9 @@ const messengerSchema = z.object({
 const phoneSchema = z.object({
   id: z.number().optional(),
   person_id: z.number().optional(),
-  number: z.string().min(5, VALIDATION_MESSAGES.INVALID_PHONE),
+  number: z
+    .string({ message: "messages.validation.required" })
+    .min(5, "messages.validation.invalid_phone"),
   is_main: z.boolean(),
   // created_at: z.string().optional(),
   // updated_at: z.string().optional(),
@@ -69,8 +70,8 @@ const emailSchema = z.object({
   id: z.number().optional(),
   person_id: z.number().optional(),
   email: z
-    .string({ message: VALIDATION_MESSAGES.REQUIRED_EMAIL })
-    .email(VALIDATION_MESSAGES.INVALID_EMAIL),
+    .string({ message: "messages.validation.required" })
+    .email("messages.validation.invalid_email"),
   is_main: z.boolean(),
   created_at: z.date().optional(),
   updated_at: z.date().optional(),
@@ -85,7 +86,7 @@ const emailsSchema = z
       if (!hasMain) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          message: VALIDATION_MESSAGES.MIN_ONE_MAIN_EMAIL,
+          message: "messages.validation.min_one_main_email",
           path: [0, "email"],
         });
       }
@@ -105,7 +106,9 @@ const emailsSchema = z
 const deliveryAddressSchema = z.object({
   id: z.number().optional(),
   is_main: z.boolean(),
-  address_line: z.string().min(3, VALIDATION_MESSAGES.MIN_THREE_CHARACTERS),
+  address_line: z
+    .string({ message: "messages.validation.required" })
+    .min(3, "messages.validation.min_three_characters"),
 });
 
 const deliveryAddressesSchema = z
@@ -117,7 +120,7 @@ const deliveryAddressesSchema = z
       if (!hasMain) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          message: VALIDATION_MESSAGES.MIN_ONE_MAIN_DELIVERY_ADDRESS,
+          message: "messages.validation.min_one_main_location",
           path: [0, "address_line"],
         });
       }
@@ -130,7 +133,7 @@ const deliveryAddressesSchema = z
             type: "string",
             inclusive: true,
             path: [index, "address_line"],
-            message: VALIDATION_MESSAGES.MIN_THREE_CHARACTERS,
+            message: "messages.validation.min_three_characters",
           });
         }
       });
@@ -149,7 +152,7 @@ const personContactSchema = z.object({
   external_id: z.string().optional(),
   username: z.string().optional(),
   full_name: z.string().optional(),
-  phone: z.nullable(z.string()),
+  phone: z.nullable(z.string()).optional(),
   person_id: z.number().nullable().optional(),
   avatar_url: z.string().nullable().optional(),
 });
@@ -162,7 +165,7 @@ const personContactsSchema = z
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           path: [index],
-          message: VALIDATION_MESSAGES.REQUIRED_CONTACT,
+          message: "messages.validation.required",
         });
       }
     });
@@ -182,16 +185,18 @@ const bankDetailsSchema = z.object({
 
 export const updatePersonSchema = z.object({
   id: z.number().optional(),
-  first_name: z.string().min(2, VALIDATION_MESSAGES.MIN_TWO_CHARACTERS),
-  last_name: z.string().min(2, VALIDATION_MESSAGES.MIN_TWO_CHARACTERS),
+  first_name: z
+    .string({ message: "messages.validation.required" })
+    .min(2, "messages.validation.min_two_characters"),
+  last_name: z.string().min(2, "messages.validation.min_two_characters"),
   patronymic: z.string().optional(),
   role: roleSchema,
   is_active: z.boolean(),
   phones: z
     .array(phoneSchema)
-    .min(1, VALIDATION_MESSAGES.MIN_ONE_PHONE)
+    .min(1, "messages.validation.min_one_main_phone")
     .refine((phones) => phones.some((p) => p.is_main), {
-      message: VALIDATION_MESSAGES.MIN_ONE_MAIN_PHONE,
+      message: "min_one_main_phone",
     }),
   emails: emailsSchema,
   locations: locationsSchema,
@@ -212,7 +217,7 @@ export const createPersonSchema = updatePersonSchema
       return requiresPassword ? !!data.password : true;
     },
     {
-      message: VALIDATION_MESSAGES.PASSWORD_REQUIRED,
+      message: "messages.validation.required_password",
       path: ["password"],
     }
   );

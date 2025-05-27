@@ -7,12 +7,13 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Cookies from "js-cookie";
 import { Loader } from "lucide-react";
+import { useTranslation } from "react-i18next";
+import { toast } from "sonner";
 
 import { loginSchema, LoginSchema } from "@/validators/login-schema";
 
-import { toast } from "sonner";
 import { UseAuth } from "@/api/auth/use-auth";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import {
   Form,
   FormControl,
@@ -26,6 +27,7 @@ import { Button } from "@/components/ui/button";
 
 const LoginPage = () => {
   const router = useRouter();
+  const { t } = useTranslation();
 
   const form = useForm<LoginSchema>({
     resolver: zodResolver(loginSchema),
@@ -40,7 +42,7 @@ const LoginPage = () => {
     loginMutation.mutate(formData, {
       onSuccess: ({ token }) => {
         Cookies.set("token", token);
-        toast.success("Welcome back!");
+        toast.success(t("messages.success.welcome_back"));
 
         router.push("/dashboard");
       },
@@ -77,7 +79,7 @@ const LoginPage = () => {
                     <Input
                       {...field}
                       name="email"
-                      placeholder="Введіть свою пошту"
+                      placeholder={t("placeholders.email")}
                     />
                   </FormControl>
                   <FormMessage />
@@ -89,13 +91,13 @@ const LoginPage = () => {
               control={form.control}
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Password</FormLabel>
+                  <FormLabel>{t("labels.password")}</FormLabel>
                   <FormControl>
                     <Input
                       {...field}
                       type="password"
                       name="password"
-                      placeholder="Enter your email"
+                      placeholder={t("placeholders.password")}
                     />
                   </FormControl>
                   <FormMessage className="text-xs" />
@@ -111,7 +113,7 @@ const LoginPage = () => {
                 {loginMutation.isPending ? (
                   <div className="flex flex-row">
                     <Loader className="size-6 animate-spin text-white mr-2" />
-                    <span>Please wait...</span>
+                    <span>{t("buttons.please_wait")}...</span>
                   </div>
                 ) : (
                   "Login"
@@ -126,10 +128,10 @@ const LoginPage = () => {
           </form>
         </Form>
         <p className="mt-5 text-sm text-stone-900 text-center">
-          Забули пароль?
+          {t("auth.forget_password")}?
           <Link href="/reset-password-token">
             <span className="text-brand-default font-bold underline hover:opacity-80 transition">
-              &nbsp;Відновити пароль
+              &nbsp;{t("auth.reset_password")}
             </span>
           </Link>
         </p>

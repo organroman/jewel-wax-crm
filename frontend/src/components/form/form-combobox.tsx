@@ -87,7 +87,7 @@ const FormCombobox = <T extends FieldValues, O>({
                 )}
               </div>
             )}
-            <div className="flex flex-col gap-1">
+            <div className="flex flex-col  gap-0.5 lg:gap-1">
               <FormControl>
                 <div>
                   <Popover open={open} onOpenChange={setOpen}>

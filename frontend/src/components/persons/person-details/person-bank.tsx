@@ -4,6 +4,7 @@ import { BankDetails } from "@/types/person.types";
 
 import { CheckCheck, Copy } from "lucide-react";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 import { Button } from "@/components/ui/button";
 import { copyToClipboard } from "@/lib/utils";
@@ -14,8 +15,9 @@ interface PersonBankDetailsProps {
 
 const PersonBankDetails = ({ bankDetails }: PersonBankDetailsProps) => {
   const [copied, setCopied] = useState<string | null>(null);
+  const { t } = useTranslation();
 
-  const titleStyles = "text-xs/5 w-32 text-text-muted ";
+  const titleStyles = "text-xs/5 w-22 lg:w-32 text-text-muted ";
   const valueStyles = "text-sm font-medium";
 
   const handleCopy = async (value: string) => {
@@ -29,16 +31,24 @@ const PersonBankDetails = ({ bankDetails }: PersonBankDetailsProps) => {
   return (
     <div className="mt-10">
       <p className="text-sm font-medium pb-2 border-b border-ui-border">
-        Банківські реквізити
+        {t("person.bank_details")}
       </p>
-      <div className="flex mt-2.5 gap-16">
+      <div className="flex flex-col lg:flex-row mt-2.5 gap-16">
         {bankDetails.map((bd) => (
           <div key={bd.id} className="flex gap-2.5 items-center ">
             <div className="flex flex-col gap-1 border-r border-ui-border justify-center">
-              {bd.bank_name && <p className={titleStyles}>Банк:</p>}
-              {bd.card_number && <p className={titleStyles}>Номер картки:</p>}
-              {bd.bank_code && <p className={titleStyles}>МФО:</p>}
-              {bd.tax_id && <p className={titleStyles}>ЄДРПОУ/ІНН:</p>}
+              {bd.bank_name && (
+                <p className={titleStyles}>{t("person.labels.bank")}:</p>
+              )}
+              {bd.card_number && (
+                <p className={titleStyles}>{t("person.labels.card_number")}:</p>
+              )}
+              {bd.bank_code && (
+                <p className={titleStyles}>{t("person.labels.bank_code")}:</p>
+              )}
+              {bd.tax_id && (
+                <p className={titleStyles}>{t("person.labels.tax_id")}:</p>
+              )}
               {bd.iban && <p className={titleStyles}>IBAN:</p>}
             </div>
             <div className="flex flex-col gap-1 justify-center ">

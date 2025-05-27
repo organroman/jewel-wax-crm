@@ -1,16 +1,16 @@
 export const STATIC_PERSON_FILTERS = [
   {
     param: "is_active",
-    label: "Статус",
+    key: "status",
     options: [
-      { label: "Активні", value: true },
-      { label: "Неактивні", value: false },
+      { key: "active", value: true },
+      { key: "inactive", value: false },
     ],
   },
 ];
 
 export const PERSON_ROLE_ALL = {
-  label: "Всі контрагенти",
+  key: "all",
   value: "all",
   type: "person_role",
 };
@@ -25,21 +25,18 @@ export const PERSON_ROLE_COLORS = {
 
 export const PERSON_CARD_TABS_LIST = [
   {
-    label: "Інформація",
     value: "general_info",
+    key: "general_info",
   },
   {
-    label: "Історія змін",
+    key: "changes_history",
     value: "changes_history",
   },
   {
-    label: "Історія замовлень",
+    key: "orders_history",
     value: "orders_history",
   },
-];
-
-export const PERSON_CARD_NEW_TAB = [
-  { label: "Новий контрагент", value: "new" },
+  { value: "new", key: "new" },
 ];
 
 export const MESSENGERS_SOURCE_ICONS = {

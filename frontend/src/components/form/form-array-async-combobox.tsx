@@ -1,12 +1,14 @@
 "use client";
 import { FormArrayComboboxProps } from "@/types/form.types";
 
-import { FieldValues, Path, useFieldArray } from "react-hook-form";
+import { FieldValues, get, Path, useFieldArray } from "react-hook-form";
 import { useEffect, useRef } from "react";
 import { Trash2 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 import { Button } from "@/components/ui/button";
 import FormAsyncCombobox from "./form-async-combobox ";
+import { cn } from "@/lib/utils";
 
 const FormArrayAsyncCombobox = <T extends FieldValues, O>({
   name,
@@ -23,9 +25,11 @@ const FormArrayAsyncCombobox = <T extends FieldValues, O>({
   searchQuery,
   setSearchQuery,
   isOptionsLoading,
+  errors,
 }: FormArrayComboboxProps<T, O>) => {
   const { fields, append, remove } = useFieldArray({ control, name });
   const hasAppended = useRef(false);
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (!hasAppended.current && fields.length === 0 && isShownEmptyInput) {
@@ -45,9 +49,19 @@ const FormArrayAsyncCombobox = <T extends FieldValues, O>({
           saveFullObject ? `${name}.${index}` : `${name}.${index}.${fieldKey}`
         ) as Path<T>;
 
+        const hasError = !!get(errors, inputName);
+
         return (
-          <div key={field.id} className="flex flex-col lg:flex-row w-full items-start lg:items-center gap-2.5">
-            <div className="flex items-end gap-2.5">
+          <div
+            key={field.id}
+            className="flex flex-col lg:flex-row w-full items-start lg:items-center gap-2.5"
+          >
+            <div
+              className={cn(
+                "flex lg:items-start gap-2.5",
+                hasError ? "items-center" : "items-end"
+              )}
+            >
               <FormAsyncCombobox
                 name={inputName}
                 control={control}
@@ -75,11 +89,11 @@ const FormArrayAsyncCombobox = <T extends FieldValues, O>({
               <Button
                 type="button"
                 variant="link"
-                size="sm"
-                className="text-action-plus text-xs p-0"
+                // size="sm"
+                className="text-action-plus h-8 text-xs px-0 lg:self-start"
                 onClick={handleAppend}
               >
-                {fields.length === 0 ? "Додати" : "Додати ще"}
+                {t("buttons.add_more")}
               </Button>
             )}
           </div>
@@ -93,7 +107,7 @@ const FormArrayAsyncCombobox = <T extends FieldValues, O>({
           className="text-action-plus text-xs p-0 self-start"
           onClick={handleAppend}
         >
-          {fields.length === 0 ? "Додати" : "Додати ще"}
+          {t("buttons.add")}
         </Button>
       )}
     </div>

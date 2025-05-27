@@ -15,18 +15,33 @@ import EntityTitle from "@/components/shared/entity-title";
 import TabsFilter from "@/components/shared/tabs-filter";
 import Toolbar from "@/components/shared/tool-bar";
 import { DataTable } from "@/components/shared/data-table";
-import { personsColumns } from "@/components/persons/persons-columns";
 
 import ERROR_MESSAGES from "@/constants/error-messages";
 import {
   STATIC_PERSON_FILTERS,
   PERSON_ROLE_ALL,
 } from "@/constants/persons.constants";
+import { useTranslation } from "react-i18next";
+import { getPersonsColumns } from "@/components/persons/persons-columns";
+
+import {
+  translateFilterGroups,
+  translateSingleLabel,
+} from "@/lib/translate-constant-labels";
 
 const PersonsClient = () => {
+  const { t } = useTranslation("common");
   const router = useRouter();
+  const personsColumns = getPersonsColumns(t);
+
   const sortFields = useEnumStore((s) => s.getByType("person_sort_fields"));
   const roles = useEnumStore((s) => s.getByType("person_role"));
+
+  const sortOptions = sortFields.map((opt) => ({
+    ...opt,
+    label: t(`person.sorting.${opt.value}`),
+  }));
+
   const [searchCity, setSearchCity] = useState("");
   const [debouncedValue, setDebouncedValue] = useState("");
 
@@ -34,6 +49,7 @@ const PersonsClient = () => {
     () => debounce((value: string) => setDebouncedValue(value), 500),
     []
   );
+
   useEffect(() => {
     debouncedSearchCity(searchCity);
     return () => {
@@ -47,11 +63,17 @@ const PersonsClient = () => {
   const { data: countries, isLoading: countriesLoading } =
     useLocation.getCountries();
 
+  const staticFilters = translateFilterGroups(
+    STATIC_PERSON_FILTERS,
+    t,
+    "person.filters"
+  );
+
   const personFilters = [
-    ...STATIC_PERSON_FILTERS,
+    ...staticFilters,
     {
       param: "city",
-      label: "Місто",
+      label: t("labels.location.city"),
       async: true,
       options:
         cities && cities.data.map((c) => ({ value: c.id, label: c.name })),
@@ -61,7 +83,7 @@ const PersonsClient = () => {
     },
     {
       param: "country",
-      label: "Країна",
+      label: t("labels.location.country"),
       hasSearch: true,
       options:
         countries && countries.map((c) => ({ value: c.id, label: c.name })),
@@ -69,7 +91,17 @@ const PersonsClient = () => {
     },
   ];
 
-  const rolesWithAllOption = [PERSON_ROLE_ALL, ...roles];
+  const roleAll = translateSingleLabel(PERSON_ROLE_ALL, t, "person.roles");
+
+  const rolesWithAllOption = [
+    {
+      ...roleAll,
+    },
+    ...roles.map((role) => ({
+      ...role,
+      label: t(`person.roles.${role.value}`),
+    })),
+  ];
 
   const { page, limit, query, setParam, ready } = useQueryParams();
 
@@ -86,13 +118,16 @@ const PersonsClient = () => {
 
   return (
     <div className="h-full flex flex-col">
-      <EntityTitle title="Контрагенти" />
+      <div className="hidden lg:flex">
+        <EntityTitle title={t("person.person_plural")} />
+      </div>
       <TabsFilter param="role" options={rolesWithAllOption} />
       <Separator className="bg-ui-border h-0.5 data-[orientation=horizontal]:h-0.5" />
       <Toolbar
-        sortOptions={sortFields}
-        searchPlaceholder="Пошук контрагента"
-        addLabel="Додати контрагента"
+        sortOptions={sortOptions}
+        searchPlaceholder={t("person.placeholders.search_person")}
+        addLabel={t("person.add_person")}
+        filterPlaceholder={t("placeholders.filters")}
         filterOptions={personFilters}
         onAdd={() => router.push("persons/new")}
       />

@@ -1,6 +1,7 @@
 import { FilterOption } from "@/types/shared.types";
 
 import { ChevronUp } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 import { Button } from "@components/ui/button";
 import {
@@ -42,6 +43,7 @@ const StaticCombobox = ({
   handleSelect,
   isChecked,
 }: StaticComboboxProps) => {
+  const { t } = useTranslation();
   return (
     <Popover
       open={open || false}
@@ -79,9 +81,9 @@ const StaticCombobox = ({
             return 0;
           }}
         >
-          {hasSearch && <CommandInput placeholder="Пошук..." />}
+          {hasSearch && <CommandInput placeholder={t("placeholders.search")} />}
           <CommandList>
-            <CommandEmpty>Нічого не знайдено</CommandEmpty>
+            <CommandEmpty>{t("messages.info.no_results")}</CommandEmpty>
             <CommandGroup>
               {options?.map((option: FilterOption) => {
                 return (

@@ -3,11 +3,13 @@ import { FormArrayInputProps } from "@/types/form.types";
 import { useEffect, useRef } from "react";
 import {
   FieldValues,
+  get,
   Path,
   PathValue,
   useFieldArray,
   useWatch,
 } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 
 import { Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -15,6 +17,7 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 
 import FormArrayInputItem from "./form-array-input-item";
+import { cn } from "@/lib/utils";
 
 const FormArrayInput = <T extends FieldValues>({
   name,
@@ -26,10 +29,12 @@ const FormArrayInput = <T extends FieldValues>({
   fieldKey = "value",
   showIsMain = false,
   inputClassName,
+  errors,
 }: FormArrayInputProps<T>) => {
   const { fields, append, remove } = useFieldArray({ control, name });
   const watchedFields = useWatch({ name: name as Path<T>, control });
   const hasAppended = useRef(false);
+  const { t } = useTranslation();
 
   const handleToggleMain = (index: number) => {
     fields.forEach((_, i) => {
@@ -61,12 +66,18 @@ const FormArrayInput = <T extends FieldValues>({
         const isMain = watchedFields?.[index]?.is_main ?? false;
 
         const inputName = `${name}.${index}.${fieldKey}` as Path<T>;
+        const hasError = !!get(errors, inputName);
         return (
           <div
             key={field.id}
             className="flex flex-col lg:flex-row lg:items-center gap-2.5"
           >
-            <div className="flex items-end lg:items-center gap-2.5">
+            <div
+              className={cn(
+                "flex  lg:items-center gap-2.5",
+                hasError ? "items-center" : "items-end"
+              )}
+            >
               <FormArrayInputItem
                 key={field.id}
                 name={inputName}
@@ -78,19 +89,19 @@ const FormArrayInput = <T extends FieldValues>({
               />
 
               {showIsMain && (
-                <div className="flex items-center h-8 gap-2">
+                <div className="flex lg:self-start items-center h-8 gap-2">
                   <Switch
                     checked={isMain}
                     onCheckedChange={() => handleToggleMain(index)}
                   />
-                  <Label className="text-xs">Основний</Label>
+                  <Label className="text-xs">{t("labels.main")}</Label>
                 </div>
               )}
               <Button
                 type="button"
                 variant="ghostDestructive"
                 size="icon"
-                className="h-8"
+                className="h-8 lg:self-start"
                 onClick={() => remove(index)}
               >
                 <Trash2 className="size-4" />
@@ -104,7 +115,7 @@ const FormArrayInput = <T extends FieldValues>({
                 className="text-action-plus text-xs h-8 px-0 self-start "
                 onClick={handleAppend}
               >
-                Додати ще
+                {t("buttons.add_more")}
               </Button>
             )}
           </div>
@@ -118,7 +129,7 @@ const FormArrayInput = <T extends FieldValues>({
           className="text-action-plus text-xs px-0 self-start"
           onClick={handleAppend}
         >
-          {fields.length === 0 ? "Додати" : "Додати ще"}
+          {t("buttons.add")}
         </Button>
       )}
     </div>

@@ -1,4 +1,4 @@
-import { SafePerson } from "@/types/person.types";
+import { Person } from "@/types/person.types";
 import apiService from "../api-service";
 
 export const AuthService = {
@@ -6,6 +6,6 @@ export const AuthService = {
     apiService.post<{
       token: string;
       refreshToken: string;
-      person: SafePerson;
+      person: Person;
     }>("auth/login", data),
 };

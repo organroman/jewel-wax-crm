@@ -8,6 +8,7 @@ import {
   useWatch,
 } from "react-hook-form";
 import { Trash2 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
@@ -23,6 +24,7 @@ const FormArrayBankDetails = <T extends FieldValues>({
 }: FormArrayBankDetailsProps<T>) => {
   const { fields, append, remove } = useFieldArray({ control, name });
   const watchedFields = useWatch({ name: name as Path<T>, control });
+  const { t } = useTranslation();
 
   const handleAppend = () => {
     append({
@@ -60,21 +62,25 @@ const FormArrayBankDetails = <T extends FieldValues>({
                 <FormArrayInputItem
                   control={control}
                   name={`${base}.bank_name` as Path<T>}
-                  placeholder="Введіть назву банку"
-                  label="Банк"
+                  placeholder={t("person.placeholders.bank")}
+                  label={t("person.labels.bank")}
                   required={required}
                   labelClassName="lg:justify-start lg:w-[100px]"
                 />
-                <div className="flex items-center mb-1.5 gap-2">
+                <div className="flex mb-1.5 lg:mb-0 items-center gap-2">
                   <Switch
                     checked={isMain}
                     onCheckedChange={() => handleToggleMain(index)}
                   />
-                  <Label className="hidden lg:block text-xs">Основний</Label>
-                  <Label className="block lg:hidden text-xs">Осн.</Label>
+                  <Label className="hidden lg:block text-xs">
+                    {t("labels.main")}
+                  </Label>
+                  <Label className="block lg:hidden text-xs">
+                    {t("labels.main_short")}
+                  </Label>
                 </div>
 
-                <div className="flex justify-end">
+                <div className="flex">
                   <Button
                     type="button"
                     variant="ghostDestructive"
@@ -88,21 +94,21 @@ const FormArrayBankDetails = <T extends FieldValues>({
               <FormArrayInputItem
                 control={control}
                 name={`${base}.bank_code` as Path<T>}
-                placeholder="Введіть МФО"
-                label="МФО"
+                placeholder={t("person.placeholders.bank_code")}
+                label={t("person.labels.bank_code")}
                 labelClassName="lg:justify-start lg:w-[100px]"
               />
               <FormArrayInputItem
                 control={control}
                 name={`${base}.tax_id` as Path<T>}
-                placeholder="Введіть ІПН/ЄДРПОУ"
-                label="ІПН/ЄДРПОУ"
+                placeholder={t("person.placeholders.tax_id")}
+                label={t("person.labels.tax_id")}
                 labelClassName="lg:justify-start lg:w-[100px]"
               />
               <FormArrayInputItem
                 control={control}
                 name={`${base}.iban` as Path<T>}
-                placeholder="Введіть IBAN"
+                placeholder={t("person.placeholders.iban")}
                 label="IBAN"
                 required={required}
                 inputClassName="min-w-[188px]"
@@ -111,31 +117,13 @@ const FormArrayBankDetails = <T extends FieldValues>({
               <FormArrayInputItem
                 control={control}
                 name={`${base}.card_number` as Path<T>}
-                placeholder="Введіть номер карти"
-                label="Номер карти"
+                placeholder={t("person.placeholders.card_number")}
+                label={t("person.labels.card_number")}
                 required={required}
                 labelClassName="lg:justify-start lg:w-[100px]"
               />
             </div>
-            {/* <div className="flex items-end lg:items-center mt-1.5 gap-2">
-              <Switch
-                checked={isMain}
-                onCheckedChange={() => handleToggleMain(index)}
-              />
-              <Label className="hidden lg:block text-xs">Основний</Label>
-              <Label className="block lg:hidden text-xs">Осн.</Label>
-            </div>
 
-            <div className="flex justify-end">
-              <Button
-                type="button"
-                variant="ghostDestructive"
-                size="sm"
-                onClick={() => remove(index)}
-              >
-                <Trash2 className="size-4" />
-              </Button>
-            </div> */}
             {fields.length === index + 1 && (
               <Button
                 type="button"
@@ -144,7 +132,7 @@ const FormArrayBankDetails = <T extends FieldValues>({
                 onClick={handleAppend}
                 className="text-action-plus text-xs px-0"
               >
-                Додати ще
+                {t("buttons.add_more")}
               </Button>
             )}
           </div>
@@ -159,7 +147,7 @@ const FormArrayBankDetails = <T extends FieldValues>({
           onClick={handleAppend}
           className="text-action-plus text-xs px-0"
         >
-          Додати
+          {t("buttons.add")}
         </Button>
       )}
     </div>

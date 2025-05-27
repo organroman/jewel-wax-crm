@@ -31,14 +31,16 @@ export const usePerson = {
   createPerson: ({
     queryClient,
     handleOnSuccess,
+    t,
   }: {
     queryClient: QueryClient;
     handleOnSuccess?: (data: Person) => void;
+    t: (key: string) => string;
   }) => {
     const mutation = useMutation<Person, Error, CreatePersonSchema>({
       mutationFn: async (data) => personService.create(data),
       onSuccess: (data) => {
-        toast.success("Контрагента створено");
+        toast.success(t("messages.success.person_created"));
         queryClient.invalidateQueries({
           queryKey: ["persons"],
         });
@@ -53,18 +55,16 @@ export const usePerson = {
   updatePerson: ({
     queryClient,
     handleOnSuccess,
+    t,
   }: {
     queryClient: QueryClient;
     handleOnSuccess?: (data: Person) => void;
+    t: (key: string) => string;
   }) => {
-    const mutation = useMutation<
-      Person,
-      Error,
-      UpdatePersonSchema 
-    >({
+    const mutation = useMutation<Person, Error, UpdatePersonSchema>({
       mutationFn: async (data) => personService.update(data),
       onSuccess: (data) => {
-        toast.success("Контрагента оновлено");
+        toast.success(t("messages.success.person_updated"));
         queryClient.invalidateQueries({
           queryKey: ["persons"],
         });
@@ -79,15 +79,17 @@ export const usePerson = {
   deletePerson: ({
     queryClient,
     handleSuccess,
+    t,
   }: {
     queryClient: QueryClient;
     handleSuccess?: () => void;
+    t: (key: string) => string;
   }) => {
     const mutation = useMutation({
       mutationFn: async (id: number) => personService.delete(id),
       onSuccess: () => {
-        toast.success("Контрагента видалено"),
-          handleSuccess && handleSuccess(),
+        toast.success(t("messages.success.person_deleted"));
+        handleSuccess && handleSuccess(),
           queryClient.invalidateQueries({
             queryKey: ["persons"],
           });

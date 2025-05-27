@@ -8,16 +8,18 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
+import { useTranslation } from "react-i18next";
 
 const Sort = ({
   param = "sortBy",
   options = [],
 }: {
   param?: string;
-  options: EnumItem[];
+  options: EnumItem<string>[];
 }) => {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { t } = useTranslation();
 
   const current = searchParams.get(param) || "created_at";
 
@@ -30,7 +32,7 @@ const Sort = ({
   return (
     <div className="flex w-[164px] items-center gap-2">
       <span className="text-xs text-text-light font-semibold focus-visible:outline-none">
-        Сортування:
+        {t("dictionary.sorting")}:
       </span>
       <Select defaultValue={current} onValueChange={handleSortChange}>
         <SelectTrigger className="w-fit p-0 text-xs font-semibold outline-none border-none shadow-none focus:ring-0 focus:outline-none focus-visible:ring-0">

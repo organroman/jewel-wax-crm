@@ -1,5 +1,7 @@
+import { useTranslation } from "react-i18next";
+
 import { DeliveryAddress } from "@/types/person.types";
-import React from "react";
+
 import PersonLabeledList from "./person-labeled-list";
 
 interface PersonDeliveryAddressesProps {
@@ -9,19 +11,20 @@ interface PersonDeliveryAddressesProps {
 const PersonDeliveryAddresses = ({
   addresses,
 }: PersonDeliveryAddressesProps) => {
+  const { t } = useTranslation();
   const delAddresses = addresses.map((address) => ({
     id: address.id || 1,
     value: address.address_line,
-    isMain: address.is_main
+    isMain: address.is_main,
   }));
   return (
     <div className="mt-10">
       <p className="text-sm font-medium pb-2 border-b border-ui-border">
-        Адреса доставки
+        {t("person.delivery_address")}
       </p>
       <PersonLabeledList
-        mainLabel="Основна адреса :"
-        secondaryLabel="Інша адреса :"
+        mainLabel={`${t("person.labels.main_location")}:`}
+        secondaryLabel={`${t("person.labels.extra_location")}:`}
         items={delAddresses}
         width="w-50"
       />

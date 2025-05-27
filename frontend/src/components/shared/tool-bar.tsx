@@ -55,49 +55,63 @@ const Toolbar = ({
 
   return (
     <div className="flex flex-col gap-2.5">
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between mt-8">
-        <div className="flex flex-1 items-center gap-8 flex-wrap">
-          {sortOptions.length > 0 && <Sort options={sortOptions} />}
-          {showFilterButton && (
-            <div className="flex items-center gap-2.5">
-              <Button
-                variant="ghost"
-                className="focus-visible:ring-0 cursor-pointer  p-0 has-[>svg]:px-0"
-                onClick={() => setFilterOpen(!filterOpen)}
-              >
-                <SlidersHorizontal className="size-4" />
-                <span className="text-xs text-text-light font-medium">
-                  {filterPlaceholder}
-                </span>
-              </Button>
-              {filterParams.length > 0 &&
-                filterParams.map((param) => (
-                  <Button
-                    key={param.value}
-                    variant="link"
-                    className="text-action-plus text-xs hover:no-underline cursor-pointer"
-                    onClick={() =>
-                      toggleParam(
-                        searchParams.toString(),
-                        param.param,
-                        param.value,
-                        router
-                      )
-                    }
-                  >
-                    {param.label}
-                    <XIcon />
-                  </Button>
-                ))}
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between mt-4 lg:mt-8">
+        <div className="flex flex-1 flex-col lg:flex-row lg:items-center gap-2.5 lg:gap-8 ">
+          <div className="flex items-start lg:items-center gap-4">
+            {sortOptions.length > 0 && <Sort options={sortOptions} />}
+            {showFilterButton && (
+              <div className="flex items-center flex-wrap lg:flex-nowrap gap-2.5">
+                <Button
+                  variant="ghost"
+                  className="focus-visible:ring-0 cursor-pointer  p-0 has-[>svg]:px-0"
+                  onClick={() => setFilterOpen(!filterOpen)}
+                >
+                  <SlidersHorizontal className="size-4" />
+                  <span className="text-xs text-text-light font-medium">
+                    {filterPlaceholder}
+                  </span>
+                </Button>
+                {filterParams.length > 0 &&
+                  filterParams.map((param) => (
+                    <Button
+                      key={param.value}
+                      variant="link"
+                      className="text-action-plus text-xs hover:no-underline cursor-pointer"
+                      onClick={() =>
+                        toggleParam(
+                          searchParams.toString(),
+                          param.param,
+                          param.value,
+                          router
+                        )
+                      }
+                    >
+                      {param.label}
+                      <XIcon />
+                    </Button>
+                  ))}
+              </div>
+            )}
+          </div>
+          {filterOpen && (
+            <div className="flex overflow-x-auto lg:hidden gap-5 pb-1.5">
+              <FilterDropdown filters={filterOptions} />
             </div>
           )}
-          <SearchInput placeholder={searchPlaceholder} />
+          <div className="flex justify-between ">
+            <SearchInput placeholder={searchPlaceholder} />
+            {onAdd && (
+              <Button onClick={onAdd} size="icon" className="flex lg:hidden">
+                <Plus className="size-4" />
+              </Button>
+            )}
+          </div>
         </div>
 
         {onAdd && (
           <Button
             onClick={onAdd}
-            className="whitespace-nowrap text-xs/tight font-semibold"
+            className="hidden lg:flex whitespace-nowrap text-xs/tight font-semibold"
           >
             <Plus className="size-3" />
             {addLabel}
@@ -105,7 +119,7 @@ const Toolbar = ({
         )}
       </div>
       {filterOpen && (
-        <div className="flex gap-5">
+        <div className="hidden lg:flex gap-5">
           <FilterDropdown filters={filterOptions} />
         </div>
       )}

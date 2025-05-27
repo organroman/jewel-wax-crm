@@ -1,21 +1,221 @@
 {
-  "types": {
-    "person": {
-      "first_name": "Имя"
+  "dictionary": {
+    "address": "Адрес",
+    "city": "Город",
+    "city_short": "г.",
+    "country": "Страна",
+    "photo": "Фото",
+    "first_name": "Имя",
+    "last_name": "Фамилия",
+    "patronymic": "Отчество",
+    "full_name": "ФИО",
+    "phone": "Телефон",
+    "role": "Роль",
+    "post": "Почтовое отделение",
+    "created": "Создано",
+    "created_at": "Дата создания",
+    "actions": "Действия",
+    "status": "Статус",
+    "info": "Информация",
+    "orders_history": "История заказов",
+    "sorting": "Сортировка",
+    "active": "Активный",
+    "inactive": "Неактивный",
+    "active_plural": "Активные",
+    "inactive_plural": "Неактивные",
+    "representative": "Представитель",
+    "password": "Пароль",
+    "main": "Основной",
+    "contact": "Контакт"
+  },
+  "labels": {
+    "main": "$t(dictionary.main)",
+    "main_short": "Осн.",
+    "password": "$t(dictionary.password)"
+  },
+  "placeholders": {
+    "search": "Поиск",
+    "filters": "Фильтры",
+    "choose": "Выберите",
+    "email": "Введите email",
+    "password": "Введите пароль"
+  },
+  "buttons": {
+    "cancel": "Отмена",
+    "delete": "Удалить",
+    "delete_continuous": "Удаление",
+    "save": "Сохранить",
+    "save_continuous": "Сохраняю",
+    "back_to_table": "Вернуться к таблице",
+    "save_changes": "Сохранить изменения",
+    "create": "Создать",
+    "add": "Добавить",
+    "add_more": "Добавить ещё",
+    "please_wait": "Пожалуйста, подождите"
+  },
+  "auth": {
+    "forget_password": "Забыли пароль",
+    "reset_password": "Восстановить пароль"
+  },
+  "person": {
+    "person": "Контрагент",
+    "person_plural": "Контрагенты",
+    "add_person": "Добавить контрагента",
+    "connected_contacts": "Привязанные контакты",
+    "delivery_address": "Адрес доставки",
+    "email_address": "Электронный адрес",
+    "bank_details": "Банковские реквизиты",
+    "person_type": "Тип контрагента",
+    "roles": {
+      "all": "Все контрагенты",
+      "super_admin": "Супер Админ",
+      "modeller": "Модельер",
+      "miller": "Фрезеровщик",
+      "client": "Заказчик",
+      "print": "3D печать"
     },
-    "location": {
-      "city": "Город",
-      "country": "Страна"
+    "table_headers": {
+      "avatar_url": "$t(dictionary.photo)",
+      "full_name": "$t(dictionary.full_name)",
+      "phone": "$t(dictionary.phone)",
+      "role": "$t(dictionary.role)",
+      "city": "$t(dictionary.city)",
+      "post": "$t(dictionary.post)",
+      "created_at": "$t(dictionary.created)",
+      "actions": "$t(dictionary.actions)"
+    },
+    "filters": {
+      "status": "$t(dictionary.status)",
+      "options": {
+        "active": "$t(dictionary.active_plural)",
+        "inactive": "$t(dictionary.inactive_plural)"
+      }
+    },
+    "sorting": {
+      "first_name": "$t(dictionary.first_name)",
+      "last_name": "$t(dictionary.last_name)",
+      "created_at": "$t(dictionary.created)",
+      "role": "$t(dictionary.role)"
+    },
+    "tabs": {
+      "general_info": "$t(dictionary.info)",
+      "changes_history": "История изменений",
+      "orders_history": "$t(dictionary.orders_history)",
+      "new": "Новый контрагент"
+    },
+    "actions": {
+      "view": "Просмотреть контрагента",
+      "edit": "Редактировать контрагента",
+      "delete": "Удалить контрагента",
+      "orders_history": "$t(dictionary.orders_history)"
+    },
+    "modal": {
+      "delete": {
+        "title": "Удаление контрагента",
+        "desc_first": "Вы уверены, что хотите удалить?",
+        "desc_second": "Это действие невозможно отменить!"
+      }
+    },
+    "labels": {
+      "created_at": "$t(dictionary.created_at)",
+      "active": "$t(dictionary.active)",
+      "inactive": "$t(dictionary.inactive)",
+      "phone_number": "Номер телефона",
+      "extra_phone_number": "Доп. номер тел.",
+      "messengers": "Мессенджеры",
+      "main_location": "Основной адрес",
+      "extra_location": "Дополнительный адрес",
+      "main_email": "Основной email",
+      "extra_email": "Дополнительный email",
+      "contact_type": "Тип контакта",
+      "representative": "$t(dictionary.representative)",
+      "full_name": "$t(dictionary.full_name)",
+      "last_name": "$t(dictionary.last_name)",
+      "first_name": "$t(dictionary.first_name)",
+      "patronymic": "$t(dictionary.patronymic)",
+      "role": "$t(dictionary.role)",
+      "bank": "Банк",
+      "card_number": "Номер карты",
+      "bank_code": "МФО",
+      "tax_id": "ЕДРПОУ/ИНН",
+      "contact": "$t(dictionary.contact)"
+    },
+    "placeholders": {
+      "search_person": "Поиск контрагента",
+      "filters": "Фильтры",
+      "last_name": "Введите фамилию",
+      "first_name": "Введите имя",
+      "patronymic": "Введите отчество",
+      "role": "Выберите роль",
+      "phone": "Введите номер",
+      "bank": "Введите название банка",
+      "bank_code": "Введите МФО",
+      "tax_id": "Введите ИНН/ЕДРПОУ",
+      "iban": "Введите IBAN",
+      "card_number": "Введите номер карты",
+      "contact": "Выберите контакт"
+    },
+    "buttons": {
+      "delete": "Удалить контрагента",
+      "print_label": "Печать этикетки"
+    }
+  },
+  "location": {
+    "address": "$t(dictionary.address)",
+    "modal": {
+      "city_title": "Создать город",
+      "country_title": "Создать страну",
+      "desc_first": "Заполните поля и нажмите Сохранить"
+    },
+    "labels": {
+      "city": "$t(dictionary.city)",
+      "country": "$t(dictionary.country)",
+      "address": "$t(dictionary.address)"
+    },
+    "placeholders": {
+      "choose_country": "Выберите страну",
+      "choose_city": "Выберите город",
+      "enter_country": "Введите страну",
+      "enter_city": "Введите город",
+      "address": "Введите адрес"
     }
   },
 
   "main_menu": {
-    "dashboard": "Дашбоард",
+    "dashboard": "Дашборд",
     "requests": "Заявки",
     "orders": "Задания",
     "finance": "Финансы",
-    "reports": "Отчеты",
+    "reports": "Отчёты",
     "statistic": "Статистика",
     "persons": "Контрагенты"
+  },
+  "messages": {
+    "validation": {
+      "min_one_main_email": "Один email должен быть основным",
+      "min_one_main_phone": "Один телефон должен быть основным",
+      "min_one_main_location": "Один адрес должен быть основным",
+      "required": "Заполните поле",
+      "required_name": "Название обязательно",
+      "required_country": "Выберите страну",
+      "required_city": "Выберите город",
+      "required_password": "Пароль обязателен",
+      "invalid_phone": "Неверный номер",
+      "invalid_email": "Неверный email",
+      "min_three_characters": "Минимум три буквы",
+      "min_two_characters": "Минимум две буквы",
+      "min_six_characters": "Минимум шесть символов"
+    },
+    "info": {
+      "no_results": "Данные отсутствуют"
+    },
+    "success": {
+      "person_created": "Контрагент создан",
+      "person_updated": "Контрагент обновлён",
+      "person_deleted": "Контрагент удалён",
+      "city_created": "Город создан",
+      "country_created": "Страна создана",
+      "welcome_back": "С возвращением!"
+    }
   }
 }

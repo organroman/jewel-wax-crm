@@ -4,6 +4,7 @@ import { SetStateAction } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQueryClient } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 
 import { useLocation } from "@/api/locations/use-location";
 
@@ -19,6 +20,7 @@ interface CountryFormProps {
 }
 
 const CountryForm = ({ setIsDialogOpen }: CountryFormProps) => {
+  const { t } = useTranslation();
   const queryClient = useQueryClient();
   const form = useForm<CreateCountrySchema>({
     resolver: zodResolver(createCountrySchema),
@@ -35,6 +37,7 @@ const CountryForm = ({ setIsDialogOpen }: CountryFormProps) => {
   const { createCountryMutation } = useLocation.createCountry({
     queryClient,
     handleOnSuccess,
+    t,
   });
 
   const onSubmit = (formData: CreateCountrySchema) => {
@@ -43,12 +46,12 @@ const CountryForm = ({ setIsDialogOpen }: CountryFormProps) => {
   return (
     <Modal
       header={{
-        title: "Створити країну",
-        descriptionFirst: "Заповніть поля і натисніть Зберігти",
+        title: t("location.modal.country_title"),
+        descriptionFirst: t("location.modal.desc_first"),
       }}
       footer={{
-        buttonActionTitle: "Зберігти",
-        buttonActionTitleContinuous: "Зберігаю",
+        buttonActionTitle: t("buttons.save"),
+        buttonActionTitleContinuous: t("buttons.save_continuous"),
         submit: true,
         formId: "countryForm",
         isPending: createCountryMutation.isPending,
@@ -63,8 +66,8 @@ const CountryForm = ({ setIsDialogOpen }: CountryFormProps) => {
           <FormInput
             name="name"
             control={form.control}
-            label="Країна"
-            placeholder="Введіть країну"
+            label={t("location.labels.country")}
+            placeholder={t("location.placeholders.enter_country")}
             required
           />
         </form>

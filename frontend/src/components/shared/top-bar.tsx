@@ -11,8 +11,9 @@ const TopBar = () => {
         </div>
 
         <ModeToggle />
-
-        <LanguageSelector />
+        <div className="hidden lg:flex">
+          <LanguageSelector />
+        </div>
         <Image
           src="/img/profile-circle.svg"
           alt="profile"

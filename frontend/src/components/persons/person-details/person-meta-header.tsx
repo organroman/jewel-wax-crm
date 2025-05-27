@@ -1,4 +1,5 @@
 import dayjs from "dayjs";
+import { useTranslation } from "react-i18next";
 
 import { Separator } from "../../ui/separator";
 
@@ -16,9 +17,10 @@ const PersonMetaHeader = ({
   id,
   isActive,
 }: PersonDetailsMetaHeaderProps) => {
+  const { t } = useTranslation();
   return (
     <div className="flex items-center gap-2.5">
-      <InfoLabel>Дата створення:</InfoLabel>
+      <InfoLabel>{t("person.labels.created_at")}:</InfoLabel>
       <InfoValue> {dayjs(createdAt).format("DD.MM.YYYY")}</InfoValue>
       <InfoValue className="text-action-alert">ID: {id}</InfoValue>
       <Separator
@@ -28,7 +30,7 @@ const PersonMetaHeader = ({
       <InfoValue
         className={isActive ? "text-brand-default" : "text-action-alert"}
       >
-        {isActive ? "Активний" : "Неактивний"}
+        {isActive ? t("person.labels.active") : t("person.labels.inactive")}
       </InfoValue>
     </div>
   );

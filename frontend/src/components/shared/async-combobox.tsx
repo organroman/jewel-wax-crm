@@ -2,6 +2,7 @@ import { FilterOption } from "@/types/shared.types";
 
 import { Dispatch, SetStateAction } from "react";
 import { ChevronUp, Loader } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 import { Button } from "@components/ui/button";
 import {
@@ -45,6 +46,7 @@ const AsyncComboBox = ({
   handleSelect,
   isChecked,
 }: AsyncComboBoxProps) => {
+  const { t } = useTranslation();
   return (
     <Popover
       open={open || false}
@@ -90,7 +92,7 @@ const AsyncComboBox = ({
           {isLoading && (
             <Loader className="size-6 text-center text-brand-default my-2 animate-spin self-center" />
           )}
-          {!isLoading && <CommandEmpty>Нічого не знайдено</CommandEmpty>}
+          {!isLoading && <CommandEmpty>{t("messages.info.no_results")}</CommandEmpty>}
           <CommandGroup>
             {options?.map((option) => {
               return (

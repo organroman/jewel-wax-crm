@@ -67,7 +67,7 @@ const FormArrayInputItem = <T extends FieldValues>({
                 )}
               />
             </FormControl>
-            <FormMessage className="text-xs" />
+            <FormMessage />
           </div>
         </FormItem>
       )}

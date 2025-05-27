@@ -27,9 +27,9 @@ const FormInput = <T extends FieldValues>({
     name={name}
     control={control}
     render={({ field }) => (
-      <FormItem className=" flex gap-2.5">
+      <FormItem className="flex flex-col lg:flex-row gap-0.5 lg:gap-2.5">
         {label && (
-          <div className="flex mt-1.5 items-start justify-end gap-1 w-full">
+          <div className="flex mt-1.5 items-start lg:justify-end gap-1 w-full">
             <FormLabel className=" text-sm">{label}</FormLabel>
             {required && (
               <Image
@@ -48,7 +48,7 @@ const FormInput = <T extends FieldValues>({
               <Textarea {...field} placeholder={placeholder} rows={rows} />
             ) : (
               <Input
-                className="min-w-[240px] font-medium rounded-xs h-8 px-2.5 border-ui-border text-sm focus-visible:ring-[1px]"
+                className="min-w-[240px] font-medium rounded-xs h-9 px-2.5 border-ui-border text-sm focus-visible:ring-[1px]"
                 {...field}
                 placeholder={placeholder}
                 type={type}

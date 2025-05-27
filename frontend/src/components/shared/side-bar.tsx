@@ -1,15 +1,21 @@
 "use client";
+
+import { PersonRoleValue } from "@/types/person.types";
+
 import Image from "next/image";
 import React from "react";
-import { Separator } from "../ui/separator";
-import { MENU_LIST } from "@/constants/sidebar.constants";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
+import { useTranslation } from "react-i18next";
+
+import { Separator } from "@/components/ui/separator";
+import { MENU_LIST } from "@/constants/sidebar.constants";
+
 import { checkPermission, cn } from "@/lib/utils";
-import { PersonRoleValue } from "@/types/person.types";
 
 const SideBar = ({ role }: { role: PersonRoleValue }) => {
   const pathName = usePathname();
+  const { t } = useTranslation();
   return (
     <div className="h-full w-full bg-white">
       <Image
@@ -34,7 +40,7 @@ const SideBar = ({ role }: { role: PersonRoleValue }) => {
                   )}
                 >
                   <Image src={route.icon} alt="logo" width={24} height={24} />
-                  {route.label}
+                  {t(`main_menu.${route.key}`)}
                 </div>
               </Link>
             )

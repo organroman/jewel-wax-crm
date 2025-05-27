@@ -34,9 +34,9 @@ const FormSelect = <T extends FieldValues, O>({
       name={name}
       render={({ field }) => {
         return (
-          <FormItem className=" flex items-center gap-2.5">
+          <FormItem className="flex flex-col lg:flex-row lg:items-center gap-0.5 lg:gap-2.5">
             {label && (
-              <div className="flex items-start justify-end gap-1 w-full">
+              <div className="flex items-start lg:justify-end gap-1 w-full">
                 <FormLabel className="text-text-muted font-normal text-sm">
                   {label}
                 </FormLabel>
@@ -66,7 +66,7 @@ const FormSelect = <T extends FieldValues, O>({
               <FormControl>
                 <SelectTrigger
                   className={cn(
-                    "min-w-[240px] h-8 rounded-xs text-sm font-semibold focus-visible:ring-[1px]",
+                    "w-full lg:min-w-[240px] h-8 rounded-xs text-sm font-semibold focus-visible:ring-[1px]",
                     className
                   )}
                 >
@@ -78,7 +78,7 @@ const FormSelect = <T extends FieldValues, O>({
 
               <SelectContent>
                 {options.map((opt) => (
-                  <SelectItem key={opt.value} value={opt.value}>
+                  <SelectItem key={opt.value} value={opt.value.toString()}>
                     {opt.label}
                   </SelectItem>
                 ))}

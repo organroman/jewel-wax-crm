@@ -20,12 +20,14 @@ import {
   getMessengerIcon,
 } from "@/lib/utils";
 import CustomAvatar from "../shared/custom-avatar";
+import { useTranslation } from "react-i18next";
 
 interface PersonInfoProps {
   person: Person;
 }
 
 const PersonInfo = ({ person }: PersonInfoProps) => {
+  const { t } = useTranslation();
   const phones = person.phones.map((phone) => ({
     id: phone.id!,
     value: formatPhone(phone.number),
@@ -48,7 +50,9 @@ const PersonInfo = ({ person }: PersonInfoProps) => {
 
   const locations = person.locations?.map((loc) => ({
     id: loc.id,
-    value: `м.${loc?.city_name}, ${loc?.country_name}`,
+    value: `${t("dictionary.city_short")}${loc?.city_name}, ${
+      loc?.country_name
+    }`,
     isMain: loc.is_main,
   }));
 
@@ -60,22 +64,26 @@ const PersonInfo = ({ person }: PersonInfoProps) => {
 
   return (
     <div className="w-full h-full bg-white rounded-md">
-      <div className="w-full h-fit flex gap-4">
-        <div className="flex-2 border-r border-ui-border">
+      <div className="w-full h-fit flex flex-col lg:flex-row gap-4">
+        <div className="flex-2 flex flex-col lg:border-r border-ui-border">
           <PersonMetaHeader
             createdAt={person.created_at}
             isActive={person.is_active}
             id={person.id}
           />
-          <div className="flex w-full mt-6 gap-12">
-            <CustomAvatar
-              className="w-37 h-37"
-              avatarUrl={person?.avatar_url}
-              fallback={
-                person ? getInitials(person?.last_name, person?.first_name) : ""
-              }
-              fallbackClassName="text-6xl"
-            />
+          <div className="flex flex-col lg:flex-row w-full mt-6 gap-12">
+            <div className="flex justify-center">
+              <CustomAvatar
+                className="w-37 h-37 "
+                avatarUrl={person?.avatar_url}
+                fallback={
+                  person
+                    ? getInitials(person?.last_name, person?.first_name)
+                    : ""
+                }
+                fallbackClassName="text-6xl"
+              />
+            </div>
             <div className="w-full">
               <PersonFullName
                 fullName={getFullName(
@@ -85,24 +93,24 @@ const PersonInfo = ({ person }: PersonInfoProps) => {
                 )}
               />
               <PersonLabeledList
-                mainLabel="Номер телефону:"
-                secondaryLabel="Інший ном. тел.:"
+                mainLabel={`${t("person.labels.phone_number")}:`}
+                secondaryLabel={`${t("person.labels.extra_phone_number")}:`}
                 highlightMain
                 items={phones}
               />
 
               {locations && locations.length > 0 && (
                 <PersonLabeledList
-                  mainLabel="Основна адреса:"
-                  secondaryLabel="Інша адреса:"
+                  mainLabel={`${t("person.labels.main_location")}:`}
+                  secondaryLabel={`${t("person.labels.extra_location")}:`}
                   items={locations}
                 />
               )}
               <PersonType value={person.role.value} label={person.role.label} />
               {emails && emails?.length > 0 && (
                 <PersonLabeledList
-                  mainLabel="Основний email:"
-                  secondaryLabel="Інший email:"
+                  mainLabel={`${t("person.labels.main_email")}:`}
+                  secondaryLabel={`${t("person.labels.extra_email")}:`}
                   items={emails}
                 />
               )}
@@ -111,7 +119,9 @@ const PersonInfo = ({ person }: PersonInfoProps) => {
         </div>
         <Separator className="border-ui-border w-1" orientation="vertical" />
         <div className="flex-1">
-          <p className="text-sm font-medium">Прив'язані контакти:</p>
+          <p className="text-sm font-medium">
+            {t("person.connected_contacts")}:
+          </p>
           {person.contacts && person.contacts.length > 0 && (
             <PersonContacts contacts={person.contacts} />
           )}
@@ -120,7 +130,7 @@ const PersonInfo = ({ person }: PersonInfoProps) => {
       {person.delivery_addresses && person.delivery_addresses?.length > 0 && (
         <PersonDeliveryAddresses addresses={person.delivery_addresses || []} />
       )}
-      {person.bank_details && person.bank_details?.length > 0 && (
+       {person.bank_details && person.bank_details?.length > 0 && (
         <PersonBankDetails bankDetails={person.bank_details} />
       )}
     </div>

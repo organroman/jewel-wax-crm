@@ -5,6 +5,7 @@ import { FieldValues } from "react-hook-form";
 import { useState } from "react";
 import Image from "next/image";
 import { ChevronDown, ChevronUp, Loader } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 import {
   FormControl,
@@ -47,6 +48,7 @@ const FormAsyncCombobox = <T extends FieldValues, O>({
   isOptionsLoading,
 }: FormAsyncComboboxProps<T, O>) => {
   const [open, setOpen] = useState(false);
+  const { t } = useTranslation();
 
   return (
     <FormField
@@ -59,7 +61,7 @@ const FormAsyncCombobox = <T extends FieldValues, O>({
             (typeof field.value === "object" &&
               Object.keys(field.value).length === 0)
           )
-            return placeholder || "Оберіть";
+            return placeholder || t("placeholders.choose");
 
           if (saveFullObject) {
             return field.value[displayKey ?? "label"];
@@ -78,7 +80,9 @@ const FormAsyncCombobox = <T extends FieldValues, O>({
           <FormItem className="flex flex-col lg:flex-row gap-0.5 lg:gap-2.5">
             {label && (
               <div className="flex items-start justify-between">
-                <FormLabel className="text-xs lg:text-sm mt-1.5">{label}</FormLabel>
+                <FormLabel className="text-xs lg:text-sm mt-1.5">
+                  {label}
+                </FormLabel>
                 {required && (
                   <Image
                     src="/img/star-required.svg"
@@ -130,7 +134,7 @@ const FormAsyncCombobox = <T extends FieldValues, O>({
                         }}
                       >
                         <CommandInput
-                          placeholder="Пошук..."
+                          placeholder={t("placeholders.choose")}
                           value={searchQuery}
                           onValueChange={setSearchQuery}
                         />
@@ -138,7 +142,7 @@ const FormAsyncCombobox = <T extends FieldValues, O>({
                           <Loader className="size-6 text-center text-brand-default my-2 animate-spin self-center" />
                         )}
                         {!isOptionsLoading && (
-                          <CommandEmpty>Нічого не знайдено</CommandEmpty>
+                          <CommandEmpty>{t("messages.info.no_results")}</CommandEmpty>
                         )}
                         <CommandGroup>
                           {options.map((option) => {

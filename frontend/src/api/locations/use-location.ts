@@ -39,14 +39,16 @@ export const useLocation = {
   createCity: ({
     queryClient,
     handleOnSuccess,
+    t,
   }: {
     queryClient: QueryClient;
     handleOnSuccess?: (data: City) => void;
+    t: (key: string) => string;
   }) => {
     const mutation = useMutation<City, Error, CreateCitySchema>({
       mutationFn: async (data) => locationService.createCity(data),
       onSuccess: (data) => {
-        toast.success("Місто створено");
+        toast.success(t("messages.success.city_created"));
         queryClient.invalidateQueries({
           queryKey: ["cities"],
         });
@@ -61,14 +63,16 @@ export const useLocation = {
   createCountry: ({
     queryClient,
     handleOnSuccess,
+    t,
   }: {
     queryClient: QueryClient;
     handleOnSuccess?: (data: Country) => void;
+    t: (key: string) => string;
   }) => {
     const mutation = useMutation<Country, Error, CreateCountrySchema>({
       mutationFn: async (data) => locationService.createCountry(data),
       onSuccess: (data) => {
-        toast.success("Країну створено");
+        toast.success(t("messages.success.country_created"));
         queryClient.invalidateQueries({
           queryKey: ["countries"],
         });

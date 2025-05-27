@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { useTranslation } from "react-i18next";
 import * as LabelPrimitive from "@radix-ui/react-label";
 import { Slot } from "@radix-ui/react-slot";
 import {
@@ -15,6 +16,7 @@ import {
 
 import { cn } from "@/lib/utils";
 import { Label } from "@/components/ui/label";
+
 
 const Form = FormProvider;
 
@@ -140,6 +142,7 @@ function FormDescription({ className, ...props }: React.ComponentProps<"p">) {
 }
 
 function FormMessage({ className, ...props }: React.ComponentProps<"p">) {
+  const { t } = useTranslation();
   const { error, formMessageId } = useFormField();
   const body = error ? String(error?.message ?? "") : props.children;
 
@@ -154,7 +157,7 @@ function FormMessage({ className, ...props }: React.ComponentProps<"p">) {
       className={cn("text-action-alert text-[11px] pl-2", className)}
       {...props}
     >
-      {body}
+      {t(body as string)}
     </p>
   );
 }

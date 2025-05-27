@@ -5,6 +5,7 @@ import { PersonMessenger } from "./person.types";
 import {
   ArrayPath,
   Control,
+  FieldErrors,
   FieldValues,
   Path,
   UseFormSetValue,
@@ -36,6 +37,7 @@ export interface FormArrayPhoneProps<T extends FieldValues> {
   fieldKey?: string;
   showIsMain?: boolean;
   messengers?: PersonMessenger[];
+  errors?: FieldErrors<T>;
 }
 
 export type FormInputProps<T extends FieldValues> = {
@@ -73,6 +75,7 @@ export interface FormArrayLocationProps<T extends FieldValues> {
   onCreateCountry?: () => void;
   onCreateCity?: (countryId: number) => void;
   required?: boolean;
+  errors?: FieldErrors<T>;
 }
 
 export interface FormArrayInputProps<T extends FieldValues> {
@@ -85,6 +88,7 @@ export interface FormArrayInputProps<T extends FieldValues> {
   fieldKey?: string;
   showIsMain?: boolean;
   inputClassName?: string;
+  errors?: FieldErrors<T>;
 }
 
 export interface FormArrayBankDetailsProps<T extends FieldValues> {
@@ -132,4 +136,5 @@ export interface FormArrayComboboxProps<T extends FieldValues, O> {
   searchQuery?: string;
   setSearchQuery?: Dispatch<SetStateAction<string>>;
   isOptionsLoading?: boolean;
+  errors?: FieldErrors<T>;
 }

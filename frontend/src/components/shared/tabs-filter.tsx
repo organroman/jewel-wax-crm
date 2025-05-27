@@ -7,7 +7,7 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 interface TabsFilterProps {
   param: string;
-  options: EnumItem[];
+  options: EnumItem<string>[];
 }
 
 const TabsFilter = ({ param, options }: TabsFilterProps) => {
@@ -31,9 +31,9 @@ const TabsFilter = ({ param, options }: TabsFilterProps) => {
       defaultValue={current}
       value={current}
       onValueChange={handleChange}
-      className="mt-7.5"
+      className="mt-2 lg:mt-7.5"
     >
-      <TabsList className="w-full justify-start gap-6 border-none  bg-transparent p-0">
+      <TabsList className="w-full overflow-x-auto justify-start gap-6 border-none  bg-transparent px-1 ">
         {options.map(({ value, label }) => (
           <TabsTrigger
             key={value}

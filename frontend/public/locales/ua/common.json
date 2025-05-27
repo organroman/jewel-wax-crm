@@ -1,8 +1,72 @@
 {
+  "dictionary": {
+    "address": "Адреса",
+    "city": "Місто",
+    "city_short": "м.",
+    "country": "Країна",
+    "photo": "Фото",
+    "first_name": "Ім'я",
+    "last_name": "Прізвище",
+    "patronymic": "По батькові",
+    "full_name": "ПІБ",
+    "phone": "Телефон",
+    "role": "Роль",
+    "post": "Відділення пошти",
+    "created": "Створено",
+    "created_at": "Дата створення",
+    "actions": "Дії",
+    "status": "Статус",
+    "info": "Інформація",
+    "orders_history": "Історія замовлень",
+    "sorting": "Сортування",
+    "active": "Активний",
+    "inactive": "Неактивний",
+    "active_plural": "Активні",
+    "inactive_plural": "Неактивні",
+    "representative": "Представник",
+    "password": "Пароль",
+    "main": "Основний",
+    "contact": "Контакт"
+  },
+  "labels": {
+    "main": "$t(dictionary.main)",
+    "main_short": "Осн.",
+    "password": "$t(dictionary.password)"
+  },
+  "placeholders": {
+    "search": "Пошук",
+    "filters": "Фільтри",
+    "choose": "Оберіть",
+    "email": "Введіть email",
+    "password": "Введіть пароль"
+  },
+  "buttons": {
+    "cancel": "Скасувати",
+    "delete": "Видалити",
+    "delete_continuous": "Видалення",
+    "save": "Зберігти",
+    "save_continuous": "Зберігаю",
+    "back_to_table": "Повернутись до таблиці",
+    "save_changes": "Зберігти зміни",
+    "create": "Створити",
+    "add": "Додати",
+    "add_more": "Додати ще",
+    "please_wait": "Зачекайте"
+  },
+  "auth": {
+    "forget_password": "Забули пароль",
+    "reset_password": "Відновити пароль"
+  },
+
   "person": {
     "person": "Контрагент",
     "person_plural": "Контрагенти",
     "add_person": "Додати контрагента",
+    "connected_contacts": "Прив'язані контакти",
+    "delivery_address": "Адреса доставки",
+    "email_address": "Електронна адреса",
+    "bank_details": "Банківські реквізити",
+    "person_type": "Тип контрагента",
     "roles": {
       "all": "Всі контрагенти",
       "super_admin": "Супер Адмін",
@@ -18,20 +82,20 @@
       "role": "$t(dictionary.role)",
       "city": "$t(dictionary.city)",
       "post": "$t(dictionary.post)",
-      "created_at": "$t(dictionary.created_at)",
+      "created_at": "$t(dictionary.created)",
       "actions": "$t(dictionary.actions)"
     },
     "filters": {
       "status": "$t(dictionary.status)",
       "options": {
-        "active": "Активні",
-        "inactive": "Неактивні"
+        "active": "$t(dictionary.active_plural)",
+        "inactive": "$t(dictionary.inactive_plural)"
       }
     },
     "sorting": {
       "first_name": "$t(dictionary.first_name)",
       "last_name": "$t(dictionary.last_name)",
-      "created_at": "$t(dictionary.created_at)",
+      "created_at": "$t(dictionary.created)",
       "role": "$t(dictionary.role)"
     },
     "tabs": {
@@ -52,8 +116,72 @@
         "desc_first": "Ви впевненні, що бажаєте видалити?",
         "desc_second": "Цю дію неможливо відмінити!"
       }
+    },
+    "labels": {
+      "created_at": "$t(dictionary.created_at)",
+      "active": "$t(dictionary.active)",
+      "inactive": "$t(dictionary.inactive)",
+      "phone_number": "Номер телефону",
+      "extra_phone_number": "Інший ном. тел.",
+      "messengers": "Мессенджери",
+      "main_location": "Основна адреса",
+      "extra_location": "Інша адреса",
+      "main_email": "Основний email",
+      "extra_email": "Інший email",
+      "contact_type": "Тип контакта",
+      "representative": "$t(dictionary.representative)",
+      "full_name": "$t(dictionary.full_name)",
+      "last_name": "$t(dictionary.last_name)",
+      "first_name": "$t(dictionary.first_name)",
+      "patronymic": "$t(dictionary.patronymic)",
+      "role": "$t(dictionary.role)",
+      "bank": "Банк",
+      "card_number": "Номер картки",
+      "bank_code": "МФО",
+      "tax_id": "ЄДРПОУ/ІПН",
+      "contact": "$t(dictionary.contact)"
+    },
+    "placeholders": {
+      "search_person": "Пошук контрагента",
+      "filters": "Фільтри",
+      "last_name": "Введіть прізвище",
+      "first_name": "Введіть ім'я",
+      "patronymic": "Введіть по батькові",
+      "role": "Оберіть роль",
+      "phone": "Введіть номер",
+      "bank": "Введіть назву банку",
+      "bank_code": "Введіть МФО",
+      "tax_id": "Введіть Введіть ІПН/ЄДРПОУ",
+      "iban": "Введіть IBAN",
+      "card_number": "Введіть номер карти",
+      "contact": "Оберіть контакт"
+    },
+    "buttons": {
+      "delete": "Видалити контрагента",
+      "print_label": "Друк етикетки"
     }
   },
+  "location": {
+    "address": "$t(dictionary.address)",
+    "modal": {
+      "city_title": "Створити місто",
+      "country_title": "Створити країну",
+      "desc_first": "Заповніть поля і натисніть Зберігти"
+    },
+    "labels": {
+      "city": "$t(dictionary.city)",
+      "country": "$t(dictionary.country)",
+      "address": "$t(dictionary.address)"
+    },
+    "placeholders": {
+      "choose_country": "Оберіть країну",
+      "choose_city": "Оберіть місто",
+      "enter_country": "Введіть країну",
+      "enter_city": "Введіть місто",
+      "address": "Введіть адресу"
+    }
+  },
+
   "main_menu": {
     "dashboard": "Дашбоард",
     "requests": "Заявки",
@@ -63,40 +191,33 @@
     "statistic": "Статистика",
     "persons": "Контрагенти"
   },
-  "labels": {
-    "location": {
-      "city": "$t(dictionary.city)",
-      "country": "$t(dictionary.country)"
+
+  "messages": {
+    "validation": {
+      "min_one_main_email": "Один email має бути основним",
+      "min_one_main_phone": "Один телефон має бути основним",
+      "min_one_main_location": "Одна адреса має бути основною",
+      "required": "Заповніть поле",
+      "required_name": "Назва обов'язкова",
+      "required_country": "Оберіть країну",
+      "required_city": "Оберіть місто",
+      "required_password": "Пароль обов'язковий",
+      "invalid_phone": "Невірний номер",
+      "invalid_email": "Невірний email",
+      "min_three_characters": "Мінімум три літери",
+      "min_two_characters": "Мінімум дві літери",
+      "min_six_characters": "Мінімум шість символів"
+    },
+    "info": {
+      "no_results": "Дані відсутні"
+    },
+    "success": {
+      "person_created": "Контрагента створено",
+      "person_updated": "Контрагента оновлено",
+      "person_deleted": "Контрагента видалено",
+      "city_created": "Місто створено",
+      "country_created": "Країну створено",
+      "welcome_back": "З поверненням!"
     }
-  },
-  "placeholders": {
-    "search": "Пошук",
-    "search_person": "Пошук контрагента",
-    "filters": "Фільтри"
-  },
-  "info": {
-    "no_results": "Дані відсутні"
-  },
-  "buttons": {
-    "cancel": "Скасувати",
-    "delete": "Видалити",
-    "delete_continuous": "Видалення"
-  },
-  "dictionary": {
-    "city": "Місто",
-    "country": "Країна",
-    "photo": "Фото",
-    "first_name": "Ім'я",
-    "last_name": "Прізвище",
-    "full_name": "ПІБ",
-    "phone": "Телефон",
-    "role": "Роль",
-    "post": "Відділення пошти",
-    "created_at": "Створено",
-    "actions": "Дії",
-    "status": "Статус",
-    "info": "Інформація",
-    "orders_history": "Історія замовлень",
-    "sorting": "Сортування"
   }
 }
