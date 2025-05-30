@@ -1,14 +1,13 @@
 "use client";
 import { PersonRoleValue } from "@/types/person.types";
 
-import Image from "next/image";
 import React, { useEffect, useRef } from "react";
-
-import { MENU_LIST } from "@/constants/sidebar.constants";
+import { useTranslation } from "react-i18next";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
+
 import { checkPermission, cn } from "@/lib/utils";
-import { useTranslation } from "react-i18next";
+import { MENU_LIST } from "@/constants/sidebar.constants";
 
 const MobileNavBar = ({ role }: { role: PersonRoleValue }) => {
   const pathName = usePathname();
@@ -29,6 +28,7 @@ const MobileNavBar = ({ role }: { role: PersonRoleValue }) => {
     <ul className="flex w-full overflow-x-auto pb-4 px-2">
       {MENU_LIST.map((route) => {
         const isActive = pathName.includes(route.href);
+        const Icon = route.icon;
         return (
           checkPermission(route.permission, role) && (
             <Link key={route.href} href={route.href} className="flex">
@@ -40,7 +40,7 @@ const MobileNavBar = ({ role }: { role: PersonRoleValue }) => {
                     "bg-brand-menu shadow-sm hover:bg-brand-default text-stone-900"
                 )}
               >
-                <Image src={route.icon} alt="logo" width={24} height={24} />
+                {<Icon className="text-text-regular" />}
                 {t(`main_menu.${route.key}`)}
               </div>
             </Link>

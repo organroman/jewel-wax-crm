@@ -27,7 +27,7 @@ const ProtectedLayout = async ({ children }: { children: React.ReactNode }) => {
         <TopBar />
       </div>
       <div className="flex h-full flex-1 w-full overflow-y-hidden">
-        <aside className="hidden lg:block lg:w-[84px] h-full overflow-y-hidden">
+        <aside className="hidden bg-ui-sidebar lg:block lg:w-[84px] h-full overflow-y-hidden">
           <ClientOnly>
             <SideBar role={role} />
           </ClientOnly>

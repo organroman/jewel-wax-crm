@@ -18,7 +18,7 @@ const ModalHeader = ({
       <DialogTitle
         className={cn(
           "text-center text-xl",
-          destructive ? "text-action-alert" : "text-black"
+          destructive ? "text-action-alert" : "text-text-regular"
         )}
       >
         {title}

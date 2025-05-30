@@ -27,7 +27,7 @@ const CustomTabs = ({
         {isModal && (
           <TabsTrigger
             value={firstTab.value as string}
-            className="p-0 grow-0 font-semibold pb-4 cursor-pointer text-black data-[state=active]:border-b-2 data-[state=active]:border-brand-default   data-[state=active]:text-primary data-[state=active]:shadow-none data-[state=active]:bg-transparent border-t-0 border-l-0 border-r-0 data-[state=active]:rounded-none"
+            className="p-0 grow-0 font-semibold pb-4 cursor-pointer text-text-regular data-[state=active]:border-b-2 data-[state=active]:border-brand-default   data-[state=active]:text-primary data-[state=active]:shadow-none data-[state=active]:bg-transparent border-t-0 border-l-0 border-r-0 data-[state=active]:rounded-none"
           >
             {firstTab.label}
           </TabsTrigger>
@@ -37,7 +37,7 @@ const CustomTabs = ({
             <TabsTrigger
               key={t.value as string}
               value={t.value as string}
-              className="p-0 grow-0 font-semibold pb-4 cursor-pointer text-black data-[state=active]:border-b-2 data-[state=active]:border-brand-default   data-[state=active]:text-primary data-[state=active]:shadow-none data-[state=active]:bg-transparent border-t-0 border-l-0 border-r-0 data-[state=active]:rounded-none"
+              className="p-0 grow-0 font-semibold pb-4 cursor-pointer text-text-regular data-[state=active]:border-b-2 data-[state=active]:border-brand-default   data-[state=active]:text-primary data-[state=active]:shadow-none data-[state=active]:bg-transparent border-t-0 border-l-0 border-r-0 data-[state=active]:rounded-none"
             >
               {t.label}
             </TabsTrigger>

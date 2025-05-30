@@ -35,7 +35,7 @@ const Sort = ({
         {t("dictionary.sorting")}:
       </span>
       <Select defaultValue={current} onValueChange={handleSortChange}>
-        <SelectTrigger className="w-fit p-0 text-xs font-semibold outline-none border-none shadow-none focus:ring-0 focus:outline-none focus-visible:ring-0">
+        <SelectTrigger className="w-fit p-0 text-xs font-semibold outline-none border-none shadow-none focus:ring-0 focus:outline-none focus-visible:ring-0 dark:hover:bg-transparent">
           <SelectValue />
         </SelectTrigger>
         <SelectContent className="border-none shadow-md text-xs">

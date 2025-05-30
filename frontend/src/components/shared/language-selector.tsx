@@ -21,7 +21,7 @@ const LanguageSwitcher = () => {
   };
   return (
     <Select onValueChange={changeLanguage} defaultValue={currentLanguage}>
-      <SelectTrigger className="pr-2 border-0 text-white [&_svg]:hidden">
+      <SelectTrigger className="pr-2 border-0 cursor-pointer focus-visible:border-none  text-white [&_svg]:hidden">
         <SelectValue className="pr-0" />
       </SelectTrigger>
       <SelectContent className="min-w-fit">

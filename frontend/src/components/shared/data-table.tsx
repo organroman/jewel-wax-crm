@@ -107,7 +107,7 @@ DataTableProps<TData, TValue> & {
                   <TableRow
                     key={row.id}
                     data-state={row.getIsSelected() && "selected"}
-                    className="h-10 bg-white even:bg-ui-row hover:bg-ui-border"
+                    className="h-10 bg-ui-odd even:bg-ui-row-even hover:opacity-85"
                   >
                     {row.getVisibleCells().map((cell) => (
                       <TableCell

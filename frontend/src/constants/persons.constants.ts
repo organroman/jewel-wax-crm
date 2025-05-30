@@ -16,11 +16,11 @@ export const PERSON_ROLE_ALL = {
 };
 
 export const PERSON_ROLE_COLORS = {
-  super_admin: "bg-gray-100 text-black",
+  super_admin: "bg-accent-grey text-black",
   modeller: "bg-accent-lavender text-accent-blue",
-  miller: "bg-gray-100 text-black",
-  client: "bg-accent-lightgreen text-brand-default",
-  print: "text-accent-yellow bg-accent-peach",
+  miller: "bg-accent-grey text-black",
+  client: "bg-accent-lightgreen text-accent-green",
+  print: "text-accent-peach bg-accent-yellow",
 };
 
 export const PERSON_CARD_TABS_LIST = [

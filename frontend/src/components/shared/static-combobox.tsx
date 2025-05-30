@@ -55,7 +55,7 @@ const StaticCombobox = ({
           role="combobox"
           variant="outline"
           className={cn(
-            "min-w-[180px] justify-between h-8 rounded-md text-sm font-semibold relative hover:bg-white hover:border-text-light"
+            "min-w-[180px] justify-between bg-ui-sidebar h-8 rounded-md text-sm font-semibold relative hover:border-text-light"
           )}
         >
           {label}

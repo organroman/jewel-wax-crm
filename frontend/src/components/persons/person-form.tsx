@@ -10,7 +10,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { UseMutationResult } from "@tanstack/react-query";
 import { useForm, useWatch } from "react-hook-form";
 import dayjs from "dayjs";
-import { toast } from "sonner";
+import { pdf } from "@react-pdf/renderer";
 import { Loader } from "lucide-react";
 import { SetStateAction, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -48,7 +48,7 @@ import {
 } from "@/constants/enums.constants";
 
 import { getFullName, getInitials } from "@/lib/utils";
-import { pdf } from "@react-pdf/renderer";
+
 import LabelPDF from "./label-pdf";
 
 const schemaMap = {
@@ -156,7 +156,7 @@ const PersonForm = ({
     window.open(url, "_blank");
   };
   return (
-    <div className="h-full w-full bg-white overflow-hidden rounded-md p-4 flex flex-col">
+    <div className="h-full w-full bg-ui-sidebar overflow-hidden rounded-md p-4 flex flex-col">
       <Form {...form}>
         <form
           id="personForm"

@@ -61,7 +61,7 @@ const PersonActionsMenu = ({ id }: { id: number }) => {
         extraItems={
           <DropdownMenuItem asChild>
             <Link href={`persons/${id}?tab=orders_history`}>
-              <GalleryVerticalEndIcon /> {t("person.actions.orders_history")}
+              <GalleryVerticalEndIcon className="text-text-regular" /> {t("person.actions.orders_history")}
             </Link>
           </DropdownMenuItem>
         }

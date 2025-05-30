@@ -23,12 +23,12 @@ export default function ModeToggle() {
       <Button
         variant="ghost"
         onClick={() => setTheme("light")}
-        className="hover:bg-stone-600 dark:hover:bg-stone-600 gap-0 p-1 h-fit has-[>svg]:px-1"
+        className="hover:bg-stone-600 dark:hover:bg-stone-600 hover:text-gray-200 dark:hover:text-gray-200 gap-0 p-1 h-fit has-[>svg]:px-1"
       >
         <Sun
           className={cn(
-            "text-white transition-all dark:text-white",
-            theme === "light" && "text-neutral-500 dark:text-neutral-500"
+            "text-gray-400 transition-all",
+            theme === "light" && "text-white dark:text-white"
           )}
         />
         <span className="sr-only">Toggle theme</span>
@@ -44,8 +44,8 @@ export default function ModeToggle() {
       >
         <Moon
           className={cn(
-            "text-white transition-all dark:text-white",
-            theme === "dark" && "text-neutral-500 dark:text-neutral-500"
+            "text-gray-400 transition-all",
+            theme === "dark" && "text-white dark:text-white"
           )}
         />
         <span className="sr-only">Toggle theme</span>

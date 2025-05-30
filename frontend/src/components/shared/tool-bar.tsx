@@ -63,10 +63,10 @@ const Toolbar = ({
               <div className="flex items-center flex-wrap lg:flex-nowrap gap-2.5">
                 <Button
                   variant="ghost"
-                  className="focus-visible:ring-0 cursor-pointer  p-0 has-[>svg]:px-0"
+                  className="focus-visible:ring-0 cursor-pointer dark:hover:bg-transparent p-0 has-[>svg]:px-0"
                   onClick={() => setFilterOpen(!filterOpen)}
                 >
-                  <SlidersHorizontal className="size-4" />
+                  <SlidersHorizontal className="size-4 text-text-light" />
                   <span className="text-xs text-text-light font-medium">
                     {filterPlaceholder}
                   </span>

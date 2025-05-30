@@ -42,7 +42,7 @@ const SearchInput = ({
         onChange={(e) => setValues(e.target.value)}
         onKeyDown={handleKeyDown}
         placeholder={placeholder}
-        className="pl-10 bg-white w-[280px] placeholder:text-text-light placeholder:text-xs "
+        className="pl-10 bg-ui-sidebar w-[280px] placeholder:text-text-light placeholder:text-xs "
       />
     </div>
   );

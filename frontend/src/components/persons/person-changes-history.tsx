@@ -27,7 +27,7 @@ const PersonChangesHistory = ({
 
   if (isLoading) {
     return (
-      <div className="h-full w-full bg-white overflow-hidden rounded-md p-4 items-center justify-center">
+      <div className="h-full w-full bg-ui-sidebar overflow-hidden rounded-md p-4 items-center justify-center">
         <Loader className="size-6 animate-spin text-brand-default" />
       </div>
     );
@@ -35,7 +35,7 @@ const PersonChangesHistory = ({
 
   if (!data || error) {
     return (
-      <div className="h-full w-full bg-white overflow-hidden rounded-md p-4 items-center justify-center">
+      <div className="h-full w-full bg-ui-sidebar overflow-hidden rounded-md p-4 items-center justify-center">
         <p>{error?.message || "something went wrong"}</p>
       </div>
     );
@@ -45,7 +45,7 @@ const PersonChangesHistory = ({
 
   console.log(data);
   return (
-    <div className="h-full w-full bg-white overflow-hidden rounded-md p-4 flex flex-col">
+    <div className="h-full w-full bg-ui-sidebar overflow-hidden rounded-md p-4 flex flex-col">
       <div className="flex items-center pb-4.5 border-b border-ui-border gap-2">
         <p>{t("person.person_changes")}:</p>
         <p className="font-semibold text-brand-default">{personFullname}</p>
@@ -54,7 +54,7 @@ const PersonChangesHistory = ({
         {data.map((item) => (
           <div
             key={item.id}
-            className="min-w-fit overflow-x-visible gap-10 lg:gap-0 flex flex-row items-center justify-between odd:bg-ui-row py-3 px-2.5 border-b border-ui-border "
+            className="min-w-fit overflow-x-visible gap-10 lg:gap-0 flex flex-row items-center justify-between odd:bg-ui-row-odd py-3 px-2.5 border-b border-ui-border "
           >
             <div className="flex min-w-fit whitespace-nowrap items-center gap-4 lg:w-3/4">
               <p className="text-xs text-text-muted">

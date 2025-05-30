@@ -42,7 +42,7 @@ const PersonMetaHeader = ({
         size="sm"
         onClick={handlePrint}
         variant="secondary"
-        className="rounded-md cursor-pointer"
+        className="rounded-md bg-ui-screen focus-visible:border-brand-default border-brand-default cursor-pointer"
       >
         <PrinterIcon />
       </Button>

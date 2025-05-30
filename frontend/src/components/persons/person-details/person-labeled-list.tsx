@@ -43,7 +43,7 @@ const PersonLabeledList = <T,>({
           <div className="flex items-center w-fit gap-2.5">
             <p
               className={`text-sm ${width ? width : "w-34"} font-semibold ${
-                highlightMain ? "text-brand-default " : "text-black"
+                highlightMain ? "text-brand-default " : "text-text-regular"
               }`}
             >
               {main.value}

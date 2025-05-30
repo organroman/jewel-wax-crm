@@ -89,7 +89,7 @@ const PersonInfo = ({ person }: PersonInfoProps) => {
   };
 
   return (
-    <div className="w-full h-full bg-white rounded-md">
+    <div className="w-full h-full rounded-md">
       <div className="w-full h-fit flex flex-col lg:flex-row gap-4">
         <div className="flex-2 flex flex-col lg:border-r border-ui-border">
           <PersonMetaHeader
@@ -147,7 +147,7 @@ const PersonInfo = ({ person }: PersonInfoProps) => {
         </div>
         <Separator className="border-ui-border w-1" orientation="vertical" />
         <div className="flex-1">
-          <p className="text-sm font-medium">
+          <p className="text-sm font-medium text-text-regular">
             {t("person.connected_contacts")}:
           </p>
           {person.contacts && person.contacts.length > 0 && (

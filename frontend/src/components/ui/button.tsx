@@ -10,15 +10,15 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default:
-          "bg-brand-default text-primary-foreground shadow-xs hover:opacity-80 cursor-pointer",
+          "bg-brand-default text-text-regular shadow-xs hover:opacity-80 cursor-pointer",
         destructive:
-          "bg-action-alert text-white shadow-xs hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60",
+          "bg-action-alert text-text-regular shadow-xs hover:bg-action-alert/80 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 ",
         outline:
-          "border bg-background text-xs text-text-muted rounded-xs shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50",
+          "border bg-ui-sidebar text-xs text-text-muted rounded-xs shadow-xs hover:opacity-90 hover:text-text-regular  dark:border-ui-border",
         secondary:
-          "bg-white border rounded-xs border-brand-default text-secondary-foreground shadow-xs hover:bg-secondary/80",
+          "bg-ui-sidebar border rounded-xs border-brand-default text-text-regular shadow-xs hover:bg-ui-sidebar/30 hover:border-accent-lightgreen ",
         ghost:
-          "hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50",
+          "hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/20",
         link: "text-primary underline-offset-4 hover:underline px-0",
         ghostDestructive:
           "text-text-light hover:bg-accent hover:text-action-minus dark:hover:bg-accent/50",

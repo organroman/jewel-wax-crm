@@ -40,7 +40,7 @@ const ActionsMenu = ({
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="h-8 w-8 p-0">
           <span className="sr-only">Open menu</span>
-          <MoreHorizontalIcon className="h-4 w-4" />
+          <MoreHorizontalIcon className="h-4 w-4 text-text-regular" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
@@ -51,14 +51,14 @@ const ActionsMenu = ({
           </>
         )}
         {viewItemDialogOpen && (
-          <DropdownMenuItem onClick={() => viewItemDialogOpen(true)}>
-            <EyeIcon /> {viewItemTitle}
+          <DropdownMenuItem className="text-text-regular" onClick={() => viewItemDialogOpen(true)}>
+            <EyeIcon className="text-text-regular" /> {viewItemTitle}
           </DropdownMenuItem>
         )}
         {editItemLink && (
           <DropdownMenuItem asChild>
             <Link href={editItemLink}>
-              <FilePenIcon className="size-4" /> {editItemTitle}
+              <FilePenIcon className="size-4 text-text-regular" /> {editItemTitle}
             </Link>
           </DropdownMenuItem>
         )}
