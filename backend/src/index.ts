@@ -8,6 +8,7 @@ import { verifyToken } from "./middlewares/auth-middleware";
 import authRoutes from "./routes/auth-rotes";
 import enumRoutes from "./routes/enum-routes";
 import personRoutes from "./routes/person-routes";
+import orderRoutes from "./routes/order-routes";
 import contactRoutes from "./routes/contact-routes";
 import requestRoutes from "./routes/request-routes";
 import locationRoutes from "./routes/location-routes";
@@ -32,6 +33,7 @@ app.get("/", (req, res) => {
 app.use("/auth", authRoutes);
 app.use("/enums", verifyToken, enumRoutes);
 app.use("/persons", personRoutes);
+app.use("/orders", orderRoutes);
 app.use("/contacts", contactRoutes);
 app.use("/requests", requestRoutes);
 app.use("/locations", locationRoutes);

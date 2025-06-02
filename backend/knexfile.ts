@@ -17,6 +17,10 @@ const config: { [key: string]: Knex.Config } = {
       directory: "./src/migrations",
       tableName: "knex_migrations",
     },
+    seeds: {
+      directory: "./src/seeds",
+      extension: "ts",
+    },
   },
 
   staging: {

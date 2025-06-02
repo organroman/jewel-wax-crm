@@ -27,3 +27,17 @@ export function parseSortParams<T extends readonly string[]>(
 
   return { sortBy, order };
 }
+
+export function getFullName(
+  firstName: string,
+  lastName: string,
+  surname: string | undefined
+) {
+  let fullname = lastName + " " + firstName;
+
+  if (surname) {
+    fullname = fullname + " " + surname;
+  }
+
+  return fullname;
+}

@@ -20,3 +20,5 @@ export const REQUEST_SORT_FIELDS = [
   "full_name",
   "message",
 ];
+
+export const ORDERS_SORT_FIELDS = ["number"];
