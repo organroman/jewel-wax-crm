@@ -3,7 +3,7 @@ import {
   ORDER_STAGE_STATUS,
   PAYMENT_STATUS,
 } from "../constants/enums";
-import { SafePerson } from "./person.types";
+import { PersonRole } from "./person.types";
 import { GetAllOptions } from "./shared.types";
 
 export type PaymentStatus = (typeof PAYMENT_STATUS)[number];
@@ -69,7 +69,10 @@ export interface Order {
   processing_days: number;
 }
 
-export type GetAllOrdersOptions = GetAllOptions<{
-  is_favorite?: boolean;
-  is_important?: boolean;
-}>;
+export interface GetAllOrdersOptions
+  extends GetAllOptions<{
+    is_important?: boolean;
+  }> {
+  user_id: number;
+  user_role: PersonRole;
+}

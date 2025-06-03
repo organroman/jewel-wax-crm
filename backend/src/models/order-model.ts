@@ -19,13 +19,33 @@ export const OrderModel = {
     search,
     sortBy = "created_at",
     order = "desc",
+    user_id,
+    user_role,
   }: GetAllOrdersOptions): Promise<PaginatedResult<OrderBase>> {
-    const baseQuery = db<Order>("orders").select("*");
+    const baseQuery = db<Order>("orders")
+      .select(
+        "orders.*",
+        db.raw(
+          `CASE WHEN order_favorites.person_id IS NOT NULL THEN true ELSE false END as is_favorite`
+        )
+      )
+      .leftJoin("order_favorites", function () {
+        this.on("order_favorites.order_id", "=", "orders.id").andOn(
+          "order_favorites.person_id",
+          "=",
+          db.raw("?", [user_id])
+        );
+      });
+
+    if (user_role === "modeller") {
+      baseQuery.join("order_services as os", function () {
+        this.on("os.order_id", "=", "orders.id")
+          .andOn("os.person_id", "=", db.raw("?", [user_id]))
+          .andOn("os.type", "=", db.raw("?", ["modeling"]));
+      });
+    }
 
     //todo: filters by currentStage
-
-    if (filters?.is_favorite)
-      baseQuery.where("is_favorite", filters.is_favorite);
 
     if (filters?.is_important)
       baseQuery.where("is_important", filters.is_important);

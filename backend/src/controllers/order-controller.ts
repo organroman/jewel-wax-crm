@@ -1,12 +1,25 @@
-import { Request, Response, NextFunction } from "express";
-import { parseSortParams } from "../utils/helpers";
-import { ORDERS_SORT_FIELDS } from "../constants/sortable-fields";
-import { OrderService } from "../services/order-service";
 import { SortOrder } from "../types/shared.types";
+import { PersonRole } from "../types/person.types";
+
+import { Request, Response, NextFunction } from "express";
+
+import { OrderService } from "../services/order-service";
+
+import { ORDERS_SORT_FIELDS } from "../constants/sortable-fields";
+import ERROR_MESSAGES from "../constants/error-messages";
+
+import AppError from "../utils/AppError";
+import { parseSortParams } from "../utils/helpers";
 
 export const OrderController = {
   async getAllOrders(req: Request, res: Response, next: NextFunction) {
     try {
+      const userId = req.user?.id;
+      const userRole = req.user?.role;
+
+      if (!userId || !userRole)
+        throw new AppError(ERROR_MESSAGES.UNAUTHORIZED, 401);
+
       const { page, limit, search, is_favorite, is_important } = req.query;
 
       const { sortBy, order } = parseSortParams(
@@ -18,14 +31,8 @@ export const OrderController = {
 
       const orders = await OrderService.getAll({
         page: Number(page),
-        limit: Number(limit),
+        limit:  Number(limit),
         filters: {
-          is_favorite:
-            is_favorite === "true"
-              ? true
-              : is_favorite === "false"
-              ? false
-              : undefined,
           is_important:
             is_important === "true"
               ? true
@@ -36,6 +43,8 @@ export const OrderController = {
         search: search as string,
         sortBy: sortBy as string,
         order: (order as SortOrder) || "desc",
+        user_id: Number(userId),
+        user_role: userRole as PersonRole,
       });
       res.status(200).json(orders);
     } catch (error) {

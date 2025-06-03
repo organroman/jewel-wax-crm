@@ -1,5 +1,5 @@
-import { Knex } from 'knex';
-import { PaginatedResult, PaginationOptions } from '../types/shared.types';
+import { Knex } from "knex";
+import { PaginatedResult, PaginationOptions } from "../types/shared.types";
 
 export async function paginateQuery<T>(
   baseQuery: Knex.QueryBuilder,
@@ -10,13 +10,16 @@ export async function paginateQuery<T>(
     order = "desc",
   }: PaginationOptions
 ): Promise<PaginatedResult<T>> {
-  const offset = (page - 1) * limit;
+  const pageNum = !page || Number.isNaN(page) ? 1 : page;
+  const limitNum = !limit || Number.isNaN(limit) ? 10 : limit;
+
+  const offset = (pageNum - 1) * limitNum;
 
   const countQuery = baseQuery.clone().clearSelect().count("* as total");
 
   const results = await baseQuery
     .offset(offset)
-    .limit(limit)
+    .limit(limitNum)
     .orderBy(sortBy, order);
 
   const countResult = await countQuery;
@@ -25,7 +28,7 @@ export async function paginateQuery<T>(
   return {
     data: results as T[],
     total,
-    page,
-    limit,
+    page: pageNum,
+    limit: limitNum,
   };
 }

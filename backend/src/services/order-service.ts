@@ -14,6 +14,8 @@ export const OrderService = {
     search,
     sortBy,
     order,
+    user_id,
+    user_role,
   }: GetAllOrdersOptions): Promise<PaginatedResult<Order>> {
     const orders = await OrderModel.getAll({
       page,
@@ -22,6 +24,8 @@ export const OrderService = {
       search,
       sortBy,
       order,
+      user_id,
+      user_role,
     });
 
     const enriched = await Promise.all(

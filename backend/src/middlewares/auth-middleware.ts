@@ -1,6 +1,8 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 
+import { PersonModel } from "../models/person-model";
+
 import AppError from "../utils/AppError";
 import ERROR_MESSAGES from "../constants/error-messages";
 
@@ -17,7 +19,7 @@ declare global {
   }
 }
 
-export const verifyToken = (
+export const verifyToken = async(
   req: Request,
   res: Response,
   next: NextFunction
@@ -33,10 +35,15 @@ export const verifyToken = (
     const secret = process.env.JWT_SECRET!;
     const decoded = jwt.verify(token, secret) as JwtPayload;
 
+    const isUserExist = await PersonModel.findById(+decoded.id);
+
+    if (!isUserExist) throw new AppError(ERROR_MESSAGES.UNAUTHORIZED, 401);
+
     req.user = {
       id: decoded.id,
       role: decoded.role,
     };
+
     next();
   } catch (error) {
     return next(new AppError(ERROR_MESSAGES.UNAUTHORIZED, 401));
