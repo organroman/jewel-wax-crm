@@ -73,7 +73,6 @@ export const OrderController = {
     try {
       const orderId = req.params.id;
       const isImportant = req.body.isImportant;
-      console.log("🚀 ~ isImportant:", isImportant);
 
       const updatedOrder = await OrderService.toggleImportant({
         orderId: Number(orderId),
