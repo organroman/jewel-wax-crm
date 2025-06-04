@@ -287,7 +287,9 @@
       "person_deleted": "Контрагента видалено",
       "city_created": "Місто створено",
       "country_created": "Країну створено",
-      "welcome_back": "З поверненням!"
+      "welcome_back": "З поверненням!",
+      "favorite_added": "Додано в обране",
+      "favorite_removed": "Видалено з обраного"
     }
   }
 }

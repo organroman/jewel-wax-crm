@@ -8,6 +8,8 @@ import Image from "next/image";
 import { Button } from "../ui/button";
 import { Badge } from "../ui/badge";
 
+import OrderFavorite from "./order-favorite";
+
 import { cn } from "@/lib/utils";
 import {
   PAYMENT_STATUS_COLORS,
@@ -32,19 +34,10 @@ export const getOrdersColumns = (
       ),
       cell: ({ row }) => {
         return (
-          <Button
-            variant="ghost"
-            className="has-[>svg]:p-1.5 hover:bg-transparent"
-          >
-            <StarIcon
-              className={cn(
-                "size-5 fill-current stroke-brand-menu",
-                row.original.is_favorite
-                  ? "text-brand-default stroke-brand-default"
-                  : "text-transparent"
-              )}
-            />
-          </Button>
+          <OrderFavorite
+            is_favorite={row.original.is_favorite}
+            orderId={row.original.id}
+          />
         );
       },
       size: 36,

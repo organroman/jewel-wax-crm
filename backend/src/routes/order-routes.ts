@@ -12,4 +12,11 @@ router.get(
   OrderController.getAllOrders
 );
 
+router.post(
+  "/:id/favorite",
+  verifyToken,
+  checkPermission("ORDERS", "UPDATE"),
+  OrderController.toggleFavorite
+);
+
 export default router;

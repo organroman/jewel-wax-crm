@@ -28,6 +28,13 @@ export interface OrderMedia {
   created_at: Date;
   updated_at: Date;
 }
+export interface OrderFavorite {
+  id: number;
+  order_id: number;
+  person_id: number;
+  created_at: Date;
+  updated_at: Date;
+}
 
 export interface OrderStage {
   id: number;

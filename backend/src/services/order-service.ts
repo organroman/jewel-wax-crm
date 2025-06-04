@@ -70,4 +70,13 @@ export const OrderService = {
       data: enriched,
     };
   },
+  async toggleFavorite({
+    orderId,
+    personId,
+  }: {
+    orderId: number;
+    personId: number;
+  }): Promise<{ status: string; orderId: number }> {
+    return await OrderModel.toggleFavorite({ orderId, personId });
+  },
 };

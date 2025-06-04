@@ -31,7 +31,7 @@ export const OrderController = {
 
       const orders = await OrderService.getAll({
         page: Number(page),
-        limit:  Number(limit),
+        limit: Number(limit),
         filters: {
           is_important:
             is_important === "true"
@@ -47,6 +47,23 @@ export const OrderController = {
         user_role: userRole as PersonRole,
       });
       res.status(200).json(orders);
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  async toggleFavorite(req: Request, res: Response, next: NextFunction) {
+    try {
+      const userId = req.user?.id;
+      const orderId = req.params.id;
+
+      if (!userId) throw new AppError(ERROR_MESSAGES.UNAUTHORIZED, 401);
+
+      const result = await OrderService.toggleFavorite({
+        orderId: Number(orderId),
+        personId: Number(userId),
+      });
+      res.status(200).json({ message: result.status });
     } catch (error) {
       next(error);
     }

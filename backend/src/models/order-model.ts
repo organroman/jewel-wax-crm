@@ -3,6 +3,7 @@ import {
   GetAllOrdersOptions,
   Order,
   OrderBase,
+  OrderFavorite,
   OrderMedia,
   OrderStage,
   Stage,
@@ -98,5 +99,32 @@ export const OrderModel = {
       .limit(1);
 
     return media;
+  },
+
+  async toggleFavorite({
+    orderId,
+    personId,
+  }: {
+    orderId: number;
+    personId: number;
+  }): Promise<{ status: string; orderId: number }> {
+    const existing = await db<OrderFavorite>("order_favorites")
+      .where("order_id", orderId)
+      .andWhere("person_id", personId)
+      .first();
+
+    if (existing) {
+      await db<OrderFavorite>("order_favorites")
+        .where("person_id", personId)
+        .andWhere("order_id", orderId)
+        .del();
+      return { status: "favorite_removed", orderId };
+    } else {
+      await db<OrderFavorite>("order_favorites").insert({
+        person_id: personId,
+        order_id: orderId,
+      });
+      return { status: "favorite_added", orderId };
+    }
   },
 };
