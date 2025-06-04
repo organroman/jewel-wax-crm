@@ -13,4 +13,7 @@ export const orderService = {
       {}
     );
   },
+  toggleImportant: async (orderId: number, isImportant: boolean) => {
+    return apiService.patch<Order>(`orders/${orderId}/important`, {isImportant});
+  },
 };

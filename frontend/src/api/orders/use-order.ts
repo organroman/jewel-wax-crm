@@ -1,6 +1,7 @@
 import { QueryClient, useMutation, useQuery } from "@tanstack/react-query";
 import { orderService } from "./order-service";
 import { toast } from "sonner";
+import { Order } from "@/types/order.types";
 
 export const useOrder = {
   getPaginatedOrders: ({
@@ -40,5 +41,34 @@ export const useOrder = {
     });
 
     return { toggleFavoriteMutation: mutation };
+  },
+  toggleImportant: ({
+    orderId,
+    queryClient,
+    t,
+  }: {
+    orderId: number;
+    queryClient: QueryClient;
+    t: (key: string) => string;
+  }) => {
+    const mutation = useMutation<Order, Error, boolean>({
+      mutationFn: async (data) => orderService.toggleImportant(orderId, data),
+      onSuccess: (data) => {
+        toast.success(
+          t(
+            `messages.success.${
+              data.is_important ? "important_added" : "important_removed"
+            }`
+          )
+        );
+        queryClient.invalidateQueries({
+          queryKey: ["orders"],
+        });
+      },
+      onError: (error) => {
+        toast.error(error.message);
+      },
+    });
+    return { toggleImportantMutation: mutation };
   },
 };

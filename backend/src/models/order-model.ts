@@ -127,4 +127,19 @@ export const OrderModel = {
       return { status: "favorite_added", orderId };
     }
   },
+
+  async toggleImportant({
+    orderId,
+    isImportant,
+  }: {
+    orderId: number;
+    isImportant: boolean;
+  }): Promise<Order> {
+    const [updatedOrder] = await db<Order>("orders")
+      .where("id", orderId)
+      .update({ is_important: isImportant, updated_at: new Date() })
+      .returning<Order[]>("*");
+
+    return updatedOrder;
+  },
 };

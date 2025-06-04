@@ -79,4 +79,14 @@ export const OrderService = {
   }): Promise<{ status: string; orderId: number }> {
     return await OrderModel.toggleFavorite({ orderId, personId });
   },
+
+  async toggleImportant({
+    orderId,
+    isImportant,
+  }: {
+    orderId: number;
+    isImportant: boolean;
+  }): Promise<Order> {
+    return await OrderModel.toggleImportant({ orderId, isImportant });
+  },
 };

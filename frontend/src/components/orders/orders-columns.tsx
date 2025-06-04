@@ -16,6 +16,7 @@ import {
   STAGE_COLORS,
   STAGE_STATUS_COLORS,
 } from "@/constants/orders.constants";
+import OrderImportant from "./order-important";
 
 export const getOrdersColumns = (
   t: (key: string) => string,
@@ -53,19 +54,10 @@ export const getOrdersColumns = (
         </Button>
       ),
       cell: ({ row }) => (
-        <Button
-          variant="ghost"
-          className="has-[>svg]:p-1.5 hover:bg-transparent"
-        >
-          <CircleAlertIcon
-            className={cn(
-              "size-5 fill-current stroke-ui-border",
-              row.original.is_important
-                ? "text-action-alert"
-                : "text-transparent"
-            )}
-          />
-        </Button>
+        <OrderImportant
+          orderId={row.original.id}
+          is_important={row.original.is_important}
+        />
       ),
       size: 36,
     },

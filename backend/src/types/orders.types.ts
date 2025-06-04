@@ -50,6 +50,7 @@ export interface OrderStage {
 export interface OrderBase {
   id: number;
   created_at: Date;
+  updated_at: Date;
   number: number;
   name: string;
   customer_id: number;
@@ -63,6 +64,7 @@ export interface OrderBase {
 export interface Order {
   id: number;
   created_at: Date;
+  updated_at: Date;
   number: number;
   name: string;
   customer: OrderCustomer;

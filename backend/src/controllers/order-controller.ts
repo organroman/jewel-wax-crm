@@ -68,4 +68,24 @@ export const OrderController = {
       next(error);
     }
   },
+
+  async toggleImportant(req: Request, res: Response, next: NextFunction) {
+    try {
+      const orderId = req.params.id;
+      const isImportant = req.body.isImportant;
+      console.log("🚀 ~ isImportant:", isImportant);
+
+      const updatedOrder = await OrderService.toggleImportant({
+        orderId: Number(orderId),
+        isImportant,
+      });
+
+      if (!updatedOrder) {
+        throw new AppError(ERROR_MESSAGES.ITEM_NOT_FOUND, 404);
+      }
+      res.status(200).json(updatedOrder);
+    } catch (error) {
+      next(error);
+    }
+  },
 };

@@ -289,7 +289,9 @@
       "country_created": "Країну створено",
       "welcome_back": "З поверненням!",
       "favorite_added": "Додано в обране",
-      "favorite_removed": "Видалено з обраного"
+      "favorite_removed": "Видалено з обраного",
+      "important_added": "Додано в важливе",
+      "important_removed": "Видалено з важливого"
     }
   }
 }
