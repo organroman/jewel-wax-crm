@@ -1,7 +1,8 @@
-import React from "react";
+import OrdersClient from "./orders-client";
 
 const OrdersPage = () => {
-  return <div>OrdersPage</div>;
+  
+  return <OrdersClient />;
 };
 
 export default OrdersPage;

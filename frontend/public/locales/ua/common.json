@@ -27,7 +27,11 @@
     "password": "Пароль",
     "main": "Основний",
     "contact": "Контакт",
-    "date": "Дата"
+    "date": "Дата",
+    "payment_status": "Статус оплати",
+    "number": "Номер",
+    "customer": "Замовник",
+    "done": "Виконано"
   },
   "labels": {
     "main": "$t(dictionary.main)",
@@ -188,6 +192,64 @@
     "login": "Вхід в систему (Login)",
     "create_person": "Контрагента створено",
     "update_person": "Контрагента оновлено"
+  },
+  "order": {
+    "add_order": "Додати завдання",
+    "tabs": {
+      "all": "Всі замовлення",
+      "new": "Нові",
+      "modeling": "Моделювання",
+      "milling": "Фрезерування",
+      "printing": "3D друк",
+      "delivery": "Доставка",
+      "done": "Виконано"
+    },
+    "placeholders": {
+      "search": "Пошук замовлення"
+    },
+    "sorting": {
+      "created_at": "$t(dictionary.created)",
+      "is_favorite": "Обране",
+      "is_important": "Важливе"
+    },
+    "filters": {
+      "payment_status": "$t(dictionary.payment_status)",
+      "options": {
+        "paid": "Оплачено",
+        "unpaid": "Не оплачено",
+        "partly_paid": "Частково оплачено"
+      }
+    },
+    "table_headers": {
+      "date": "$t(dictionary.date)",
+      "number": "$t(dictionary.number)",
+      "photo": "$t(dictionary.photo)",
+      "name": "Назва завдання",
+      "customer": "$t(dictionary.customer)",
+      "amount": "Сума, ₴",
+      "payment_status": "$t(dictionary.payment_status)",
+      "stage": "Етап",
+      "stage_status": "Готовність",
+      "days": "Дн.",
+      "comment": "Коментар",
+      "actions": "$t(dictionary.actions)"
+    },
+    "stages": {
+      "new": "Нове",
+      "milling": "Фрезерування",
+      "modeling": "Моделювання",
+      "delivery": "Доставка",
+      "printing": "3D друк",
+      "done": "$t(dictionary.done)"
+    },
+    "stage_statuses": {
+      "pending": "Очікування",
+      "processed": "Оброблено",
+      "in_process": "В роботі",
+      "clarification": "Уточнення",
+      "negotiation": "Погодження",
+      "done": "$t(dictionary.done)"
+    }
   },
 
   "main_menu": {

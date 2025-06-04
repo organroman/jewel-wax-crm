@@ -1,13 +1,13 @@
 "use client";
 
-import { EnumItem } from "@/types/shared.types";
+import { TabOption } from "@/types/shared.types";
 import { useRouter, useSearchParams } from "next/navigation";
 
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 interface TabsFilterProps {
   param: string;
-  options: EnumItem<string>[];
+  options: TabOption[];
 }
 
 const TabsFilter = ({ param, options }: TabsFilterProps) => {

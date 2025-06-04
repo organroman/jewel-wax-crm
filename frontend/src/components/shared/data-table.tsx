@@ -6,6 +6,7 @@ import {
   getCoreRowModel,
   RowSelectionState,
   useReactTable,
+  VisibilityState,
 } from "@tanstack/react-table";
 import { Loader } from "lucide-react";
 import { useState } from "react";
@@ -26,6 +27,8 @@ interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   onRowSelectionChange?: (selection: RowSelectionState) => void;
+  columnVisibility?: VisibilityState;
+  onColumnVisibilityChange?: (visibility: VisibilityState) => void;
 }
 
 export function DataTable<TData, TValue>({
@@ -36,6 +39,8 @@ export function DataTable<TData, TValue>({
   currentLimit,
   isLoading,
   onPageChange,
+  columnVisibility,
+  onColumnVisibilityChange,
 }: //   onLimitChange,
 DataTableProps<TData, TValue> & {
   currentPage: number;
@@ -56,9 +61,19 @@ DataTableProps<TData, TValue> & {
     enableRowSelection: true,
     onRowSelectionChange: setRowSelection,
     pageCount: totalPages,
+    onColumnVisibilityChange: (updater) => {
+      if (onColumnVisibilityChange) {
+        const newValue =
+          typeof updater === "function"
+            ? updater(columnVisibility ?? {})
+            : updater;
+        onColumnVisibilityChange(newValue);
+      }
+    },
     state: {
       rowSelection: rowSelection,
       pagination: { pageIndex: currentPage - 1, pageSize: currentLimit },
+      columnVisibility,
     },
     rowCount: totalItems,
   });

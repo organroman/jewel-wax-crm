@@ -63,7 +63,7 @@ export interface Order {
   amount: number;
   payment_status?: PaymentStatus;
   active_stage: Stage;
-  stage_status?: StageStatus;
+  stage_status: StageStatus | null;
   is_favorite: boolean;
   is_important: boolean;
   processing_days: number;

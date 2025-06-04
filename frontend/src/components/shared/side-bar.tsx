@@ -20,8 +20,6 @@ const SideBar = ({ role }: { role: PersonRoleValue }) => {
   const { t } = useTranslation();
   const { theme } = useTheme();
 
-  console.log(theme);
-
   return (
     <div className="h-full w-full">
       <div className="flex items-center justify-center mt-3 mb-10">

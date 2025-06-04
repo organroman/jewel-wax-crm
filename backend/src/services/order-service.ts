@@ -47,6 +47,11 @@ export const OrderService = {
           );
         } else days = order.processing_days;
 
+        const activeStageStatus = await OrderModel.getOrderStageStatus({
+          orderId: order.id,
+          stage: order.active_stage,
+        });
+
         return {
           ...order,
           media: image,
@@ -55,6 +60,7 @@ export const OrderService = {
             fullname: getFullName(first_name, last_name, patronymic),
           },
           processing_days: days,
+          stage_status: activeStageStatus,
         };
       })
     );

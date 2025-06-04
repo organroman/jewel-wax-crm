@@ -43,7 +43,6 @@ const PersonChangesHistory = ({
 
   const personFullname = getFullName(firstName, lastName, patronymic);
 
-  console.log(data);
   return (
     <div className="h-full w-full bg-ui-sidebar overflow-hidden rounded-md p-4 flex flex-col">
       <div className="flex items-center pb-4.5 border-b border-ui-border gap-2">

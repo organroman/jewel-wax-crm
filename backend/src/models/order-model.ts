@@ -6,6 +6,7 @@ import {
   OrderMedia,
   OrderStage,
   Stage,
+  StageStatus,
 } from "../types/orders.types";
 
 import db from "../db/db";
@@ -66,17 +67,17 @@ export const OrderModel = {
   }: {
     orderId: number;
     stage: Stage;
-  }): Promise<Stage | null> {
+  }): Promise<StageStatus | null> {
     const [orderStage] = await db<OrderStage>("order_stage_statuses")
       .where("order_id", orderId)
       .andWhere("stage", stage)
       .orderBy("created_at", "desc")
       .limit(1)
-      .select("stage");
+      .select("status");
 
     if (!orderStage) return null;
 
-    return orderStage.stage;
+    return orderStage.status;
   },
   async getOrderImages({
     orderId,
