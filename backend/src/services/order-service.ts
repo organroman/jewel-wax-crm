@@ -1,5 +1,10 @@
 import { PaginatedResult } from "../types/shared.types";
-import { GetAllOrdersOptions, Order, OrderBase } from "../types/orders.types";
+import {
+  GetAllOrdersOptions,
+  Order,
+  OrderBase,
+  PaginatedOrdersResult,
+} from "../types/orders.types";
 import { OrderModel } from "../models/order-model";
 import { PersonModel } from "../models/person-model";
 import AppError from "../utils/AppError";
@@ -16,17 +21,20 @@ export const OrderService = {
     order,
     user_id,
     user_role,
-  }: GetAllOrdersOptions): Promise<PaginatedResult<Order>> {
-    const orders = await OrderModel.getAll({
-      page,
-      limit,
-      filters,
-      search,
-      sortBy,
-      order,
-      user_id,
-      user_role,
-    });
+  }: GetAllOrdersOptions): Promise<PaginatedOrdersResult<Order>> {
+    const [orders, stageCounts] = await Promise.all([
+      OrderModel.getAll({
+        page,
+        limit,
+        filters,
+        search,
+        sortBy,
+        order,
+        user_id,
+        user_role,
+      }),
+      OrderModel.countByStage("done"),
+    ]);
 
     const enriched = await Promise.all(
       orders.data.map(async (order: OrderBase) => {
@@ -68,6 +76,7 @@ export const OrderService = {
     return {
       ...orders,
       data: enriched,
+      stage_counts: stageCounts,
     };
   },
   async toggleFavorite({

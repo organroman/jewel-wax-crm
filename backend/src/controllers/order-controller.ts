@@ -10,6 +10,7 @@ import ERROR_MESSAGES from "../constants/error-messages";
 
 import AppError from "../utils/AppError";
 import { parseSortParams } from "../utils/helpers";
+import { Stage } from "../types/orders.types";
 
 export const OrderController = {
   async getAllOrders(req: Request, res: Response, next: NextFunction) {
@@ -20,25 +21,22 @@ export const OrderController = {
       if (!userId || !userRole)
         throw new AppError(ERROR_MESSAGES.UNAUTHORIZED, 401);
 
-      const { page, limit, search, is_favorite, is_important } = req.query;
+      const { page, limit, search, active_stage } = req.query;
 
       const { sortBy, order } = parseSortParams(
         req.query.sortBy as string,
         req.query.order as string,
         ORDERS_SORT_FIELDS,
         "created_at"
-      );
+      )
+
+      
 
       const orders = await OrderService.getAll({
         page: Number(page),
         limit: Number(limit),
         filters: {
-          is_important:
-            is_important === "true"
-              ? true
-              : is_favorite === "false"
-              ? false
-              : undefined,
+          active_stage: active_stage as Stage,
         },
         search: search as string,
         sortBy: sortBy as string,

@@ -40,17 +40,13 @@ export const OrderModel = {
       });
 
     if (user_role === "modeller") {
-      baseQuery.join("order_services as os", function () {
-        this.on("os.order_id", "=", "orders.id")
-          .andOn("os.person_id", "=", db.raw("?", [user_id]))
-          .andOn("os.type", "=", db.raw("?", ["modeling"]));
-      });
+      baseQuery.where("modeller_id", user_id);
     }
 
-    //todo: filters by currentStage
+    //todo: filters by payment_status
 
-    if (filters?.is_important)
-      baseQuery.where("is_important", filters.is_important);
+    if (filters?.active_stage)
+      baseQuery.where("active_stage", filters.active_stage);
 
     //todo: search
     const paginated = await paginateQuery<OrderBase>(baseQuery, {
@@ -141,5 +137,18 @@ export const OrderModel = {
       .returning<Order[]>("*");
 
     return updatedOrder;
+  },
+  async countByStage(exclusion: string): Promise<Record<string, number>> {
+    const rows = await db("orders")
+      .select("active_stage")
+      .whereNot("active_stage", exclusion)
+      .count("* as count")
+      .groupBy("active_stage");
+
+    const result: Record<string, number> = {};
+    for (const row of rows) {
+      result[row.active_stage] = Number(row.count);
+    }
+    return result;
   },
 };

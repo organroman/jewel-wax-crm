@@ -1,10 +1,12 @@
-import { Order } from "@/types/order.types";
+import { Order, PaginatedOrdersResult } from "@/types/order.types";
 import { PaginatedResult } from "@/types/shared.types";
 import apiService from "../api-service";
 
 export const orderService = {
   getAll: async (query: string) => {
-    return await apiService.get<PaginatedResult<Order>>(`orders?${query}`);
+    return await apiService.get<PaginatedOrdersResult<Order>>(
+      `orders?${query}`
+    );
   },
 
   toggleFavorite: async (orderId: number) => {
@@ -14,6 +16,8 @@ export const orderService = {
     );
   },
   toggleImportant: async (orderId: number, isImportant: boolean) => {
-    return apiService.patch<Order>(`orders/${orderId}/important`, {isImportant});
+    return apiService.patch<Order>(`orders/${orderId}/important`, {
+      isImportant,
+    });
   },
 };

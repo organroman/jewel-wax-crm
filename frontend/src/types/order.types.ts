@@ -3,6 +3,7 @@ import {
   ORDER_STAGE_STATUS,
   PAYMENT_STATUS,
 } from "@/constants/enums.constants";
+import { PaginatedResult } from "./shared.types";
 
 export type OrderCustomer = {
   id: number;
@@ -41,5 +42,9 @@ export interface Order {
   is_favorite: boolean;
   is_important: boolean;
   processing_days: number;
-  notes: string
+  notes: string;
+}
+
+export interface PaginatedOrdersResult<T> extends PaginatedResult<T> {
+  stage_counts: Record<string, number>;
 }

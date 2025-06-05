@@ -22,7 +22,6 @@ import {
 
 import { translateFilterGroups } from "@/lib/translate-constant-labels";
 
-
 const OrdersClient = () => {
   const { t } = useTranslation();
   const router = useRouter();
@@ -54,12 +53,13 @@ const OrdersClient = () => {
     enabled: ready,
   });
 
-  const { data: orders = [], total = 0 } = data ?? {};
+  const { data: orders = [], total = 0, stage_counts } = data ?? {};
 
   const userRole: string = "super_admin"; // TODO: replace with actual logic
 
   const hiddenColumns = userRole === "modeller" ? ["customer"] : [];
   const ordersColumns = getOrdersColumns(t, hiddenColumns);
+
 
   if (error) {
     return <p>{ERROR_MESSAGES.SOMETHING_WENT_WRONG}</p>;
@@ -67,7 +67,7 @@ const OrdersClient = () => {
 
   return (
     <div className="h-full flex flex-col">
-      <TabsFilter param="active_stage" options={tabsOptions} />
+      <TabsFilter param="active_stage" options={tabsOptions} counts={stage_counts} />
       <Separator className="bg-ui-border h-0.5 data-[orientation=horizontal]:h-0.5" />
       <Toolbar
         sortOptions={sortOptions}

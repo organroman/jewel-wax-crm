@@ -19,7 +19,6 @@ router.post(
   "/:id/favorite",
   verifyToken,
   checkPermission("ORDERS", "UPDATE"),
-  validateBody(toggleIsImportantSchema),
   OrderController.toggleFavorite
 );
 

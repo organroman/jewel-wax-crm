@@ -4,7 +4,7 @@ import {
   PAYMENT_STATUS,
 } from "../constants/enums";
 import { PersonRole } from "./person.types";
-import { GetAllOptions } from "./shared.types";
+import { GetAllOptions, PaginatedResult } from "./shared.types";
 
 export type PaymentStatus = (typeof PAYMENT_STATUS)[number];
 
@@ -59,6 +59,9 @@ export interface OrderBase {
   is_favorite: boolean;
   is_important: boolean;
   processing_days: number | null;
+  modeller_id: number;
+  miller_id: number;
+  printer_id: number;
 }
 
 export interface Order {
@@ -80,8 +83,12 @@ export interface Order {
 
 export interface GetAllOrdersOptions
   extends GetAllOptions<{
-    is_important?: boolean;
+    active_stage?: Stage;
   }> {
   user_id: number;
   user_role: PersonRole;
+}
+
+export interface PaginatedOrdersResult<T> extends PaginatedResult<T> {
+  stage_counts: Record<string, number>;
 }
