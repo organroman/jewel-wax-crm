@@ -21,14 +21,20 @@ import {
   ORDER_STAGES,
   STATIC_ORDER_FILTERS,
 } from "@/constants/orders.constants";
-import { getColumnVisibilityByRole } from "@/constants/permissions.constants";
+import {
+  getColumnVisibilityByRole,
+  PERMISSIONS,
+} from "@/constants/permissions.constants";
 
 import { translateFilterGroups } from "@/lib/translate-constant-labels";
+import { hasPermission } from "@/lib/utils";
 
 const OrdersClient = ({ userRole }: { userRole: PersonRoleValue }) => {
   const { t } = useTranslation();
   const router = useRouter();
   const searchParams = useSearchParams();
+
+  const permission = hasPermission(PERMISSIONS.ORDERS.CREATE, userRole);
 
   const sortFields = useEnumStore((s) => s.getByType("order_sort_fields"));
 
@@ -48,7 +54,7 @@ const OrdersClient = ({ userRole }: { userRole: PersonRoleValue }) => {
       : [{ ...ORDER_STAGES[0], label: t(`order.tabs.${ORDER_STAGES[0].key}`) }];
 
   const filters = translateFilterGroups(
-    STATIC_ORDER_FILTERS,
+    STATIC_ORDER_FILTERS.filter((f) => f.permission.includes(userRole)),
     t,
     "order.filters"
   );
@@ -86,11 +92,8 @@ const OrdersClient = ({ userRole }: { userRole: PersonRoleValue }) => {
         addLabel={t("order.add_order")}
         filterPlaceholder={t("placeholders.filters")}
         filterOptions={filters}
-        onAdd={
-          userRole === "super_admin"
-            ? () => router.push("orders/new")
-            : undefined
-        }
+        showFilterButton={filters.length > 0}
+        onAdd={permission ? () => router.push("orders/new") : undefined}
       />
       <div className="flex-1 overflow-hidden flex flex-col mt-4">
         <DataTable

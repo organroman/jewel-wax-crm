@@ -28,9 +28,9 @@ export const PERMISSIONS: PermissionMap = {
   },
   ORDERS: {
     VIEW: ["super_admin", "miller", "modeller"],
-    CREATE: ["super_admin", "miller", "modeller"],
+    CREATE: ["super_admin", "miller"],
     UPDATE: ["super_admin", "miller", "modeller"],
-    DELETE: ["super_admin", "miller", "modeller"],
+    DELETE: ["super_admin"],
   },
   FINANCE: {
     VIEW: ["super_admin", "miller", "modeller"],

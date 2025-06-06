@@ -15,6 +15,7 @@ export const STATIC_ORDER_FILTERS = [
     param: "payment_status",
     key: "payment_status",
     options: mapToOptions(PAYMENT_STATUS),
+    permission: "super_admin",
   },
 ];
 
