@@ -170,7 +170,7 @@ export const getOrdersColumns = (
               PAYMENT_STATUS_COLORS[row.original.payment_status || "unpaid"]
             )}
           >
-            {row.original.payment_status}
+            {t(`order.filters.options.${row.original.payment_status}`)}
           </span>
         );
       },
