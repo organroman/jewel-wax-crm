@@ -28,7 +28,7 @@ export const PAYMENT_STATUS_COLORS = {
 
 export const STAGE_COLORS = {
   new: "text-accent-olive bg-accent-lime",
-  modeling: "text-accent-lavender bg-accent-blue",
+  modeling: "text-accent-blue bg-accent-lavender",
   milling: "bg-accent-grey text-black",
   printing: "text-accent-peach bg-accent-yellow",
   delivery: "bg-accent-pink text-accent-red",

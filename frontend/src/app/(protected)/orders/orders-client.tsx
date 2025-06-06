@@ -1,5 +1,7 @@
 "use client";
-import { useRouter } from "next/navigation";
+import { PersonRoleValue } from "@/types/person.types";
+
+import { useRouter, useSearchParams } from "next/navigation";
 import { useTranslation } from "react-i18next";
 
 import { useOrder } from "@/api/orders/use-order";
@@ -19,12 +21,14 @@ import {
   ORDER_STAGES,
   STATIC_ORDER_FILTERS,
 } from "@/constants/orders.constants";
+import { getColumnVisibilityByRole } from "@/constants/permissions.constants";
 
 import { translateFilterGroups } from "@/lib/translate-constant-labels";
 
-const OrdersClient = () => {
+const OrdersClient = ({ userRole }: { userRole: PersonRoleValue }) => {
   const { t } = useTranslation();
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   const sortFields = useEnumStore((s) => s.getByType("order_sort_fields"));
 
@@ -33,12 +37,15 @@ const OrdersClient = () => {
     label: t(`order.sorting.${opt.value}`),
   }));
 
-  const tabsOptions = [
-    ...ORDER_STAGES.map((order) => ({
-      ...order,
-      label: t(`order.tabs.${order.key}`),
-    })),
-  ];
+  const tabsOptions =
+    userRole === "super_admin"
+      ? [
+          ...ORDER_STAGES.map((order) => ({
+            ...order,
+            label: t(`order.tabs.${order.key}`),
+          })),
+        ]
+      : [{ ...ORDER_STAGES[0], label: t(`order.tabs.${ORDER_STAGES[0].key}`) }];
 
   const filters = translateFilterGroups(
     STATIC_ORDER_FILTERS,
@@ -55,11 +62,11 @@ const OrdersClient = () => {
 
   const { data: orders = [], total = 0, stage_counts } = data ?? {};
 
-  const userRole: string = "super_admin"; // TODO: replace with actual logic
-
-  const hiddenColumns = userRole === "modeller" ? ["customer"] : [];
-  const ordersColumns = getOrdersColumns(t, hiddenColumns);
-
+  const ordersColumns = getOrdersColumns(t, userRole);
+  const columnVisibility = getColumnVisibilityByRole(
+    userRole,
+    searchParams.toString()
+  );
 
   if (error) {
     return <p>{ERROR_MESSAGES.SOMETHING_WENT_WRONG}</p>;
@@ -67,7 +74,11 @@ const OrdersClient = () => {
 
   return (
     <div className="h-full flex flex-col">
-      <TabsFilter param="active_stage" options={tabsOptions} counts={stage_counts} />
+      <TabsFilter
+        param="active_stage"
+        options={tabsOptions}
+        counts={stage_counts}
+      />
       <Separator className="bg-ui-border h-0.5 data-[orientation=horizontal]:h-0.5" />
       <Toolbar
         sortOptions={sortOptions}
@@ -75,7 +86,11 @@ const OrdersClient = () => {
         addLabel={t("order.add_order")}
         filterPlaceholder={t("placeholders.filters")}
         filterOptions={filters}
-        onAdd={() => router.push("orders/new")}
+        onAdd={
+          userRole === "super_admin"
+            ? () => router.push("orders/new")
+            : undefined
+        }
       />
       <div className="flex-1 overflow-hidden flex flex-col mt-4">
         <DataTable
@@ -85,6 +100,7 @@ const OrdersClient = () => {
           totalItems={total}
           currentLimit={limit}
           currentPage={page}
+          columnVisibility={columnVisibility}
           onPageChange={(newPage) => setParam("page", newPage)}
         />
       </div>

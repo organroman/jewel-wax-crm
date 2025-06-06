@@ -10,9 +10,11 @@ import { cn } from "@/lib/utils";
 const OrderImportant = ({
   orderId,
   is_important,
+  disabled,
 }: {
   orderId: number;
   is_important: boolean;
+  disabled: boolean;
 }) => {
   const queryClient = useQueryClient();
   const { t } = useTranslation();
@@ -25,8 +27,9 @@ const OrderImportant = ({
   return (
     <Button
       variant="ghost"
-      className="has-[>svg]:p-1.5 hover:bg-transparent"
+      className="has-[>svg]:p-1.5 hover:bg-transparent disabled:opacity-100"
       onClick={() => toggleImportantMutation.mutate(!is_important)}
+      disabled={disabled}
     >
       <CircleAlertIcon
         className={cn(

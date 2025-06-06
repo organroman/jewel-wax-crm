@@ -1,4 +1,5 @@
 import { PermissionMap } from "@/types/permission.types";
+import { PersonRoleValue } from "@/types/person.types";
 
 export const PERMISSIONS: PermissionMap = {
   PERSONS: {
@@ -50,3 +51,35 @@ export const PERMISSIONS: PermissionMap = {
     DELETE: ["super_admin", "miller", "modeller"],
   },
 } as const;
+
+export const getColumnVisibilityByRole = (
+  role: PersonRoleValue,
+  query: string
+) => {
+  const includesModeling = query.includes("modeling");
+  const includesMilling = query.includes("milling");
+  const includesPrinting = query.includes("printing");
+
+  return {
+    is_favorite: true,
+    is_important: true,
+    created_at: true,
+    number: true,
+    image: true,
+    name: true,
+    customer: role === "super_admin",
+    modeller: includesModeling,
+    miller: includesMilling,
+    printer: includesPrinting,
+    amount: role === "super_admin",
+    modeling_cost: role === "modeller",
+    payment_status: role === "super_admin",
+    active_stage: role === "super_admin",
+    active_stage_status: role === "super_admin",
+    specific_stage: role === "modeller" || role === "miller",
+    specific_stage_status: role === "modeller" || role === "miller",
+    processing_days: role === "super_admin",
+    notes: role === "super_admin",
+    actions: true,
+  };
+};

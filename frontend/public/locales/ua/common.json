@@ -31,7 +31,9 @@
     "payment_status": "Статус оплати",
     "number": "Номер",
     "customer": "Замовник",
-    "done": "Виконано"
+    "done": "Виконано",
+    "modeller": "Модельєр",
+    "miller": "Фрезерувальник"
   },
   "labels": {
     "main": "$t(dictionary.main)",
@@ -76,9 +78,9 @@
     "roles": {
       "all": "Всі контрагенти",
       "super_admin": "Супер Адмін",
-      "modeller": "Модельєр",
-      "miller": "Фрезерувальник",
-      "client": "Замовник",
+      "modeller": "$t(dictionary.modeller)",
+      "miller": "$t(dictionary.miller)",
+      "client": "$t(dictionary.customer)",
       "print": "3D друк"
     },
     "table_headers": {
@@ -226,7 +228,11 @@
       "photo": "$t(dictionary.photo)",
       "name": "Назва завдання",
       "customer": "$t(dictionary.customer)",
+      "modeller": "$t(dictionary.modeller)",
+      "miller": "$t(dictionary.miller)",
+      "printer": "Друкар",
       "amount": "Сума, ₴",
+      "modeling_cost": "Сума модел., ₴",
       "payment_status": "$t(dictionary.payment_status)",
       "stage": "Етап",
       "stage_status": "Готовність",

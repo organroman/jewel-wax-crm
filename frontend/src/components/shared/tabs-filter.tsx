@@ -27,7 +27,6 @@ const TabsFilter = ({ param, options, counts }: TabsFilterProps) => {
     }
     router.push(`?${params.toString()}`);
   };
-  console.log(counts);
 
   return (
     <Tabs
@@ -38,7 +37,6 @@ const TabsFilter = ({ param, options, counts }: TabsFilterProps) => {
     >
       <TabsList className="w-full overflow-x-auto justify-start gap-6 border-none  bg-transparent px-1 ">
         {options.map(({ value, label }) => {
-          console.log(counts?.[value]);
           return (
             <TabsTrigger
               key={value}

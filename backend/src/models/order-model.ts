@@ -12,6 +12,8 @@ import {
 
 import db from "../db/db";
 import { paginateQuery } from "../utils/pagination";
+import { PersonRole } from "../types/person.types";
+import { getVisibleFieldsForRoleAndContext } from "../utils/helpers";
 
 export const OrderModel = {
   async getAll({
@@ -24,14 +26,10 @@ export const OrderModel = {
     user_id,
     user_role,
   }: GetAllOrdersOptions): Promise<PaginatedResult<OrderBase>> {
-    const baseQuery = db<Order>("orders")
-      .select(
-        "orders.*",
-        db.raw(
-          `CASE WHEN order_favorites.person_id IS NOT NULL THEN true ELSE false END as is_favorite`
-        )
-      )
-      .leftJoin("order_favorites", function () {
+    const visibleFields = getVisibleFieldsForRoleAndContext(user_role);
+
+    const baseQuery = db("orders").modify((qb) => {
+      qb.leftJoin("order_favorites", function () {
         this.on("order_favorites.order_id", "=", "orders.id").andOn(
           "order_favorites.person_id",
           "=",
@@ -39,23 +37,73 @@ export const OrderModel = {
         );
       });
 
-    if (user_role === "modeller") {
-      baseQuery.where("modeller_id", user_id);
+      qb.select(
+        db.raw(
+          `CASE WHEN order_favorites.person_id IS NOT NULL THEN true ELSE false END as is_favorite`
+        )
+      );
+
+      qb.leftJoin(
+        db.raw(`LATERAL (
+            SELECT *
+            FROM order_media
+            WHERE order_media.order_id = orders.id
+            ORDER BY created_at ASC
+            LIMIT 1
+          ) as media`),
+        db.raw("true")
+      );
+      qb.select("media");
+
+      if (user_role === "super_admin") {
+        qb.leftJoin(
+          db.raw(`LATERAL (
+            SELECT status
+            FROM order_stage_statuses
+            WHERE order_stage_statuses.order_id = orders.id
+              AND order_stage_statuses.stage = orders.active_stage::order_stage
+            ORDER BY created_at DESC
+            LIMIT 1
+          ) as stage_statuses`),
+          db.raw("true")
+        );
+        qb.select("stage_statuses.status as active_stage_status");
+      }
+
+      // Join people
+      const joins = ["customer", "modeller", "miller", "printer"];
+      joins.forEach((role) => {
+        if (visibleFields.includes(`${role}_id`)) {
+          qb.leftJoin(
+            `persons as ${role}s`,
+            `${role}s.id`,
+            `orders.${role}_id`
+          ).select(
+            `${role}s.id as ${role}_id`,
+            `${role}s.first_name as ${role}_first_name`,
+            `${role}s.last_name as ${role}_last_name`,
+            `${role}s.patronymic as ${role}_patronymic`
+          );
+        }
+      });
+
+      visibleFields.forEach((field) => {
+        qb.select(`orders.${field}`);
+      });
+
+      if (user_role === "modeller") qb.where("modeller_id", user_id);
+      if (user_role === "miller") qb.where("miller_id", user_id);
+    });
+
+    if (filters?.active_stage) {
+      baseQuery.where("active_stage", filters.active_stage);
     }
 
-    //todo: filters by payment_status
+    if (search) {
+      baseQuery.whereILike("orders.name", `%${search}%`);
+    }
 
-    if (filters?.active_stage)
-      baseQuery.where("active_stage", filters.active_stage);
-
-    //todo: search
-    const paginated = await paginateQuery<OrderBase>(baseQuery, {
-      page,
-      limit,
-      order,
-      sortBy,
-    });
-    return paginated;
+    return paginateQuery(baseQuery, { page, limit, sortBy, order });
   },
 
   async getOrderStageStatus({
@@ -75,6 +123,43 @@ export const OrderModel = {
     if (!orderStage) return null;
 
     return orderStage.status;
+  },
+  async getOrderStagesForOrders(orderIds: number[], role: string) {
+    const query = db("order_stage_statuses").whereIn("order_id", orderIds);
+
+    if (role === "modeller") query.andWhere("stage", "modeling");
+    else if (role === "miller") query.andWhere("stage", "milling");
+
+    const rows = await query.orderBy("created_at", "desc");
+
+    // Group by order_id
+    return rows.reduce((acc, row) => {
+      if (!acc[row.order_id]) acc[row.order_id] = [];
+      acc[row.order_id].push(row);
+      return acc;
+    }, {} as Record<number, any[]>);
+  },
+
+  async getOrderStageStatuses({
+    orderId,
+    role,
+  }: {
+    orderId: number;
+    role: PersonRole;
+  }) {
+    const baseQuery = db<OrderStage>("order_stage_statuses")
+      .select("*")
+      .where("order_id", orderId);
+
+    if (role === "modeller") {
+      baseQuery.where("stage", "modeling");
+    }
+
+    if (role === "miller") {
+      baseQuery.where("stage", "milling");
+    }
+
+    return await baseQuery;
   },
   async getOrderImages({
     orderId,

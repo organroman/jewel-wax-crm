@@ -1,3 +1,6 @@
+import { Order } from "../types/orders.types";
+import { PersonRole } from "../types/person.types";
+
 export const formatLabel = (value: string): string => {
   return value
     .split("_")
@@ -29,15 +32,48 @@ export function parseSortParams<T extends readonly string[]>(
 }
 
 export function getFullName(
-  firstName: string,
-  lastName: string,
-  surname: string | undefined
-) {
-  let fullname = lastName + " " + firstName;
+  first?: string,
+  last?: string,
+  patronymic?: string
+): string {
+  console.log(first, last);
+  return [first, patronymic, last].filter(Boolean).join(" ");
+}
 
-  if (surname) {
-    fullname = fullname + " " + surname;
-  }
+export function formatPerson(row: any, prefix: string) {
+  const id = row[`${prefix}_id`];
+  if (!id) return null;
+  return {
+    id,
+    fullname: getFullName(
+      row[`${prefix}_last_name`],
+      row[`${prefix}_first_name`],
+      row[`${prefix}_patronymic`]
+    ),
+  };
+}
 
-  return fullname;
+export function getVisibleFieldsForRoleAndContext(role: PersonRole): string[] {
+  return [
+    "id",
+    "number",
+    "name",
+    "created_at",
+    "is_important",
+    ...(role === "super_admin"
+      ? [
+          "customer_id",
+          "miller_id",
+          "printer_id",
+          "modeller_id",
+          "amount",
+          "payment_status",
+          "active_stage",
+          "processing_days",
+          "notes",
+        ]
+      : []),
+    ...(role === "modeller" ? ["modeller_id", "modeling_cost"] : []),
+    ...(role === "miller" ? ["miller_id", "milling_cost"] : []),
+  ];
 }

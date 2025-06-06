@@ -47,6 +47,13 @@ export interface OrderStage {
   updated_at: Date;
 }
 
+type ShortPerson = {
+  id: number;
+  first_name?: string;
+  last_name?: string;
+  patronymic?: string;
+};
+
 export interface OrderBase {
   id: number;
   created_at: Date;
@@ -62,6 +69,58 @@ export interface OrderBase {
   modeller_id: number;
   miller_id: number;
   printer_id: number;
+  milling_cost?: number;
+  modelling_cost?: number;
+  active_stage_status?: StageStatus | null;
+  media: OrderMedia | null;
+  modeller_first_name?: string;
+  modeller_last_name?: string;
+  modeller_patronymic?: string;
+  miller_first_name?: string;
+  miller_last_name?: string;
+  miller_patronymic?: string;
+  customer_first_name?: string;
+  customer_last_name?: string;
+  customer_patronymic?: string;
+  printer_first_name?: string;
+  printer_last_name?: string;
+  printer_patronymic?: string;
+}
+
+export interface UserOrder {
+  id: number;
+  created_at: Date;
+  updated_at: Date;
+  number: number;
+  name: string;
+  modeller?: OrderCustomer | null;
+  miller?: OrderCustomer | null;
+  media: OrderMedia | null;
+  modelling_cost?: number;
+  milling_cost?: number;
+  is_favorite: boolean;
+  is_important: boolean;
+  stages: OrderStage[];
+}
+export interface AdminOrder {
+  id: number;
+  created_at: Date;
+  updated_at: Date;
+  number: number;
+  name: string;
+  customer: OrderCustomer | null;
+  modeller: OrderCustomer | null;
+  miller: OrderCustomer | null;
+  printer: OrderCustomer | null;
+  media: OrderMedia | null;
+  amount: number;
+  payment_status?: PaymentStatus;
+  active_stage: Stage;
+  active_stage_status: StageStatus | null;
+  is_favorite: boolean;
+  is_important: boolean;
+  processing_days: number;
+  stages: OrderStage[];
 }
 
 export interface Order {
@@ -70,15 +129,19 @@ export interface Order {
   updated_at: Date;
   number: number;
   name: string;
-  customer: OrderCustomer;
+  customer: OrderCustomer | null;
+  modeller: OrderCustomer | null;
+  miller: OrderCustomer | null;
+  printer: OrderCustomer | null;
   media: OrderMedia[];
   amount: number;
   payment_status?: PaymentStatus;
   active_stage: Stage;
-  stage_status: StageStatus | null;
+  active_stage_status: StageStatus | null;
   is_favorite: boolean;
   is_important: boolean;
   processing_days: number;
+  stages: OrderStage[];
 }
 
 export interface GetAllOrdersOptions

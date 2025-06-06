@@ -1,15 +1,12 @@
-import { PaginatedResult } from "../types/shared.types";
 import {
+  AdminOrder,
   GetAllOrdersOptions,
   Order,
-  OrderBase,
   PaginatedOrdersResult,
+  UserOrder,
 } from "../types/orders.types";
 import { OrderModel } from "../models/order-model";
-import { PersonModel } from "../models/person-model";
-import AppError from "../utils/AppError";
-import ERROR_MESSAGES from "../constants/error-messages";
-import { getFullName } from "../utils/helpers";
+import { formatPerson } from "../utils/helpers";
 
 export const OrderService = {
   async getAll({
@@ -21,7 +18,9 @@ export const OrderService = {
     order,
     user_id,
     user_role,
-  }: GetAllOrdersOptions): Promise<PaginatedOrdersResult<Order>> {
+  }: GetAllOrdersOptions): Promise<
+    PaginatedOrdersResult<AdminOrder | UserOrder>
+  > {
     const [orders, stageCounts] = await Promise.all([
       OrderModel.getAll({
         page,
@@ -36,43 +35,82 @@ export const OrderService = {
       OrderModel.countByStage("done"),
     ]);
 
-    const enriched = await Promise.all(
-      orders.data.map(async (order: OrderBase) => {
-        const image = await OrderModel.getOrderImage({ orderId: order.id });
-
-        const safeCustomer = await PersonModel.findById(order.customer_id);
-        if (!safeCustomer)
-          throw new AppError(ERROR_MESSAGES.ITEM_NOT_FOUND, 404);
-
-        const { id, last_name, first_name, patronymic } = safeCustomer;
-
-        let days = 0;
-
-        if (!order.processing_days) {
-          days = Math.ceil(
-            (Date.now() - new Date(order.created_at).getTime()) /
-              (1000 * 60 * 60 * 24)
-          );
-        } else days = order.processing_days;
-
-        const activeStageStatus = await OrderModel.getOrderStageStatus({
-          orderId: order.id,
-          stage: order.active_stage,
-        });
-
-        return {
-          ...order,
-          media: image,
-          customer: {
-            id: id,
-            fullname: getFullName(first_name, last_name, patronymic),
-          },
-          processing_days: days,
-          stage_status: activeStageStatus,
-        };
-      })
+    const stageMap = await OrderModel.getOrderStagesForOrders(
+      orders.data.map((o) => o.id),
+      user_role
     );
 
+    console.log(orders.data);
+
+    const enriched = orders.data.map((order) => {
+      const base = {
+        ...order,
+        stages: stageMap[order.id] ?? [],
+        processing_days:
+          order.processing_days ??
+          Math.ceil(
+            (Date.now() - new Date(order.created_at).getTime()) /
+              (1000 * 60 * 60 * 24)
+          ),
+        customer: formatPerson(order, "customer"),
+        modeller: formatPerson(order, "modeller"),
+        miller: formatPerson(order, "miller"),
+        printer: formatPerson(order, "printer"),
+      };
+
+      if (user_role === "modeller") {
+        const {
+          customer_id,
+          miller_id,
+          printer_id,
+          modeller_id,
+          modeller_first_name,
+          modeller_last_name,
+          modeller_patronymic,
+          ...cleaned
+        } = base;
+        return cleaned;
+      }
+
+      if (user_role === "miller") {
+        const {
+          customer_id,
+          modeller_id,
+          printer_id,
+          miller_id,
+          miller_first_name,
+          miller_last_name,
+          miller_patronymic,
+          ...cleaned
+        } = base;
+        return cleaned;
+      }
+
+      if (user_role === "super_admin") {
+        const {
+          modeller_id,
+          miller_id,
+          printer_id,
+          customer_id,
+          miller_first_name,
+          miller_last_name,
+          miller_patronymic,
+          modeller_first_name,
+          modeller_last_name,
+          modeller_patronymic,
+          customer_first_name,
+          customer_last_name,
+          customer_patronymic,
+          printer_first_name,
+          printer_last_name,
+          printer_patronymic,
+          ...cleaned
+        } = base;
+        return cleaned;
+      }
+
+      return base;
+    });
     return {
       ...orders,
       data: enriched,

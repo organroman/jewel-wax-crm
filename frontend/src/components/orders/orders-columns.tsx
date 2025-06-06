@@ -17,11 +17,14 @@ import {
   STAGE_STATUS_COLORS,
 } from "@/constants/orders.constants";
 import OrderImportant from "./order-important";
+import { PersonRoleValue } from "@/types/person.types";
 
 export const getOrdersColumns = (
   t: (key: string) => string,
-  hiddenColumns: string[] = []
+  userRole: PersonRoleValue
 ): ColumnDef<Order>[] => {
+  const isAdmin = userRole === "super_admin";
+
   const columns: ColumnDef<Order>[] = [
     {
       id: "is_favorite",
@@ -57,6 +60,7 @@ export const getOrdersColumns = (
         <OrderImportant
           orderId={row.original.id}
           is_important={row.original.is_important}
+          disabled={!isAdmin}
         />
       ),
       size: 36,
@@ -85,7 +89,7 @@ export const getOrdersColumns = (
       id: "image",
       header: t("order.table_headers.photo"),
       cell: ({ row }) => {
-        const imageUrl = row.original.media[0]?.url || "";
+        const imageUrl = row.original.media?.url || "";
 
         return imageUrl ? (
           <Image src={imageUrl} width={30} height={30} alt="img" />
@@ -114,12 +118,47 @@ export const getOrdersColumns = (
       size: 100,
     },
     {
+      id: "modeller",
+      header: t("order.table_headers.modeller"),
+      cell: ({ row }) => {
+        const modeller = row.original.modeller?.fullname;
+        return modeller;
+      },
+      size: 100,
+    },
+    {
+      id: "miller",
+      header: t("order.table_headers.miller"),
+      cell: ({ row }) => {
+        const miller = row.original.miller?.fullname;
+        return miller;
+      },
+      size: 100,
+    },
+    {
+      id: "printer",
+      header: t("order.table_headers.printer"),
+      cell: ({ row }) => {
+        const printer = row.original.printer?.fullname;
+        return printer;
+      },
+      size: 100,
+    },
+    {
       id: "amount",
       header: t("order.table_headers.amount"),
       size: 50,
       cell: ({ row }) => {
         return row.original.amount;
       },
+    },
+    {
+      id: "modeling_cost",
+      header: t("order.table_headers.modeling_cost"),
+      cell: ({ row }) => {
+        return row.original.modeling_cost;
+      },
+      size: 50,
     },
     {
       id: "payment_status",
@@ -137,14 +176,14 @@ export const getOrdersColumns = (
       },
     },
     {
-      id: "stage",
+      id: "active_stage",
       header: t("order.table_headers.stage"),
       cell: ({ row }) => {
         const stage = row.original.active_stage;
         return (
           <Badge
             className={cn(
-              "text-xs rounded-2xl font-medium",
+              "text-[10px] rounded-2xl font-medium",
               STAGE_COLORS[stage]
             )}
           >
@@ -155,10 +194,10 @@ export const getOrdersColumns = (
       size: 50,
     },
     {
-      id: "stage_status",
+      id: "active_stage_status",
       header: t("order.table_headers.stage_status"),
       cell: ({ row }) => {
-        const status = row.original.stage_status;
+        const status = row.original.active_stage_status;
         if (status)
           return (
             <span
@@ -173,6 +212,45 @@ export const getOrdersColumns = (
       },
       size: 40,
     },
+    // specific stage for miller/ modeller
+    {
+      id: "specific_stage",
+      header: t("order.table_headers.stage"),
+      cell: ({ row }) => {
+        const stage = row.original.stages[0].stage;
+        return (
+          <Badge
+            className={cn(
+              "text-[10px] rounded-2xl font-medium",
+              STAGE_COLORS[stage]
+            )}
+          >
+            {t(`order.stages.${stage}`)}
+          </Badge>
+        );
+      },
+      size: 50,
+    },
+    {
+      id: "specific_stage_status",
+      header: t("order.table_headers.stage_status"),
+      cell: ({ row }) => {
+        const status = row.original.stages[0].status;
+        if (status)
+          return (
+            <span
+              className={cn(
+                "font-medium",
+                status && STAGE_STATUS_COLORS[status]
+              )}
+            >
+              {t(`order.stage_statuses.${status}`)}
+            </span>
+          );
+      },
+      size: 40,
+    },
+
     {
       id: "processing_days",
       header: t("order.table_headers.days"),
@@ -204,5 +282,5 @@ export const getOrdersColumns = (
       size: 24,
     },
   ];
-  return columns.filter((col) => !hiddenColumns.includes(col.id ? col.id : ""));
+  return columns;
 };
