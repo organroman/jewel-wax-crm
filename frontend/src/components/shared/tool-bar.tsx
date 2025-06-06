@@ -37,19 +37,21 @@ const Toolbar = ({
   const allParams = Object.fromEntries(searchParams.entries());
 
   const filterParams = Object.entries(allParams)
-    .map(([k, v]) => ({
-      param: k,
-      value: v,
-    }))
-    .map((o) => {
-      const filterOption = filterOptions.find((opt) => opt.param === o.param);
-      const filterOptionLabel = filterOption?.options?.find(
-        (opt) => o.value === opt.value.toString()
-      );
-      return {
-        ...o,
-        label: filterOptionLabel?.label,
-      };
+    .flatMap(([param, rawValue]) => {
+      const values = rawValue.split(",");
+      const filterOption = filterOptions.find((opt) => opt.param === param);
+
+      return values.map((value) => {
+        const filterOptionLabel = filterOption?.options?.find(
+          (opt) => value === opt.value.toString()
+        );
+
+        return {
+          param,
+          value,
+          label: filterOptionLabel?.label,
+        };
+      });
     })
     .filter(({ param }) => filterOptions.some((o) => o.param === param));
 

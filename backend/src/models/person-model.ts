@@ -28,23 +28,23 @@ export const PersonModel = {
 
     if (filters?.role) baseQuery.where("role", filters.role);
     if (typeof filters?.is_active === "boolean")
-      baseQuery.where("is_active", filters.is_active);
+      baseQuery.whereIn("is_active", filters.is_active);
 
-    if (filters?.city)
+    if (filters?.city && filters.city.length > 0)
       baseQuery.where((qb) => {
         qb.whereIn("id", function () {
           this.select("person_id")
             .from("person_locations")
-            .where("city_id", filters.city);
+            .whereIn("city_id", filters.city as number[]);
         });
       });
 
-    if (filters?.country)
+    if (filters?.country && filters.country.length > 0)
       baseQuery.where((qb) => {
         qb.whereIn("id", function () {
           this.select("person_id")
             .from("person_locations")
-            .where("country_id", filters.country);
+            .whereIn("country_id", filters.country as number[]);
         });
       });
 

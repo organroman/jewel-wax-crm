@@ -5,7 +5,7 @@ import { Request, Response, NextFunction } from "express";
 
 import { ContactService } from "../services/contact-service";
 
-import { parseSortParams } from "../utils/helpers";
+import { parseSortParams } from "../utils/parse-query-params";
 import AppError from "../utils/AppError";
 
 import { CONTACT_SORT_FIELDS } from "../constants/sortable-fields";

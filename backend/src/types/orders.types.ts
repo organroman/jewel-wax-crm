@@ -147,6 +147,7 @@ export interface Order {
 export interface GetAllOrdersOptions
   extends GetAllOptions<{
     active_stage?: Stage;
+    payment_status?: PaymentStatus[];
   }> {
   user_id: number;
   user_role: PersonRole;

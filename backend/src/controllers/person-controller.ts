@@ -5,7 +5,11 @@ import { Request, Response, NextFunction } from "express";
 import { PersonService } from "../services/person-service";
 
 import AppError from "../utils/AppError";
-import { parseSortParams } from "../utils/helpers";
+import {
+  parseBooleanArray,
+  parseNumberArray,
+  parseSortParams,
+} from "../utils/parse-query-params";
 import ERROR_MESSAGES from "../constants/error-messages";
 import { PERSON_SORT_FIELDS } from "../constants/sortable-fields";
 
@@ -13,6 +17,10 @@ export const PersonController = {
   async getAllPersons(req: Request, res: Response, next: NextFunction) {
     try {
       const { page, limit, role, city, country, is_active, search } = req.query;
+
+      const parsedCity = parseNumberArray(city);
+      const parsedCountry = parseNumberArray(country);
+      const parsedIsActive = parseBooleanArray(is_active);
 
       const { sortBy, order } = parseSortParams(
         req.query.sortBy as string,
@@ -26,14 +34,9 @@ export const PersonController = {
         limit: Number(limit),
         filters: {
           role: role as string,
-          city: Number(city) as number,
-          country: Number(country) as number,
-          is_active:
-            is_active === "true"
-              ? true
-              : is_active === "false"
-              ? false
-              : undefined,
+          city: parsedCity as number[],
+          country: parsedCountry as number[],
+          is_active: parsedIsActive as boolean[],
         },
         search: search as string,
         sortBy: sortBy as string,

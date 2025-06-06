@@ -1,16 +1,17 @@
 import { SortOrder } from "../types/shared.types";
 import { PersonRole } from "../types/person.types";
+import { PaymentStatus, Stage } from "../types/orders.types";
 
 import { Request, Response, NextFunction } from "express";
 
 import { OrderService } from "../services/order-service";
 
 import { ORDERS_SORT_FIELDS } from "../constants/sortable-fields";
+
 import ERROR_MESSAGES from "../constants/error-messages";
 
 import AppError from "../utils/AppError";
-import { parseSortParams } from "../utils/helpers";
-import { Stage } from "../types/orders.types";
+import { parseStringArray, parseSortParams } from "../utils/parse-query-params";
 
 export const OrderController = {
   async getAllOrders(req: Request, res: Response, next: NextFunction) {
@@ -21,22 +22,24 @@ export const OrderController = {
       if (!userId || !userRole)
         throw new AppError(ERROR_MESSAGES.UNAUTHORIZED, 401);
 
-      const { page, limit, search, active_stage } = req.query;
+      const { page, limit, search, active_stage, payment_status } = req.query;
+
+      const parsedPaymentStatus =
+        parseStringArray<PaymentStatus>(payment_status);
 
       const { sortBy, order } = parseSortParams(
         req.query.sortBy as string,
         req.query.order as string,
         ORDERS_SORT_FIELDS,
         "created_at"
-      )
-
-      
+      );
 
       const orders = await OrderService.getAll({
         page: Number(page),
         limit: Number(limit),
         filters: {
           active_stage: active_stage as Stage,
+          payment_status: parsedPaymentStatus,
         },
         search: search as string,
         sortBy: sortBy as string,

@@ -52,3 +52,10 @@ export const ORDER_STAGE_STATUS = [
   "clarification",
   "done",
 ] as const;
+
+export const INVOICE_STATUS = [
+  "pending",
+  "paid",
+  "cancelled",
+  "failed",
+] as const;

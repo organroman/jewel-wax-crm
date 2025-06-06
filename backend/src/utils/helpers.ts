@@ -13,30 +13,13 @@ export function stripPassword<T extends { password?: string }>(person: T) {
   return safe;
 }
 
-export type SortDirection = "asc" | "desc";
 
-export function parseSortParams<T extends readonly string[]>(
-  sortByRaw: string | undefined,
-  orderRaw: string | undefined,
-  allowedFields: T,
-  defaultSortBy: T[number]
-): { sortBy: T[number]; order: SortDirection } {
-  const sortBy = allowedFields.includes(sortByRaw as T[number])
-    ? (sortByRaw as T[number])
-    : defaultSortBy;
-
-  const order: SortDirection =
-    orderRaw === "asc" || orderRaw === "desc" ? orderRaw : "desc";
-
-  return { sortBy, order };
-}
 
 export function getFullName(
   first?: string,
   last?: string,
   patronymic?: string
 ): string {
-  console.log(first, last);
   return [first, patronymic, last].filter(Boolean).join(" ");
 }
 

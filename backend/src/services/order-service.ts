@@ -40,8 +40,6 @@ export const OrderService = {
       user_role
     );
 
-    console.log(orders.data);
-
     const enriched = orders.data.map((order) => {
       const base = {
         ...order,

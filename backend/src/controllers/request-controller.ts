@@ -5,7 +5,7 @@ import { Request, Response, NextFunction } from "express";
 
 import { RequestService } from "../services/request-service";
 
-import { parseSortParams } from "../utils/helpers";
+import { parseSortParams } from "../utils/parse-query-params";
 import AppError from "../utils/AppError";
 import { REQUEST_SORT_FIELDS } from "../constants/sortable-fields";
 import ERROR_MESSAGES from "../constants/error-messages";

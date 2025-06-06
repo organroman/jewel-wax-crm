@@ -99,6 +99,10 @@ export const OrderModel = {
       baseQuery.where("active_stage", filters.active_stage);
     }
 
+    if (filters?.payment_status && filters.payment_status.length > 0) {
+      baseQuery.whereIn("payment_status", filters.payment_status);
+    }
+
     if (search) {
       baseQuery.whereILike("orders.name", `%${search}%`);
     }
