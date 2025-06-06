@@ -236,4 +236,30 @@ export const OrderModel = {
     }
     return result;
   },
+  async updateOrderPaymentStatus(orderId: number) {
+    const order = await db("orders").where("id", orderId).first();
+    const invoices = await db("invoices").where("order_id", orderId);
+
+    const totalPaid = invoices.reduce(
+      (sum, invoice) => sum + Number(invoice.amount_paid || 0),
+      0
+    );
+    const orderAmount = Number(order.amount || 0);
+
+    let status: "unpaid" | "partly_paid" | "paid" = "unpaid";
+
+    if (totalPaid === 0) status = "unpaid";
+    else if (totalPaid >= orderAmount) status = "paid";
+    else status = "partly_paid";
+
+    await db("orders").update({ payment_status: status }).where("id", orderId);
+  },
+
+  //TODO: DELETE
+  async syncAllOrderPaymentStatuses() {
+    const orders = await db("orders").select("id");
+    for (const order of orders) {
+      await OrderModel.updateOrderPaymentStatus(order.id);
+    }
+  },
 };
