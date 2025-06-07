@@ -44,3 +44,19 @@ export const STAGE_STATUS_COLORS = {
   clarification: "text-accent-peach",
   done: "text-brand-default",
 };
+
+export const ORDER_CARD_TABS_LIST = [
+  {
+    value: "general_info",
+    key: "general_info",
+  },
+  {
+    key: "payments",
+    value: "payments",
+  },
+  {
+    key: "chat",
+    value: "chat",
+  },
+  { value: "new", key: "new" },
+];

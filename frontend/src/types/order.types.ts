@@ -42,6 +42,7 @@ export interface Order {
   id: number;
   created_at: Date;
   number: number;
+  description: string;
   name: string;
   customer: OrderPerson;
   modeller: OrderPerson | null;

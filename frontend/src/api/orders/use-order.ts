@@ -1,7 +1,8 @@
-import { QueryClient, useMutation, useQuery } from "@tanstack/react-query";
-import { orderService } from "./order-service";
-import { toast } from "sonner";
 import { Order } from "@/types/order.types";
+import { QueryClient, useMutation, useQuery } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { orderService } from "./order-service";
+
 
 export const useOrder = {
   getPaginatedOrders: ({
@@ -70,5 +71,35 @@ export const useOrder = {
       },
     });
     return { toggleImportantMutation: mutation };
+  },
+  getById: ({ id, enabled }: { id: number; enabled: boolean }) => {
+    return useQuery({
+      queryKey: ["orders", id],
+      queryFn: () => orderService.getById(Number(id)),
+      enabled,
+    });
+  },
+  delete: ({
+    queryClient,
+    handleSuccess,
+    t,
+  }: {
+    queryClient: QueryClient;
+    handleSuccess?: () => void;
+    t: (key: string) => string;
+  }) => {
+    const mutation = useMutation({
+      mutationFn: async (id: number) => orderService.delete(id),
+      onSuccess: () => {
+        toast.success(t("messages.success.order_deleted"));
+        handleSuccess && handleSuccess(),
+          queryClient.invalidateQueries({
+            queryKey: ["orders"],
+          });
+      },
+      onError: (error) => toast.error(error.message),
+    });
+
+    return { deleteOrderMutation: mutation };
   },
 };

@@ -1,7 +1,8 @@
 import { Order } from "@/types/order.types";
+import { PersonRoleValue } from "@/types/person.types";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { CircleAlertIcon, MoreHorizontalIcon, StarIcon } from "lucide-react";
+import { CircleAlertIcon, StarIcon } from "lucide-react";
 import dayjs from "dayjs";
 import Image from "next/image";
 
@@ -9,6 +10,8 @@ import { Button } from "../ui/button";
 import { Badge } from "../ui/badge";
 
 import OrderFavorite from "./order-favorite";
+import OrderImportant from "./order-important";
+import OrderActionsMenu from "./order-actions-menu";
 
 import { cn } from "@/lib/utils";
 import {
@@ -16,8 +19,6 @@ import {
   STAGE_COLORS,
   STAGE_STATUS_COLORS,
 } from "@/constants/orders.constants";
-import OrderImportant from "./order-important";
-import { PersonRoleValue } from "@/types/person.types";
 
 export const getOrdersColumns = (
   t: (key: string) => string,
@@ -273,11 +274,7 @@ export const getOrdersColumns = (
       id: "actions",
       header: t("order.table_headers.actions"),
       cell: ({ row }) => {
-        return (
-          // <Button>
-          <MoreHorizontalIcon />
-          // </Button>
-        );
+        return <OrderActionsMenu id={row.original.id} />;
       },
       size: 24,
     },

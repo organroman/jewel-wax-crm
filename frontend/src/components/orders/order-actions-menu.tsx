@@ -1,24 +1,24 @@
 import { useQueryClient } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 import { GalleryVerticalEndIcon, Loader } from "lucide-react";
 import Link from "next/link";
 
-import { usePerson } from "@/api/persons/use-person";
-
 import { useDialog } from "@/hooks/use-dialog";
 
-import { DropdownMenuItem } from "@components/ui/dropdown-menu";
-import { Dialog } from "@components/ui/dialog";
+import { useOrder } from "@/api/orders/use-order";
 
-import ActionsMenu from "@components/shared/actions-menu";
-import Modal from "@components/shared/modal/modal";
-import PersonInfo from "./person-info";
-import { useTranslation } from "react-i18next";
+import ActionsMenu from "../shared/actions-menu";
+import Modal from "../shared/modal/modal";
 import CustomTabs from "../shared/custom-tabs";
-import { Separator } from "../ui/separator";
-import { translateKeyValueList } from "@/lib/translate-constant-labels";
-import { PERSON_CARD_TABS_LIST } from "@/constants/persons.constants";
 
-const PersonActionsMenu = ({ id }: { id: number }) => {
+import { Dialog } from "../ui/dialog";
+import { DropdownMenuItem } from "../ui/dropdown-menu";
+import { Separator } from "../ui/separator";
+
+import { translateKeyValueList } from "@/lib/translate-constant-labels";
+import { ORDER_CARD_TABS_LIST } from "@/constants/orders.constants";
+
+const OrderActionsMenu = ({ id }: { id: number }) => {
   const queryClient = useQueryClient();
   const { t } = useTranslation();
 
@@ -31,56 +31,56 @@ const PersonActionsMenu = ({ id }: { id: number }) => {
     closeDialog: closeDeleteDialog,
   } = useDialog();
 
-  const { deletePersonMutation } = usePerson.deletePerson({
+  const { deleteOrderMutation } = useOrder.delete({
     queryClient,
     handleSuccess: closeDeleteDialog,
     t,
   });
 
   const {
-    data: person,
+    data: order,
     isLoading,
     error,
-  } = usePerson.getPersonById({ id, enabled: isViewDialogOpen });
+  } = useOrder.getById({ id, enabled: isViewDialogOpen });
 
   const tabs = translateKeyValueList(
-    PERSON_CARD_TABS_LIST,
+    ORDER_CARD_TABS_LIST,
     t,
-    "person.tabs"
+    "order.tabs"
   ).filter((t) => t.value === "general_info");
 
   return (
     <>
       <ActionsMenu
-        editItemLink={`persons/${id}`}
-        viewItemTitle={t("person.actions.view")}
+        editItemLink={`orders/${id}`}
+        viewItemTitle={t("order.actions.view")}
         viewItemDialogOpen={() => setIsViewDialogOpen(true)}
-        editItemTitle={t("person.actions.edit")}
+        editItemTitle={t("order.actions.edit")}
         deleteItemDialogOpen={() => setIsDeleteDialogOpen(true)}
-        deleteItemTitle={t("person.actions.delete")}
-        extraItems={
-          <DropdownMenuItem asChild>
-            <Link href={`persons/${id}?tab=orders_history`}>
-              <GalleryVerticalEndIcon className="text-text-regular" />{" "}
-              {t("person.actions.orders_history")}
-            </Link>
-          </DropdownMenuItem>
-        }
+        deleteItemTitle={t("order.actions.delete")}
+        // extraItems={
+        //   <DropdownMenuItem asChild>
+        //     <Link href={`persons/${id}?tab=orders_history`}>
+        //       <GalleryVerticalEndIcon className="text-text-regular" />{" "}
+        //       {t("person.actions.orders_history")}
+        //     </Link>
+        //   </DropdownMenuItem>
+        // }
       />
       <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
         <Modal
           destructive
           header={{
-            title: t("person.modal.delete.title"),
-            descriptionFirst: t("person.modal.delete.desc_first"),
-            descriptionSecond: t("person.modal.delete.desc_second"),
+            title: t("order.modal.delete.title"),
+            descriptionFirst: t("order.modal.delete.desc_first"),
+            descriptionSecond: t("order.modal.delete.desc_second"),
           }}
           footer={{
             buttonActionTitleContinuous: t("buttons.delete.delete_continuous"),
             buttonActionTitle: t("buttons.delete"),
             actionId: id,
-            isPending: deletePersonMutation.isPending,
-            action: () => deletePersonMutation.mutate(id),
+            isPending: deleteOrderMutation.isPending,
+            action: () => deleteOrderMutation.mutate(id),
           }}
         />
       </Dialog>
@@ -88,7 +88,7 @@ const PersonActionsMenu = ({ id }: { id: number }) => {
         <Modal>
           {error && <p>{error.message}</p>}
           {isLoading && <Loader />}
-          {!isLoading && person && (
+          {!isLoading && order && (
             <>
               <CustomTabs
                 isModal={true}
@@ -96,7 +96,7 @@ const PersonActionsMenu = ({ id }: { id: number }) => {
                 selectedTab={tabs[0]}
               />
               <Separator className="bg-ui-border h-0.5 data-[orientation=horizontal]:h-0.5" />
-              <PersonInfo person={person} />
+              {/* TODO:  ORDER VIEW */}
             </>
           )}
         </Modal>
@@ -105,4 +105,4 @@ const PersonActionsMenu = ({ id }: { id: number }) => {
   );
 };
 
-export default PersonActionsMenu;
+export default OrderActionsMenu;

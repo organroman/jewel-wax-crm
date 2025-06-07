@@ -1,5 +1,5 @@
 import { Order, PaginatedOrdersResult } from "@/types/order.types";
-import { PaginatedResult } from "@/types/shared.types";
+
 import apiService from "../api-service";
 
 export const orderService = {
@@ -20,4 +20,9 @@ export const orderService = {
       isImportant,
     });
   },
+  getById: (id: number) => {
+    return apiService.get<Order>(`orders/${id}`);
+  },
+
+  delete: (id: number) => apiService.delete(`orders/${id}`),
 };
