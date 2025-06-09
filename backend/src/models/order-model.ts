@@ -1,19 +1,26 @@
 import { PaginatedResult } from "../types/shared.types";
 import {
+  AdminOrder,
   GetAllOrdersOptions,
   Order,
   OrderBase,
+  OrderDelivery,
   OrderFavorite,
   OrderMedia,
   OrderStage,
   Stage,
   StageStatus,
+  UserOrder,
 } from "../types/orders.types";
 
 import db from "../db/db";
 import { paginateQuery } from "../utils/pagination";
 import { PersonRole } from "../types/person.types";
-import { getVisibleFieldsForRoleAndContext } from "../utils/helpers";
+import {
+  getFullName,
+  getVisibleFieldsForRoleAndContext,
+} from "../utils/helpers";
+import { PersonModel } from "./person-model";
 
 export const OrderModel = {
   async getAll({
@@ -127,6 +134,114 @@ export const OrderModel = {
     if (!orderStage) return null;
 
     return orderStage.status;
+  },
+  async getById({
+    orderId,
+    role,
+    userId,
+  }: {
+    orderId: number;
+    role: PersonRole;
+    userId: number;
+  }): Promise<AdminOrder | UserOrder | null> {
+    const [order] = await db<OrderBase>("orders").where("id", orderId);
+
+    if (!order) return null;
+
+    const favorite = await db<OrderFavorite>("order_favorites")
+      .where("person_id", userId)
+      .andWhere("order_id", orderId)
+      .first();
+
+    const is_favorite = favorite ? true : false;
+    const media = await this.getOrderImages({ orderId });
+
+    const customerFull = await PersonModel.findById(order.customer_id);
+
+    const customer = customerFull
+      ? {
+          id: customerFull?.id,
+          fullname: getFullName(
+            customerFull?.first_name,
+            customerFull?.last_name,
+            customerFull?.patronymic
+          ),
+        }
+      : null;
+
+    const modellerFull = await PersonModel.findById(order.modeller_id);
+
+    const modeller = modellerFull
+      ? {
+          id: modellerFull?.id,
+          fullname: getFullName(
+            modellerFull?.first_name,
+            modellerFull?.last_name,
+            modellerFull?.patronymic
+          ),
+        }
+      : null;
+
+    const millerFull = await PersonModel.findById(order.miller_id);
+
+    const miller = millerFull
+      ? {
+          id: millerFull?.id,
+          fullname: getFullName(
+            millerFull?.first_name,
+            millerFull?.last_name,
+            millerFull?.patronymic
+          ),
+        }
+      : null;
+
+    const printerFull = await PersonModel.findById(order.printer_id);
+
+    const printer = printerFull
+      ? {
+          id: printerFull?.id,
+          fullname: getFullName(
+            printerFull?.first_name,
+            printerFull?.last_name,
+            printerFull?.patronymic
+          ),
+        }
+      : null;
+
+    const stages = await db<OrderStage>("order_stage_statuses").where(
+      "order_id",
+      orderId
+    );
+
+    const activeStageStatus = stages.find(
+      (stage) => stage.stage === order.active_stage
+    )?.status;
+
+    const [delivery] = await db<OrderDelivery>("order_deliveries").where(
+      "order_id",
+      orderId
+    );
+
+    const enrichedOrder = {
+      ...order,
+      is_favorite,
+      media,
+      customer: customer,
+      modeller,
+      miller,
+      printer,
+      stages,
+      active_stage_status: activeStageStatus || null,
+      processing_days:
+        order.processing_days ??
+        Math.ceil(
+          (Date.now() - new Date(order.created_at).getTime()) /
+            (1000 * 60 * 60 * 24)
+        ),
+      delivery,
+    };
+
+    return enrichedOrder;
   },
   async getOrderStagesForOrders(orderIds: number[], role: string) {
     const query = db("order_stage_statuses").whereIn("order_id", orderIds);

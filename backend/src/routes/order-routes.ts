@@ -15,6 +15,13 @@ router.get(
   OrderController.getAllOrders
 );
 
+router.get(
+  "/:id",
+  verifyToken,
+  checkPermission("ORDERS", "VIEW"),
+  OrderController.getById
+);
+
 router.post(
   "/:id/favorite",
   verifyToken,

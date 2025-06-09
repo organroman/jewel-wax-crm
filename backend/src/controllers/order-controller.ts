@@ -88,4 +88,28 @@ export const OrderController = {
       next(error);
     }
   },
+  async getById(req: Request, res: Response, next: NextFunction) {
+    try {
+      const orderId = req.params.id;
+      const userId = req.user?.id;
+      const userRole = req.user?.role;
+
+      if (!userId || !userRole)
+        throw new AppError(ERROR_MESSAGES.UNAUTHORIZED, 401);
+
+      const order = await OrderService.getById({
+        orderId: Number(orderId),
+        role: userRole as PersonRole,
+        userId: Number(userId),
+      });
+
+      if (!order) {
+        throw new AppError(ERROR_MESSAGES.ITEM_NOT_FOUND, 404);
+      }
+
+      res.status(200).json(order);
+    } catch (error) {
+      next(error);
+    }
+  },
 };

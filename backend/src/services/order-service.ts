@@ -5,6 +5,8 @@ import {
   PaginatedOrdersResult,
   UserOrder,
 } from "../types/orders.types";
+import { PersonRole } from "../types/person.types";
+
 import { OrderModel } from "../models/order-model";
 import { formatPerson } from "../utils/helpers";
 
@@ -133,5 +135,17 @@ export const OrderService = {
     isImportant: boolean;
   }): Promise<Order> {
     return await OrderModel.toggleImportant({ orderId, isImportant });
+  },
+
+  async getById({
+    userId,
+    orderId,
+    role,
+  }: {
+    userId: number;
+    orderId: number;
+    role: PersonRole;
+  }) {
+    return await OrderModel.getById({ orderId, userId, role });
   },
 };

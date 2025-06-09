@@ -47,12 +47,14 @@ export interface OrderStage {
   updated_at: Date;
 }
 
-type ShortPerson = {
+export interface OrderDelivery {
   id: number;
-  first_name?: string;
-  last_name?: string;
-  patronymic?: string;
-};
+  order_id: number;
+  delivery_address_id: number;
+  delivery_service: string;
+  cost: number;
+  declaration_number: number;
+}
 
 export interface OrderBase {
   id: number;
@@ -112,7 +114,7 @@ export interface AdminOrder {
   modeller: OrderCustomer | null;
   miller: OrderCustomer | null;
   printer: OrderCustomer | null;
-  media: OrderMedia | null;
+  media: OrderMedia[];
   amount: number;
   payment_status?: PaymentStatus;
   active_stage: Stage;
@@ -121,6 +123,7 @@ export interface AdminOrder {
   is_important: boolean;
   processing_days: number;
   stages: OrderStage[];
+  delivery?: OrderDelivery;
 }
 
 export interface Order {
