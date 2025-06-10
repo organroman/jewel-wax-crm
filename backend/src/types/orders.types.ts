@@ -50,10 +50,11 @@ export interface OrderStage {
 export interface OrderDelivery {
   id: number;
   order_id: number;
-  delivery_address_id: number;
+  delivery_address_id?: number;
   delivery_service: string;
   cost: number;
   declaration_number: number;
+  address_line: string;
 }
 
 export interface OrderBase {
@@ -87,6 +88,7 @@ export interface OrderBase {
   printer_first_name?: string;
   printer_last_name?: string;
   printer_patronymic?: string;
+  created_by: number;
 }
 
 export interface UserOrder {
@@ -124,6 +126,7 @@ export interface AdminOrder {
   processing_days: number;
   stages: OrderStage[];
   delivery?: OrderDelivery;
+  createdBy: string;
 }
 
 export interface Order {

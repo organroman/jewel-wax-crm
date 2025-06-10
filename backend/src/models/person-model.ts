@@ -10,7 +10,7 @@ import { PaginatedResult } from "../types/shared.types";
 
 import db from "../db/db";
 
-import { stripPassword } from "../utils/helpers";
+import { getFullName, stripPassword } from "../utils/helpers";
 import AppError from "../utils/AppError";
 import { paginateQuery } from "../utils/pagination";
 import ERROR_MESSAGES from "../constants/error-messages";
@@ -366,5 +366,42 @@ export const PersonModel = {
 
   async findByPhone(phoneNumbers: string[]) {
     return db("phones").whereIn("number", phoneNumbers).first();
+  },
+
+  async getModellers(): Promise<{ id: number; fullname: string }[]> {
+    const modellersFull = await db<Person>("persons")
+      .where("role", "modeller")
+      .select("id", "first_name", "last_name", "patronymic");
+
+    const modellers = modellersFull.map((item) => ({
+      id: item.id,
+      fullname: getFullName(item.first_name, item.last_name, item.patronymic),
+    }));
+
+    return modellers;
+  },
+  async getMillers(): Promise<{ id: number; fullname: string }[]> {
+    const millersFull = await db<Person>("persons")
+      .where("role", "miller")
+      .select("id", "first_name", "last_name", "patronymic");
+
+    const millers = millersFull.map((item) => ({
+      id: item.id,
+      fullname: getFullName(item.first_name, item.last_name, item.patronymic),
+    }));
+
+    return millers;
+  },
+  async getPrinters(): Promise<{ id: number; fullname: string }[]> {
+    const printersFull = await db<Person>("persons")
+      .where("role", "print")
+      .select("id", "first_name", "last_name", "patronymic");
+
+    const printers = printersFull.map((item) => ({
+      id: item.id,
+      fullname: getFullName(item.first_name, item.last_name, item.patronymic),
+    }));
+
+    return printers;
   },
 };

@@ -113,4 +113,14 @@ export const PersonService = {
 
     return result;
   },
+
+  async getModellers(): Promise<{ id: number; fullname: string }[]> {
+    return await PersonModel.getModellers();
+  },
+  async getMillers(): Promise<{ id: number; fullname: string }[]> {
+    return await PersonModel.getMillers();
+  },
+  async getPrinters(): Promise<{ id: number; fullname: string }[]> {
+    return await PersonModel.getPrinters();
+  },
 };

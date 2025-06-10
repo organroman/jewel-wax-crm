@@ -18,6 +18,27 @@ router.get(
 );
 
 router.get(
+  "/modellers",
+  verifyToken,
+  checkPermission("ORDERS", "VIEW"),
+  PersonController.getModellers
+);
+
+router.get(
+  "/millers",
+  verifyToken,
+  checkPermission("ORDERS", "VIEW"),
+  PersonController.getMillers
+);
+
+router.get(
+  "/printers",
+  verifyToken,
+  checkPermission("ORDERS", "VIEW"),
+  PersonController.getPrinters
+);
+
+router.get(
   "/:id",
   verifyToken,
   checkPermission("PERSONS", "VIEW"),

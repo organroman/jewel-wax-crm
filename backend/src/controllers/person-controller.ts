@@ -104,4 +104,32 @@ export const PersonController = {
       next(error);
     }
   },
+
+  async getModellers(req: Request, res: Response, next: NextFunction) {
+    try {
+      const modellers = await PersonService.getModellers();
+
+      res.status(200).json(modellers);
+    } catch (error) {
+      next(error);
+    }
+  },
+  async getMillers(req: Request, res: Response, next: NextFunction) {
+    try {
+      const millers = await PersonService.getMillers();
+
+      res.status(200).json(millers);
+    } catch (error) {
+      next(error);
+    }
+  },
+  async getPrinters(req: Request, res: Response, next: NextFunction) {
+    try {
+      const printers = await PersonService.getPrinters();
+
+      res.status(200).json(printers);
+    } catch (error) {
+      next(error);
+    }
+  },
 };

@@ -166,6 +166,10 @@ export const OrderModel = {
             customerFull?.last_name,
             customerFull?.patronymic
           ),
+          delivery_addresses: customerFull.delivery_addresses?.map((i) => ({
+            delivery_address_id: i.id,
+            address_line: i.address_line,
+          })),
         }
       : null;
 
@@ -208,6 +212,13 @@ export const OrderModel = {
         }
       : null;
 
+    const createdByFull = await PersonModel.findById(order.created_by);
+    const createdBy = getFullName(
+      createdByFull?.first_name,
+      createdByFull?.last_name,
+      createdByFull?.patronymic
+    );
+
     const stages = await db<OrderStage>("order_stage_statuses").where(
       "order_id",
       orderId
@@ -217,13 +228,25 @@ export const OrderModel = {
       (stage) => stage.stage === order.active_stage
     )?.status;
 
-    const [delivery] = await db<OrderDelivery>("order_deliveries").where(
-      "order_id",
-      orderId
-    );
+    const [delivery] = await db<OrderDelivery>("order_deliveries")
+      .where("order_id", orderId)
+      .join(
+        "delivery_addresses",
+        "delivery_addresses.id",
+        "order_deliveries.delivery_address_id"
+      );
+
+    const {
+      customer_id,
+      miller_id,
+      printer_id,
+      created_by,
+      modeller_id,
+      ...rest
+    } = order;
 
     const enrichedOrder = {
-      ...order,
+      ...rest,
       is_favorite,
       media,
       customer: customer,
@@ -239,6 +262,7 @@ export const OrderModel = {
             (1000 * 60 * 60 * 24)
         ),
       delivery,
+      createdBy,
     };
 
     return enrichedOrder;
