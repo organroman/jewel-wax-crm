@@ -24,4 +24,20 @@ export const personService = {
   },
 
   delete: (id: number) => apiService.delete(`persons/${id}`),
+
+  getModellers: async () => {
+    return await apiService.get<{ id: number; fullname: string }[]>(
+      "persons/modellers"
+    );
+  },
+  getMillers: async () => {
+    return await apiService.get<{ id: number; fullname: string }[]>(
+      "persons/millers"
+    );
+  },
+  getPrinters: async () => {
+    return await apiService.get<{ id: number; fullname: string }[]>(
+      "persons/printers"
+    );
+  },
 };

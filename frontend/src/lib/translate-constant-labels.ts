@@ -1,4 +1,4 @@
-import { FilterGroup, FilterOption, TabOption } from "@/types/shared.types";
+import { FilterGroup } from "@/types/shared.types";
 
 type WithKey = { key: string };
 

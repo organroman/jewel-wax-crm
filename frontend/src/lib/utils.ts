@@ -127,8 +127,6 @@ export const getRoleAndUserFromToken = (token: PersonRoleValue) => {
   return role;
 };
 
-export const mapToOptions = <T extends readonly string[]>(arr: T) =>
-  arr.map((item) => ({ key: item, value: item }));
 
 export const hasPermission = (permission: string[], role: string) => {
   return permission.includes(role);

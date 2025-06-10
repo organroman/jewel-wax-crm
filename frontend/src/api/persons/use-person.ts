@@ -98,4 +98,23 @@ export const usePerson = {
     });
     return { deletePersonMutation: mutation };
   },
+
+  getModellers: () => {
+    return useQuery({
+      queryKey: ["modellers"],
+      queryFn: () => personService.getModellers(),
+    });
+  },
+  getMillers: () => {
+    return useQuery({
+      queryKey: ["millers"],
+      queryFn: () => personService.getMillers(),
+    });
+  },
+  getPrinters: () => {
+    return useQuery({
+      queryKey: ["printers"],
+      queryFn: () => personService.getPrinters(),
+    });
+  },
 };
