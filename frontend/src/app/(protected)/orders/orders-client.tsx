@@ -46,12 +46,17 @@ const OrdersClient = ({ userRole }: { userRole: PersonRoleValue }) => {
   const tabsOptions =
     userRole === "super_admin"
       ? [
-          ...ORDER_STAGES.map((order) => ({
-            ...order,
-            label: t(`order.tabs.${order.key}`),
+          ...ORDER_STAGES.map((stage) => ({
+            value: stage,
+            label: t(`order.active_stages.${stage}`),
           })),
         ]
-      : [{ ...ORDER_STAGES[0], label: t(`order.tabs.${ORDER_STAGES[0].key}`) }];
+      : [
+          {
+            value: ORDER_STAGES[0],
+            label: t(`order.tabs.${ORDER_STAGES[0]}`),
+          },
+        ];
 
   const filters = translateFilterGroups(
     STATIC_ORDER_FILTERS.filter((f) => f.permission.includes(userRole)),

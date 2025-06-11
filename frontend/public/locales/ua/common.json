@@ -31,9 +31,17 @@
     "payment_status": "Статус оплати",
     "number": "Номер",
     "customer": "Замовник",
+    "modeling": "Моделювання",
+    "milling": "Фрезерування",
+    "printing": "3D друк",
+    "delivery": "Доставка",
     "done": "Виконано",
     "modeller": "Модельєр",
-    "miller": "Фрезерувальник"
+    "miller": "Фрезерувальник",
+    "order": "Замовлення",
+    "comment": "Коментар",
+    "stage": "Етап",
+    "stage_status": "Готовність"
   },
   "labels": {
     "main": "$t(dictionary.main)",
@@ -45,7 +53,9 @@
     "filters": "Фільтри",
     "choose": "Оберіть",
     "email": "Введіть email",
-    "password": "Введіть пароль"
+    "password": "Введіть пароль",
+    "not_appointed": "Не призначено",
+    "not_chosen": "Не обрано"
   },
   "buttons": {
     "cancel": "Скасувати",
@@ -196,15 +206,16 @@
     "update_person": "Контрагента оновлено"
   },
   "order": {
+    "order": "$t(dictionary.order)",
     "add_order": "Додати завдання",
-    "tabs": {
+    "active_stages": {
       "all": "Всі замовлення",
       "new": "Нові",
-      "modeling": "Моделювання",
-      "milling": "Фрезерування",
-      "printing": "3D друк",
-      "delivery": "Доставка",
-      "done": "Виконано"
+      "modeling": "$t(dictionary.modeling)",
+      "milling": "$t(dictionary.milling)",
+      "printing": "$t(dictionary.printing)",
+      "delivery": "$t(dictionary.delivery)",
+      "done": "$t(dictionary.done)"
     },
     "placeholders": {
       "search": "Пошук замовлення"
@@ -234,18 +245,18 @@
       "amount": "Сума, ₴",
       "modeling_cost": "Сума модел., ₴",
       "payment_status": "$t(dictionary.payment_status)",
-      "stage": "Етап",
-      "stage_status": "Готовність",
+      "stage": "$t(dictionary.stage)",
+      "stage_status": "$t(dictionary.stage_status)",
       "days": "Дн.",
-      "comment": "Коментар",
+      "comment": "$t(dictionary.comment",
       "actions": "$t(dictionary.actions)"
     },
     "stages": {
       "new": "Нове",
-      "milling": "Фрезерування",
-      "modeling": "Моделювання",
-      "delivery": "Доставка",
-      "printing": "3D друк",
+      "modeling": "$t(dictionary.modeling)",
+      "milling": "$t(dictionary.milling)",
+      "printing": "$t(dictionary.printing)",
+      "delivery": "$t(dictionary.delivery)",
       "done": "$t(dictionary.done)"
     },
     "stage_statuses": {
@@ -255,6 +266,35 @@
       "clarification": "Уточнення",
       "negotiation": "Погодження",
       "done": "$t(dictionary.done)"
+    },
+    "tabs": {
+      "order": "$t(dictionary.order)",
+      "payments": "Оплати",
+      "chat": "Чат JW",
+      "new": "Нове замовлення"
+    },
+    "buttons": {
+      "create_invoice": "Сформувати рахунок",
+      "change_status": "Змінити статус"
+    },
+    "actions": {
+      "view": "Переглянути замовлення",
+      "edit": "Редагувати замовлення",
+      "delete": "Видалити замовлення"
+    },
+
+    "labels": {
+      "name": "Назва замовлення",
+      "desc": "Опис",
+      "days": "Днів у роботі",
+      "order": "$t(dictionary.order)",
+      "amount": "Сума замов.",
+      "created_by": "Ким створено",
+      "declaration_number": "ТТН",
+      "comment": "$t(dictionary.comment)",
+      "stage": "$t(dictionary.stage)",
+      "stage_status": "$t(dictionary.stage_status)",
+      "date": "$t(dictionary.date)"
     }
   },
 

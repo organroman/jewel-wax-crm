@@ -1,25 +1,16 @@
-import { mapToOptions } from "@/lib/utils";
-import {
-  ORDER_STAGE,
-  PAYMENT_STATUS,
-  ORDER_STAGE_STATUS,
-} from "./enums.constants";
 
-export const ORDER_STAGES = [
-  { key: "all", value: "all" },
-  ...mapToOptions(ORDER_STAGE),
-];
+import { ORDER_STAGE, PAYMENT_STATUS } from "./enums.constants";
+
+export const ORDER_STAGES = [...ORDER_STAGE, "all"];
 
 export const STATIC_ORDER_FILTERS = [
   {
     param: "payment_status",
     key: "payment_status",
-    options: mapToOptions(PAYMENT_STATUS),
+    options: PAYMENT_STATUS.map((ps) => ({ key: ps, value: ps })),
     permission: "super_admin",
   },
 ];
-
-export const STAGE_STATUS = mapToOptions(ORDER_STAGE_STATUS);
 
 export const PAYMENT_STATUS_COLORS = {
   paid: "text-brand-default",
@@ -37,7 +28,7 @@ export const STAGE_COLORS = {
 };
 
 export const STAGE_STATUS_COLORS = {
-  pending: "text-black",
+  pending: "text-text-regular",
   processed: "text-brand-default",
   in_process: "text-blue",
   negotiation: "text-accent-red",
@@ -47,8 +38,8 @@ export const STAGE_STATUS_COLORS = {
 
 export const ORDER_CARD_TABS_LIST = [
   {
-    value: "general_info",
-    key: "general_info",
+    value: "order",
+    key: "order",
   },
   {
     key: "payments",

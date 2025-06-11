@@ -45,10 +45,13 @@ export type FormInputProps<T extends FieldValues> = {
   label?: string;
   placeholder?: string;
   control: Control<T>;
-  fieldType?: "input" | "textarea";
+  fieldType?: "input" | "textarea" | "number";
   type?: string;
   rows?: number;
   required?: boolean;
+  labelPosition?: "top" | "left";
+  inputStyles?: string;
+  isFullWidth?: boolean;
 };
 
 export type Option<T> = {

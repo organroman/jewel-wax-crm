@@ -1,7 +1,7 @@
-import React from "react";
+import OrderClient from "./order-client";
 
-const OrderPage = ({ params }: { params: { orderId: string } }) => {
-  return <div>OrderPage {params.orderId}</div>;
+const OrderPage = ({ params }: { params: { id: string } }) => {
+  return <OrderClient id={Number(params.id)} />;
 };
 
 export default OrderPage;

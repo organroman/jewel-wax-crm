@@ -68,6 +68,7 @@ const FormCombobox = <T extends FieldValues, O>({
 
             return foundOption ? foundOption.label : placeholder;
           }
+
           return field.value?.label ?? placeholder;
         })();
 
@@ -75,7 +76,9 @@ const FormCombobox = <T extends FieldValues, O>({
           <FormItem className="flex flex-col lg:flex-row gap-0.5 lg:gap-2.5">
             {label && (
               <div className="flex items-start justify-between">
-                <FormLabel className="text-xs lg:text-sm lg:mt-1.5">{label}</FormLabel>
+                <FormLabel className="text-xs lg:text-sm lg:mt-1.5">
+                  {label}
+                </FormLabel>
                 {required && (
                   <Image
                     src="/img/star-required.svg"

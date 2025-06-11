@@ -65,6 +65,7 @@ const FormSelect = <T extends FieldValues, O>({
             >
               <FormControl>
                 <SelectTrigger
+                  size="sm"
                   className={cn(
                     "w-full lg:min-w-[240px] h-8 rounded-xs text-sm font-semibold focus-visible:ring-[1px]",
                     className

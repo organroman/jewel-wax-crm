@@ -4,11 +4,22 @@ import {
   PAYMENT_STATUS,
 } from "@/constants/enums.constants";
 import { PaginatedResult } from "./shared.types";
+import { DeliveryAddress } from "./person.types";
 
-export type OrderPerson = {
+export interface OrderPerson {
   id: number;
   fullname: string;
-};
+}
+
+export interface OrderCustomerDelivery {
+  delivery_address_id: number;
+  address_line: string;
+  declaration_number: number;
+}
+
+export interface OrderCustomer extends OrderPerson {
+  delivery_addresses: OrderCustomerDelivery[];
+}
 
 export interface OrderMedia {
   id: number;
@@ -33,10 +44,19 @@ export interface OrderStage {
   order_id: number;
   stage: Stage;
   status: StageStatus;
-  started_at: Date;
-  completed_at: Date;
-  created_at: Date;
-  updated_at: Date;
+  started_at: string;
+  completed_at: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface OrderDelivery {
+  id: number;
+  cost: number;
+  delivery_address_id: number;
+  address_line: string;
+  order_id: number;
+  declaration_number: number;
 }
 export interface Order {
   id: number;
@@ -44,13 +64,16 @@ export interface Order {
   number: number;
   description: string;
   name: string;
-  customer: OrderPerson;
+  customer: OrderCustomer;
   modeller: OrderPerson | null;
   miller: OrderPerson | null;
   printer: OrderPerson | null;
   media: OrderMedia | null;
   amount: number;
   modeling_cost: number;
+  milling_cost: number;
+  printing_cost: number;
+
   payment_status?: PaymentStatus;
   active_stage: Stage;
   active_stage_status?: StageStatus;
@@ -59,6 +82,8 @@ export interface Order {
   processing_days: number;
   notes: string;
   stages: OrderStage[];
+  createdBy: string;
+  delivery: OrderDelivery;
 }
 
 export interface PaginatedOrdersResult<T> extends PaginatedResult<T> {
