@@ -2,7 +2,6 @@ import { PaginatedResult } from "../types/shared.types";
 import {
   AdminOrder,
   GetAllOrdersOptions,
-  Order,
   OrderBase,
   OrderDelivery,
   OrderFavorite,
@@ -10,6 +9,7 @@ import {
   OrderStage,
   Stage,
   StageStatus,
+  UpdateOrderInput,
   UserOrder,
 } from "../types/orders.types";
 
@@ -166,14 +166,17 @@ export const OrderModel = {
             customerFull?.last_name,
             customerFull?.patronymic
           ),
-          delivery_addresses: customerFull.delivery_addresses?.map((i) => ({
-            delivery_address_id: i.id,
-            address_line: i.address_line,
-          })),
+          delivery_addresses: customerFull.delivery_addresses
+            ? customerFull.delivery_addresses?.map((i) => ({
+                delivery_address_id: i.id,
+                address_line: i.address_line,
+              }))
+            : [],
         }
       : null;
 
-    const modellerFull = await PersonModel.findById(order.modeller_id);
+    const modellerFull =
+      order.modeller_id && (await PersonModel.findById(order.modeller_id));
 
     const modeller = modellerFull
       ? {
@@ -186,7 +189,8 @@ export const OrderModel = {
         }
       : null;
 
-    const millerFull = await PersonModel.findById(order.miller_id);
+    const millerFull =
+      order.miller_id && (await PersonModel.findById(order.miller_id));
 
     const miller = millerFull
       ? {
@@ -199,7 +203,8 @@ export const OrderModel = {
         }
       : null;
 
-    const printerFull = await PersonModel.findById(order.printer_id);
+    const printerFull =
+      order.printer_id && (await PersonModel.findById(order.printer_id));
 
     const printer = printerFull
       ? {
@@ -358,11 +363,11 @@ export const OrderModel = {
   }: {
     orderId: number;
     isImportant: boolean;
-  }): Promise<Order> {
-    const [updatedOrder] = await db<Order>("orders")
+  }): Promise<AdminOrder> {
+    const [updatedOrder] = await db<AdminOrder>("orders")
       .where("id", orderId)
       .update({ is_important: isImportant, updated_at: new Date() })
-      .returning<Order[]>("*");
+      .returning<AdminOrder[]>("*");
 
     return updatedOrder;
   },
@@ -398,11 +403,82 @@ export const OrderModel = {
     await db("orders").update({ payment_status: status }).where("id", orderId);
   },
 
-  //TODO: DELETE
-  async syncAllOrderPaymentStatuses() {
-    const orders = await db("orders").select("id");
-    for (const order of orders) {
-      await OrderModel.updateOrderPaymentStatus(order.id);
+  async update(
+    orderId: number,
+    userId: number,
+    role: PersonRole,
+    data: UpdateOrderInput
+  ): Promise<AdminOrder | UserOrder | null> {
+    const {
+      customer,
+      created_by,
+      processing_days,
+      miller,
+      modeller,
+      printer,
+      stages,
+      delivery,
+      ...orderFields
+    } = data;
+
+    const isOrderCompleted =
+      stages?.find((stage) => stage.stage === "done")?.status === "done";
+
+    const [updatedOrder] = await db<OrderBase>("orders")
+      .where("id", orderId)
+      .update({
+        ...orderFields,
+        updated_at: new Date(),
+        customer_id: customer?.id,
+        created_by: userId,
+        miller_id: miller?.id ?? null,
+        modeller_id: modeller?.id ?? null,
+        printer_id: printer?.id ?? null,
+        processing_days: isOrderCompleted
+          ? Math.ceil(
+              (Date.now() - new Date(data.created_at).getTime()) /
+                (1000 * 60 * 60 * 24)
+            )
+          : null,
+      })
+      .returning("*");
+
+    if (!updatedOrder) {
+      return null;
     }
+
+    if (stages?.length) {
+      await Promise.all(
+        stages.map(async (s) => {
+          const isStageStarted =
+            !s.started_at &&
+            s.status &&
+            ["clarification", "in_process", "negotiation", "pending", "processed"].includes(s.status);
+    
+          const isStageCompleted = s.status === "done" && !s.completed_at;
+    
+          await db("order_stage_statuses")
+            .where("id", s.id)
+            .andWhere("stage", s.stage)
+            .update({
+              status: s.status,
+              updated_at: new Date(),
+              started_at: s.started_at ?? (isStageStarted ? new Date() : null),
+              completed_at: s.completed_at ?? (isStageCompleted ? new Date() : null),
+            });
+        })
+      );
+    }
+
+    if (delivery) {
+      await db("order_deliveries").where("order_id", orderId).update({
+        delivery_address_id: delivery.delivery_address_id,
+        cost: delivery.cost,
+        updated_at: new Date(),
+        declaration_number: delivery.declaration_number,
+      });
+    }
+
+    return await OrderModel.getById({ orderId, userId, role });
   },
 };

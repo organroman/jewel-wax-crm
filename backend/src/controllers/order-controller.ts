@@ -112,4 +112,24 @@ export const OrderController = {
       next(error);
     }
   },
+  async update(req: Request, res: Response, next: NextFunction) {
+    try {
+      const currentUserId = req.user?.id;
+      const currentUserRole = req.user?.role;
+
+      const updatedOrder = await OrderService.update({
+        role: currentUserRole as PersonRole,
+        userId: Number(currentUserId),
+        data: req.body,
+        orderId: Number(req.params.id),
+      });
+
+      if (!updatedOrder) {
+        throw new AppError(ERROR_MESSAGES.ITEM_NOT_FOUND, 404);
+      }
+      res.status(200).json(updatedOrder);
+    } catch (error) {
+      next(error);
+    }
+  },
 };

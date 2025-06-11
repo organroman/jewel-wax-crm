@@ -1,4 +1,3 @@
-import { Order } from "../types/orders.types";
 import { PersonRole } from "../types/person.types";
 
 export const formatLabel = (value: string): string => {

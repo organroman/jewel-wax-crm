@@ -4,7 +4,7 @@ import { validateBody } from "../middlewares/validation-middleware";
 import { checkPermission } from "../middlewares/permission-middleware";
 
 import { OrderController } from "../controllers/order-controller";
-import { toggleIsImportantSchema } from "../validators/order.validator";
+import { updateOrderSchema } from "../validators/order.validator";
 
 const router = Router();
 
@@ -34,6 +34,14 @@ router.patch(
   verifyToken,
   checkPermission("ORDERS", "UPDATE"),
   OrderController.toggleImportant
+);
+
+router.patch(
+  "/:id",
+  verifyToken,
+  checkPermission("ORDERS", "UPDATE"),
+  validateBody(updateOrderSchema),
+  OrderController.update
 );
 
 export default router;

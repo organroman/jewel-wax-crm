@@ -42,6 +42,7 @@ const OrderForm = ({ order }: OrderFormProps) => {
     const existing = order?.stages.find((s) => s.stage === stageKey);
     const statusKey = existing?.status ?? undefined;
     const statusOption = ORDER_STAGE_STATUS.find((s) => s === statusKey);
+    const pendingOption = ORDER_STAGE_STATUS.find((s) => s === "pending");
     return {
       id: existing?.id ?? undefined,
       order_id: existing?.order_id ?? undefined,
@@ -50,6 +51,11 @@ const OrderForm = ({ order }: OrderFormProps) => {
         ? {
             value: statusOption,
             label: t(`order.stage_statuses.${statusOption}`),
+          }
+        : stageKey === "new"
+        ? {
+            value: pendingOption,
+            label: t(`order.stage_statuses.${pendingOption}`),
           }
         : undefined,
       started_at: existing?.started_at ?? undefined,

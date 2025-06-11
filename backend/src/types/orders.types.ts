@@ -12,10 +12,19 @@ export type Stage = (typeof ORDER_STAGE)[number];
 
 export type StageStatus = (typeof ORDER_STAGE_STATUS)[number];
 
-export type OrderCustomer = {
+export interface OrderPerson {
   id: number;
   fullname: string;
+}
+
+export type CustomerDeliveryAddress = {
+  delivery_address_id?: number;
+  address_line: string;
 };
+
+export interface OrderCustomer extends OrderPerson {
+  delivery_addresses: CustomerDeliveryAddress[];
+}
 
 export interface OrderMedia {
   id: number;
@@ -69,11 +78,11 @@ export interface OrderBase {
   is_favorite: boolean;
   is_important: boolean;
   processing_days: number | null;
-  modeller_id: number;
-  miller_id: number;
-  printer_id: number;
+  modeller_id: number | null;
+  miller_id: number | null;
+  printer_id: number | null;
   milling_cost?: number;
-  modelling_cost?: number;
+  modeling_cost?: number;
   active_stage_status?: StageStatus | null;
   media: OrderMedia | null;
   modeller_first_name?: string;
@@ -97,8 +106,8 @@ export interface UserOrder {
   updated_at: Date;
   number: number;
   name: string;
-  modeller?: OrderCustomer | null;
-  miller?: OrderCustomer | null;
+  modeller?: OrderPerson | null;
+  miller?: OrderPerson | null;
   media: OrderMedia | null;
   modelling_cost?: number;
   milling_cost?: number;
@@ -113,9 +122,9 @@ export interface AdminOrder {
   number: number;
   name: string;
   customer: OrderCustomer | null;
-  modeller: OrderCustomer | null;
-  miller: OrderCustomer | null;
-  printer: OrderCustomer | null;
+  modeller: OrderPerson | null;
+  miller: OrderPerson | null;
+  printer: OrderPerson | null;
   media: OrderMedia[];
   amount: number;
   payment_status?: PaymentStatus;
@@ -127,29 +136,33 @@ export interface AdminOrder {
   stages: OrderStage[];
   delivery?: OrderDelivery;
   createdBy: string;
+  milling_cost?: number;
+  modeling_cost?: number;
+  printing_cost?: number;
 }
 
-export interface Order {
-  id: number;
-  created_at: Date;
-  updated_at: Date;
-  number: number;
+export interface CreateOrderInput {
+  customer: OrderPerson;
   name: string;
-  customer: OrderCustomer | null;
-  modeller: OrderCustomer | null;
-  miller: OrderCustomer | null;
-  printer: OrderCustomer | null;
-  media: OrderMedia[];
+  description?: string;
+  notes?: string;
+  created_by: number;
   amount: number;
-  payment_status?: PaymentStatus;
   active_stage: Stage;
-  active_stage_status: StageStatus | null;
-  is_favorite: boolean;
-  is_important: boolean;
-  processing_days: number;
+  processing_days?: number;
+  modeller?: OrderPerson;
+  modeling_cost?: number;
+  miller?: OrderPerson;
+  milling_cost?: number;
+  printer?: OrderPerson;
+  printing_cost?: number;
   stages: OrderStage[];
+  delivery: OrderDelivery;
 }
 
+export interface UpdateOrderInput extends Partial<CreateOrderInput> {
+  created_at: Date;
+}
 export interface GetAllOrdersOptions
   extends GetAllOptions<{
     active_stage?: Stage;

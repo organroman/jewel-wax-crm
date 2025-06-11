@@ -10,7 +10,8 @@ export const validateBody =
       schema.parse(req.body);
       next();
     } catch (error: any) {
-      const message = error.errors?.[0]?.message || ERROR_MESSAGES.INVALID_REQUEST;
+      const message =
+        error.errors?.[0]?.message || ERROR_MESSAGES.INVALID_REQUEST;
       next(new AppError(message, 400));
     }
   };

@@ -1,14 +1,17 @@
 import {
   AdminOrder,
   GetAllOrdersOptions,
-  Order,
   PaginatedOrdersResult,
+  UpdateOrderInput,
   UserOrder,
 } from "../types/orders.types";
 import { PersonRole } from "../types/person.types";
 
 import { OrderModel } from "../models/order-model";
+import { ActivityLogModel } from "../models/activity-log-model";
+
 import { formatPerson } from "../utils/helpers";
+import { LOG_ACTIONS, LOG_TARGETS } from "../constants/activity-log";
 
 export const OrderService = {
   async getAll({
@@ -133,7 +136,7 @@ export const OrderService = {
   }: {
     orderId: number;
     isImportant: boolean;
-  }): Promise<Order> {
+  }): Promise<AdminOrder> {
     return await OrderModel.toggleImportant({ orderId, isImportant });
   },
 
@@ -147,5 +150,30 @@ export const OrderService = {
     role: PersonRole;
   }) {
     return await OrderModel.getById({ orderId, userId, role });
+  },
+  async update({
+    userId,
+    orderId,
+    role,
+    data,
+  }: {
+    userId: number;
+    orderId: number;
+    role: PersonRole;
+    data: UpdateOrderInput;
+  }) {
+    const updatedOrder = await OrderModel.update(orderId, userId, role, data);
+
+    await ActivityLogModel.logAction({
+      actor_id: userId || null,
+      action: LOG_ACTIONS.UPDATE_ORDER,
+      target_type: LOG_TARGETS.ORDER,
+      target_id: orderId,
+      details: {
+        data,
+      },
+    });
+
+    return updatedOrder;
   },
 };
