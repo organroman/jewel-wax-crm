@@ -1,6 +1,7 @@
 "use client";
 
 import { TabOption } from "@/types/shared.types";
+import { UpdateOrderSchema } from "@/types/order.types";
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { ChevronLeftIcon, Loader } from "lucide-react";
@@ -27,6 +28,8 @@ const OrderClient = ({ id }: { id: number }) => {
   const queryClient = useQueryClient();
   const { t } = useTranslation();
   const searchParams = useSearchParams();
+
+  const { updateMutation } = useOrder.update({ queryClient, t });
 
   const tabParam = searchParams.get("tab");
 
@@ -61,6 +64,11 @@ const OrderClient = ({ id }: { id: number }) => {
 
   console.log(order);
 
+  const handleUpdate = (formData: UpdateOrderSchema) => {
+    console.log("clicked");
+    updateMutation?.mutate({ ...formData });
+  };
+
   if (isLoading) {
     return <Loader />;
   }
@@ -93,7 +101,12 @@ const OrderClient = ({ id }: { id: number }) => {
           customerFullName={order.customer.fullname}
           orderNumber={order.number}
         />
-        {selectedTab.value === "order" && <OrderForm order={order} />}
+        {selectedTab.value === "order" && (
+          <OrderForm
+            order={order}
+            handleMutate={handleUpdate}
+          />
+        )}
         {selectedTab.value === "payments" && <OrderPayments />}
         {selectedTab.value === "chat" && <OrderChat />}
       </div>

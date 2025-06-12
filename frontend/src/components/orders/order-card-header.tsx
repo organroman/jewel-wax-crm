@@ -47,7 +47,9 @@ const OrderCardHeader = ({
         <Button variant="secondary" className="bg-transparent rounded-sm">
           {t("order.buttons.create_invoice")}
         </Button>
-        <Button className="text-white">{t("buttons.save")}</Button>
+        <Button type="submit" form="orderForm" className="text-white">
+          {t("buttons.save")}
+        </Button>
       </div>
     </div>
   );

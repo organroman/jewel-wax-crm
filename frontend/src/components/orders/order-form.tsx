@@ -1,4 +1,4 @@
-import { Order } from "@/types/order.types";
+import { Order, UpdateOrderSchema } from "@/types/order.types";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useFieldArray, useForm } from "react-hook-form";
@@ -28,10 +28,10 @@ import { cn } from "@/lib/utils";
 
 interface OrderFormProps {
   order?: Order;
+  handleMutate: (data: UpdateOrderSchema) => void;
 }
 
-const OrderForm = ({ order }: OrderFormProps) => {
-  console.log("🚀 ~ order:", order);
+const OrderForm = ({ order, handleMutate }: OrderFormProps) => {
   const { t } = useTranslation();
 
   const { data: modellers = [] } = usePerson.getModellers();
@@ -78,9 +78,8 @@ const OrderForm = ({ order }: OrderFormProps) => {
       printer: order?.printer || null,
       printing_cost: order?.printing_cost || 0.0,
       delivery: order?.delivery || null,
-      delivery_cost: order?.delivery?.cost || 0.0,
-      declaration_number: order?.delivery?.declaration_number || null,
       notes: order?.notes || "",
+      customer: order?.customer || null,
       stages: defaultOrderStages,
     },
   });
@@ -90,11 +89,16 @@ const OrderForm = ({ order }: OrderFormProps) => {
     name: "stages",
   });
 
-  console.log(form.getValues());
+  console.log("fields", form.getValues());
+  console.log("errors", form.formState.errors);
   return (
     <div className="h-full w-full bg-ui-sidebar p-4 flex flex-col rounded-bl-md rounded-br-md ">
       <Form {...form}>
-        <form id="orderForm" className="flex flex-col h-full flex-1">
+        <form
+          id="orderForm"
+          onSubmit={form.handleSubmit(handleMutate)}
+          className="flex flex-col h-full flex-1"
+        >
           <div className="flex gap-5">
             <div className="w-1/3"></div>
             <div className="w-3/4">
@@ -309,9 +313,10 @@ const OrderForm = ({ order }: OrderFormProps) => {
                       </div>
                     </div>
                     <FormInput
-                      name="delivery_cost"
+                      name="delivery.cost"
                       control={form.control}
                       inputStyles="min-w-[100px] max-w-[100px]"
+                      defaultValue="0.00"
                     />
                   </div>
                   <div className="flex items-center gap-2.5">
@@ -320,7 +325,7 @@ const OrderForm = ({ order }: OrderFormProps) => {
                     </InfoLabel>
                     <div className="flex items-center">
                       <FormInput
-                        name="declaration_number"
+                        name="delivery.declaration_number"
                         control={form.control}
                       />
                       <Button

@@ -1,8 +1,7 @@
-import { Order } from "@/types/order.types";
+import { Order, UpdateOrderSchema } from "@/types/order.types";
 import { QueryClient, useMutation, useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { orderService } from "./order-service";
-
 
 export const useOrder = {
   getPaginatedOrders: ({
@@ -78,6 +77,31 @@ export const useOrder = {
       queryFn: () => orderService.getById(Number(id)),
       enabled,
     });
+  },
+  update: ({
+    queryClient,
+    handleOnSuccess,
+    t,
+  }: {
+    queryClient: QueryClient;
+    handleOnSuccess?: (data: Order) => void;
+    t: (key: string) => string;
+  }) => {
+    const mutation = useMutation<Order, Error, UpdateOrderSchema>({
+      mutationFn: async (data) => orderService.update(data),
+      onSuccess: (data) => {
+        toast.success(t("messages.success.order_updated"));
+        queryClient.invalidateQueries({
+          queryKey: ["orders"],
+        });
+        handleOnSuccess && handleOnSuccess(data);
+      },
+      onError: (error) => {
+        toast.error(error.message);
+      },
+    });
+
+    return { updateMutation: mutation };
   },
   delete: ({
     queryClient,

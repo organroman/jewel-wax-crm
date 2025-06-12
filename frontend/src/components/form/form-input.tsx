@@ -26,6 +26,7 @@ const FormInput = <T extends FieldValues>({
   labelPosition = "left",
   inputStyles,
   isFullWidth = false,
+  defaultValue,
 }: FormInputProps<T>) => (
   <FormField
     name={name}
@@ -34,7 +35,9 @@ const FormInput = <T extends FieldValues>({
       <FormItem
         className={cn(
           "flex flex-col gap-0.5 lg:gap-2.5",
-          labelPosition === "top" ? "lg:flex-col lg:gap-0.5" : "lg:flex-row lg:0.5",
+          labelPosition === "top"
+            ? "lg:flex-col lg:gap-0.5"
+            : "lg:flex-row lg:0.5",
           isFullWidth && "flex-1"
         )}
       >
@@ -70,6 +73,7 @@ const FormInput = <T extends FieldValues>({
                 {...field}
                 placeholder={placeholder}
                 type={type}
+                defaultValue={defaultValue}
               />
             )}
           </FormControl>

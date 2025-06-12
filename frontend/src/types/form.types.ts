@@ -52,6 +52,7 @@ export type FormInputProps<T extends FieldValues> = {
   labelPosition?: "top" | "left";
   inputStyles?: string;
   isFullWidth?: boolean;
+  defaultValue?: string | number;
 };
 
 export type Option<T> = {

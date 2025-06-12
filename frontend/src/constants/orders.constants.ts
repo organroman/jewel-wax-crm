@@ -1,7 +1,6 @@
-
 import { ORDER_STAGE, PAYMENT_STATUS } from "./enums.constants";
 
-export const ORDER_STAGES = [...ORDER_STAGE, "all"];
+export const ORDER_STAGES = ["all", ...ORDER_STAGE];
 
 export const STATIC_ORDER_FILTERS = [
   {

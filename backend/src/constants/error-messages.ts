@@ -22,6 +22,7 @@ const ERROR_MESSAGES = {
   CITY_EXISTS: "City already exists",
   COUNTRY_EXISTS: "Country already exists",
   UNAUTHORIZED: "Unauthorized access",
+  DELIVERY_ADDRESS_REQUIRED: "Delivery address required",
 } as const;
 
 export default ERROR_MESSAGES;

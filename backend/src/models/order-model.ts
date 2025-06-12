@@ -453,24 +453,50 @@ export const OrderModel = {
           const isStageStarted =
             !s.started_at &&
             s.status &&
-            ["clarification", "in_process", "negotiation", "pending", "processed"].includes(s.status);
-    
+            [
+              "clarification",
+              "in_process",
+              "negotiation",
+              "pending",
+              "processed",
+            ].includes(s.status);
+
           const isStageCompleted = s.status === "done" && !s.completed_at;
-    
-          await db("order_stage_statuses")
-            .where("id", s.id)
-            .andWhere("stage", s.stage)
-            .update({
+
+          if (!Object.prototype.hasOwnProperty.call(s, s.id)) {
+            await db("order_stage_statuses").insert({
+              stage: s.stage,
               status: s.status,
-              updated_at: new Date(),
+              order_id: updatedOrder.id,
               started_at: s.started_at ?? (isStageStarted ? new Date() : null),
-              completed_at: s.completed_at ?? (isStageCompleted ? new Date() : null),
+              completed_at:
+                s.completed_at ?? (isStageCompleted ? new Date() : null),
             });
+          } else
+            await db("order_stage_statuses")
+              .where("id", s.id)
+              .andWhere("stage", s.stage)
+              .update({
+                status: s.status,
+                updated_at: new Date(),
+                started_at:
+                  s.started_at ?? (isStageStarted ? new Date() : null),
+                completed_at:
+                  s.completed_at ?? (isStageCompleted ? new Date() : null),
+              });
         })
       );
     }
 
     if (delivery) {
+      if (!Object.prototype.hasOwnProperty.call(delivery, delivery.id)) {
+        await db("order_deliveries").insert({
+          cost: delivery.cost,
+          declaration_number: delivery.declaration_number,
+          delivery_address_id: delivery.delivery_address_id,
+          order_id: updatedOrder.id,
+        });
+      }
       await db("order_deliveries").where("order_id", orderId).update({
         delivery_address_id: delivery.delivery_address_id,
         cost: delivery.cost,

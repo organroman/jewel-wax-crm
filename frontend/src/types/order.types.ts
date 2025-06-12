@@ -1,10 +1,11 @@
+import { z } from "zod";
 import {
   ORDER_STAGE,
   ORDER_STAGE_STATUS,
   PAYMENT_STATUS,
 } from "@/constants/enums.constants";
 import { PaginatedResult } from "./shared.types";
-import { DeliveryAddress } from "./person.types";
+import { updateOrderSchema } from "@/validators/order.validator";
 
 export interface OrderPerson {
   id: number;
@@ -89,3 +90,5 @@ export interface Order {
 export interface PaginatedOrdersResult<T> extends PaginatedResult<T> {
   stage_counts: Record<string, number>;
 }
+
+export type UpdateOrderSchema = z.infer<typeof updateOrderSchema>;

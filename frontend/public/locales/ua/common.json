@@ -337,7 +337,10 @@
       "favorite_added": "Додано в обране",
       "favorite_removed": "Видалено з обраного",
       "important_added": "Додано в важливе",
-      "important_removed": "Видалено з важливого"
+      "important_removed": "Видалено з важливого",
+      "order_created": "Замовлення створено",
+      "order_updated": "Замовлення оновлено",
+      "order_deleted": "Замовлення видалено"
     }
   }
 }

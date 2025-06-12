@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 import { ORDER_STAGE, ORDER_STAGE_STATUS } from "../constants/enums";
+import ERROR_MESSAGES from "../constants/error-messages";
 
 export const toggleIsImportantSchema = z.object({
   is_important: z.boolean(),
@@ -28,7 +29,7 @@ const stageSchema = z.object({
   id: z.number().optional(),
   order_id: z.number().optional(),
   stage: stageEnum,
-  status: stageStatusEnum,
+  status: stageStatusEnum.optional(),
   started_at: z.string().nullable().optional(),
   completed_at: z.string().nullable().optional(),
   created_at: z.string().optional(),
@@ -37,7 +38,9 @@ const stageSchema = z.object({
 const deliverySchema = z.object({
   id: z.number().optional(),
   order_id: z.number().optional(),
-  delivery_address_id: z.number().optional(),
+  delivery_address_id: z.number({
+    message: ERROR_MESSAGES.DELIVERY_ADDRESS_REQUIRED,
+  }),
   delivery_service: z.string().optional(),
   cost: z.number().default(0.0),
   declaration_number: z.number().optional().nullable(),
@@ -57,7 +60,7 @@ const baseSchema = z.object({
   printer: personSchema.optional().nullable(),
   customer: customerSchema,
   stages: z.array(stageSchema),
-  delivery: deliverySchema.optional(),
+  delivery: deliverySchema.optional().nullable(),
 });
 
 export const updateOrderSchema = baseSchema.partial();

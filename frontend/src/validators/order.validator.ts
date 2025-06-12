@@ -2,6 +2,13 @@ import z from "zod";
 
 import { ORDER_STAGE, ORDER_STAGE_STATUS } from "@/constants/enums.constants";
 
+const costField = z
+  .union([
+    z.number(),
+    z.string().regex(/^\d+(\.\d+)?$/, "Must be a valid number string"),
+  ])
+  .transform((val) => (typeof val === "string" ? parseFloat(val) : val));
+
 const orderPersonSchema = z.object({
   id: z.number(),
   fullname: z.string(),
@@ -10,17 +17,19 @@ const orderPersonSchema = z.object({
 const orderCustomerSchema = z.object({
   id: z.number(),
   fullname: z.string(),
-  delivery_addresses: z.array(
-    z.object({ delivery_address_id: z.number(), address_line: z.string() })
-  ),
+  delivery_addresses: z
+    .array(
+      z.object({ delivery_address_id: z.number(), address_line: z.string() })
+    )
+    .optional(),
 });
 
 const orderDeliveryAddressSchema = z.object({
-  id: z.number(),
+  id: z.number().optional(),
   order_id: z.number().optional(),
-  address_delivery_id: z.number(),
-  address_line: z.string(),
-  cost: z.number().optional(),
+  delivery_address_id: z.number().optional(),
+  address_line: z.string().optional(),
+  cost: costField.nullable().default(0.0),
   declaration_number: z.number().optional().nullable(),
 });
 
@@ -38,27 +47,29 @@ const orderStageSchema = z.object({
   stage: stageSchema,
   status: stageStatusSchema,
   started_at: z.string().optional(),
-  created_at: z.string(),
+  created_at: z.string().optional(),
   completed_at: z.string().optional().nullable(),
 });
 
 export const updateOrderSchema = z.object({
   id: z.number().optional(),
-  number: z.number().nullable(),
-  customer: orderCustomerSchema,
+  number: z
+    .union([z.number(), z.string().regex(/^\d+$/, "Must be a numeric string")])
+    .optional()
+    .nullable()
+    .transform((val) => (typeof val === "string" ? val.padStart(4, "0") : val)),
+  customer: orderCustomerSchema.nullable(),
   name: z.string(),
   processing_days: z.number().readonly().optional(),
   description: z.string().optional(),
-  amount: z.number(),
+  amount: costField,
   modeller: orderPersonSchema.nullable().optional(),
-  modeling_cost: z.number().optional().default(0.0),
+  modeling_cost: costField,
   miller: orderPersonSchema.nullable().optional(),
-  milling_cost: z.number().optional().default(0.0),
+  milling_cost: costField,
   printer: orderPersonSchema.nullable().optional(),
-  printing_cost: z.number().optional().default(0.0),
-  delivery: orderDeliveryAddressSchema.nullable(),
-  delivery_cost: z.number().optional().default(0.0),
-  declaration_number: z.number().optional().nullable(),
+  printing_cost: costField,
+  delivery: orderDeliveryAddressSchema.nullable().optional(),
   notes: z.string().optional(),
   stages: z.array(orderStageSchema),
 });

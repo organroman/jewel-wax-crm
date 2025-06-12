@@ -1,4 +1,8 @@
-import { Order, PaginatedOrdersResult } from "@/types/order.types";
+import {
+  Order,
+  PaginatedOrdersResult,
+  UpdateOrderSchema,
+} from "@/types/order.types";
 
 import apiService from "../api-service";
 
@@ -22,6 +26,24 @@ export const orderService = {
   },
   getById: (id: number) => {
     return apiService.get<Order>(`orders/${id}`);
+  },
+  update: (data: UpdateOrderSchema) => {
+    const { stages, ...order } = data;
+
+    const delivery = order.delivery?.delivery_address_id
+      ? order.delivery
+      : null;
+
+    const updatedStages = stages.map((s) => ({
+      ...s,
+      status: s.status?.value,
+    }));
+    const payload = {
+      ...order,
+      stages: updatedStages,
+      delivery: delivery,
+    };
+    return apiService.patch<Order>(`orders/${data.id}`, payload);
   },
 
   delete: (id: number) => apiService.delete(`orders/${id}`),
