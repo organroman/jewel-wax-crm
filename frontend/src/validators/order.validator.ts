@@ -72,4 +72,5 @@ export const updateOrderSchema = z.object({
   delivery: orderDeliveryAddressSchema.nullable().optional(),
   notes: z.string().optional(),
   stages: z.array(orderStageSchema),
+  active_stage: stageSchema,
 });

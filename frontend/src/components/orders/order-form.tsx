@@ -1,4 +1,4 @@
-import { Order, UpdateOrderSchema } from "@/types/order.types";
+import { Order, Stage, UpdateOrderSchema } from "@/types/order.types";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useFieldArray, useForm } from "react-hook-form";
@@ -6,9 +6,11 @@ import { useTranslation } from "react-i18next";
 import dayjs from "dayjs";
 
 import { usePerson } from "@/api/persons/use-person";
+import { useDialog } from "@/hooks/use-dialog";
 
 import { Form } from "../ui/form";
 import { Button } from "../ui/button";
+import { Dialog } from "../ui/dialog";
 
 import FormInput from "../form/form-input";
 import FormCombobox from "../form/form-combobox";
@@ -16,6 +18,7 @@ import FormSelect from "../form/form-select";
 
 import InfoLabel from "../shared/typography/info-label";
 import InfoValue from "../shared/typography/info-value";
+import OrderChangeStage from "./order-change-stage";
 
 import { updateOrderSchema } from "@/validators/order.validator";
 
@@ -37,6 +40,13 @@ const OrderForm = ({ order, handleMutate }: OrderFormProps) => {
   const { data: modellers = [] } = usePerson.getModellers();
   const { data: millers = [] } = usePerson.getMillers();
   const { data: printers = [] } = usePerson.getPrinters();
+
+  const {
+    dialogOpen: changeStageDialogOpen,
+    setDialogOpen: changeStageSetDialogOpen,
+    openDialog: changeStageOpenDialog,
+    closeDialog: changeStageCloseDialog,
+  } = useDialog();
 
   const defaultOrderStages = ORDER_STAGE.map((stageKey) => {
     const existing = order?.stages.find((s) => s.stage === stageKey);
@@ -81,6 +91,7 @@ const OrderForm = ({ order, handleMutate }: OrderFormProps) => {
       notes: order?.notes || "",
       customer: order?.customer || null,
       stages: defaultOrderStages,
+      active_stage: order?.active_stage || "new",
     },
   });
 
@@ -88,6 +99,10 @@ const OrderForm = ({ order, handleMutate }: OrderFormProps) => {
     control: form.control,
     name: "stages",
   });
+
+  const handleStageChange = (newValue: Stage) => {
+    form.setValue("active_stage", newValue);
+  };
 
   console.log("fields", form.getValues());
   console.log("errors", form.formState.errors);
@@ -377,7 +392,7 @@ const OrderForm = ({ order, handleMutate }: OrderFormProps) => {
                           >
                             {t(`order.stages.${field.stage}`)}
                           </div>
-                          {order?.active_stage === field.stage && (
+                          {form.getValues("active_stage") === field.stage && (
                             <div className="absolute top-0 -left-3 h-full w-1 bg-brand-default"></div>
                           )}
                           <FormSelect
@@ -406,14 +421,26 @@ const OrderForm = ({ order, handleMutate }: OrderFormProps) => {
                   </div>
                   <Button
                     type="button"
+                    size="sm"
                     variant="secondary"
                     className="self-start text-xs px-5"
+                    onClick={() => changeStageOpenDialog()}
                   >
                     {t("order.buttons.change_status")}
                   </Button>
                 </div>
               </div>
             </div>
+            <Dialog
+              open={changeStageDialogOpen}
+              onOpenChange={changeStageSetDialogOpen}
+            >
+              <OrderChangeStage
+                currentStage={form.getValues("active_stage")}
+                handleStageChange={handleStageChange}
+                closeDialog={changeStageCloseDialog}
+              />
+            </Dialog>
           </div>
         </form>
       </Form>

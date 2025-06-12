@@ -6,7 +6,7 @@ export interface ModalHeaderProps {
 }
 
 export interface ModalFooterProps {
-  isPending: boolean;
+  isPending?: boolean;
   submit?: boolean;
   formId?: string;
   actionId?: number;
