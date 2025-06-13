@@ -2,6 +2,7 @@ import { PaginatedResult } from "../types/shared.types";
 import {
   AdminOrder,
   GetAllOrdersOptions,
+  LinkedOrder,
   OrderBase,
   OrderDelivery,
   OrderFavorite,
@@ -246,6 +247,11 @@ export const OrderModel = {
         "order_deliveries.delivery_address_id"
       );
 
+    const linked_orders = await db<LinkedOrder>("order_links")
+      .where("order_id", orderId)
+      .leftJoin("orders", "orders.id", "order_links.linked_order_id")
+      .select("order_links.*", "orders.number as linked_order_number");
+
     const {
       customer_id,
       miller_id,
@@ -272,6 +278,7 @@ export const OrderModel = {
             (1000 * 60 * 60 * 24)
         ),
       delivery,
+      linked_orders,
       createdBy,
     };
 
@@ -423,6 +430,7 @@ export const OrderModel = {
       printer,
       stages,
       delivery,
+      linked_orders,
       ...orderFields
     } = data;
 
@@ -450,6 +458,17 @@ export const OrderModel = {
 
     if (!updatedOrder) {
       return null;
+    }
+    if (linked_orders?.length) {
+      await db<LinkedOrder>("order_links")
+        .where("order_id", updatedOrder.id)
+        .del();
+      await db<LinkedOrder>("order_links").insert(
+        linked_orders.map((lo) => ({
+          ...lo,
+          order_id: updatedOrder.id,
+        }))
+      );
     }
 
     if (stages?.length) {

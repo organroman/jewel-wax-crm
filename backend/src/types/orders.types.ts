@@ -141,6 +141,14 @@ export interface AdminOrder {
   printing_cost?: number;
 }
 
+export interface LinkedOrder {
+  id?: number;
+  order_id: number;
+  linked_order_id: number;
+  is_common_delivery: number;
+  comment: string;
+}
+
 export interface CreateOrderInput {
   customer: OrderPerson;
   name: string;
@@ -158,6 +166,7 @@ export interface CreateOrderInput {
   printing_cost?: number;
   stages: OrderStage[];
   delivery: OrderDelivery;
+  linked_orders: LinkedOrder[];
 }
 
 export interface UpdateOrderInput extends Partial<CreateOrderInput> {

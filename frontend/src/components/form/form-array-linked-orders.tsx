@@ -87,7 +87,7 @@ const FormArrayLinkedOrders = <T extends FieldValues>({
         linked_order_id: selected?.data?.id,
         linked_order_number: selected?.data?.number,
       } as any);
-    }, 100);
+    }, 150);
     setSearchQuery("");
     setSelected(null);
   };

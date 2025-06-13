@@ -101,21 +101,12 @@ const OrderForm = ({
       milling_cost: order?.milling_cost || 0.0,
       printer: order?.printer || null,
       printing_cost: order?.printing_cost || 0.0,
-      delivery: order?.delivery || {declaration_number: "", cost: "0.00"},
+      delivery: order?.delivery || { declaration_number: "", cost: "0.00" },
       notes: order?.notes || "",
       customer: order?.customer || null,
       stages: defaultOrderStages,
       active_stage: order?.active_stage || "new",
-      linked_orders: order?.linked_orders || [
-        {
-          id: 1,
-          order_id: 2,
-          linked_order_id: 3,
-          linked_order_number: "0003",
-          comment: "blalgdldfgfdgfdgfdg",
-          is_common_delivery: false,
-        },
-      ],
+      linked_orders: order?.linked_orders || [],
     },
   });
 

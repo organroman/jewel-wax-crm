@@ -29,7 +29,7 @@ export const orderService = {
     return apiService.get<Order>(`orders/${id}`);
   },
   update: (data: UpdateOrderSchema) => {
-    const { stages, ...order } = data;
+    const { stages, linked_orders, ...order } = data;
 
     const delivery = order.delivery?.delivery_address_id
       ? order.delivery
@@ -39,10 +39,21 @@ export const orderService = {
       ...s,
       status: s.status?.value,
     }));
+    
+    const linked = linked_orders?.map(
+      ({ is_common_delivery, id, order_id, linked_order_id, comment }) => ({
+        id,
+        order_id,
+        linked_order_id,
+        comment,
+        is_common_delivery,
+      })
+    );
     const payload = {
       ...order,
       stages: updatedStages,
       delivery: delivery,
+      linked_orders: linked,
     };
     return apiService.patch<Order>(`orders/${data.id}`, payload);
   },
