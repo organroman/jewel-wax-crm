@@ -36,7 +36,7 @@ const orderDeliveryAddressSchema = z.object({
   delivery_address_id: z.number().optional(),
   address_line: z.string().optional(),
   cost: costField.nullable().default(0.0),
-  declaration_number: z.number().optional().nullable(),
+  declaration_number: z.string().optional().nullable(),
 });
 
 const stageSchema = z.enum(ORDER_STAGE);

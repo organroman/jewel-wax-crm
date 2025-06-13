@@ -57,7 +57,7 @@ export interface OrderDelivery {
   delivery_address_id: number;
   address_line: string;
   order_id: number;
-  declaration_number: number;
+  declaration_number: string;
 }
 
 export interface LinkedOrder {

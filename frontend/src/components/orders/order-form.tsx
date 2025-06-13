@@ -91,7 +91,7 @@ const OrderForm = ({
     resolver: zodResolver(updateOrderSchema),
     defaultValues: {
       id: order?.id,
-      number: order?.number || null,
+      number: order?.number || "",
       name: order?.name || "",
       description: order?.description || "",
       amount: order?.amount || 0.0,
@@ -101,7 +101,7 @@ const OrderForm = ({
       milling_cost: order?.milling_cost || 0.0,
       printer: order?.printer || null,
       printing_cost: order?.printing_cost || 0.0,
-      delivery: order?.delivery || null,
+      delivery: order?.delivery || {declaration_number: "", cost: "0.00"},
       notes: order?.notes || "",
       customer: order?.customer || null,
       stages: defaultOrderStages,
@@ -360,7 +360,7 @@ const OrderForm = ({
                         name="delivery.cost"
                         control={form.control}
                         inputStyles="min-w-[100px] max-w-[100px]"
-                        defaultValue="0.00"
+                        // defaultValue="0.00"
                       />
                     </div>
                     <div className="flex items-center gap-2.5">
