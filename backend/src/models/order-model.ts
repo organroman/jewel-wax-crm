@@ -111,7 +111,12 @@ export const OrderModel = {
     }
 
     if (search) {
-      baseQuery.whereILike("orders.name", `%${search}%`);
+      baseQuery.where((qb) => {
+        qb.whereILike("orders.name", `%${search}%`).orWhereILike(
+          "orders.number",
+          `%${search}%`
+        );
+      });
     }
 
     return paginateQuery(baseQuery, { page, limit, sortBy, order });
@@ -506,5 +511,28 @@ export const OrderModel = {
     }
 
     return await OrderModel.getById({ orderId, userId, role });
+  },
+
+  async getOrdersNumbers({
+    search,
+  }: {
+    search: string;
+  }): Promise<PaginatedResult<{ id: number; number: number }>> {
+    // const visibleFields = getVisibleFieldsForRoleAndContext(user_role);
+
+    const baseQuery = db<OrderBase>("orders").select("id", "number");
+
+    if (search) {
+      baseQuery.where((qb) => {
+        qb.whereILike("orders.number", `%${search}%`);
+      });
+    }
+
+    return paginateQuery(baseQuery, {
+      page: 1,
+      limit: 10,
+      sortBy: "created_at",
+      order: "desc",
+    });
   },
 };

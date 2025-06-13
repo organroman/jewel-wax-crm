@@ -16,6 +16,13 @@ router.get(
 );
 
 router.get(
+  "/numbers",
+  verifyToken,
+  checkPermission("ORDERS", "VIEW"),
+  OrderController.getOrderNumbers
+);
+
+router.get(
   "/:id",
   verifyToken,
   checkPermission("ORDERS", "VIEW"),

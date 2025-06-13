@@ -5,6 +5,7 @@ import {
 } from "@/types/order.types";
 
 import apiService from "../api-service";
+import { PaginatedResult } from "@/types/shared.types";
 
 export const orderService = {
   getAll: async (query: string) => {
@@ -47,4 +48,9 @@ export const orderService = {
   },
 
   delete: (id: number) => apiService.delete(`orders/${id}`),
+  getOrdersNumbers: (query: string) => {
+    return apiService.get<PaginatedResult<{ id: number; number: number }>>(
+      `orders/numbers?${query}`
+    );
+  },
 };

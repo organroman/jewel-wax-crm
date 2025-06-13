@@ -8,7 +8,7 @@ import SearchInput from "./search-input";
 
 import Sort from "./sort";
 import { useState } from "react";
-import FilterDropdown from "./filter-dropdown";
+import FilterDropdown from "./filter/filter-dropdown";
 import { toggleParam } from "@/lib/utils";
 
 interface ToolbarFilterProps {

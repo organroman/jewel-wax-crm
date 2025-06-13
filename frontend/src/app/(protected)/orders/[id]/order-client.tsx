@@ -22,6 +22,7 @@ import OrderChat from "@/components/orders/order-chat";
 
 import { translateKeyValueList } from "@/lib/translate-constant-labels";
 import { ORDER_CARD_TABS_LIST } from "@/constants/orders.constants";
+import { useDialog } from "@/hooks/use-dialog";
 
 const OrderClient = ({ id }: { id: number }) => {
   const router = useRouter();
@@ -29,7 +30,23 @@ const OrderClient = ({ id }: { id: number }) => {
   const { t } = useTranslation();
   const searchParams = useSearchParams();
 
+  const {
+    dialogOpen: isDeleteDialogOpen,
+    setDialogOpen,
+    closeDialog,
+  } = useDialog();
+
   const { updateMutation } = useOrder.update({ queryClient, t });
+
+  const handleDeleteSuccess = () => {
+    closeDialog();
+    router.replace("/orders");
+  };
+  const { deleteOrderMutation } = useOrder.delete({
+    queryClient,
+    t,
+    handleSuccess: handleDeleteSuccess,
+  });
 
   const tabParam = searchParams.get("tab");
 
@@ -105,6 +122,9 @@ const OrderClient = ({ id }: { id: number }) => {
           <OrderForm
             order={order}
             handleMutate={handleUpdate}
+            deleteMutation={deleteOrderMutation}
+            isDeleteDialogOpen={isDeleteDialogOpen}
+            setIsDeleteDialogOpen={setDialogOpen}
           />
         )}
         {selectedTab.value === "payments" && <OrderPayments />}

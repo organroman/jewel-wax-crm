@@ -102,6 +102,14 @@ export interface FormArrayBankDetailsProps<T extends FieldValues> {
   required?: boolean;
 }
 
+export interface FormArrayLinkedOrdersProps<T extends FieldValues> {
+  name: ArrayPath<T>;
+  control: Control<T>;
+  setValue: UseFormSetValue<T>;
+  required?: boolean;
+  orderId: number | null;
+}
+
 export interface FormComboboxProps<T extends FieldValues, O> {
   name: Path<T>;
   label?: string;

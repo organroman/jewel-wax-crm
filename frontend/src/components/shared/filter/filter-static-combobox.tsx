@@ -22,7 +22,7 @@ import { Checkbox } from "@components/ui/checkbox";
 
 import { cn } from "@/lib/utils";
 
-interface StaticComboboxProps {
+interface FilterStaticComboboxProps {
   open: boolean;
   handleOpenChange: (value: boolean) => void;
   label: string;
@@ -33,7 +33,7 @@ interface StaticComboboxProps {
   isChecked: (value: string) => boolean;
 }
 
-const StaticCombobox = ({
+const FilterStaticCombobox = ({
   open,
   handleOpenChange,
   label,
@@ -42,7 +42,7 @@ const StaticCombobox = ({
   param,
   handleSelect,
   isChecked,
-}: StaticComboboxProps) => {
+}: FilterStaticComboboxProps) => {
   const { t } = useTranslation();
   return (
     <Popover
@@ -108,4 +108,4 @@ const StaticCombobox = ({
   );
 };
 
-export default StaticCombobox;
+export default FilterStaticCombobox;

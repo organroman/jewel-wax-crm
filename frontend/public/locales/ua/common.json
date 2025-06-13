@@ -130,9 +130,7 @@
     },
     "modal": {
       "delete": {
-        "title": "Видалення контрагента",
-        "desc_first": "Ви впевненні, що бажаєте видалити?",
-        "desc_second": "Цю дію неможливо відмінити!"
+        "title": "Видалення контрагента"
       }
     },
     "labels": {
@@ -208,6 +206,9 @@
   "order": {
     "order": "$t(dictionary.order)",
     "add_order": "Додати завдання",
+    "linked_orders": {
+      "linked": "Прив'язані замовлення"
+    },
     "active_stages": {
       "all": "Всі замовлення",
       "new": "Нові",
@@ -275,17 +276,24 @@
     },
     "buttons": {
       "create_invoice": "Сформувати рахунок",
-      "change_status": "Змінити статус"
-    },
-    "actions": {
+      "change_stage": "Змінити етап",
+      "delete": "Видалити замовлення",
       "view": "Переглянути замовлення",
-      "edit": "Редагувати замовлення",
-      "delete": "Видалити замовлення"
+      "edit": "Редагувати замовлення"
     },
     "modal": {
       "change_stage": {
         "title": "Зміна етапу замовлення",
         "desc_first": "Оберіть новий етап і збережіть зміни"
+      },
+      "delete": {
+        "title": "Видалення замовлення",
+        "desc_first": "Ви впевненні, що бажаєте видалити?",
+        "desc_second": "Цю дію неможливо відмінити!"
+      },
+      "linked_order": {
+        "title": "Додати прив'язане замовлення",
+        "desc_first": "Оберіть замовлення"
       }
     },
 
@@ -300,7 +308,8 @@
       "comment": "$t(dictionary.comment)",
       "stage": "$t(dictionary.stage)",
       "stage_status": "$t(dictionary.stage_status)",
-      "date": "$t(dictionary.date)"
+      "date": "$t(dictionary.date)",
+      "common_delivery": "Обєднати замовлення для доставки"
     }
   },
 
@@ -331,7 +340,9 @@
       "min_six_characters": "Мінімум шість символів"
     },
     "info": {
-      "no_results": "Дані відсутні"
+      "no_results": "Дані відсутні",
+      "confirm_delete": "Ви впевненні, що бажаєте видалити?",
+      "action_undone": "Цю дію неможливо відмінити!"
     },
     "success": {
       "person_created": "Контрагента створено",

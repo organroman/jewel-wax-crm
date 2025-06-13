@@ -9,6 +9,12 @@ const costField = z
   ])
   .transform((val) => (typeof val === "string" ? parseFloat(val) : val));
 
+const numberField = z
+  .union([z.number(), z.string().regex(/^\d+$/, "Must be a numeric string")])
+  .optional()
+  .nullable()
+  .transform((val) => (typeof val === "string" ? val.padStart(4, "0") : val));
+
 const orderPersonSchema = z.object({
   id: z.number(),
   fullname: z.string(),
@@ -51,13 +57,18 @@ const orderStageSchema = z.object({
   completed_at: z.string().optional().nullable(),
 });
 
+const linkedOrderSchema = z.object({
+  id: z.number().optional(),
+  order_id: z.number().optional(),
+  linked_order_id: z.number(),
+  linked_order_number: numberField,
+  comment: z.string().optional(),
+  is_common_delivery: z.boolean().default(false),
+});
+
 export const updateOrderSchema = z.object({
   id: z.number().optional(),
-  number: z
-    .union([z.number(), z.string().regex(/^\d+$/, "Must be a numeric string")])
-    .optional()
-    .nullable()
-    .transform((val) => (typeof val === "string" ? val.padStart(4, "0") : val)),
+  number: numberField,
   customer: orderCustomerSchema.nullable(),
   name: z.string(),
   processing_days: z.number().readonly().optional(),
@@ -73,4 +84,5 @@ export const updateOrderSchema = z.object({
   notes: z.string().optional(),
   stages: z.array(orderStageSchema),
   active_stage: stageSchema,
+  linked_orders: z.array(linkedOrderSchema).optional(),
 });

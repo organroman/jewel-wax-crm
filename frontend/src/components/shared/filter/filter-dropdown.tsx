@@ -6,8 +6,8 @@ import { useState } from "react";
 
 import { toggleParam } from "@/lib/utils";
 
-import StaticCombobox from "./static-combobox";
-import AsyncComboBox from "./async-combobox";
+import StaticCombobox from "./filter-static-combobox";
+import AsyncComboBox from "./filter-async-combobox";
 
 interface FilterDropdownProps {
   filters: FilterGroup[];

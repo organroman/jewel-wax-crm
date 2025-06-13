@@ -59,6 +59,16 @@ export interface OrderDelivery {
   order_id: number;
   declaration_number: number;
 }
+
+export interface LinkedOrder {
+  id: number;
+  order_id: number;
+  linked_order_id: number;
+  comment: string;
+  is_common_delivery: boolean;
+  linked_order_number: number;
+}
+
 export interface Order {
   id: number;
   created_at: Date;
@@ -85,6 +95,7 @@ export interface Order {
   stages: OrderStage[];
   createdBy: string;
   delivery: OrderDelivery;
+  linked_orders: LinkedOrder[];
 }
 
 export interface PaginatedOrdersResult<T> extends PaginatedResult<T> {

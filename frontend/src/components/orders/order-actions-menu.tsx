@@ -53,11 +53,11 @@ const OrderActionsMenu = ({ id }: { id: number }) => {
     <>
       <ActionsMenu
         editItemLink={`orders/${id}`}
-        viewItemTitle={t("order.actions.view")}
+        viewItemTitle={t("order.buttons.view")}
         viewItemDialogOpen={() => setIsViewDialogOpen(true)}
-        editItemTitle={t("order.actions.edit")}
+        editItemTitle={t("order.buttons.edit")}
         deleteItemDialogOpen={() => setIsDeleteDialogOpen(true)}
-        deleteItemTitle={t("order.actions.delete")}
+        deleteItemTitle={t("order.buttons.delete")}
         // extraItems={
         //   <DropdownMenuItem asChild>
         //     <Link href={`persons/${id}?tab=orders_history`}>
@@ -72,8 +72,8 @@ const OrderActionsMenu = ({ id }: { id: number }) => {
           destructive
           header={{
             title: t("order.modal.delete.title"),
-            descriptionFirst: t("order.modal.delete.desc_first"),
-            descriptionSecond: t("order.modal.delete.desc_second"),
+            descriptionFirst: t("messages.info.confirm_delete"),
+            descriptionSecond: t("messages.info.action_undone"),
           }}
           footer={{
             buttonActionTitleContinuous: t("buttons.delete.delete_continuous"),

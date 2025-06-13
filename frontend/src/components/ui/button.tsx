@@ -12,7 +12,7 @@ const buttonVariants = cva(
         default:
           "bg-brand-default text-white shadow-xs hover:opacity-80 cursor-pointer",
         destructive:
-          "bg-action-alert text-text-regular shadow-xs hover:bg-action-alert/80 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 ",
+          "bg-action-alert text-white shadow-xs hover:bg-action-alert/80 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 ",
         outline:
           "border bg-ui-sidebar text-xs text-text-muted rounded-xs shadow-xs hover:opacity-90 hover:text-text-regular  dark:border-ui-border",
         secondary:

@@ -72,8 +72,8 @@ const PersonActionsMenu = ({ id }: { id: number }) => {
           destructive
           header={{
             title: t("person.modal.delete.title"),
-            descriptionFirst: t("person.modal.delete.desc_first"),
-            descriptionSecond: t("person.modal.delete.desc_second"),
+            descriptionFirst: t("messages.info.confirm_delete"),
+            descriptionSecond: t("messages.info.action_undone"),
           }}
           footer={{
             buttonActionTitleContinuous: t("buttons.delete.delete_continuous"),

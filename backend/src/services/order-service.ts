@@ -176,4 +176,8 @@ export const OrderService = {
 
     return updatedOrder;
   },
+  async getOrdersNumbers({ search }: { search: string }) {
+    const orders = await OrderModel.getOrdersNumbers({ search });
+    return orders;
+  },
 };

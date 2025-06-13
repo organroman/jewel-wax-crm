@@ -126,4 +126,17 @@ export const useOrder = {
 
     return { deleteOrderMutation: mutation };
   },
+  getOrdersNumbers: ({
+    query,
+    enabled,
+  }: {
+    query: string;
+    enabled: boolean;
+  }) => {
+    return useQuery({
+      queryKey: ["ordersNumbers", query],
+      queryFn: () => orderService.getOrdersNumbers(query),
+      enabled,
+    });
+  },
 };

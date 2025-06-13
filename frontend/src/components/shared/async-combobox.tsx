@@ -1,118 +1,147 @@
-import { FilterOption } from "@/types/shared.types";
+"use client";
 
-import { Dispatch, SetStateAction } from "react";
-import { ChevronUp, Loader } from "lucide-react";
+import { Dispatch, SetStateAction, useState } from "react";
+import { ChevronDown, ChevronUp, Loader } from "lucide-react";
 import { useTranslation } from "react-i18next";
-
-import { Button } from "@components/ui/button";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@components/ui/popover";
+import { Button } from "@/components/ui/button";
 import {
   Command,
   CommandEmpty,
   CommandGroup,
   CommandInput,
   CommandItem,
-} from "@components/ui/command";
-import { Checkbox } from "@components/ui/checkbox";
+} from "@/components/ui/command";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 
-interface AsyncComboBoxProps {
-  open: boolean;
-  handleOpenChange: (value: boolean) => void;
+type Option<T> = {
   label: string;
+  value: string | number;
+  data?: T;
+};
+
+type AsyncComboboxProps<T> = {
+  label?: string;
+  placeholder?: string;
+  options: Option<T>[];
+  value?: Option<T> | null;
+  onChange: (selected: Option<T>) => void;
   isLoading?: boolean;
-  searchQuery?: string;
-  setSearchQuery?: Dispatch<SetStateAction<string>>;
+  disabled?: boolean;
+  className?: string;
+  displayKey?: keyof T;
+  valueKey?: keyof T;
+  search: string;
+  setSearch?: Dispatch<SetStateAction<string>>;
+};
 
-  options: FilterOption[];
-  param: string;
-  handleSelect: (param: string, value: string) => void;
-  isChecked: (value: string) => boolean;
-}
-
-const AsyncComboBox = ({
-  open,
-  handleOpenChange,
-  searchQuery = "",
-  setSearchQuery,
-  isLoading,
+const AsyncCombobox = <T,>({
   label,
+  placeholder,
   options,
-  param,
-  handleSelect,
-  isChecked,
-}: AsyncComboBoxProps) => {
+  value,
+  onChange,
+  isLoading = false,
+  disabled = false,
+  className,
+  displayKey,
+  valueKey,
+  search,
+  setSearch,
+}: AsyncComboboxProps<T>) => {
   const { t } = useTranslation();
+  const [open, setOpen] = useState(false);
+
+  const selectedLabel = (() => {
+    if (!value) return placeholder || t("placeholders.choose");
+
+    if (value.data && displayKey) {
+      return value.data[displayKey] as string;
+    }
+
+    return value.label;
+  })();
+
   return (
-    <Popover
-      open={open || false}
-      onOpenChange={(value) => handleOpenChange(value)}
-    >
-      <PopoverTrigger asChild>
-        <Button
-          type="button"
-          role="combobox"
-          variant="outline"
-          className={cn(
-            "min-w-[180px] justify-between bg-ui-sidebar h-8 rounded-md text-sm font-semibold relative hover:border-text-light"
-          )}
-        >
-          {label}
-          <ChevronUp
+    <div className={cn("flex flex-col gap-1", className)}>
+      {label && <span className="text-xs lg:text-sm font-medium">{label}</span>}
+
+      <Popover open={open} onOpenChange={setOpen}>
+        <PopoverTrigger asChild>
+          <Button
+            type="button"
+            role="combobox"
+            variant="outline"
             className={cn(
-              "transition-transform duration-300",
-              !open && "rotate-180"
+              "min-w-[240px] max-w-[240px] justify-between h-8 rounded-xs text-sm font-semibold relative",
+              className
             )}
-          />
-        </Button>
-      </PopoverTrigger>
+            disabled={disabled}
+          >
+            {selectedLabel}
+            <div className="absolute top-1.5 right-2">
+              {open ? <ChevronUp /> : <ChevronDown />}
+            </div>
+          </Button>
+        </PopoverTrigger>
 
-      <PopoverContent className="w-[180px] p-0 max-h-64 overflow-y-auto">
-        <Command
-          filter={(value, search) => {
-            const item = options.find((opt) =>
-              opt.label.toLowerCase().includes(search.toLowerCase())
-            );
-
-            if (item?.value === +value) {
-              return 1;
-            }
-            return 0;
-          }}
-        >
-          <CommandInput
-            placeholder="Пошук..."
-            value={searchQuery}
-            onValueChange={setSearchQuery}
-          />
-          {isLoading && (
-            <Loader className="size-6 text-center text-brand-default my-2 animate-spin self-center" />
-          )}
-          {!isLoading && <CommandEmpty>{t("messages.info.no_results")}</CommandEmpty>}
-          <CommandGroup>
-            {options?.map((option) => {
-              return (
-                <CommandItem
-                  key={option.value.toString()}
-                  value={option.value.toString()}
-                  onSelect={() => {
-                    handleSelect(param, option.value.toString());
-                  }}
-                >
-                  <Checkbox checked={isChecked(option.value.toString())} />
-                  {option.label}
-                </CommandItem>
+        <PopoverContent className="lg:w-[240px] p-0 max-h-64 overflow-y-auto">
+          <Command
+            filter={(value, search) => {
+              const item = options.find((opt) =>
+                opt.label.toLowerCase().includes(search.toLowerCase())
               );
-            })}
-          </CommandGroup>
-        </Command>
-      </PopoverContent>
-    </Popover>
+
+              return item?.value?.toString() === value ? 1 : 0;
+            }}
+          >
+            <CommandInput
+              placeholder={t("placeholders.choose")}
+              value={search}
+              onValueChange={setSearch}
+            />
+
+            {isLoading && (
+              <Loader className="size-6 text-center text-brand-default my-2 animate-spin self-center" />
+            )}
+
+            {!isLoading && (
+              <CommandEmpty>{t("messages.info.no_results")}</CommandEmpty>
+            )}
+
+            <CommandGroup>
+              {options.map((option) => {
+                const label = displayKey
+                  ? (option.data?.[displayKey] as string)
+                  : option.label;
+
+                const value = valueKey
+                  ? (option.data?.[valueKey] as string | number)
+                  : option.value;
+
+                return (
+                  <CommandItem
+                    key={value}
+                    value={value.toString()}
+                    onSelect={() => {
+                      onChange(option);
+                      setOpen(false);
+                    }}
+                  >
+                    {label}
+                  </CommandItem>
+                );
+              })}
+            </CommandGroup>
+          </Command>
+        </PopoverContent>
+      </Popover>
+    </div>
   );
 };
 
-export default AsyncComboBox;
+export default AsyncCombobox;

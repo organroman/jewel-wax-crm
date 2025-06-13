@@ -132,4 +132,16 @@ export const OrderController = {
       next(error);
     }
   },
+  async getOrderNumbers(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { search } = req.query;
+
+      const orders = await OrderService.getOrdersNumbers({
+        search: search as string,
+      });
+      res.status(200).json(orders);
+    } catch (error) {
+      next(error);
+    }
+  },
 };
