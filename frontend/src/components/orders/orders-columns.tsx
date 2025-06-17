@@ -4,7 +4,6 @@ import { PersonRoleValue } from "@/types/person.types";
 import { ColumnDef } from "@tanstack/react-table";
 import { CircleAlertIcon, StarIcon } from "lucide-react";
 import dayjs from "dayjs";
-import Image from "next/image";
 
 import { Button } from "../ui/button";
 import { Badge } from "../ui/badge";
@@ -90,14 +89,21 @@ export const getOrdersColumns = (
       id: "image",
       header: t("order.table_headers.photo"),
       cell: ({ row }) => {
-        const imageUrl = row.original.media?.url || "";
+        const imageUrl = row.original.media.at(0)?.url || "";
 
         return imageUrl ? (
-          <Image src={imageUrl} width={30} height={30} alt="img" />
+          <div className="w-6 h-6 rounded-full">
+            <img
+              src={imageUrl}
+              alt="img"
+              className="text-xs rounded-full h-full aspect-square"
+            />
+          </div>
         ) : (
           <div className="w-6 h-6 rounded-full bg-text-light"></div>
         );
       },
+
       size: 36,
     },
     {

@@ -1,4 +1,6 @@
 import { useTranslation } from "react-i18next";
+import { Loader } from "lucide-react";
+
 import OrderFavorite from "./order-favorite";
 import OrderImportant from "./order-important";
 import InfoLabel from "../shared/typography/info-label";
@@ -12,6 +14,7 @@ interface OrderCardHeaderProps {
   orderNumber: number;
   customerId: number;
   customerFullName: string;
+  savingIsLoading: boolean;
 }
 
 const OrderCardHeader = ({
@@ -21,6 +24,7 @@ const OrderCardHeader = ({
   orderNumber,
   customerId,
   customerFullName,
+  savingIsLoading,
 }: OrderCardHeaderProps) => {
   const { t } = useTranslation();
   return (
@@ -47,8 +51,20 @@ const OrderCardHeader = ({
         <Button variant="secondary" className="bg-transparent rounded-sm">
           {t("order.buttons.create_invoice")}
         </Button>
-        <Button type="submit" form="orderForm" className="text-white">
-          {t("buttons.save")}
+        <Button
+          type="submit"
+          form="orderForm"
+          className="text-white"
+          disabled={savingIsLoading}
+        >
+          {savingIsLoading ? (
+            <div className="flex items-center gap-2.5">
+              <Loader className="size-4 text-white animate-spin" />
+              {t("buttons.save")}
+            </div>
+          ) : (
+            t("buttons.save")
+          )}
         </Button>
       </div>
     </div>

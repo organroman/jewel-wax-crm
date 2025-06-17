@@ -1,11 +1,17 @@
-import { Order, Stage, UpdateOrderSchema } from "@/types/order.types";
+import {
+  Order,
+  OrderMedia,
+  Stage,
+  UpdateOrderSchema,
+} from "@/types/order.types";
+import { ResultUploadedFile } from "@/types/upload.types";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useFieldArray, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import dayjs from "dayjs";
 import { UseMutationResult } from "@tanstack/react-query";
-import { SetStateAction } from "react";
+import { SetStateAction, useState } from "react";
 
 import { usePerson } from "@/api/persons/use-person";
 import { useDialog } from "@/hooks/use-dialog";
@@ -25,6 +31,8 @@ import InfoLabel from "../shared/typography/info-label";
 import InfoValue from "../shared/typography/info-value";
 import OrderChangeStage from "./order-change-stage";
 
+import OrderImages from "./order-images";
+
 import { updateOrderSchema } from "@/validators/order.validator";
 
 import {
@@ -36,24 +44,29 @@ import { cn } from "@/lib/utils";
 
 interface OrderFormProps {
   order?: Order;
-  handleMutate: (data: UpdateOrderSchema) => void;
   deleteMutation?: UseMutationResult<unknown, Error, number>;
   isDeleteDialogOpen?: boolean;
   setIsDeleteDialogOpen?: (v: SetStateAction<boolean>) => void;
+  uploadImagesMutation: UseMutationResult<ResultUploadedFile[], Error, File[]>;
+  mutation: UseMutationResult<Order, Error, UpdateOrderSchema>;
 }
 
 const OrderForm = ({
   order,
-  handleMutate,
+  mutation,
   deleteMutation,
   isDeleteDialogOpen,
   setIsDeleteDialogOpen,
+  uploadImagesMutation,
 }: OrderFormProps) => {
   const { t } = useTranslation();
 
   const { data: modellers = [] } = usePerson.getModellers();
   const { data: millers = [] } = usePerson.getMillers();
   const { data: printers = [] } = usePerson.getPrinters();
+
+  const [newFiles, setNewFiles] = useState<File[]>([]);
+  const [previews, setPreviews] = useState<OrderMedia[]>(order?.media ?? []);
 
   const {
     dialogOpen: changeStageDialogOpen,
@@ -107,6 +120,7 @@ const OrderForm = ({
       stages: defaultOrderStages,
       active_stage: order?.active_stage || "new",
       linked_orders: order?.linked_orders || [],
+      media: order?.media || [],
     },
   });
 
@@ -119,6 +133,44 @@ const OrderForm = ({
     form.setValue("active_stage", newValue);
   };
 
+  const onSubmit = async (formData: UpdateOrderSchema) => {
+    if (newFiles.length) {
+      uploadImagesMutation.mutate(newFiles, {
+        onSuccess: (data) => {
+          console.log(data);
+          const currentMedia = form.getValues("media");
+          const newMedia = data.map((media) => ({
+            url: media.url,
+            type: "image",
+            public_id: media.public_id,
+            uploaded_by: +media.uploaded_by,
+            is_main: false,
+            order_id: order?.id,
+            name: media.name,
+          }));
+
+          form.setValue("media", [...currentMedia, ...newMedia]);
+
+          mutation.mutate(
+            {
+              ...formData,
+              media: form.getValues("media"),
+            },
+            {
+              onSuccess: (data) => form.setValue("media", data.media),
+            }
+          );
+        },
+      });
+      setNewFiles([]);
+    } else mutation.mutate(formData);
+  };
+
+  const handleUpdateImages = (media: OrderMedia[]) => {
+    console.log(media);
+    form.setValue("media", media);
+  };
+
   console.log("fields", form.getValues());
   console.log("errors", form.formState.errors);
   return (
@@ -126,12 +178,21 @@ const OrderForm = ({
       <Form {...form}>
         <form
           id="orderForm"
-          onSubmit={form.handleSubmit(handleMutate)}
+          onSubmit={form.handleSubmit(onSubmit)}
           className="flex flex-col h-full flex-1"
         >
           <div className="flex flex-col gap-5">
-            <div className="flex gap-5">
-              <div className="w-1/3"></div>
+            <div className="flex gap-7">
+              <div className="w-1/3">
+                <OrderImages
+                  newFiles={newFiles}
+                  setNewFiles={setNewFiles}
+                  previews={previews}
+                  setPreviews={setPreviews}
+                  currentMedia={form.getValues("media")}
+                  handleUpdateMedia={handleUpdateImages}
+                />
+              </div>
               <div className="w-3/4">
                 <div className="flex items-end w-full gap-5 mb-3.5">
                   <FormInput

@@ -1,7 +1,6 @@
 "use client";
 
 import { TabOption } from "@/types/shared.types";
-import { UpdateOrderSchema } from "@/types/order.types";
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { ChevronLeftIcon, Loader } from "lucide-react";
@@ -10,6 +9,7 @@ import { useTranslation } from "react-i18next";
 import { useState } from "react";
 
 import { useOrder } from "@/api/orders/use-order";
+import { useUpload } from "@/api/upload/use-upload";
 
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -37,6 +37,7 @@ const OrderClient = ({ id }: { id: number }) => {
   } = useDialog();
 
   const { updateMutation } = useOrder.update({ queryClient, t });
+  const { uploadImagesMutation } = useUpload.uploadImages();
 
   const handleDeleteSuccess = () => {
     closeDialog();
@@ -79,13 +80,6 @@ const OrderClient = ({ id }: { id: number }) => {
     error,
   } = useOrder.getById({ id, enabled: id ? true : false });
 
-  console.log(order);
-
-  const handleUpdate = (formData: UpdateOrderSchema) => {
-    console.log("clicked");
-    updateMutation?.mutate({ ...formData });
-  };
-
   if (isLoading) {
     return <Loader />;
   }
@@ -117,14 +111,18 @@ const OrderClient = ({ id }: { id: number }) => {
           customerId={order.customer.id}
           customerFullName={order.customer.fullname}
           orderNumber={order.number}
+          savingIsLoading={
+            updateMutation.isPending || uploadImagesMutation.isPending
+          }
         />
         {selectedTab.value === "order" && (
           <OrderForm
             order={order}
-            handleMutate={handleUpdate}
             deleteMutation={deleteOrderMutation}
             isDeleteDialogOpen={isDeleteDialogOpen}
             setIsDeleteDialogOpen={setDialogOpen}
+            uploadImagesMutation={uploadImagesMutation}
+            mutation={updateMutation}
           />
         )}
         {selectedTab.value === "payments" && <OrderPayments />}

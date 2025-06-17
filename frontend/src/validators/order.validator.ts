@@ -35,7 +35,7 @@ const orderDeliveryAddressSchema = z.object({
   order_id: z.number().optional(),
   delivery_address_id: z.number().optional(),
   address_line: z.string().optional(),
-  cost: costField.nullable().default(0.0),
+  cost: costField,
   declaration_number: z.string().optional().nullable(),
 });
 
@@ -66,6 +66,20 @@ const linkedOrderSchema = z.object({
   is_common_delivery: z.boolean().default(false),
 });
 
+const orderMediaSchema = z.object({
+  id: z.number().optional(),
+  order_id: z.number().optional(),
+  type: z.string().optional(),
+  url: z.string().optional(),
+  mime_type: z.string().optional().nullable(),
+  name: z.string().optional().nullable(),
+  public_id: z.string().optional(),
+  is_main: z.boolean().default(false).optional(),
+  uploaded_by: z.number().optional(),
+  created_at: z.string().optional(),
+  updated_at: z.string().optional(),
+});
+
 export const updateOrderSchema = z.object({
   id: z.number().optional(),
   number: numberField,
@@ -85,4 +99,5 @@ export const updateOrderSchema = z.object({
   stages: z.array(orderStageSchema),
   active_stage: stageSchema,
   linked_orders: z.array(linkedOrderSchema).optional(),
+  media: z.array(orderMediaSchema),
 });
