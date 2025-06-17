@@ -1,3 +1,4 @@
+import { AdminOrder, UserOrder } from "../types/orders.types";
 import { PersonRole } from "../types/person.types";
 
 export const formatLabel = (value: string): string => {
@@ -11,8 +12,6 @@ export function stripPassword<T extends { password?: string }>(person: T) {
   const { password, ...safe } = person;
   return safe;
 }
-
-
 
 export function getFullName(
   first?: string,
@@ -58,4 +57,53 @@ export function getVisibleFieldsForRoleAndContext(role: PersonRole): string[] {
     ...(role === "modeller" ? ["modeller_id", "modeling_cost"] : []),
     ...(role === "miller" ? ["miller_id", "milling_cost"] : []),
   ];
+}
+
+export function stripPrivateFields(
+  order: AdminOrder | UserOrder,
+  user_role: PersonRole
+): Partial<AdminOrder | UserOrder> {
+  const fieldsToRemove: Partial<Record<PersonRole, string[]>> = {
+    modeller: [
+      "customer_id",
+      "miller_id",
+      "printer_id",
+      "modeller_id",
+      "modeller_first_name",
+      "modeller_last_name",
+      "modeller_patronymic",
+    ],
+    miller: [
+      "customer_id",
+      "modeller_id",
+      "printer_id",
+      "miller_id",
+      "miller_first_name",
+      "miller_last_name",
+      "miller_patronymic",
+    ],
+    super_admin: [
+      "modeller_id",
+      "miller_id",
+      "printer_id",
+      "customer_id",
+      "modeller_first_name",
+      "modeller_last_name",
+      "modeller_patronymic",
+      "miller_first_name",
+      "miller_last_name",
+      "miller_patronymic",
+      "customer_first_name",
+      "customer_last_name",
+      "customer_patronymic",
+      "printer_first_name",
+      "printer_last_name",
+      "printer_patronymic",
+    ],
+  };
+
+  const omit = new Set(fieldsToRemove[user_role] || []);
+  return Object.fromEntries(
+    Object.entries(order).filter(([key]) => !omit.has(key))
+  );
 }

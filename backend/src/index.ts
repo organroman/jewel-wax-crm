@@ -13,11 +13,13 @@ import contactRoutes from "./routes/contact-routes";
 import requestRoutes from "./routes/request-routes";
 import locationRoutes from "./routes/location-routes";
 import activityLogRoutes from "./routes/activity-logs-routes";
+import uploadRoutes from "./routes/upload-routes";
 
 const app = express();
 const PORT = process.env.PORT || 8000;
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(
   cors({
     origin: ["http://localhost:8000", "http://localhost:3000"],
@@ -38,6 +40,7 @@ app.use("/contacts", contactRoutes);
 app.use("/requests", requestRoutes);
 app.use("/locations", locationRoutes);
 app.use("/activity-logs", activityLogRoutes);
+app.use("/upload", uploadRoutes);
 
 app.use(errorHandler);
 

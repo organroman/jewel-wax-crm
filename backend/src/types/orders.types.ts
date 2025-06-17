@@ -36,6 +36,8 @@ export interface OrderMedia {
   uploaded_by: number;
   created_at: Date;
   updated_at: Date;
+  public_id: string;
+  is_main?: boolean;
 }
 export interface OrderFavorite {
   id: number;
@@ -64,6 +66,7 @@ export interface OrderDelivery {
   cost: number;
   declaration_number: number;
   address_line: string;
+  updated_at?: Date;
 }
 
 export interface OrderBase {
@@ -167,6 +170,7 @@ export interface CreateOrderInput {
   stages: OrderStage[];
   delivery: OrderDelivery;
   linked_orders: LinkedOrder[];
+  media: OrderMedia[];
 }
 
 export interface UpdateOrderInput extends Partial<CreateOrderInput> {

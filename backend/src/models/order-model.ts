@@ -10,18 +10,13 @@ import {
   OrderStage,
   Stage,
   StageStatus,
-  UpdateOrderInput,
-  UserOrder,
 } from "../types/orders.types";
+import { PersonRole } from "../types/person.types";
 
 import db from "../db/db";
+
 import { paginateQuery } from "../utils/pagination";
-import { PersonRole } from "../types/person.types";
-import {
-  getFullName,
-  getVisibleFieldsForRoleAndContext,
-} from "../utils/helpers";
-import { PersonModel } from "./person-model";
+import { getVisibleFieldsForRoleAndContext } from "../utils/helpers";
 
 export const OrderModel = {
   async getAll({
@@ -51,17 +46,18 @@ export const OrderModel = {
         )
       );
 
-      qb.leftJoin(
-        db.raw(`LATERAL (
-            SELECT *
+      qb.select(
+        db.raw(`(
+          SELECT COALESCE(json_agg(m), '[]'::json)
+          FROM (
+            SELECT id, url, public_id, is_main, created_at
             FROM order_media
             WHERE order_media.order_id = orders.id
             ORDER BY created_at ASC
             LIMIT 1
-          ) as media`),
-        db.raw("true")
+          ) m
+        ) as media`)
       );
-      qb.select("media");
 
       if (user_role === "super_admin") {
         qb.leftJoin(
@@ -78,7 +74,6 @@ export const OrderModel = {
         qb.select("stage_statuses.status as active_stage_status");
       }
 
-      // Join people
       const joins = ["customer", "modeller", "miller", "printer"];
       joins.forEach((role) => {
         if (visibleFields.includes(`${role}_id`)) {
@@ -141,149 +136,25 @@ export const OrderModel = {
 
     return orderStage.status;
   },
-  async getById({
-    orderId,
-    role,
-    userId,
-  }: {
-    orderId: number;
-    role: PersonRole;
-    userId: number;
-  }): Promise<AdminOrder | UserOrder | null> {
-    const [order] = await db<OrderBase>("orders").where("id", orderId);
-
-    if (!order) return null;
-
-    const favorite = await db<OrderFavorite>("order_favorites")
-      .where("person_id", userId)
+  async getFavoriteOrderByIdAndUserId(personId: number, orderId: number) {
+    return await db<OrderFavorite>("order_favorites")
+      .where("person_id", personId)
       .andWhere("order_id", orderId)
       .first();
+  },
 
-    const is_favorite = favorite ? true : false;
-    const media = await this.getOrderImages({ orderId });
+  async getOrderBaseById(orderId: number): Promise<OrderBase> {
+    const [order] = await db<OrderBase>("orders").where("id", orderId);
+    return order;
+  },
 
-    const customerFull = await PersonModel.findById(order.customer_id);
-
-    const customer = customerFull
-      ? {
-          id: customerFull?.id,
-          fullname: getFullName(
-            customerFull?.first_name,
-            customerFull?.last_name,
-            customerFull?.patronymic
-          ),
-          delivery_addresses: customerFull.delivery_addresses
-            ? customerFull.delivery_addresses?.map((i) => ({
-                delivery_address_id: i.id,
-                address_line: i.address_line,
-              }))
-            : [],
-        }
-      : null;
-
-    const modellerFull =
-      order.modeller_id && (await PersonModel.findById(order.modeller_id));
-
-    const modeller = modellerFull
-      ? {
-          id: modellerFull?.id,
-          fullname: getFullName(
-            modellerFull?.first_name,
-            modellerFull?.last_name,
-            modellerFull?.patronymic
-          ),
-        }
-      : null;
-
-    const millerFull =
-      order.miller_id && (await PersonModel.findById(order.miller_id));
-
-    const miller = millerFull
-      ? {
-          id: millerFull?.id,
-          fullname: getFullName(
-            millerFull?.first_name,
-            millerFull?.last_name,
-            millerFull?.patronymic
-          ),
-        }
-      : null;
-
-    const printerFull =
-      order.printer_id && (await PersonModel.findById(order.printer_id));
-
-    const printer = printerFull
-      ? {
-          id: printerFull?.id,
-          fullname: getFullName(
-            printerFull?.first_name,
-            printerFull?.last_name,
-            printerFull?.patronymic
-          ),
-        }
-      : null;
-
-    const createdByFull = await PersonModel.findById(order.created_by);
-    const createdBy = getFullName(
-      createdByFull?.first_name,
-      createdByFull?.last_name,
-      createdByFull?.patronymic
-    );
-
-    const stages = await db<OrderStage>("order_stage_statuses").where(
+  async getOrderStagesByOrderId(orderId: number) {
+    return await db<OrderStage>("order_stage_statuses").where(
       "order_id",
       orderId
     );
-
-    const activeStageStatus = stages.find(
-      (stage) => stage.stage === order.active_stage
-    )?.status;
-
-    const [delivery] = await db<OrderDelivery>("order_deliveries")
-      .where("order_id", orderId)
-      .join(
-        "delivery_addresses",
-        "delivery_addresses.id",
-        "order_deliveries.delivery_address_id"
-      );
-
-    const linked_orders = await db<LinkedOrder>("order_links")
-      .where("order_id", orderId)
-      .leftJoin("orders", "orders.id", "order_links.linked_order_id")
-      .select("order_links.*", "orders.number as linked_order_number");
-
-    const {
-      customer_id,
-      miller_id,
-      printer_id,
-      created_by,
-      modeller_id,
-      ...rest
-    } = order;
-
-    const enrichedOrder = {
-      ...rest,
-      is_favorite,
-      media,
-      customer: customer,
-      modeller,
-      miller,
-      printer,
-      stages,
-      active_stage_status: activeStageStatus || null,
-      processing_days:
-        order.processing_days ??
-        Math.ceil(
-          (Date.now() - new Date(order.created_at).getTime()) /
-            (1000 * 60 * 60 * 24)
-        ),
-      delivery,
-      linked_orders,
-      createdBy,
-    };
-
-    return enrichedOrder;
   },
+
   async getOrderStagesForOrders(orderIds: number[], role: string) {
     const query = db("order_stage_statuses").whereIn("order_id", orderIds);
 
@@ -414,122 +285,83 @@ export const OrderModel = {
 
     await db("orders").update({ payment_status: status }).where("id", orderId);
   },
-
-  async update(
-    orderId: number,
-    userId: number,
-    role: PersonRole,
-    data: UpdateOrderInput
-  ): Promise<AdminOrder | UserOrder | null> {
-    const {
-      customer,
-      created_by,
-      processing_days,
-      miller,
-      modeller,
-      printer,
-      stages,
-      delivery,
-      linked_orders,
-      ...orderFields
-    } = data;
-
-    const isOrderCompleted =
-      stages?.find((stage) => stage.stage === "done")?.status === "done";
-
-    const [updatedOrder] = await db<OrderBase>("orders")
+  async updateBaseOrder(orderId: number, fields: Partial<OrderBase>) {
+    return await db<OrderBase>("orders")
       .where("id", orderId)
-      .update({
-        ...orderFields,
-        updated_at: new Date(),
-        customer_id: customer?.id,
-        created_by: userId,
-        miller_id: miller?.id ?? null,
-        modeller_id: modeller?.id ?? null,
-        printer_id: printer?.id ?? null,
-        processing_days: isOrderCompleted
-          ? Math.ceil(
-              (Date.now() - new Date(data.created_at).getTime()) /
-                (1000 * 60 * 60 * 24)
-            )
-          : null,
-      })
+      .update(fields)
       .returning("*");
+  },
 
-    if (!updatedOrder) {
-      return null;
-    }
-    if (linked_orders?.length) {
-      await db<LinkedOrder>("order_links")
-        .where("order_id", updatedOrder.id)
-        .del();
-      await db<LinkedOrder>("order_links").insert(
-        linked_orders.map((lo) => ({
-          ...lo,
-          order_id: updatedOrder.id,
-        }))
-      );
-    }
+  async getLinkedOrders(orderId: number): Promise<LinkedOrder[]> {
+    return await db<LinkedOrder>("order_links")
+      .where("order_id", orderId)
+      .leftJoin("orders", "orders.id", "order_links.linked_order_id")
+      .select("order_links.*", "orders.number as linked_order_number");
+  },
 
-    if (stages?.length) {
-      await Promise.all(
-        stages.map(async (s) => {
-          const isStageStarted =
-            !s.started_at &&
-            s.status &&
-            [
-              "clarification",
-              "in_process",
-              "negotiation",
-              "pending",
-              "processed",
-            ].includes(s.status);
+  async replaceLinkedOrders(orderId: number, links: LinkedOrder[]) {
+    await db<LinkedOrder>("order_links").where("order_id", orderId).del();
+    await db<LinkedOrder>("order_links").insert(
+      links.map((lo) => ({
+        ...lo,
+        order_id: orderId,
+      }))
+    );
+  },
+  async getMediaByOrderId(orderId: number): Promise<OrderMedia[]> {
+    return await db<OrderMedia>("order_media").where("order_id", orderId);
+  },
 
-          const isStageCompleted = s.status === "done" && !s.completed_at;
+  async updateMediaFlags(toUpdate: OrderMedia[], updatedMedia: OrderMedia[]) {
+    await Promise.all(
+      toUpdate.map((m) => {
+        const updated = updatedMedia.find((u) => u.id === m.id);
+        return db("order_media")
+          .where("id", m.id)
+          .update({ is_main: updated?.is_main });
+      })
+    );
+  },
 
-          if (!Object.prototype.hasOwnProperty.call(s, s.id)) {
-            await db("order_stage_statuses").insert({
-              stage: s.stage,
-              status: s.status,
-              order_id: updatedOrder.id,
-              started_at: s.started_at ?? (isStageStarted ? new Date() : null),
-              completed_at:
-                s.completed_at ?? (isStageCompleted ? new Date() : null),
-            });
-          } else
-            await db("order_stage_statuses")
-              .where("id", s.id)
-              .andWhere("stage", s.stage)
-              .update({
-                status: s.status,
-                updated_at: new Date(),
-                started_at:
-                  s.started_at ?? (isStageStarted ? new Date() : null),
-                completed_at:
-                  s.completed_at ?? (isStageCompleted ? new Date() : null),
-              });
-        })
-      );
-    }
+  async insertMedia(orderId: number, media: Partial<OrderMedia>[]) {
+    await db("order_media").insert(
+      media.map((m) => ({ ...m, order_id: orderId }))
+    );
+  },
 
-    if (delivery) {
-      if (!Object.prototype.hasOwnProperty.call(delivery, delivery.id)) {
-        await db("order_deliveries").insert({
-          cost: delivery.cost,
-          declaration_number: delivery.declaration_number,
-          delivery_address_id: delivery.delivery_address_id,
-          order_id: updatedOrder.id,
-        });
-      }
-      await db("order_deliveries").where("order_id", orderId).update({
-        delivery_address_id: delivery.delivery_address_id,
-        cost: delivery.cost,
-        updated_at: new Date(),
-        declaration_number: delivery.declaration_number,
-      });
-    }
+  async deleteMediaByIds(ids: number[]) {
+    await db<OrderMedia>("order_media").whereIn("id", ids).del();
+  },
+  async getDelivery(orderId: number): Promise<OrderDelivery> {
+    const delivery = await db<OrderDelivery>("order_deliveries")
+      .where("order_id", orderId)
+      .join(
+        "delivery_addresses",
+        "delivery_addresses.id",
+        "order_deliveries.delivery_address_id"
+      )
+      .first();
+    return delivery;
+  },
+  async insertDelivery(delivery: Partial<OrderDelivery>) {
+    await db("order_deliveries").insert(delivery);
+  },
+  async updateDelivery(orderId: number, delivery: Partial<OrderDelivery>) {
+    await db("order_deliveries").where("order_id", orderId).update(delivery);
+  },
 
-    return await OrderModel.getById({ orderId, userId, role });
+  async insertStage(stage: Partial<OrderStage>) {
+    await db("order_stage_statuses").insert(stage);
+  },
+  async updateStage(
+    orderId: number,
+    stage: Stage,
+    fields: Partial<OrderStage>
+  ) {
+    await db<OrderStage>("order_stage_statuses")
+      .where("order_id", orderId)
+      .andWhere("stage", stage)
+      .update(fields);
   },
 
   async getOrdersNumbers({
