@@ -23,15 +23,17 @@ export interface OrderCustomer extends OrderPerson {
 }
 
 export interface OrderMedia {
-  id: number;
-  order_id: number;
-  type: string;
-  url: string;
-  mime_type?: string;
-  name?: string;
-  uploaded_by: number;
-  created_at: Date;
-  updated_at: Date;
+  id?: number;
+  order_id?: number;
+  type?: string;
+  url?: string;
+  mime_type?: string | null;
+  name?: string | null;
+  uploaded_by?: number;
+  created_at?: string;
+  updated_at?: string;
+  public_id?: string;
+  is_main?: boolean;
 }
 
 export type Stage = (typeof ORDER_STAGE)[number];
@@ -79,12 +81,11 @@ export interface Order {
   modeller: OrderPerson | null;
   miller: OrderPerson | null;
   printer: OrderPerson | null;
-  media: OrderMedia | null;
+  media: OrderMedia[];
   amount: number;
   modeling_cost: number;
   milling_cost: number;
   printing_cost: number;
-
   payment_status?: PaymentStatus;
   active_stage: Stage;
   active_stage_status?: StageStatus;
@@ -101,5 +102,12 @@ export interface Order {
 export interface PaginatedOrdersResult<T> extends PaginatedResult<T> {
   stage_counts: Record<string, number>;
 }
-
-export type UpdateOrderSchema = z.infer<typeof updateOrderSchema>;
+export type UpdateOrderSchema = {
+  amount: number | string;
+  modeling_cost: number | string;
+  milling_cost: number | string;
+  printing_cost: number | string;
+} & Omit<
+  z.infer<typeof updateOrderSchema>,
+  "amount" | "modeling_cost" | "milling_cost" | "printing_cost"
+>;

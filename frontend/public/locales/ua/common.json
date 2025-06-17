@@ -249,7 +249,7 @@
       "stage": "$t(dictionary.stage)",
       "stage_status": "$t(dictionary.stage_status)",
       "days": "Дн.",
-      "comment": "$t(dictionary.comment",
+      "comment": "$t(dictionary.comment)",
       "actions": "$t(dictionary.actions)"
     },
     "stages": {
@@ -309,7 +309,8 @@
       "stage": "$t(dictionary.stage)",
       "stage_status": "$t(dictionary.stage_status)",
       "date": "$t(dictionary.date)",
-      "common_delivery": "Обєднати замовлення для доставки"
+      "common_delivery": "Обєднати замовлення для доставки",
+      "main_photo": "Основне фото"
     }
   },
 
