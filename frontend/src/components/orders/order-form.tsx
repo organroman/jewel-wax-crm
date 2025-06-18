@@ -171,8 +171,6 @@ const OrderForm = ({
     form.setValue("media", media);
   };
 
-  console.log("fields", form.getValues());
-  console.log("errors", form.formState.errors);
   return (
     <div className="h-full w-full overflow-y-auto bg-ui-sidebar p-4 flex flex-col rounded-bl-md rounded-br-md ">
       <Form {...form}>
@@ -183,7 +181,7 @@ const OrderForm = ({
         >
           <div className="flex flex-col gap-5">
             <div className="flex gap-7">
-              <div className="w-1/3">
+              <div className="w-1/3 overflow-x-hidden">
                 <OrderImages
                   newFiles={newFiles}
                   setNewFiles={setNewFiles}
