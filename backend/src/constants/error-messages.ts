@@ -15,6 +15,7 @@ const ERROR_MESSAGES = {
   MISSING_REQUIRED_FIELDS: "Missing required fields",
   MISSING_REFRESH_TOKEN: "Missing refresh token",
   MISSING_TARGET_AND_TARGET_ID: "Missing target type and target Id",
+  MISSING_CITY_REF_PARAM: "Missing city ref param",
   PHONE_EXISTS: "Person with this phone already exists",
   PASSWORD_EMAIL_REQUIRED: "Password and email are required",
   PERSON_NOT_FOUND: "Person not found",

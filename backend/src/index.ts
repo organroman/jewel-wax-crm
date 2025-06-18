@@ -14,6 +14,7 @@ import requestRoutes from "./routes/request-routes";
 import locationRoutes from "./routes/location-routes";
 import activityLogRoutes from "./routes/activity-logs-routes";
 import uploadRoutes from "./routes/upload-routes";
+import novaPoshtaRoutes from "./routes/novaposhta-routes";
 
 const app = express();
 const PORT = process.env.PORT || 8000;
@@ -41,6 +42,7 @@ app.use("/requests", requestRoutes);
 app.use("/locations", locationRoutes);
 app.use("/activity-logs", activityLogRoutes);
 app.use("/upload", uploadRoutes);
+app.use("/np", novaPoshtaRoutes);
 
 app.use(errorHandler);
 

@@ -4,9 +4,14 @@ export interface Country {
 }
 
 export interface City {
-  id: number;
-  country_id: number;
+  id?: number;
+  country_id?: number;
   name: string;
+  ref: string;
+  area_ref: string;
+  area: string;
+  settlementType_ref: string;
+  settlementType: string;
 }
 
 export interface CreateCountryInput {
