@@ -38,8 +38,11 @@ export const LocationController = {
   },
   async getCitiesByCountry(req: Request, res: Response, next: NextFunction) {
     try {
+      const { search } = req.query;
+
       const cities = await LocationService.getCitiesByCountry(
-        Number(req.params.countryId)
+        Number(req.params.countryId),
+        search as string
       );
       res.status(200).json(cities);
     } catch (error) {

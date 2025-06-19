@@ -11,22 +11,16 @@ import { QueryClient, useMutation, useQuery } from "@tanstack/react-query";
 import { locationService } from "./location-service";
 
 export const useLocation = {
-  getCitiesByCountryQuery: (countryId?: number) => ({
-    queryKey: ["cities", countryId],
-    queryFn: () => locationService.getCitiesByCountry(countryId!!),
-    enabled: !!countryId,
-  }),
-
   getCountries: () => {
     return useQuery({
       queryKey: ["countries"],
       queryFn: () => locationService.getCountries(),
     });
   },
-  getCitiesByCountry: (countryId?: number) => {
+  getCitiesByCountry: (query: string, countryId?: number) => {
     return useQuery({
-      queryKey: ["cities", countryId],
-      queryFn: () => locationService.getCitiesByCountry(countryId!!),
+      queryKey: ["cities", countryId, query],
+      queryFn: () => locationService.getCitiesByCountry(countryId!!, query),
       enabled: !!countryId,
     });
   },
@@ -34,6 +28,13 @@ export const useLocation = {
     return useQuery({
       queryKey: ["cities", query],
       queryFn: () => locationService.getAllCities(query),
+    });
+  },
+  getCityById: ({ cityId, enabled }: { cityId: number; enabled: boolean }) => {
+    return useQuery({
+      queryKey: ["city", cityId],
+      queryFn: () => locationService.getCityById(cityId),
+      enabled,
     });
   },
   createCity: ({

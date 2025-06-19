@@ -1,8 +1,8 @@
 import { Location } from "@/types/person.types";
 import { FormArrayLocationProps } from "@/types/form.types";
 
-import { useEffect, useMemo, useRef } from "react";
-import { useQueries } from "@tanstack/react-query";
+import { useEffect, useMemo, useRef, useState } from "react";
+import debounce from "lodash.debounce";
 import {
   FieldValues,
   Path,
@@ -22,6 +22,7 @@ import { Label } from "@/components/ui/label";
 import FormCombobox from "./form-combobox";
 import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
+import FormAsyncCombobox from "./form-async-combobox ";
 
 const FormArrayLocation = <T extends FieldValues>({
   name,
@@ -38,6 +39,14 @@ const FormArrayLocation = <T extends FieldValues>({
   const hasAppended = useRef(false);
   const { t } = useTranslation();
 
+  const [search, setSearch] = useState("");
+  const [, setDebouncedValue] = useState("");
+
+  const debouncedSearchQuery = useMemo(
+    () => debounce((value: string) => setDebouncedValue(value), 1000),
+    []
+  );
+
   const countryIds = useMemo(
     () =>
       (watchedFields as Location[])?.map(
@@ -46,11 +55,28 @@ const FormArrayLocation = <T extends FieldValues>({
     [watchedFields]
   );
 
-  const cityQueries = useQueries({
-    queries: countryIds.map((countryId) =>
-      useLocation.getCitiesByCountryQuery(countryId)
-    ),
+  const cityIds = useMemo(
+    () =>
+      (watchedFields as Location[])?.map(
+        (row: { city_id?: number }) => row?.city_id
+      ) || [],
+    [watchedFields]
+  );
+
+  const cityQueries = countryIds.map((countryId) =>
+    useLocation.getCitiesByCountry(`search=${search}`, countryId)
+  );
+
+  const existingCitiesQueries = cityIds.map((cityId) => {
+    return cityId ? useLocation.getCityById({ cityId, enabled: true }) : null;
   });
+
+  useEffect(() => {
+    debouncedSearchQuery(search);
+    return () => {
+      debouncedSearchQuery.cancel();
+    };
+  }, [search, debouncedSearchQuery]);
 
   useEffect(() => {
     const noData = (!watchedFields || watchedFields.length === 0) && required;
@@ -91,8 +117,23 @@ const FormArrayLocation = <T extends FieldValues>({
       {fields.map((field, index) => {
         const isMain = watchedFields?.[index]?.is_main ?? false;
         const selectedCountryId = watchedFields?.[index]?.country_id;
-        const cityOptions = cityQueries[index]?.data || [];
+        const cityOptions = cityQueries[index]?.data?.data || [];
         const isLoading = cityQueries[index]?.isLoading;
+        const existingCity = existingCitiesQueries[index]?.data;
+
+        const isExistingInOptions = cityOptions.find(
+          (c) => c.id === existingCity?.id
+        );
+
+        const fullCities = existingCity && !isExistingInOptions
+          ? [...cityOptions, existingCity]
+          : cityOptions;
+
+        const fullCityOptions = fullCities.map((c) => ({
+          ...c,
+          city_name: c.name,
+          city_id: c.id,
+        }));
 
         const hasCountryError = !!get(errors, `${name}.${index}.country_id`);
         const hasCityError = !!get(errors, `${name}.${index}.city_id`);
@@ -143,7 +184,7 @@ const FormArrayLocation = <T extends FieldValues>({
                 hasCountryError ? "items-center" : "items-end"
               )}
             >
-              <FormCombobox
+              {/* <FormCombobox
                 name={`${name}.${index}.city_id` as Path<T>}
                 label={t("location.labels.city")}
                 placeholder={t("location.placeholders.choose_city")}
@@ -161,6 +202,30 @@ const FormArrayLocation = <T extends FieldValues>({
                 valueKey="id"
                 saveOnlyValue={true}
                 disabled={!selectedCountryId || isLoading}
+              /> */}
+              <FormAsyncCombobox
+                name={`${name}.${index}.city_id` as Path<T>}
+                control={control}
+                placeholder={t("location.placeholders.choose_city")}
+                options={
+                  (fullCityOptions &&
+                    fullCityOptions.map((c) => ({
+                      label: c.name || "",
+                      value: c.id,
+                      data: c,
+                    }))) ||
+                  []
+                }
+                label={t("location.labels.city")}
+                required={required && index === 0}
+                displayKey="name"
+                valueKey="id"
+                // saveFullObject={true}
+                saveOnlyValue
+                searchQuery={search}
+                setSearchQuery={setSearch}
+                isOptionsLoading={isLoading}
+                disabled={!selectedCountryId}
               />
               <Button
                 variant="outline"
@@ -220,6 +285,7 @@ const FormArrayLocation = <T extends FieldValues>({
           </div>
         );
       })}
+
       {fields.length === 0 && (
         <Button
           type="button"

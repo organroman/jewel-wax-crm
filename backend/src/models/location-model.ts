@@ -43,11 +43,28 @@ export const LocationModel = {
     });
   },
 
-  async getCitiesByCountry(countryId: number): Promise<City[]> {
-    const cities = await db<City>("cities")
+  async getCitiesByCountry(
+    countryId: number,
+    search: string
+  ): Promise<PaginatedResult<City>> {
+    const baseQuery = db<City>("cities")
       .where("country_id", countryId)
       .select("*");
-    return cities;
+
+    if (search) {
+      baseQuery.where((qb) => {
+        qb.whereILike("name", `${search}`)
+        .orWhereILike("name", `${search} %`)
+        .orWhereILike("name", `${search},%`)
+        .orWhereILike("name", `${search} (%)`)
+        .orWhereILike("name", `${search}%`);
+      });
+    }
+    return await paginateQuery<City>(baseQuery, {
+      page: 1,
+      limit: 20,
+      sortBy: "name",
+    });
   },
 
   async getCityById(cityId: number): Promise<City | null> {

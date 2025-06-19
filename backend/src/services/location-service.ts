@@ -22,8 +22,11 @@ export const LocationService = {
     return await LocationModel.getCountryById(countryId);
   },
 
-  async getCitiesByCountry(countryId: number): Promise<City[]> {
-    return await LocationModel.getCitiesByCountry(countryId);
+  async getCitiesByCountry(
+    countryId: number,
+    search: string
+  ): Promise<PaginatedResult<City>> {
+    return await LocationModel.getCitiesByCountry(countryId, search);
   },
 
   async getPaginatedCities(search: string): Promise<PaginatedResult<City>> {
@@ -67,7 +70,7 @@ export const LocationService = {
       actor_id: authorId || null,
       action: LOG_ACTIONS.CREATE_CITY,
       target_type: LOG_TARGETS.CITY,
-      target_id: city.id,
+      target_id: city?.id,
       details: {
         city,
       },

@@ -11,9 +11,9 @@ export const locationService = {
   getCountries: async () => {
     return await apiService.get<Country[]>(`locations/countries`);
   },
-  getCitiesByCountry: async (countryId: number) => {
-    return await apiService.get<City[]>(
-      `locations/countries/${countryId}/cities`
+  getCitiesByCountry: async (countryId: number, query: string) => {
+    return await apiService.get<PaginatedResult<City>>(
+      `locations/countries/${countryId}/cities?${query}`
     );
   },
   getAllCities: async (query: string) => {
@@ -26,5 +26,8 @@ export const locationService = {
   },
   createCountry: async (data: CreateCountrySchema) => {
     return await apiService.post<Country>("locations/countries", data);
+  },
+  getCityById: async (cityId: number) => {
+    return await apiService.get<City>(`locations/cities/${cityId}`);
   },
 };

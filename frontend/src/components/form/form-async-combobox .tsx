@@ -75,6 +75,7 @@ const FormAsyncCombobox = <T extends FieldValues, O>({
           }
           return field.value?.label ?? placeholder;
         })();
+        console.log(selectedLabel);
 
         return (
           <FormItem className="flex flex-col lg:flex-row gap-0.5 lg:gap-2.5">
@@ -121,15 +122,14 @@ const FormAsyncCombobox = <T extends FieldValues, O>({
                     <PopoverContent className="lg:w-[240px] p-0 max-h-64 overflow-y-auto">
                       <Command
                         filter={(value, search) => {
-                          const item = options.find((opt) =>
+                          const item = options.filter((opt) =>
                             opt.label
                               .toLowerCase()
                               .includes(search.toLowerCase())
                           );
 
-                          if (item?.value === +value) {
-                            return 1;
-                          }
+                          if (item?.length) return 1;
+
                           return 0;
                         }}
                       >
@@ -142,7 +142,9 @@ const FormAsyncCombobox = <T extends FieldValues, O>({
                           <Loader className="size-6 text-center text-brand-default my-2 animate-spin self-center" />
                         )}
                         {!isOptionsLoading && (
-                          <CommandEmpty>{t("messages.info.no_results")}</CommandEmpty>
+                          <CommandEmpty>
+                            {t("messages.info.no_results")}
+                          </CommandEmpty>
                         )}
                         <CommandGroup>
                           {options.map((option) => {
@@ -156,7 +158,7 @@ const FormAsyncCombobox = <T extends FieldValues, O>({
 
                             return (
                               <CommandItem
-                                key={value}
+                                key={option.value + option.label}
                                 value={value.toString()}
                                 onSelect={() => {
                                   if (saveFullObject) {
