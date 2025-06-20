@@ -1,10 +1,10 @@
 import AppError from "../utils/AppError";
 import { NovaPoshtaModel } from "../models/novaposhta-model";
 import ERROR_MESSAGES from "../constants/error-messages";
-import { City } from "../types/location-types";
+import { City, Street, Warehouse } from "../types/location-types";
 
 export const NovaPoshtaService = {
-  async findCities(search: string): Promise<City[]> {
+  async findCities(search: string): Promise<Omit<City, "id">[]> {
     const { success, data, errors } = await NovaPoshtaModel.getCities(search);
 
     if (!success) {
@@ -21,8 +21,29 @@ export const NovaPoshtaService = {
     }));
   },
 
-  async getCityWarehouses(cityRef: string) {
+  async getCityWarehouses(
+    cityRef: string,
+    search: string
+  ): Promise<Warehouse[]> {
     const { success, data, errors } = await NovaPoshtaModel.getWarehouses(
+      cityRef,
+      search
+    );
+
+    if (!success) {
+      throw new AppError(errors?.[0] || ERROR_MESSAGES.FAILED_TO_FETCH, 500);
+    }
+
+    return data.map((warehouse) => ({
+      np_warehouse_ref: warehouse.Ref,
+      np_warehouse: warehouse.Description,
+      np_warehouse_siteKey: warehouse.SiteKey,
+    }));
+  },
+
+  async getCityStreets(cityRef: string, streetName: string): Promise<Street[]> {
+    const { success, data, errors } = await NovaPoshtaModel.getCityStreets(
+      streetName,
       cityRef
     );
 
@@ -30,6 +51,9 @@ export const NovaPoshtaService = {
       throw new AppError(errors?.[0] || ERROR_MESSAGES.FAILED_TO_FETCH, 500);
     }
 
-    return data;
+    return data.map((street) => ({
+      street: street.Description,
+      street_ref: street.Ref,
+    }));
   },
 };

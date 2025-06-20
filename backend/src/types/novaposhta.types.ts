@@ -28,7 +28,7 @@ export interface NPResponse<T> {
   errors: any[];
 }
 
-export interface Warehouse {
+export interface NPWarehouse {
   SiteKey: string;
   Description: string;
   DescriptionRu: string;
@@ -115,4 +115,11 @@ export interface Warehouse {
   WarehouseIndex: string;
   BeaconCode: string;
   Location: string;
+}
+
+export interface NPStreet {
+  Description: string;
+  Ref: string;
+  StreetsTypeRef: string;
+  StreetsType: string;
 }

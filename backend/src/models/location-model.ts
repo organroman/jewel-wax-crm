@@ -27,8 +27,10 @@ export const LocationModel = {
 
   async getPaginatedCities({
     search,
+    ids,
   }: {
     search?: string;
+    ids?: number[];
   }): Promise<PaginatedResult<City>> {
     const baseQuery = db<City>("cities").select("*");
 
@@ -37,9 +39,12 @@ export const LocationModel = {
         qb.whereILike("name", `%${search}%`);
       });
     }
+    if (ids?.length) {
+      baseQuery.whereIn("id", ids);
+    }
     return await paginateQuery<City>(baseQuery, {
       page: 1,
-      limit: 10,
+      limit: 20,
     });
   },
 
@@ -54,10 +59,10 @@ export const LocationModel = {
     if (search) {
       baseQuery.where((qb) => {
         qb.whereILike("name", `${search}`)
-        .orWhereILike("name", `${search} %`)
-        .orWhereILike("name", `${search},%`)
-        .orWhereILike("name", `${search} (%)`)
-        .orWhereILike("name", `${search}%`);
+          .orWhereILike("name", `${search} %`)
+          .orWhereILike("name", `${search},%`)
+          .orWhereILike("name", `${search} (%)`)
+          .orWhereILike("name", `${search}%`);
       });
     }
     return await paginateQuery<City>(baseQuery, {

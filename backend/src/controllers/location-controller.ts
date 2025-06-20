@@ -27,9 +27,18 @@ export const LocationController = {
   },
   async getCities(req: Request, res: Response, next: NextFunction) {
     try {
-      const { search } = req.query;
+      const { search, ids } = req.query;
 
-      const cities = await LocationService.getPaginatedCities(search as string);
+      const idsArr = Array(ids);
+
+      const numericIds = idsArr
+        .map((id) => Number(id))
+        .filter((id) => !isNaN(id));
+
+      const cities = await LocationService.getPaginatedCities(
+        search as string,
+        numericIds
+      );
 
       res.status(200).json(cities);
     } catch (error) {
@@ -49,6 +58,7 @@ export const LocationController = {
       next(error);
     }
   },
+  
   async getCityById(req: Request, res: Response, next: NextFunction) {
     try {
       const city = await LocationService.getCityById(Number(req.params.id));

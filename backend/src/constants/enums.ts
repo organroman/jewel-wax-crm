@@ -59,3 +59,5 @@ export const INVOICE_STATUS = [
   "cancelled",
   "failed",
 ] as const;
+
+export const DELIVERY_TYPE = ["door", "warehouse"] as const 

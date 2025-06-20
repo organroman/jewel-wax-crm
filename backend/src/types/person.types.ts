@@ -1,10 +1,11 @@
 import { PERSON_SORT_FIELDS } from "../constants/sortable-fields";
-import { PERSON_ROLES } from "../constants/enums";
+import { DELIVERY_TYPE, PERSON_ROLES } from "../constants/enums";
 import { GetAllOptions } from "./shared.types";
 import { Contact, ContactSource } from "./contact.types";
-import { City, Country } from "./location-types";
 
 export type PersonRole = (typeof PERSON_ROLES)[number];
+
+export type DeliveryType = (typeof DELIVERY_TYPE)[number];
 export interface EnrichedRole {
   type: PersonRole;
   label: string;
@@ -33,8 +34,17 @@ export interface BankDetails {
 }
 export interface DeliveryAddress {
   id?: number;
-  address_line: string;
+  address_line?: string;
+  type: DeliveryType;
+  np_city_ref: string;
+  np_warehouse_ref: string;
+  street: string;
+  street_ref: string;
+  house_number: string;
+  flat_number: string;
   is_main: boolean;
+  created_at?: Date
+  updated_at?: Date
 }
 
 export interface Location {

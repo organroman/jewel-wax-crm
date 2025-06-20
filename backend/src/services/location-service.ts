@@ -29,13 +29,17 @@ export const LocationService = {
     return await LocationModel.getCitiesByCountry(countryId, search);
   },
 
-  async getPaginatedCities(search: string): Promise<PaginatedResult<City>> {
-    return await LocationModel.getPaginatedCities({ search });
+  async getPaginatedCities(
+    search: string,
+    ids: number[]
+  ): Promise<PaginatedResult<City>> {
+    return await LocationModel.getPaginatedCities({ search, ids });
   },
 
   async getCityById(cityId: number): Promise<City | null> {
     return await LocationModel.getCityById(cityId);
   },
+
   async createCountry(
     data: CreateCountryInput,
     authorId?: number

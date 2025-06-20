@@ -16,14 +16,34 @@ export const NovaPoshtaController = {
 
   async getWarehouses(req: Request, res: Response, next: NextFunction) {
     try {
-      const { cityRef } = req.query;
+      const { cityRef, search } = req.query;
       if (!cityRef) {
         throw new AppError(ERROR_MESSAGES.MISSING_CITY_REF_PARAM, 401);
       }
       const warehouses = await NovaPoshtaService.getCityWarehouses(
-        cityRef as string
+        cityRef as string,
+        search as string
       );
       res.status(200).json(warehouses);
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  async getCityStreets(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { streetName } = req.query;
+      const cityRef = req.params.cityRef;
+
+      if (!cityRef) {
+        throw new AppError(ERROR_MESSAGES.MISSING_CITY_REF_PARAM, 401);
+      }
+
+      const streets = await NovaPoshtaService.getCityStreets(
+        cityRef as string,
+        streetName as string
+      );
+      res.status(200).json(streets);
     } catch (error) {
       next(error);
     }

@@ -4,7 +4,7 @@ export interface Country {
 }
 
 export interface City {
-  id?: number;
+  id: number;
   country_id?: number;
   name: string;
   ref: string;
@@ -24,4 +24,15 @@ export interface CreateCityInput {
     label: string;
     value: number;
   };
+}
+
+export interface Street {
+  street: string;
+  street_ref: string;
+}
+
+export interface Warehouse {
+  np_warehouse_ref: string;
+  np_warehouse: string;
+  np_warehouse_siteKey: string;
 }

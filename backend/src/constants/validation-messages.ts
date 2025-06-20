@@ -7,6 +7,9 @@ const VALIDATION_MESSAGES = {
   MIN_ONE_MAIN_PHONE: "At least one phone must be marked as main",
   CITY: "City is required",
   ADDRESS: "Address is required",
+  WAREHOUSE_REQUIRED: "Warehouse is required",
+  STREET_REQUIRED: "Street is required",
+  HOUSE_REQUIRED: "House is required",
 } as const;
 
 export default VALIDATION_MESSAGES;
