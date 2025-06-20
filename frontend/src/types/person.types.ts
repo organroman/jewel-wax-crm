@@ -1,5 +1,6 @@
 import {
   ALLOWED_ROLES_FOR_CRM_USER,
+  DELIVERY_TYPE,
   PERSON_ROLE_VALUES,
 } from "@/constants/enums.constants";
 import { PERSON_SORT_FIELDS } from "@/constants/sortable-fields";
@@ -12,6 +13,8 @@ import {
 } from "@/validators/person.validator";
 
 export type PersonRoleValue = (typeof PERSON_ROLE_VALUES)[number];
+export type DeliveryType = (typeof DELIVERY_TYPE)[number];
+
 export type AllowedRolesForCrmUser =
   (typeof ALLOWED_ROLES_FOR_CRM_USER)[number];
 
@@ -46,7 +49,16 @@ export interface BankDetails {
 export interface DeliveryAddress {
   id?: number;
   is_main: boolean;
-  address_line: string;
+  // address_line: string; TODO: DELETE
+  type: DeliveryType;
+  street?: string;
+  street_ref?: string;
+  np_city_ref?: string;
+  np_warehouse_ref?: string;
+  np_warehouse?: string;
+  np_warehouse_siteKey?: string;
+  house_number?: string;
+  flat_number?: string;
 }
 
 export interface Location {

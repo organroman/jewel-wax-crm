@@ -1,8 +1,14 @@
 import { PersonRoleValue } from "@/types/person.types";
 import { z } from "zod";
-import { CHANEL_SOURCE, PERSON_ROLE_VALUES } from "@/constants/enums.constants";
+import {
+  CHANEL_SOURCE,
+  DELIVERY_TYPE,
+  PERSON_ROLE_VALUES,
+} from "@/constants/enums.constants";
 
 const chanelSchema = z.enum(CHANEL_SOURCE);
+const deliveryTypeSchema = z.enum(DELIVERY_TYPE);
+
 const locationSchema = z.object({
   city_id: z.number().nullable().optional(),
   city_name: z.string().optional(),
@@ -106,9 +112,18 @@ const emailsSchema = z
 const deliveryAddressSchema = z.object({
   id: z.number().optional(),
   is_main: z.boolean(),
-  address_line: z
-    .string({ message: "messages.validation.required" })
-    .min(3, "messages.validation.min_three_characters"),
+  type: deliveryTypeSchema,
+  np_city_ref: z.string({ required_error: "City is required" }).min(1),
+  np_warehouse_ref: z.string().optional().nullable(),
+  np_warehouse: z.string().optional().nullable(),
+  np_warehouse_siteKey: z.string().optional().nullable(),
+  street: z.string().optional().nullable(),
+  street_ref: z.string().optional().nullable(),
+  house_number: z.string().optional().nullable(),
+  flat_number: z.string().optional().nullable(),
+  // address_line: z
+  //   .string({ message: "messages.validation.required" })
+  //   .min(3, "messages.validation.min_three_characters"),
 });
 
 const deliveryAddressesSchema = z
@@ -126,15 +141,34 @@ const deliveryAddressesSchema = z
       }
 
       addresses.forEach((address, index) => {
-        if (!address.address_line || address.address_line.length < 3) {
-          ctx.addIssue({
-            code: z.ZodIssueCode.too_small,
-            minimum: 3,
-            type: "string",
-            inclusive: true,
-            path: [index, "address_line"],
-            message: "messages.validation.min_three_characters",
-          });
+        if (address.type === "warehouse") {
+          if (!address.np_warehouse_ref) {
+            ctx.addIssue({
+              path: [index, "np_warehouse_ref"],
+              code: z.ZodIssueCode.custom,
+              message: "messages.validation.warehouse_required",
+            });
+          }
+        }
+
+        if (address.type === "door") {
+          if (!address.street_ref || !address.house_number) {
+            if (!address.street_ref) {
+              ctx.addIssue({
+                path: [index, "street"],
+                code: z.ZodIssueCode.custom,
+                message: "messages.validation.street_required",
+              });
+            }
+
+            if (!address.house_number) {
+              ctx.addIssue({
+                path: [index, "house_number"],
+                code: z.ZodIssueCode.custom,
+                message: "messages.validation.house_number_required",
+              });
+            }
+          }
         }
       });
     }

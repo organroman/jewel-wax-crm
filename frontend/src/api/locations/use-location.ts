@@ -17,6 +17,7 @@ export const useLocation = {
       queryFn: () => locationService.getCountries(),
     });
   },
+
   getCitiesByCountry: (query: string, countryId?: number) => {
     return useQuery({
       queryKey: ["cities", countryId, query],
@@ -24,12 +25,15 @@ export const useLocation = {
       enabled: !!countryId,
     });
   },
-  getCities: (query: string) => {
+
+  getCities: ({ query, enabled }: { query: string; enabled?: boolean }) => {
     return useQuery({
       queryKey: ["cities", query],
       queryFn: () => locationService.getAllCities(query),
+      enabled,
     });
   },
+
   getCityById: ({ cityId, enabled }: { cityId: number; enabled: boolean }) => {
     return useQuery({
       queryKey: ["city", cityId],
@@ -37,6 +41,31 @@ export const useLocation = {
       enabled,
     });
   },
+
+  getStreets: ({
+    cityRef,
+    query,
+    enabled,
+  }: {
+    cityRef?: string;
+    query: string;
+    enabled: boolean;
+  }) => {
+    return useQuery({
+      queryKey: ["streets", cityRef, query],
+      queryFn: () => locationService.getNPStreets(cityRef, query),
+      enabled,
+    });
+  },
+
+  getWareHouses: ({ query, enabled }: { query: string; enabled: boolean }) => {
+    return useQuery({
+      queryKey: ["warehouses", query],
+      queryFn: () => locationService.getNPWarehouses(query),
+      enabled,
+    });
+  },
+
   createCity: ({
     queryClient,
     handleOnSuccess,
@@ -61,6 +90,7 @@ export const useLocation = {
     });
     return { createCityMutation: mutation };
   },
+
   createCountry: ({
     queryClient,
     handleOnSuccess,

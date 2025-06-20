@@ -50,3 +50,5 @@ export const ORDER_STAGE_STATUS = [
   "clarification",
   "done",
 ] as const;
+
+export const DELIVERY_TYPE = ["warehouse", "door"] as const;
