@@ -2,18 +2,23 @@ import {
   CreatePersonInput,
   Person,
   SafePerson,
-  UpdatePersonInput,
   GetAllPersonsOptions,
   SafePersonWithRole,
+  PersonBase,
+  Phone,
+  Email,
+  DeliveryAddress,
+  Location,
+  PersonContact,
+  BankDetails,
 } from "../types/person.types";
 import { PaginatedResult } from "../types/shared.types";
 
 import db from "../db/db";
 
 import { getFullName, stripPassword } from "../utils/helpers";
-import AppError from "../utils/AppError";
 import { paginateQuery } from "../utils/pagination";
-import ERROR_MESSAGES from "../constants/error-messages";
+
 
 export const PersonModel = {
   async getAll({
@@ -131,8 +136,8 @@ export const PersonModel = {
       .where("value", person.role)
       .first()
       .select("value", "label");
-    const phones = await db("phones").where("person_id", person.id);
-    const emails = await db("person_emails").where("person_id", person.id);
+    const phones = await this.getPhonesByPersonId(person.id);
+    const emails = await this.getEmailsByPersonId(person.id);
     const locations = await db("person_locations")
       .leftJoin("cities", "person_locations.city_id", "cities.id")
       .leftJoin("countries", "person_locations.country_id", "countries.id")
@@ -146,10 +151,7 @@ export const PersonModel = {
         "countries.name as country_name"
       );
 
-    const addresses = await db("delivery_addresses").where(
-      "person_id",
-      personId
-    );
+    const addresses = await this.getDeliveryAddressesByPersonId(person.id);
     const contacts = await db("person_contacts")
       .join("contacts", "person_contacts.contact_id", "contacts.id")
       .where("person_contacts.person_id", person.id)
@@ -165,10 +167,7 @@ export const PersonModel = {
       "person_id",
       person.id
     );
-    const bank_details = await db("person_bank_accounts").where(
-      "person_id",
-      person.id
-    );
+    const bank_details = await this.getBankDetailsByPersonId(person.id);
 
     const base = stripPassword(person);
 
@@ -187,7 +186,7 @@ export const PersonModel = {
     return safePerson;
   },
 
-  async create(data: CreatePersonInput): Promise<SafePerson> {
+  async createPersonBase(data: CreatePersonInput): Promise<PersonBase> {
     const [newPerson] = await db<Person>("persons")
       .insert({
         first_name: data.first_name,
@@ -197,152 +196,210 @@ export const PersonModel = {
         password: data.password,
         is_active: true,
       })
-      .returning<Person[]>("*");
-
-    await db("phones").insert(
-      data.phones.map((phone) => ({
-        ...phone,
-        person_id: newPerson.id,
-      }))
-    );
-
-    if (data.emails?.length) {
-      await db("person_emails").insert(
-        data.emails.map((email) => ({
-          ...email,
-          person_id: newPerson.id,
-        }))
-      );
-    }
-    if (data.locations?.length) {
-      await db("person_locations").insert(
-        data.locations.map((location) => ({
-          person_id: newPerson.id,
-          city_id: location.city_id,
-          country_id: location.country_id,
-          is_main: location.is_main,
-        }))
-      );
-    }
-
-    if (data.delivery_addresses?.length) {
-      await db("delivery_addresses").insert(
-        data.delivery_addresses.map((address) => ({
-          ...address,
-          person_id: newPerson.id,
-        }))
-      );
-    }
-    if (data.bank_details?.length) {
-      await db("person_bank_accounts").insert(
-        data.bank_details.map((bank) => ({
-          ...bank,
-          person_id: newPerson.id,
-        }))
-      );
-    }
-    if (data.contacts?.length) {
-      await db("person_contacts").insert(
-        data.contacts.map((contact) => ({
-          contact_id: contact.id,
-          person_id: newPerson.id,
-        }))
-      );
-    }
-
-    const result = await PersonModel.findById(newPerson.id);
-
-    if (!result) {
-      throw new AppError(ERROR_MESSAGES.FAILED_TO_LOAD_AFTER_CREATION, 500);
-    }
-    return result;
+      .returning<PersonBase[]>("*");
+    return newPerson;
   },
 
-  async update(
-    personId: number,
-    data: UpdatePersonInput
-  ): Promise<SafePerson | null> {
-    const {
-      phones,
-      emails,
-      locations,
-      contacts,
-      bank_details,
-      delivery_addresses,
-      ...personFields
-    } = data;
-    const [updatedPerson] = await db<Person>("persons")
+  async updateBasePerson(personId: number, fields: Partial<PersonBase>) {
+    return await db<PersonBase>("persons")
       .where("id", personId)
-      .update({ ...personFields, updated_at: new Date() })
-      .returning<Person[]>("*");
+      .update({ ...fields, updated_at: new Date() })
+      .returning("*");
+  },
 
-    if (!updatedPerson) {
-      return null;
-    }
+  async getPhonesByPersonId(personId: number): Promise<Phone[]> {
+    return await db<Phone>("phones").where("person_id", personId);
+  },
 
-    if (phones?.length) {
-      await db("phones").where("person_id", personId).del();
-      await db("phones").insert(
-        phones.map((phone) => ({
-          ...phone,
-          person_id: personId,
-        }))
-      );
-    }
+  async createPhones(personId: number, phones: Phone[]) {
+    await db("phones").insert(
+      phones.map((phone) => ({
+        ...phone,
+        person_id: personId,
+      }))
+    );
+  },
+  async deletePhones(phoneIds: number[]) {
+    await db<Phone>("phones").whereIn("id", phoneIds).del();
+  },
+  async updatePhones(toUpdate: Phone[], updatedPhones: Phone[]) {
+    await Promise.all(
+      toUpdate.map((p) => {
+        const updated = updatedPhones.find((u) => u.id === p.id);
+        return db<Phone>("phones")
+          .where("id", p.id)
+          .update({
+            ...updated,
+            updated_at: new Date(),
+          });
+      })
+    );
+  },
 
-    if (emails?.length) {
-      await db("person_emails").where("person_id", personId).del();
-      await db("person_emails").insert(
-        emails.map((email) => ({
-          ...email,
-          person_id: personId,
-        }))
-      );
-    }
-    if (delivery_addresses?.length) {
-      await db("delivery_addresses").where({ person_id: personId }).del();
-      await db("delivery_addresses").insert(
-        delivery_addresses.map((address) => ({
-          ...address,
-          person_id: personId,
-        }))
-      );
-    }
+  async getEmailsByPersonId(personId: number): Promise<Email[]> {
+    return await db<Email>("person_emails").where("person_id", personId);
+  },
 
-    if (locations?.length) {
-      await db("person_locations").where("person_id", personId).del();
-      await db("person_locations").insert(
-        locations.map((location) => ({
-          id: location.id,
-          is_main: location.is_main,
-          city_id: location.city_id,
-          country_id: location.country_id,
-          person_id: personId,
-        }))
-      );
-    }
+  async createEmails(personId: number, emails: Email[]) {
+    await db("person_emails").insert(
+      emails.map((email) => ({
+        ...email,
+        person_id: personId,
+      }))
+    );
+  },
 
-    if (contacts?.length) {
-      await db("person_contacts").where("person_id", personId).del();
-      await db("person_contacts").insert(
-        contacts.map((contact) => ({
-          contact_id: contact.id,
-          person_id: personId,
-        }))
-      );
-    }
+  async deleteEmails(emailIds: number[]) {
+    await db<Email>("person_emails").whereIn("id", emailIds).del();
+  },
 
-    if (bank_details?.length) {
-      await db("person_bank_accounts").where("person_id", personId).del();
-      await db("person_bank_accounts").insert(
-        bank_details.map((bank) => ({
-          ...bank,
-          person_id: personId,
-        }))
-      );
-    }
+  async updateEmails(toUpdate: Email[], updatedEmails: Email[]) {
+    await Promise.all(
+      toUpdate.map((p) => {
+        const updated = updatedEmails.find((u) => u.id === p.id);
+        return db<Email>("person_emails")
+          .where("id", p.id)
+          .update({
+            ...updated,
+            updated_at: new Date(),
+          });
+      })
+    );
+  },
 
-    return await PersonModel.findById(personId);
+  async getDeliveryAddressesByPersonId(
+    personId: number
+  ): Promise<DeliveryAddress[]> {
+    return await db<DeliveryAddress>("delivery_addresses").where(
+      "person_id",
+      personId
+    );
+  },
+
+  async createDeliveryAddresses(
+    personId: number,
+    deliveryAddress: DeliveryAddress[]
+  ) {
+    await db("delivery_addresses").insert(
+      deliveryAddress.map((deliveryAddress) => ({
+        ...deliveryAddress,
+        person_id: personId,
+      }))
+    );
+  },
+
+  async deleteDeliveryAddresses(deliveryAddressIds: number[]) {
+    await Promise.all(
+      deliveryAddressIds.map((id) => {
+        return db<DeliveryAddress>("delivery_addresses")
+          .where("id", id)
+          .update({
+            person_id: null,
+          });
+      })
+    );
+  },
+
+  async updateDeliveryAddresses(
+    toUpdate: DeliveryAddress[],
+    updatedDeliveryAddress: DeliveryAddress[]
+  ) {
+    await Promise.all(
+      toUpdate.map((p) => {
+        const updated = updatedDeliveryAddress.find((u) => u.id === p.id);
+        if (!updated) return;
+        return db<DeliveryAddress>("delivery_addresses")
+          .where("id", p.id)
+          .update({
+            ...updated,
+            updated_at: new Date(),
+          });
+      })
+    );
+  },
+
+  async getLocationsByPersonId(personId: number): Promise<Location[]> {
+    return await db<Location>("person_locations").where("person_id", personId);
+  },
+  async createLocations(personId: number, location: Location[]) {
+    await db("person_locations").insert(
+      location.map((location) => ({
+        is_main: location.is_main,
+        city_id: location.city_id,
+        country_id: location.country_id,
+        person_id: personId,
+      }))
+    );
+  },
+  async deleteLocations(locationIds: number[]) {
+    await db<Location>("person_locations").whereIn("id", locationIds).del();
+  },
+  async updateLocations(toUpdate: Location[], updatedLocation: Location[]) {
+    await Promise.all(
+      toUpdate.map((p) => {
+        const updated = updatedLocation.find((u) => u.id === p.id);
+        if (!updated) return;
+        return db<Location>("person_locations").where("id", p.id).update({
+          id: updated.id,
+          is_main: updated.is_main,
+          city_id: updated.city_id,
+          country_id: updated.country_id,
+          person_id: updated.person_id,
+        });
+      })
+    );
+  },
+
+  async getContactsByPersonId(personId: number): Promise<PersonContact[]> {
+    return await db<PersonContact>("person_contacts").where(
+      "person_id",
+      personId
+    );
+  },
+  async createContacts(personId: number, contact: PersonContact[]) {
+    await db("person_contacts").insert(
+      contact.map((contact) => ({
+        contact_id: contact.id,
+        person_id: personId,
+      }))
+    );
+  },
+  async deleteContacts(contactIds: number[]) {
+    await db<PersonContact>("person_contacts").whereIn("id", contactIds).del();
+  },
+
+  async getBankDetailsByPersonId(personId: number): Promise<BankDetails[]> {
+    return await db<BankDetails>("person_bank_accounts").where(
+      "person_id",
+      personId
+    );
+  },
+  async createBankDetails(personId: number, bankDetail: BankDetails[]) {
+    await db("person_bank_accounts").insert(
+      bankDetail.map((bankDetail) => ({
+        ...bankDetail,
+        person_id: personId,
+      }))
+    );
+  },
+  async deleteBankDetails(bankDetailIds: number[]) {
+    await db<BankDetails>("person_bank_accounts")
+      .whereIn("id", bankDetailIds)
+      .del();
+  },
+  async updateBankDetails(
+    toUpdate: BankDetails[],
+    updatedBankDetails: BankDetails[]
+  ) {
+    await Promise.all(
+      toUpdate.map((p) => {
+        const updated = updatedBankDetails.find((u) => u.id === p.id);
+        if (!updated) return;
+        return db<BankDetails>("person_bank_accounts")
+          .where("id", p.id)
+          .update(updated);
+      })
+    );
   },
 
   async updatePassword(personId: number, hashedPassword: string) {
@@ -380,6 +437,7 @@ export const PersonModel = {
 
     return modellers;
   },
+
   async getMillers(): Promise<{ id: number; fullname: string }[]> {
     const millersFull = await db<Person>("persons")
       .where("role", "miller")
@@ -392,6 +450,7 @@ export const PersonModel = {
 
     return millers;
   },
+
   async getPrinters(): Promise<{ id: number; fullname: string }[]> {
     const printersFull = await db<Person>("persons")
       .where("role", "print")

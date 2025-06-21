@@ -22,7 +22,7 @@ export interface PersonMessenger {
   platform: ContactSource;
 }
 export interface BankDetails {
-  id?: number;
+  id: number;
   person_id?: number;
   bank_name?: string;
   bank_code?: string;
@@ -33,7 +33,7 @@ export interface BankDetails {
   created_at?: Date;
 }
 export interface DeliveryAddress {
-  id?: number;
+  id: number;
   address_line?: string;
   type: DeliveryType;
   np_city_ref: string;
@@ -43,8 +43,9 @@ export interface DeliveryAddress {
   house_number: string;
   flat_number: string;
   is_main: boolean;
-  created_at?: Date
-  updated_at?: Date
+  created_at?: Date;
+  updated_at?: Date;
+  person_id: number | null;
 }
 
 export interface Location {
@@ -54,10 +55,11 @@ export interface Location {
   city_name: string;
   is_main: boolean;
   id: number;
+  person_id?: number;
 }
 
 export interface Phone {
-  id?: number;
+  id: number;
   person_id?: number;
   number: string;
   is_main: boolean;
@@ -66,12 +68,25 @@ export interface Phone {
 }
 
 export interface Email {
-  id?: number;
+  id: number;
   person_id: number;
   email: string;
   is_main: boolean;
   created_at?: Date;
   updated_at?: Date;
+}
+
+export interface PersonBase {
+  id: number;
+  role: PersonRole;
+  first_name: string;
+  last_name: string;
+  patronymic?: string;
+  avatar_url?: string;
+  password?: string;
+  is_active: boolean;
+  created_at: Date;
+  updated_at: Date;
 }
 
 export interface Person {

@@ -64,10 +64,46 @@ export const PersonService = {
       ? await bcryptjs.hash(data.password, 10)
       : undefined;
 
-    const person = await PersonModel.create({
+    // const person = await PersonModel.create({
+    //   ...data,
+    //   password: hashedPassword,
+    // });
+
+    const person = await PersonModel.createPersonBase({
       ...data,
       password: hashedPassword,
     });
+
+    await PersonModel.createPhones(person.id, data.phones);
+
+    if (data.emails?.length) {
+      await PersonModel.createEmails(person.id, data.emails);
+    }
+
+    if (data.locations?.length) {
+      await PersonModel.createLocations(person.id, data.locations);
+    }
+
+    if (data.delivery_addresses?.length) {
+      await PersonModel.createDeliveryAddresses(
+        person.id,
+        data.delivery_addresses
+      );
+    }
+
+    if (data.bank_details?.length) {
+      await PersonModel.createBankDetails(person.id, data.bank_details);
+    }
+
+    if (data.contacts?.length) {
+      await PersonModel.createContacts(person.id, data.contacts);
+    }
+
+    const result = await PersonModel.findById(person.id);
+
+    if (!result) {
+      throw new AppError(ERROR_MESSAGES.FAILED_TO_LOAD_AFTER_CREATION, 500);
+    }
 
     await ActivityLogModel.logAction({
       actor_id: authorId || null,
@@ -78,7 +114,7 @@ export const PersonService = {
         person,
       },
     });
-    return person;
+    return result;
   },
 
   async update(
@@ -86,7 +122,172 @@ export const PersonService = {
     data: UpdatePersonInput,
     actorId?: number
   ): Promise<SafePerson | null> {
-    const updatedPerson = await PersonModel.update(personId, data);
+    const {
+      phones,
+      emails,
+      locations,
+      contacts,
+      bank_details,
+      delivery_addresses,
+      ...personFields
+    } = data;
+
+    const updatedPerson = await PersonModel.updateBasePerson(
+      personId,
+      personFields
+    );
+
+    if (!updatedPerson) return null;
+
+    const existingPhones = await PersonModel.getPhonesByPersonId(personId);
+
+    const newPhones = phones?.filter((p) => !p.id) ?? [];
+    const incomingPhones = phones?.filter((p) => p.id) ?? [];
+
+    const toUpdatePhones = existingPhones.filter((dbPhone) => {
+      const incomingMatch = incomingPhones?.find((p) => p.id === dbPhone.id);
+      return incomingMatch;
+    });
+
+    const toDeletePhones = existingPhones.filter(
+      (dbPhone) => !incomingPhones.find((m) => m.id === dbPhone.id)
+    );
+
+    if (toDeletePhones.length) {
+      await PersonModel.deletePhones(toDeletePhones.map((m) => m.id));
+    }
+
+    if (toUpdatePhones.length) {
+      await PersonModel.updatePhones(toUpdatePhones, incomingPhones);
+    }
+
+    if (newPhones.length) {
+      await PersonModel.createPhones(personId, newPhones);
+    }
+
+    const existingEmails = await PersonModel.getEmailsByPersonId(personId);
+
+    const newEmails = emails?.filter((p) => !p.id) ?? [];
+    const incomingEmails = emails?.filter((p) => p.id) ?? [];
+
+    const toUpdateEmails = existingEmails.filter((dbEmail) => {
+      const incomingMatch = incomingEmails?.find((p) => p.id === dbEmail.id);
+      return incomingMatch;
+    });
+
+    const toDeleteEmails = existingEmails.filter(
+      (dbEmail) => !incomingEmails.find((m) => m.id === dbEmail.id)
+    );
+
+    if (toDeleteEmails.length) {
+      await PersonModel.deleteEmails(toDeleteEmails.map((m) => m.id));
+    }
+
+    if (toUpdateEmails.length) {
+      await PersonModel.updateEmails(toUpdateEmails, incomingEmails);
+    }
+
+    if (newEmails.length) {
+      await PersonModel.createEmails(personId, newEmails);
+    }
+
+    const existingDeliveryAddresses =
+      await PersonModel.getDeliveryAddressesByPersonId(personId);
+
+    const newDelAddresses = delivery_addresses?.filter((p) => !p.id) ?? [];
+    const incomingDelAddresses = delivery_addresses?.filter((p) => p.id) ?? [];
+
+    const toUpdateDelAddresses = existingDeliveryAddresses.filter((dbItem) => {
+      const incomingMatch = incomingDelAddresses?.find(
+        (p) => p.id === dbItem.id
+      );
+      return incomingMatch;
+    });
+
+    const toDeleteDelAddresses = existingDeliveryAddresses.filter(
+      (dbItem) => !incomingDelAddresses.find((m) => m.id === dbItem.id)
+    );
+
+    if (toDeleteDelAddresses.length) {
+      await PersonModel.deleteDeliveryAddresses(
+        toDeleteDelAddresses.map((m) => m.id)
+      );
+    }
+
+    if (toUpdateDelAddresses.length) {
+      await PersonModel.updateDeliveryAddresses(
+        toUpdateDelAddresses,
+        incomingDelAddresses
+      );
+    }
+
+    if (newDelAddresses.length) {
+      await PersonModel.createDeliveryAddresses(personId, newDelAddresses);
+    }
+
+    const existingLocations = await PersonModel.getLocationsByPersonId(
+      personId
+    );
+
+    const newLocations = locations?.filter((i) => !i.id) ?? [];
+    const incomingLocations = locations?.filter((i) => i.id) ?? [];
+
+    const toUpdateLocations = existingLocations.filter((dbItem) => {
+      const incomingMatch = existingLocations?.find((p) => p.id === dbItem.id);
+      return incomingMatch;
+    });
+
+    const toDeleteLocations = existingLocations.filter(
+      (dbItem) => !incomingLocations.find((m) => m.id === dbItem.id)
+    );
+
+    if (toDeleteLocations.length) {
+      await PersonModel.deleteLocations(toDeleteLocations.map((m) => m.id));
+    }
+
+    if (toUpdateLocations.length) {
+      await PersonModel.updateLocations(toUpdateLocations, incomingLocations);
+    }
+
+    if (newLocations.length) {
+      await PersonModel.createLocations(personId, newLocations);
+    }
+
+    const existingContacts = await PersonModel.getContactsByPersonId(personId);
+
+    if (existingContacts.length) {
+      await PersonModel.deleteContacts(existingContacts.map((m) => m.id));
+    }
+
+    if (contacts?.length) {
+      await PersonModel.createContacts(personId, contacts);
+    }
+
+    const existingBank = await PersonModel.getBankDetailsByPersonId(personId);
+
+    const newBank = bank_details?.filter((i) => !i.id) ?? [];
+    const incomingBank = bank_details?.filter((i) => i.id) ?? [];
+
+    const toUpdateBank = existingBank.filter((dbItem) => {
+      const incomingMatch = existingBank?.find((p) => p.id === dbItem.id);
+      return incomingMatch;
+    });
+
+    const toDeleteBank = existingBank.filter(
+      (dbItem) => !incomingBank.find((m) => m.id === dbItem.id)
+    );
+
+    if (toDeleteBank.length) {
+      await PersonModel.deleteBankDetails(toDeleteBank.map((m) => m.id));
+    }
+
+    if (toUpdateBank.length) {
+      await PersonModel.updateBankDetails(toUpdateBank, incomingBank);
+    }
+
+    if (newBank.length) {
+      await PersonModel.createBankDetails(personId, newBank);
+    }
 
     await ActivityLogModel.logAction({
       actor_id: actorId || null,
@@ -98,7 +299,7 @@ export const PersonService = {
       },
     });
 
-    return updatedPerson;
+    return await PersonService.getById(personId);
   },
 
   async delete(personId: number, actorId?: number): Promise<number> {
