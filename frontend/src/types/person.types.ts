@@ -44,7 +44,7 @@ export interface BankDetails {
   iban?: string;
   card_number?: string;
   is_main: boolean;
-  created_at?: Date;
+  created_at?: string;
 }
 export interface DeliveryAddress {
   id?: number;

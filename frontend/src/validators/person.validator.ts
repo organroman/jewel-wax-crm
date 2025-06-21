@@ -214,7 +214,7 @@ const bankDetailsSchema = z.object({
   iban: z.string().optional(),
   card_number: z.string().optional(),
   is_main: z.boolean(),
-  created_at: z.date().optional(),
+  created_at: z.string().optional(),
 });
 
 export const updatePersonSchema = z.object({
