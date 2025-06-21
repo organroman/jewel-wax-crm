@@ -4,6 +4,7 @@ import { FormComboboxProps } from "@/types/form.types";
 import { FieldValues } from "react-hook-form";
 import { useState } from "react";
 import Image from "next/image";
+import { useTranslation } from "react-i18next";
 import { ChevronDown, ChevronUp } from "lucide-react";
 
 import {
@@ -44,6 +45,7 @@ const FormCombobox = <T extends FieldValues, O>({
   disabled = false,
 }: FormComboboxProps<T, O>) => {
   const [open, setOpen] = useState(false);
+  const { t } = useTranslation();
 
   return (
     <FormField
@@ -90,7 +92,7 @@ const FormCombobox = <T extends FieldValues, O>({
                 )}
               </div>
             )}
-            <div className="flex flex-col  gap-0.5 lg:gap-1">
+            <div className="flex flex-col gap-0.5 lg:gap-1">
               <FormControl>
                 <div>
                   <Popover open={open} onOpenChange={setOpen}>
@@ -116,8 +118,10 @@ const FormCombobox = <T extends FieldValues, O>({
 
                     <PopoverContent className="w-[240px] p-0 max-h-64 overflow-y-auto">
                       <Command>
-                        <CommandInput placeholder="Пошук..." />
-                        <CommandEmpty>Нічого не знайдено</CommandEmpty>
+                        <CommandInput placeholder={t("placeholders.search")} />
+                        <CommandEmpty>
+                          {t("messages.info.no_result")}
+                        </CommandEmpty>
                         <CommandGroup>
                           {options.map((option) => {
                             const label = displayKey

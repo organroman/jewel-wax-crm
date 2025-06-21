@@ -41,7 +41,8 @@
     "order": "Замовлення",
     "comment": "Коментар",
     "stage": "Етап",
-    "stage_status": "Готовність"
+    "stage_status": "Готовність",
+    "warehouse": "Відділення"
   },
   "labels": {
     "main": "$t(dictionary.main)",
@@ -131,6 +132,14 @@
     "modal": {
       "delete": {
         "title": "Видалення контрагента"
+      },
+      "delivery_address": {
+        "title": "Додати адресу доставки",
+        "desc_first": "Заповніть форму",
+        "delivery_type": {
+          "door": "Адресна",
+          "warehouse": "$t(dictionary.warehouse)"
+        }
       }
     },
     "labels": {
@@ -155,7 +164,8 @@
       "card_number": "Номер картки",
       "bank_code": "МФО",
       "tax_id": "ЄДРПОУ/ІПН",
-      "contact": "$t(dictionary.contact)"
+      "contact": "$t(dictionary.contact)",
+      "delivery_type": "Тип доставки"
     },
     "placeholders": {
       "search_person": "Пошук контрагента",
@@ -187,14 +197,20 @@
     "labels": {
       "city": "$t(dictionary.city)",
       "country": "$t(dictionary.country)",
-      "address": "$t(dictionary.address)"
+      "address": "$t(dictionary.address)",
+      "warehouse": "$t(dictionary.warehouse)",
+      "house_number": "Будинок №",
+      "flat_number": "Квартира №",
+      "street": "Вулиця"
     },
     "placeholders": {
       "choose_country": "Оберіть країну",
       "choose_city": "Оберіть місто",
       "enter_country": "Введіть країну",
       "enter_city": "Введіть місто",
-      "address": "Введіть адресу"
+      "address": "Введіть адресу",
+      "house_number": "Введіть № будинку",
+      "flat_number": "Введіть № квартири"
     }
   },
   "log_actions": {
@@ -338,7 +354,10 @@
       "invalid_email": "Невірний email",
       "min_three_characters": "Мінімум три літери",
       "min_two_characters": "Мінімум дві літери",
-      "min_six_characters": "Мінімум шість символів"
+      "min_six_characters": "Мінімум шість символів",
+      "warehouse_required": "Відділення обов'язкове",
+      "street_required": "Вулиця обов'язкова",
+      "house_number": "Будинок обов'язковий"
     },
     "info": {
       "no_results": "Дані відсутні",

@@ -110,6 +110,13 @@ export interface FormArrayLinkedOrdersProps<T extends FieldValues> {
   orderId: number | null;
 }
 
+export interface FormArrayDeliveryAddressProps<T extends FieldValues> {
+  name: ArrayPath<T>;
+  control: Control<T>;
+  setValue: UseFormSetValue<T>;
+  personLocations: { id: number | null; is_main: boolean }[];
+}
+
 export interface FormComboboxProps<T extends FieldValues, O> {
   name: Path<T>;
   label?: string;

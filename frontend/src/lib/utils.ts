@@ -20,6 +20,14 @@ export function getInitials(firstName: string, lastName: string) {
   return firstName.charAt(0).toUpperCase() + lastName.charAt(0).toUpperCase();
 }
 
+export function getDoorAddress(
+  street?: string,
+  house?: string,
+  flat?: string
+): string {
+  return [street, house, flat].filter(Boolean).join(" ,");
+}
+
 export function getFullName(
   firstName: string,
   lastName: string,
@@ -126,7 +134,6 @@ export const getRoleAndUserFromToken = (token: PersonRoleValue) => {
 
   return role;
 };
-
 
 export const hasPermission = (permission: string[], role: string) => {
   return permission.includes(role);

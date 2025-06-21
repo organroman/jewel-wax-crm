@@ -33,6 +33,7 @@ type AsyncComboboxProps<T> = {
   isLoading?: boolean;
   disabled?: boolean;
   className?: string;
+  popoverContentClassName?: string;
   displayKey?: keyof T;
   valueKey?: keyof T;
   search: string;
@@ -52,6 +53,7 @@ const AsyncCombobox = <T,>({
   valueKey,
   search,
   setSearch,
+  popoverContentClassName,
 }: AsyncComboboxProps<T>) => {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
@@ -68,7 +70,11 @@ const AsyncCombobox = <T,>({
 
   return (
     <div className={cn("flex flex-col gap-1", className)}>
-      {label && <span className="text-xs lg:text-sm font-medium">{label}</span>}
+      {label && (
+        <span className="text-xs text-text-muted lg:text-sm font-medium">
+          {label}
+        </span>
+      )}
 
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
@@ -89,14 +95,20 @@ const AsyncCombobox = <T,>({
           </Button>
         </PopoverTrigger>
 
-        <PopoverContent className="lg:w-[240px] p-0 max-h-64 overflow-y-auto">
+        <PopoverContent
+          className={cn(
+            "w-full p-0 max-h-64 overflow-y-auto",
+            popoverContentClassName
+          )}
+          align="start"
+        >
           <Command
             filter={(value, search) => {
-              const item = options.find((opt) =>
+              const item = options.filter((opt) =>
                 opt.label.toLowerCase().includes(search.toLowerCase())
               );
 
-              return item?.value?.toString() === value ? 1 : 0;
+              return item?.length ? 1 : 0;
             }}
           >
             <CommandInput

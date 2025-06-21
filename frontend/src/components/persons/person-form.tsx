@@ -36,6 +36,7 @@ import FormArrayPhone from "@/components/form/form-array-phone";
 import FormArrayBankDetails from "@/components/form/form-array-bank";
 import FormArrayLocation from "@/components/form/form-array-location";
 import FormArrayCombobox from "@/components/form/form-array-async-combobox";
+import FormArrayDeliveryAddress from "../form/form-array-delivery-address";
 
 import InfoLabel from "@/components/shared/typography/info-label";
 import InfoValue from "@/components/shared/typography/info-value";
@@ -322,16 +323,16 @@ const PersonForm = ({
                 <p className="pb-3 border-b font-medium border-ui-border mb-2.5">
                   {t("person.delivery_address")}
                 </p>
-                <FormArrayInput
+                <FormArrayDeliveryAddress
                   name="delivery_addresses"
                   control={form.control}
                   setValue={form.setValue}
-                  placeholder={t("location.placeholders.address")}
-                  fieldKey="address_line"
-                  label={t("location.labels.address")}
-                  showIsMain
-                  inputClassName="min-w-[188px] lg:min-w[460px]"
-                  errors={form.formState.errors}
+                  personLocations={
+                    form.getValues("locations")?.map((i) => ({
+                      id: i.city_id ? i.city_id : null,
+                      is_main: i.is_main,
+                    })) ?? []
+                  }
                 />
               </div>
             </div>

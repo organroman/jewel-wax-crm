@@ -10,7 +10,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import ViewPersonDetails from "./view-person";
 import PersonActionsMenu from "./person-actions-menu";
 
-import { cn, getInitials } from "@/lib/utils";
+import { cn, getDoorAddress, getInitials } from "@/lib/utils";
 import { PERSON_ROLE_COLORS } from "@/constants/persons.constants";
 import { Button } from "../ui/button";
 
@@ -121,9 +121,20 @@ export const getPersonsColumns = (
     accessorKey: "post",
     header: t("person.table_headers.post"),
     cell: ({ row }) => {
-      return (
-        <span> {row.original.delivery_addresses?.at(0)?.address_line}</span>
-      );
+      const mainAddress =
+        row.original.delivery_addresses.find((a) => a.is_main) ??
+        row.original.delivery_addresses[0];
+
+      const addressName =
+        mainAddress?.type === "warehouse"
+          ? mainAddress.np_warehouse
+          : getDoorAddress(
+              mainAddress?.street,
+              mainAddress?.house_number,
+              mainAddress?.flat_number
+            );
+
+      return <span> {addressName}</span>;
     },
   },
   {

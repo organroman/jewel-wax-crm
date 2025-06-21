@@ -11,18 +11,19 @@ import {
   PathValue,
   get,
 } from "react-hook-form";
+import { useQueries } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 import { Trash2 } from "lucide-react";
 
-import { useLocation } from "@/api/locations/use-location";
-
+import { locationService } from "@/api/locations/location-service";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 
 import FormCombobox from "./form-combobox";
-import { useTranslation } from "react-i18next";
-import { cn } from "@/lib/utils";
 import FormAsyncCombobox from "./form-async-combobox ";
+
+import { cn } from "@/lib/utils";
 
 const FormArrayLocation = <T extends FieldValues>({
   name,
@@ -49,26 +50,35 @@ const FormArrayLocation = <T extends FieldValues>({
 
   const countryIds = useMemo(
     () =>
-      (watchedFields as Location[])?.map(
-        (row: { country_id?: number }) => row?.country_id
-      ) || [],
+      (watchedFields as Location[])
+        ?.map((row: { country_id?: number }) => row?.country_id)
+        .filter((id): id is number => typeof id === "number") || [],
     [watchedFields]
   );
 
   const cityIds = useMemo(
     () =>
-      (watchedFields as Location[])?.map(
-        (row: { city_id?: number }) => row?.city_id
-      ) || [],
+      (watchedFields as Location[])
+        ?.map((row: { city_id?: number }) => row?.city_id)
+        .filter((id): id is number => typeof id === "number") || [],
     [watchedFields]
   );
 
-  const cityQueries = countryIds.map((countryId) =>
-    useLocation.getCitiesByCountry(`search=${search}`, countryId)
-  );
+  const cityQueries = useQueries({
+    queries: countryIds.map((countryId) => ({
+      queryKey: ["cities", countryId, search],
+      queryFn: () =>
+        locationService.getCitiesByCountry(countryId!, `search=${search}`),
+      enabled: !!countryId,
+    })),
+  });
 
-  const existingCitiesQueries = cityIds.map((cityId) => {
-    return cityId ? useLocation.getCityById({ cityId, enabled: true }) : null;
+  const existingCitiesQueries = useQueries({
+    queries: cityIds.map((cityId) => ({
+      queryKey: ["city", cityId],
+      queryFn: () => locationService.getCityById(cityId),
+      enabled: !!cityId,
+    })),
   });
 
   useEffect(() => {
@@ -125,9 +135,10 @@ const FormArrayLocation = <T extends FieldValues>({
           (c) => c.id === existingCity?.id
         );
 
-        const fullCities = existingCity && !isExistingInOptions
-          ? [...cityOptions, existingCity]
-          : cityOptions;
+        const fullCities =
+          existingCity && !isExistingInOptions
+            ? [...cityOptions, existingCity]
+            : cityOptions;
 
         const fullCityOptions = fullCities.map((c) => ({
           ...c,
@@ -184,25 +195,6 @@ const FormArrayLocation = <T extends FieldValues>({
                 hasCountryError ? "items-center" : "items-end"
               )}
             >
-              {/* <FormCombobox
-                name={`${name}.${index}.city_id` as Path<T>}
-                label={t("location.labels.city")}
-                placeholder={t("location.placeholders.choose_city")}
-                control={control}
-                options={
-                  (cityOptions &&
-                    cityOptions.map((c) => ({
-                      label: c.name || "",
-                      value: c.id,
-                      data: c,
-                    }))) ||
-                  []
-                }
-                displayKey="name"
-                valueKey="id"
-                saveOnlyValue={true}
-                disabled={!selectedCountryId || isLoading}
-              /> */}
               <FormAsyncCombobox
                 name={`${name}.${index}.city_id` as Path<T>}
                 control={control}
@@ -220,7 +212,6 @@ const FormArrayLocation = <T extends FieldValues>({
                 required={required && index === 0}
                 displayKey="name"
                 valueKey="id"
-                // saveFullObject={true}
                 saveOnlyValue
                 searchQuery={search}
                 setSearchQuery={setSearch}

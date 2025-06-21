@@ -107,7 +107,7 @@ const FormAsyncCombobox = <T extends FieldValues, O>({
                         variant="outline"
                         aria-invalid={fieldState.invalid}
                         className={cn(
-                          "min-w-[240px] justify-between h-8 rounded-xs text-sm font-semibold relative",
+                          "min-w-[160px] lg:min-w-[240px] justify-between h-8 rounded-xs text-sm font-semibold relative",
                           className
                         )}
                         disabled={disabled}
@@ -119,7 +119,11 @@ const FormAsyncCombobox = <T extends FieldValues, O>({
                       </Button>
                     </PopoverTrigger>
 
-                    <PopoverContent className="lg:w-[240px] p-0 max-h-64 overflow-y-auto">
+                    <PopoverContent
+                      className={cn(
+                        "lg:w-[240px] p-0 max-h-64 overflow-y-auto"
+                      )}
+                    >
                       <Command
                         filter={(value, search) => {
                           const item = options.filter((opt) =>
