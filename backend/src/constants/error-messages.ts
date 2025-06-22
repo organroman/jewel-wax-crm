@@ -25,6 +25,11 @@ const ERROR_MESSAGES = {
   COUNTRY_EXISTS: "Country already exists",
   UNAUTHORIZED: "Unauthorized access",
   DELIVERY_ADDRESS_REQUIRED: "Delivery address required",
+  CUSTOMER_REQUIRED: "Customer is required",
+  STAGE_REQUIRED: "Stage is required",
+  NAME_REQUIRED: "Name is required",
+  AMOUNT_REQUIRED: "Amount is required",
+  AMOUNT_SHOULD_BE_NUMBER: "Amount should be a number"
 } as const;
 
 export default ERROR_MESSAGES;

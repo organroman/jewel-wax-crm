@@ -340,6 +340,27 @@ export const OrderModel = {
         "delivery_addresses.id",
         "order_deliveries.delivery_address_id"
       )
+      .select(
+        "order_deliveries.id as id",
+        "order_deliveries.order_id",
+        "order_deliveries.delivery_address_id",
+        "order_deliveries.delivery_service",
+        "order_deliveries.cost",
+        "order_deliveries.status",
+        "order_deliveries.declaration_number",
+        "order_deliveries.estimated_delivery_date",
+        "order_deliveries.actual_delivery_date",
+        "delivery_addresses.id as delivery_address_id",
+        "delivery_addresses.type",
+        "delivery_addresses.np_city_ref",
+        "delivery_addresses.np_warehouse_ref",
+        "delivery_addresses.np_warehouse",
+        "delivery_addresses.np_warehouse_siteKey",
+        "delivery_addresses.street",
+        "delivery_addresses.street_ref",
+        "delivery_addresses.house_number",
+        "delivery_addresses.flat_number"
+      )
       .first();
     return delivery;
   },

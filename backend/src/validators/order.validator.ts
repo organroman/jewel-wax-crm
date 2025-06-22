@@ -6,7 +6,9 @@ import ERROR_MESSAGES from "../constants/error-messages";
 export const toggleIsImportantSchema = z.object({
   is_important: z.boolean(),
 });
-const stageEnum = z.enum(ORDER_STAGE);
+const stageEnum = z.enum(ORDER_STAGE, {
+  required_error: ERROR_MESSAGES.STAGE_REQUIRED,
+});
 const stageStatusEnum = z.enum(ORDER_STAGE_STATUS);
 
 const personSchema = z.object({
@@ -14,15 +16,8 @@ const personSchema = z.object({
   fullname: z.string(),
 });
 
-const customerDeliverySchema = z.object({
-  delivery_address_id: z.number(),
-  address_line: z.string(),
-});
-
 const customerSchema = z.object({
-  id: z.number(),
-  fullname: z.string(),
-  delivery_addresses: z.array(customerDeliverySchema).optional(),
+  id: z.number({ required_error: ERROR_MESSAGES.CUSTOMER_REQUIRED }),
 });
 
 const stageSchema = z.object({
@@ -39,7 +34,7 @@ const deliverySchema = z.object({
   id: z.number().optional(),
   order_id: z.number().optional(),
   delivery_address_id: z.number({
-    message: ERROR_MESSAGES.DELIVERY_ADDRESS_REQUIRED,
+    required_error: ERROR_MESSAGES.DELIVERY_ADDRESS_REQUIRED,
   }),
   delivery_service: z.string().optional(),
   cost: z.number().default(0.0),
@@ -48,9 +43,12 @@ const deliverySchema = z.object({
 });
 
 const baseSchema = z.object({
-  name: z.string(),
+  name: z.string({ required_error: ERROR_MESSAGES.NAME_REQUIRED }),
   description: z.string().optional(),
-  amount: z.number(),
+  amount: z.number({
+    required_error: ERROR_MESSAGES.AMOUNT_REQUIRED,
+    invalid_type_error: ERROR_MESSAGES.AMOUNT_SHOULD_BE_NUMBER,
+  }),
   notes: z.string().optional(),
   modeling_cost: z.number().optional(),
   milling_cost: z.number().optional(),

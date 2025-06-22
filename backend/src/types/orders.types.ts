@@ -3,7 +3,7 @@ import {
   ORDER_STAGE_STATUS,
   PAYMENT_STATUS,
 } from "../constants/enums";
-import { PersonRole } from "./person.types";
+import { DeliveryType, PersonRole, Phone } from "./person.types";
 import { GetAllOptions, PaginatedResult } from "./shared.types";
 
 export type PaymentStatus = (typeof PAYMENT_STATUS)[number];
@@ -18,11 +18,15 @@ export interface OrderPerson {
 }
 
 export type CustomerDeliveryAddress = {
-  delivery_address_id?: number;
+  delivery_address_id: number;
   address_line: string;
 };
 
-export interface OrderCustomer extends OrderPerson {
+export interface OrderCustomer {
+  first_name: string;
+  last_name: string;
+  patronymic?: string;
+  phones: Phone[];
   delivery_addresses: CustomerDeliveryAddress[];
 }
 
@@ -61,11 +65,20 @@ export interface OrderStage {
 export interface OrderDelivery {
   id: number;
   order_id: number;
-  delivery_address_id?: number;
+  delivery_address_id: number;
   delivery_service: string;
-  cost: number;
-  declaration_number: number;
-  address_line: string;
+  cost: number | string;
+  status: string;
+  declaration_number: string | null;
+  type: DeliveryType;
+  np_city_ref: string | null;
+  np_warehouse_ref: string | null;
+  np_warehouse: string | null;
+  np_warehouse_siteKey: string | null;
+  street: string | null;
+  street_ref: string | null;
+  house_number: string | null;
+  flat_number: string | null;
   updated_at?: Date;
 }
 
@@ -137,7 +150,7 @@ export interface AdminOrder {
   is_important: boolean;
   processing_days: number;
   stages: OrderStage[];
-  delivery?: OrderDelivery;
+  delivery?: OrderDelivery | null;
   createdBy: string;
   milling_cost?: number;
   modeling_cost?: number;

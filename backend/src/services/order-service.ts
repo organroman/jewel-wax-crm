@@ -15,6 +15,7 @@ import { PersonModel } from "../models/person-model";
 
 import {
   formatPerson,
+  getDoorAddress,
   getFullName,
   stripPrivateFields,
 } from "../utils/helpers";
@@ -122,15 +123,18 @@ export const OrderService = {
     const customer = customerFull
       ? {
           id: customerFull?.id,
-          fullname: getFullName(
-            customerFull?.first_name,
-            customerFull?.last_name,
-            customerFull?.patronymic
-          ),
+          first_name: customerFull.first_name,
+          last_name: customerFull.last_name,
+          patronymic: customerFull.patronymic,
+          phones: customerFull.phones,
           delivery_addresses: customerFull.delivery_addresses
             ? customerFull.delivery_addresses?.map((i) => ({
                 delivery_address_id: i.id,
-                address_line: i.address_line,
+                address_line: i.type
+                  ? i.type === "door"
+                    ? getDoorAddress(i.street, i.house_number, i.flat_number)
+                    : i.np_warehouse
+                  : "",
               }))
             : [],
         }
@@ -193,6 +197,20 @@ export const OrderService = {
 
     const delivery = await OrderModel.getDelivery(orderId);
 
+    const enrichedDelivery = delivery
+      ? {
+          ...delivery,
+          address_line:
+            delivery?.type === "warehouse"
+              ? delivery.np_warehouse
+              : getDoorAddress(
+                  delivery.street,
+                  delivery.house_number,
+                  delivery.flat_number
+                ),
+        }
+      : null;
+
     const linked_orders = await OrderModel.getLinkedOrders(orderId);
 
     const {
@@ -220,7 +238,7 @@ export const OrderService = {
           (Date.now() - new Date(order.created_at).getTime()) /
             (1000 * 60 * 60 * 24)
         ),
-      delivery,
+      delivery: enrichedDelivery,
       linked_orders,
       createdBy,
     };
@@ -317,6 +335,7 @@ export const OrderService = {
           declaration_number: delivery.declaration_number,
           delivery_address_id: delivery.delivery_address_id,
           order_id: orderId,
+          delivery_service: "nova_poshta",
         });
       } else
         await OrderModel.updateDelivery(orderId, {

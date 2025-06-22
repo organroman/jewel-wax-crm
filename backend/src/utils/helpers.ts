@@ -13,6 +13,14 @@ export function stripPassword<T extends { password?: string }>(person: T) {
   return safe;
 }
 
+export function getDoorAddress(
+  street?: string | null,
+  house?: string | null,
+  flat?: string | null
+): string {
+  return [street, house, flat].filter(Boolean).join(" ,");
+}
+
 export function getFullName(
   first?: string,
   last?: string,

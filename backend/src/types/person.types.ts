@@ -38,6 +38,8 @@ export interface DeliveryAddress {
   type: DeliveryType;
   np_city_ref: string;
   np_warehouse_ref: string;
+  np_warehouse: string;
+  np_warehouse_siteKey: string;
   street: string;
   street_ref: string;
   house_number: string;
