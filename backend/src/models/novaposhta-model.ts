@@ -1,4 +1,5 @@
 import {
+  NPCargoType,
   NPCity,
   NPResponse,
   NPStreet,
@@ -54,6 +55,16 @@ export const NovaPoshtaModel = {
         Page: "1",
         Limit: "100",
       },
+    });
+    return res.data;
+  },
+
+  async getCargoTypes(): Promise<NPResponse<NPCargoType>> {
+    const res = await axiosClient.post("", {
+      apiKey,
+      modelName: "CommonGeneral",
+      calledMethod: "getCargoTypes",
+      methodProperties: {},
     });
     return res.data;
   },

@@ -48,4 +48,12 @@ export const NovaPoshtaController = {
       next(error);
     }
   },
+  async getCargoTypes(req: Request, res: Response, next: NextFunction) {
+    try {
+      const cargoTypes = await NovaPoshtaService.getCargoTypes();
+      res.status(200).json(cargoTypes);
+    } catch (error) {
+      next(error);
+    }
+  },
 };

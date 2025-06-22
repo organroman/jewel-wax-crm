@@ -123,3 +123,13 @@ export interface NPStreet {
   StreetsTypeRef: string;
   StreetsType: string;
 }
+
+export interface NPCargoType {
+  Description: string;
+  Ref: string;
+}
+
+export interface CargoType {
+  value: string;
+  label: string
+}

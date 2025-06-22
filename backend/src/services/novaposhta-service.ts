@@ -2,6 +2,7 @@ import AppError from "../utils/AppError";
 import { NovaPoshtaModel } from "../models/novaposhta-model";
 import ERROR_MESSAGES from "../constants/error-messages";
 import { City, Street, Warehouse } from "../types/location-types";
+import { CargoType } from "../types/novaposhta.types";
 
 export const NovaPoshtaService = {
   async findCities(search: string): Promise<Omit<City, "id">[]> {
@@ -54,6 +55,19 @@ export const NovaPoshtaService = {
     return data.map((street) => ({
       street: street.Description,
       street_ref: street.Ref,
+    }));
+  },
+
+  async getCargoTypes(): Promise<CargoType[]> {
+    const { success, data, errors } = await NovaPoshtaModel.getCargoTypes();
+
+    if (!success) {
+      throw new AppError(errors?.[0] || ERROR_MESSAGES.FAILED_TO_FETCH, 500);
+    }
+
+    return data.map((item) => ({
+      label: item.Description,
+      value: item.Ref,
     }));
   },
 };
