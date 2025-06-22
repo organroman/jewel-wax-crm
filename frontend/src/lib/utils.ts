@@ -21,9 +21,9 @@ export function getInitials(firstName: string, lastName: string) {
 }
 
 export function getDoorAddress(
-  street?: string,
-  house?: string,
-  flat?: string
+  street?: string | null,
+  house?: string | null,
+  flat?: string | null
 ): string {
   return [street, house, flat].filter(Boolean).join(" ,");
 }

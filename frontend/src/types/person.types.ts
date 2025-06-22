@@ -75,8 +75,8 @@ export interface Phone {
   person_id?: number;
   number: string;
   is_main: boolean;
-  created_at?: Date;
-  updated_at?: Date;
+  created_at?: string;
+  updated_at?: string;
 }
 
 export interface Email {
@@ -84,8 +84,8 @@ export interface Email {
   person_id: number;
   email: string;
   is_main: boolean;
-  created_at?: Date;
-  updated_at?: Date;
+  created_at?: string;
+  updated_at?: string;
 }
 export interface Person {
   id: number;
@@ -95,8 +95,8 @@ export interface Person {
   patronymic: string;
   avatar_url: string;
   is_active: boolean;
-  created_at: Date;
-  updated_at: Date;
+  created_at: string;
+  updated_at: string;
   emails: Email[];
   phones: Phone[];
   locations: Location[];

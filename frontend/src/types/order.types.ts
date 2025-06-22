@@ -6,6 +6,7 @@ import {
 } from "@/constants/enums.constants";
 import { PaginatedResult } from "./shared.types";
 import { updateOrderSchema } from "@/validators/order.validator";
+import { Phone } from "./person.types";
 
 export interface OrderPerson {
   id: number;
@@ -15,10 +16,14 @@ export interface OrderPerson {
 export interface OrderCustomerDelivery {
   delivery_address_id: number;
   address_line: string;
-  declaration_number: number;
 }
 
-export interface OrderCustomer extends OrderPerson {
+export interface OrderCustomer {
+  id: number;
+  first_name: string;
+  last_name: string;
+  patronymic?: string;
+  phones: Phone[];
   delivery_addresses: OrderCustomerDelivery[];
 }
 

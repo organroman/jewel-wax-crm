@@ -73,7 +73,7 @@ export const useOrder = {
   },
   getById: ({ id, enabled }: { id: number; enabled: boolean }) => {
     return useQuery({
-      queryKey: ["orders", id],
+      queryKey: ["order", id],
       queryFn: () => orderService.getById(Number(id)),
       enabled,
     });
@@ -92,7 +92,7 @@ export const useOrder = {
       onSuccess: (data) => {
         toast.success(t("messages.success.order_updated"));
         queryClient.invalidateQueries({
-          queryKey: ["orders"],
+          queryKey: ["orders", "order"],
         });
         handleOnSuccess && handleOnSuccess(data);
       },

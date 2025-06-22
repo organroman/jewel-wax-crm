@@ -114,7 +114,12 @@ const OrderForm = ({
       milling_cost: order?.milling_cost || 0.0,
       printer: order?.printer || null,
       printing_cost: order?.printing_cost || 0.0,
-      delivery: order?.delivery || { declaration_number: "", cost: "0.00" },
+      delivery: (order?.delivery && {
+        ...order.delivery,
+        declaration_number: order.delivery.declaration_number
+          ? order.delivery.declaration_number
+          : "",
+      }) || { declaration_number: "", cost: "0.00" },
       notes: order?.notes || "",
       customer: order?.customer || null,
       stages: defaultOrderStages,
@@ -137,7 +142,6 @@ const OrderForm = ({
     if (newFiles.length) {
       uploadImagesMutation.mutate(newFiles, {
         onSuccess: (data) => {
-          console.log(data);
           const currentMedia = form.getValues("media");
           const newMedia = data.map((media) => ({
             url: media.url,
@@ -167,7 +171,6 @@ const OrderForm = ({
   };
 
   const handleUpdateImages = (media: OrderMedia[]) => {
-    console.log(media);
     form.setValue("media", media);
   };
 
@@ -388,7 +391,7 @@ const OrderForm = ({
                             options={
                               (order?.customer.delivery_addresses &&
                                 order.customer.delivery_addresses.map((m) => ({
-                                  label: m.address_line || "",
+                                  label: m.address_line,
                                   value: m.delivery_address_id,
                                   data: m,
                                 }))) ||

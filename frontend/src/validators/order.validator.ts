@@ -20,9 +20,20 @@ const orderPersonSchema = z.object({
   fullname: z.string(),
 });
 
+const phoneSchema = z.object({
+  id: z.number(),
+  is_main: z.boolean(),
+
+  number: z.string(),
+  person_id: z.number(),
+});
+
 const orderCustomerSchema = z.object({
   id: z.number(),
-  fullname: z.string(),
+  first_name: z.string(),
+  last_name: z.string(),
+  patronymic: z.string().optional().nullable(),
+  phones: z.array(phoneSchema),
   delivery_addresses: z
     .array(
       z.object({ delivery_address_id: z.number(), address_line: z.string() })
@@ -34,7 +45,15 @@ const orderDeliveryAddressSchema = z.object({
   id: z.number().optional(),
   order_id: z.number().optional(),
   delivery_address_id: z.number().optional(),
-  address_line: z.string().optional(),
+  // address_line: z.string().optional(),
+  np_city_ref: z.string().nullable().optional(),
+  np_warehouse_ref: z.string().nullable().optional(),
+  np_warehouse: z.string().nullable().optional(),
+  np_warehouse_siteKey: z.string().nullable().optional(),
+  street: z.string().nullable().optional(),
+  street_ref: z.string().nullable().optional(),
+  house_number: z.string().nullable().optional(),
+  flat_number: z.string().nullable().optional(),
   cost: costField,
   declaration_number: z.string().optional().nullable(),
 });

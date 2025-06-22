@@ -23,6 +23,7 @@ import OrderChat from "@/components/orders/order-chat";
 import { translateKeyValueList } from "@/lib/translate-constant-labels";
 import { ORDER_CARD_TABS_LIST } from "@/constants/orders.constants";
 import { useDialog } from "@/hooks/use-dialog";
+import { getFullName } from "@/lib/utils";
 
 const OrderClient = ({ id }: { id: number }) => {
   const router = useRouter();
@@ -109,7 +110,11 @@ const OrderClient = ({ id }: { id: number }) => {
           isFavorite={order.is_favorite}
           isImportant={order.is_important}
           customerId={order.customer.id}
-          customerFullName={order.customer.fullname}
+          customerFullName={getFullName(
+            order.customer.first_name,
+            order.customer.last_name,
+            order.customer.patronymic
+          )}
           orderNumber={order.number}
           savingIsLoading={
             updateMutation.isPending || uploadImagesMutation.isPending

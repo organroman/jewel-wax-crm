@@ -79,8 +79,8 @@ const emailSchema = z.object({
     .string({ message: "messages.validation.required" })
     .email("messages.validation.invalid_email"),
   is_main: z.boolean(),
-  created_at: z.date().optional(),
-  updated_at: z.date().optional(),
+  created_at: z.string().optional(),
+  updated_at: z.string().optional(),
 });
 
 const emailsSchema = z

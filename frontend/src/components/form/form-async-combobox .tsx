@@ -75,7 +75,6 @@ const FormAsyncCombobox = <T extends FieldValues, O>({
           }
           return field.value?.label ?? placeholder;
         })();
-        console.log(selectedLabel);
 
         return (
           <FormItem className="flex flex-col lg:flex-row gap-0.5 lg:gap-2.5">
