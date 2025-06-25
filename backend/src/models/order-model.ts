@@ -359,7 +359,9 @@ export const OrderModel = {
         "delivery_addresses.street",
         "delivery_addresses.street_ref",
         "delivery_addresses.house_number",
-        "delivery_addresses.flat_number"
+        "delivery_addresses.flat_number",
+        "delivery_addresses.np_recipient_ref",
+        "delivery_addresses.np_contact_recipient_ref"
       )
       .first();
     return delivery;

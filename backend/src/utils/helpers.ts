@@ -115,3 +115,8 @@ export function stripPrivateFields(
     Object.entries(order).filter(([key]) => !omit.has(key))
   );
 }
+
+export function parseDate(input: string): Date {
+  const [day, month, year] = input.split(".");
+  return new Date(Number(year), Number(month) - 1, Number(day));
+}

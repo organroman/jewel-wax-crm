@@ -29,7 +29,9 @@ const ERROR_MESSAGES = {
   STAGE_REQUIRED: "Stage is required",
   NAME_REQUIRED: "Name is required",
   AMOUNT_REQUIRED: "Amount is required",
-  AMOUNT_SHOULD_BE_NUMBER: "Amount should be a number"
+  AMOUNT_SHOULD_BE_NUMBER: "Amount should be a number",
+  UNKNOWN_NP_ERROR: "Unknown Nova Poshta error",
+  FAILED_TO_CREATE_NP_RECIPIENT: "Failed to create recipient",
 } as const;
 
 export default ERROR_MESSAGES;

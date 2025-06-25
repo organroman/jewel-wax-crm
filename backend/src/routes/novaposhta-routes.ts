@@ -12,5 +12,6 @@ router.get(
   verifyToken,
   NovaPoshtaController.getCityStreets
 );
+router.post("/ttn", verifyToken, NovaPoshtaController.createTTN);
 
 export default router;

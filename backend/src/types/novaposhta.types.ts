@@ -131,5 +131,60 @@ export interface NPCargoType {
 
 export interface CargoType {
   value: string;
-  label: string
+  label: string;
+}
+
+export interface CreateDeclarationInput {
+  Description: string;
+  VolumeGeneral: string;
+  Weight: string;
+  SeatsAmount: string;
+  Cost: string;
+  PayerType: "Recipient" | "Sender";
+  DateTime: string;
+  PaymentMethod: "Cash" | "NonCash";
+  CargoType: string;
+  CitySender: string;
+  Sender: string;
+  SendersPhone: string;
+  SenderAddress: string;
+  ContactSender: string;
+  CityRecipient: string;
+  RecipientAddress?: string;
+  RecipientsPhone: string;
+  RecipientType: string;
+  Recipient: string;
+  ContactRecipient: string;
+  RecipientFirstName: string;
+  RecipientLastName: string;
+  OrderId: number;
+}
+
+export interface DeliveryDeclaration {
+  Ref: string;
+  CostOnSite: string;
+  EstimatedDeliveryDate: string;
+  IntDocNumber: string;
+  TypeDocument: string;
+}
+
+export interface NPCounterParty {
+  Ref: string;
+  Description: string;
+  FirstName: string;
+  MiddleName: string;
+  LastName: string;
+  Counterparty: string;
+  EDRPOU: string;
+  CounterpartyType: string;
+  ContactPerson: {
+    success: boolean;
+    data: {
+      Ref: string;
+      Description: string;
+      FirstName: string;
+      MiddleName: string;
+      LastName: string;
+    }[];
+  };
 }

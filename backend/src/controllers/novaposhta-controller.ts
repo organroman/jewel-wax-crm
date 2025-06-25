@@ -56,4 +56,14 @@ export const NovaPoshtaController = {
       next(error);
     }
   },
+
+  async createTTN(req: Request, res: Response, next: NextFunction) {
+    try {
+      const ttn = await NovaPoshtaService.createDeclaration(req.body);
+
+      res.status(200).json(ttn);
+    } catch (error) {
+      next(error);
+    }
+  },
 };

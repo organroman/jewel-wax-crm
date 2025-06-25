@@ -1,8 +1,17 @@
-import AppError from "../utils/AppError";
-import { NovaPoshtaModel } from "../models/novaposhta-model";
-import ERROR_MESSAGES from "../constants/error-messages";
 import { City, Street, Warehouse } from "../types/location-types";
-import { CargoType } from "../types/novaposhta.types";
+import {
+  CargoType,
+  CreateDeclarationInput,
+  DeliveryDeclaration,
+} from "../types/novaposhta.types";
+
+import { NovaPoshtaModel } from "../models/novaposhta-model";
+import { OrderModel } from "../models/order-model";
+
+import { ensureRecipientExists } from "../utils/novaposhta";
+import AppError from "../utils/AppError";
+import { parseDate } from "../utils/helpers";
+import ERROR_MESSAGES from "../constants/error-messages";
 
 export const NovaPoshtaService = {
   async findCities(search: string): Promise<Omit<City, "id">[]> {
@@ -69,5 +78,61 @@ export const NovaPoshtaService = {
       label: item.Description,
       value: item.Ref,
     }));
+  },
+
+  async createDeclaration(
+    data: CreateDeclarationInput
+  ): Promise<DeliveryDeclaration[]> {
+    const payload: Record<string, any> = {};
+    for (const [key, value] of Object.entries(data)) {
+      const newKey = key.charAt(0).toUpperCase() + key.slice(1);
+      const newValue =
+        typeof value === "string"
+          ? value.charAt(0).toUpperCase() + value.slice(1)
+          : value;
+
+      payload[newKey] = newValue;
+    }
+
+    const { recipientRef, contactRef } = await ensureRecipientExists(
+      {
+        np_recipient_ref: payload.RecipientRef,
+        np_contact_recipient_ref: payload.ContactRecipientRef,
+        delivery_address_id: payload.Delivery_address_id,
+      },
+      {
+        firstName: payload.RecipientFirstName,
+        lastName: payload.RecipientLastName,
+        phone: payload.RecipientsPhone,
+      }
+    );
+
+    const {
+      success,
+      data: declaration,
+      errors,
+    } = await NovaPoshtaModel.createDeclaration({
+      ...payload,
+      CitySender: process.env.NOVA_POSHAT_SENDER_CITY_REF,
+      Sender: process.env.NOVA_POSHTA_COUNTERPARTY_REF,
+      ContactSender: process.env.NOVA_POSHTA_SENDER_CONTACT_REF,
+      Recipient: recipientRef,
+      ContactRecipient: contactRef,
+    } as CreateDeclarationInput);
+
+    if (!success || !declaration) {
+      throw new AppError(errors?.[0] || ERROR_MESSAGES.FAILED_TO_FETCH, 500);
+    }
+
+    await OrderModel.updateDelivery(payload.OrderId, {
+      declaration_number: declaration[0].IntDocNumber,
+      estimated_delivery_date: parseDate(declaration[0].EstimatedDeliveryDate),
+      cost:
+        payload.PayerType === "Recipient"
+          ? 0.0
+          : Number(declaration[0].CostOnSite),
+    });
+
+    return declaration;
   },
 };

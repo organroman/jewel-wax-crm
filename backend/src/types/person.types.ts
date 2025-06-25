@@ -48,6 +48,8 @@ export interface DeliveryAddress {
   created_at?: Date;
   updated_at?: Date;
   person_id: number | null;
+  np_recipient_ref: string | null;
+  np_contact_recipient_ref: string | null;
 }
 
 export interface Location {

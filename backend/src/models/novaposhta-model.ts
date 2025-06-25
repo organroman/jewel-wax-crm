@@ -1,10 +1,16 @@
 import {
+  CreateDeclarationInput,
+  DeliveryDeclaration,
   NPCargoType,
   NPCity,
+  NPCounterParty,
   NPResponse,
   NPStreet,
   NPWarehouse,
 } from "../types/novaposhta.types";
+
+import ERROR_MESSAGES from "../constants/error-messages";
+import AppError from "../utils/AppError";
 import { axiosClient } from "../utils/axiosClient";
 
 const apiKey = process.env.NOVA_POSHTA_API_KEY;
@@ -34,7 +40,7 @@ export const NovaPoshtaModel = {
       methodProperties: {
         CityRef: cityRef,
         FindByString: search,
-        Limit: "50",
+        Limit: "100",
         Page: "1",
       },
     });
@@ -65,6 +71,46 @@ export const NovaPoshtaModel = {
       modelName: "CommonGeneral",
       calledMethod: "getCargoTypes",
       methodProperties: {},
+    });
+    return res.data;
+  },
+  async createDeclaration(
+    data: CreateDeclarationInput
+  ): Promise<NPResponse<DeliveryDeclaration>> {
+    console.log("payload", data);
+    const res = await axiosClient.post("", {
+      apiKey,
+      modelName: "InternetDocumentGeneral",
+      calledMethod: "save",
+      methodProperties: data,
+    });
+
+    const response = res.data;
+
+    if (!response.success) {
+      const errorMessage =
+        response.errors?.[0] || ERROR_MESSAGES.UNKNOWN_NP_ERROR;
+      throw new AppError(errorMessage, 400);
+    }
+
+    return res.data;
+  },
+  async createCounterParty(data: {
+    FirstName: string;
+    LastName: string;
+    Phone: string;
+  }): Promise<NPResponse<NPCounterParty>> {
+    const res = await axiosClient.post("", {
+      apiKey,
+      modelName: "CounterpartyGeneral",
+      calledMethod: "save",
+      methodProperties: {
+        FirstName: data.FirstName,
+        LastName: data.LastName,
+        Phone: data.Phone,
+        CounterpartyType: "PrivatePerson",
+        CounterpartyProperty: "Recipient",
+      },
     });
     return res.data;
   },

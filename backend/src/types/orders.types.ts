@@ -75,11 +75,14 @@ export interface OrderDelivery {
   np_warehouse_ref: string | null;
   np_warehouse: string | null;
   np_warehouse_siteKey: string | null;
+  np_recipient_ref: string | null;
+  np_contact_recipient_ref: string | null;
   street: string | null;
   street_ref: string | null;
   house_number: string | null;
   flat_number: string | null;
   updated_at?: Date;
+  estimated_delivery_date: Date;
 }
 
 export interface OrderBase {
