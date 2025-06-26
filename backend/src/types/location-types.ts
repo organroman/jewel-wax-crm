@@ -12,6 +12,7 @@ export interface City {
   area: string;
   settlementType_ref: string;
   settlementType: string;
+  region: string | null;
 }
 
 export interface CreateCountryInput {

@@ -188,3 +188,18 @@ export interface NPCounterParty {
     }[];
   };
 }
+
+export interface NPAddress {
+  Warehouses: number;
+  MainDescription: string;
+  Area: string;
+  Region: string;
+  SettlementTypeCode: string;
+  Ref: string;
+  DeliveryCity: string;
+}
+
+export interface NPSettlement {
+  TotalCount: string;
+  Addresses: NPAddress[];
+}

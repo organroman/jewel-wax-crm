@@ -129,6 +129,7 @@ export const OrderService = {
           phones: customerFull.phones,
           delivery_addresses: customerFull.delivery_addresses
             ? customerFull.delivery_addresses?.map((i) => ({
+                ...i,
                 delivery_address_id: i.id,
                 address_line: i.type
                   ? i.type === "door"

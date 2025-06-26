@@ -94,4 +94,7 @@ export const LocationModel = {
       .returning("*");
     return city;
   },
+  async updateCity(cityId: number, data: Partial<City>) {
+    return await db<City>("cities").where("id", cityId).update(data);
+  },
 };

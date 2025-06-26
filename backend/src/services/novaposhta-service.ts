@@ -28,6 +28,7 @@ export const NovaPoshtaService = {
       area: city.AreaDescription,
       settlementType_ref: city.SettlementType,
       settlementType: city.SettlementTypeDescription,
+      region: null,
     }));
   },
 

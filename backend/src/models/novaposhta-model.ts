@@ -5,6 +5,7 @@ import {
   NPCity,
   NPCounterParty,
   NPResponse,
+  NPSettlement,
   NPStreet,
   NPWarehouse,
 } from "../types/novaposhta.types";
@@ -112,6 +113,20 @@ export const NovaPoshtaModel = {
         CounterpartyProperty: "Recipient",
       },
     });
+    return res.data;
+  },
+  async getSettlements(cityName: string): Promise<NPResponse<NPSettlement>> {
+    const res = await axiosClient.post("", {
+      apiKey,
+      modelName: "AddressGeneral",
+      calledMethod: "searchSettlements",
+      methodProperties: {
+        CityName: cityName,
+        Limit: "50",
+        Page: "1",
+      },
+    });
+
     return res.data;
   },
 };

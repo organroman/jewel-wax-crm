@@ -4,12 +4,15 @@ import {
   SafePerson,
   UpdatePersonInput,
 } from "../types/person.types";
+import { Location } from "../types/person.types";
 import { PaginatedResult } from "../types/shared.types";
 
 import bcryptjs from "bcryptjs";
 
 import { PersonModel } from "../models/person-model";
 import { ActivityLogModel } from "../models/activity-log-model";
+import { LocationModel } from "../models/location-model";
+import { NovaPoshtaModel } from "../models/novaposhta-model";
 
 import AppError from "../utils/AppError";
 import ERROR_MESSAGES from "../constants/error-messages";
@@ -64,11 +67,6 @@ export const PersonService = {
       ? await bcryptjs.hash(data.password, 10)
       : undefined;
 
-    // const person = await PersonModel.create({
-    //   ...data,
-    //   password: hashedPassword,
-    // });
-
     const person = await PersonModel.createPersonBase({
       ...data,
       password: hashedPassword,
@@ -82,6 +80,7 @@ export const PersonService = {
 
     if (data.locations?.length) {
       await PersonModel.createLocations(person.id, data.locations);
+      await this.updateCitiesWithRegion(data.locations);
     }
 
     if (data.delivery_addresses?.length) {
@@ -232,6 +231,10 @@ export const PersonService = {
     const newLocations = locations?.filter((i) => !i.id) ?? [];
     const incomingLocations = locations?.filter((i) => i.id) ?? [];
 
+    if (locations?.length) {
+      await this.updateCitiesWithRegion(locations);
+    }
+
     const toUpdateLocations = existingLocations.filter((dbItem) => {
       const incomingMatch = existingLocations?.find((p) => p.id === dbItem.id);
       return incomingMatch;
@@ -323,5 +326,48 @@ export const PersonService = {
   },
   async getPrinters(): Promise<{ id: number; fullname: string }[]> {
     return await PersonModel.getPrinters();
+  },
+  async updateCitiesWithRegion(locations: Location[]) {
+    const existingCities = await Promise.all(
+      locations.map(async (location) => {
+        return await LocationModel.getCityById(location.city_id);
+      })
+    );
+
+    const citiesToUpdate = existingCities.filter(
+      (city) => city?.region === null
+    );
+
+    if (citiesToUpdate.length) {
+      const updatedCities = await Promise.all(
+        citiesToUpdate.map(async (item) => {
+          if (item) {
+            const { success, data } = await NovaPoshtaModel.getSettlements(
+              item.name
+            );
+
+            if (!success || !data?.[0]?.Addresses?.length) {
+              console.warn(`No region data found for city: ${item.name}`);
+              return null;
+            }
+            const region = data[0].Addresses[0].Region;
+            return {
+              ...item,
+              region,
+            };
+          }
+        })
+      );
+
+      const citiesWithRegion = updatedCities.filter(Boolean);
+
+      await Promise.all(
+        citiesWithRegion.map(
+          async (city) =>
+            city &&
+            (await LocationModel.updateCity(city.id, { region: city.region }))
+        )
+      );
+    }
   },
 };
