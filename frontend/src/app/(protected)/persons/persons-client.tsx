@@ -57,9 +57,9 @@ const PersonsClient = () => {
     };
   }, [searchCity, debouncedSearchCity]);
 
-  const { data: cities, isLoading: citiesLoading } = useLocation.getCities(
-    `search=${debouncedValue}`
-  );
+  const { data: cities, isLoading: citiesLoading } = useLocation.getCities({
+    query: `search=${debouncedValue}`,
+  });
   const { data: countries, isLoading: countriesLoading } =
     useLocation.getCountries();
 

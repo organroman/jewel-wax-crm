@@ -2,6 +2,7 @@ import { Order, UpdateOrderSchema } from "@/types/order.types";
 import { QueryClient, useMutation, useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { orderService } from "./order-service";
+import { CreateDeclarationSchema } from "@/types/novaposhta.types";
 
 export const useOrder = {
   getPaginatedOrders: ({
@@ -138,5 +139,39 @@ export const useOrder = {
       queryFn: () => orderService.getOrdersNumbers(query),
       enabled,
     });
+  },
+  getNPCargoTypes: (enabled: boolean) => {
+    return useQuery({
+      queryKey: ["cargoTypes"],
+      queryFn: () => orderService.getNPCargoTypes(),
+      enabled,
+    });
+  },
+  createTTN: ({
+    queryClient,
+    handleSuccess,
+    t,
+    orderId,
+  }: {
+    queryClient: QueryClient;
+    handleSuccess?: () => void;
+    t: (key: string) => string;
+    orderId?: number;
+  }) => {
+    const mutation = useMutation({
+      mutationFn: async (data: CreateDeclarationSchema) =>
+        orderService.createTTN(data),
+
+      onSuccess: () => {
+        toast.success(t("messages.success.ttn_created"));
+        handleSuccess && handleSuccess(),
+          queryClient.invalidateQueries({
+            queryKey: ["order", orderId],
+          });
+      },
+      onError: (error) => toast.error(error.message),
+    });
+
+    return { createTTNMutation: mutation };
   },
 };

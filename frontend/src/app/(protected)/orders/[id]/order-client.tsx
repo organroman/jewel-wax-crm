@@ -25,7 +25,7 @@ import { ORDER_CARD_TABS_LIST } from "@/constants/orders.constants";
 import { useDialog } from "@/hooks/use-dialog";
 import { getFullName } from "@/lib/utils";
 
-const OrderClient = ({ id }: { id: number }) => {
+const OrderClient = ({ id, userId }: { id: number; userId: number }) => {
   const router = useRouter();
   const queryClient = useQueryClient();
   const { t } = useTranslation();
@@ -128,6 +128,7 @@ const OrderClient = ({ id }: { id: number }) => {
             setIsDeleteDialogOpen={setDialogOpen}
             uploadImagesMutation={uploadImagesMutation}
             mutation={updateMutation}
+            userId={userId}
           />
         )}
         {selectedTab.value === "payments" && <OrderPayments />}

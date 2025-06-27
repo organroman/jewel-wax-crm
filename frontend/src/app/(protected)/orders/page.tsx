@@ -7,7 +7,7 @@ const OrdersPage = async () => {
   const cookieStore = await cookies();
   const token = cookieStore.get("token")?.value;
 
-  const role = getRoleAndUserFromToken(token as PersonRoleValue);
+  const { role } = getRoleAndUserFromToken(token as PersonRoleValue);
 
   return <OrdersClient userRole={role} />;
 };

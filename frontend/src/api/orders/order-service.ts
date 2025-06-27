@@ -6,6 +6,12 @@ import {
 
 import apiService from "../api-service";
 import { PaginatedResult } from "@/types/shared.types";
+import {
+  CargoType,
+  CreateDeclarationSchema,
+  DeliveryDeclaration,
+} from "@/types/novaposhta.types";
+import dayjs from "dayjs";
 
 export const orderService = {
   getAll: async (query: string) => {
@@ -32,14 +38,20 @@ export const orderService = {
     const { stages, linked_orders, ...order } = data;
 
     const delivery = order.delivery?.delivery_address_id
-      ? order.delivery
+      ? {
+          ...order.delivery,
+          declaration_number:
+            order.delivery.declaration_number !== ""
+              ? order.delivery.declaration_number
+              : null,
+        }
       : null;
 
     const updatedStages = stages.map((s) => ({
       ...s,
       status: s.status?.value,
     }));
-    
+
     const linked = linked_orders?.map(
       ({ is_common_delivery, id, order_id, linked_order_id, comment }) => ({
         id,
@@ -63,5 +75,18 @@ export const orderService = {
     return apiService.get<PaginatedResult<{ id: number; number: number }>>(
       `orders/numbers?${query}`
     );
+  },
+  getNPCargoTypes: () => {
+    return apiService.get<CargoType[]>("np/cargoTypes");
+  },
+  createTTN: (data: CreateDeclarationSchema) => {
+    const payload = {
+      ...data,
+      payerType: data.payerType.value,
+      paymentMethod: data.paymentMethod.value,
+      cargoType: data.cargoType.value,
+      dateTime: dayjs(data.dateTime).format("DD.MM.YYYY"),
+    };
+    return apiService.post<DeliveryDeclaration>("np/ttn", payload);
   },
 };

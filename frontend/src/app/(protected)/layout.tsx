@@ -19,7 +19,7 @@ const ProtectedLayout = async ({ children }: { children: React.ReactNode }) => {
   if (!token) {
     redirect("/login");
   }
-  const role = getRoleAndUserFromToken(token as PersonRoleValue);
+  const {role} = getRoleAndUserFromToken(token as PersonRoleValue);
 
   return (
     <div className="flex flex-col h-screen w-full overflow-y-hidden">

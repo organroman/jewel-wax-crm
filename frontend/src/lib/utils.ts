@@ -31,7 +31,7 @@ export function getDoorAddress(
 export function getFullName(
   firstName: string,
   lastName: string,
-  surname: string | undefined,
+  surname: string | undefined | null,
   isUpperCase?: boolean
 ) {
   if (isUpperCase) {
@@ -130,9 +130,9 @@ export const getRoleAndUserFromToken = (token: PersonRoleValue) => {
     throw new Error("Invalid token payload: missing role");
   }
 
-  const { role } = decoded as TokenPayload;
+  const { id, role } = decoded as TokenPayload;
 
-  return role;
+  return { id, role };
 };
 
 export const hasPermission = (permission: string[], role: string) => {
