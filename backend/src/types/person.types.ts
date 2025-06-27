@@ -36,7 +36,7 @@ export interface DeliveryAddress {
   id: number;
   address_line?: string;
   type: DeliveryType;
-  np_city_ref: string;
+  city_id: string;
   np_warehouse_ref: string;
   np_warehouse: string;
   np_warehouse_siteKey: string;

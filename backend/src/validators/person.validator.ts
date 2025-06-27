@@ -17,7 +17,7 @@ const deliveryAddressSchema = z.object({
   id: z.number().optional(),
   is_main: z.boolean(),
   type: deliveryTypeSchema,
-  np_city_ref: z.string({ required_error: "City is required" }).min(1),
+  city_id: z.number({ required_error: "City is required" }),
   np_warehouse_ref: z.string().optional().nullable(),
   np_warehouse: z.string().optional().nullable(),
   np_warehouse_siteKey: z.string().optional().nullable(),

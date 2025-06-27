@@ -71,7 +71,10 @@ export interface OrderDelivery {
   status: string;
   declaration_number: string | null;
   type: DeliveryType;
-  np_city_ref: string | null;
+  city_name: string | null;
+  city_ref: string | null;
+  area: string | null;
+  region: string | null;
   np_warehouse_ref: string | null;
   np_warehouse: string | null;
   np_warehouse_siteKey: string | null;

@@ -340,6 +340,7 @@ export const OrderModel = {
         "delivery_addresses.id",
         "order_deliveries.delivery_address_id"
       )
+      .leftJoin("cities", "delivery_addresses.city_id", "cities.id")
       .select(
         "order_deliveries.id as id",
         "order_deliveries.order_id",
@@ -352,7 +353,6 @@ export const OrderModel = {
         "order_deliveries.actual_delivery_date",
         "delivery_addresses.id as delivery_address_id",
         "delivery_addresses.type",
-        "delivery_addresses.np_city_ref",
         "delivery_addresses.np_warehouse_ref",
         "delivery_addresses.np_warehouse",
         "delivery_addresses.np_warehouse_siteKey",
@@ -361,7 +361,11 @@ export const OrderModel = {
         "delivery_addresses.house_number",
         "delivery_addresses.flat_number",
         "delivery_addresses.np_recipient_ref",
-        "delivery_addresses.np_contact_recipient_ref"
+        "delivery_addresses.np_contact_recipient_ref",
+        "cities.name as city_name",
+        "cities.ref as city_ref",
+        "cities.region",
+        "cities.area"
       )
       .first();
     return delivery;
