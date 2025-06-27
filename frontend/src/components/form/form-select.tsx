@@ -18,6 +18,7 @@ import {
   SelectValue,
 } from "../ui/select";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "react-i18next";
 
 const FormSelect = <T extends FieldValues, O>({
   name,
@@ -27,16 +28,31 @@ const FormSelect = <T extends FieldValues, O>({
   options,
   required = false,
   className,
+  labelPosition = "left",
+  isFullWidth,
 }: FormSelectProps<T, O>) => {
+  const { t } = useTranslation();
   return (
     <FormField
       control={control}
       name={name}
       render={({ field }) => {
         return (
-          <FormItem className="flex flex-col lg:flex-row lg:items-center gap-0.5 lg:gap-2.5">
+          <FormItem
+            className={cn(
+              "flex flex-col  lg:flex-row lg:items-center gap-0.5 lg:gap-2.5",
+              labelPosition === "top" &&
+                "lg:flex-col lg:gap-0.5 lg:items-start",
+              isFullWidth && "w-full"
+            )}
+          >
             {label && (
-              <div className="flex items-start lg:justify-end gap-1 w-full">
+              <div
+                className={cn(
+                  "flex items-start lg:justify-end gap-1 w-full",
+                  labelPosition === "top" && "lg:justify-start"
+                )}
+              >
                 <FormLabel className="text-text-muted font-normal text-sm">
                   {label}
                 </FormLabel>
@@ -67,12 +83,12 @@ const FormSelect = <T extends FieldValues, O>({
                 <SelectTrigger
                   size="sm"
                   className={cn(
-                    "w-full lg:min-w-[240px] h-8 rounded-xs text-sm font-semibold focus-visible:ring-[1px]",
+                    "w-full lg:min-w-[240px] h-8 rounded-xs text-sm font-semibold focus-visible:ring-[1px] text-text-muted hover:text-text-regular",
                     className
                   )}
                 >
                   <SelectValue
-                    placeholder={placeholder || "Make your choice"}
+                    placeholder={placeholder || t("placeholders.choose")}
                   />
                 </SelectTrigger>
               </FormControl>

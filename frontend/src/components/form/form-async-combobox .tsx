@@ -46,6 +46,7 @@ const FormAsyncCombobox = <T extends FieldValues, O>({
   saveOnlyValue = false,
   disabled = false,
   isOptionsLoading,
+  onChange,
 }: FormAsyncComboboxProps<T, O>) => {
   const [open, setOpen] = useState(false);
   const { t } = useTranslation();
@@ -106,12 +107,14 @@ const FormAsyncCombobox = <T extends FieldValues, O>({
                         variant="outline"
                         aria-invalid={fieldState.invalid}
                         className={cn(
-                          "min-w-[160px] lg:min-w-[240px] justify-between h-8 rounded-xs text-sm font-semibold relative",
+                          "min-w-[160px] lg:min-w-[240px] lg:max-w-[240px] justify-between h-8 rounded-xs text-sm font-semibold relative",
                           className
                         )}
                         disabled={disabled}
                       >
-                        {selectedLabel}
+                        <span className="truncate overflow-hidden whitespace-nowrap w-full text-left">
+                          {selectedLabel}
+                        </span>
                         <div className="absolute top-1.5 right-2">
                           {open ? <ChevronUp /> : <ChevronDown />}
                         </div>
@@ -170,6 +173,11 @@ const FormAsyncCombobox = <T extends FieldValues, O>({
                                     field.onChange(value);
                                   } else {
                                     field.onChange({ value, label });
+                                  }
+                                  console.log("onChange", onChange)
+                                  if (typeof onChange === "function") {
+                                    console.log("option", option)
+                                    onChange(option);
                                   }
                                   setOpen(false);
                                 }}

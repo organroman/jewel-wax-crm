@@ -168,7 +168,7 @@ const FormArrayLocation = <T extends FieldValues>({
                 options={
                   (countries &&
                     countries.map((c) => ({
-                      label: c.name || "",
+                      label: c.name,
                       value: c.id,
                       data: c,
                     }))) ||
@@ -202,21 +202,27 @@ const FormArrayLocation = <T extends FieldValues>({
                 options={
                   (fullCityOptions &&
                     fullCityOptions.map((c) => ({
-                      label: c.name || "",
-                      value: c.id,
+                      label: c.city_name || "",
+                      value: c.city_id,
                       data: c,
                     }))) ||
                   []
                 }
                 label={t("location.labels.city")}
                 required={required && index === 0}
-                displayKey="name"
-                valueKey="id"
+                displayKey="city_name"
+                valueKey="city_id"
                 saveOnlyValue
                 searchQuery={search}
                 setSearchQuery={setSearch}
                 isOptionsLoading={isLoading}
                 disabled={!selectedCountryId}
+                onChange={(selected) => {
+                  setValue(
+                    `${name}.${index}.city_name` as Path<T>,
+                    selected?.data?.city_name as PathValue<T, any>
+                  );
+                }}
               />
               <Button
                 variant="outline"

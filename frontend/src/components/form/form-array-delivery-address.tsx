@@ -42,6 +42,7 @@ const FormArrayDeliveryAddress = <T extends FieldValues>({
 }: FormArrayDeliveryAddressProps<T>) => {
   const { t } = useTranslation();
   const { dialogOpen, setDialogOpen } = useDialog();
+  const [inputValue, setInputValue] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCity, setSelectedCity] = useState<City | null>(null);
   const [selectedWarehouse, setSelectedWarehouse] = useState<Warehouse | null>(
@@ -55,8 +56,16 @@ const FormArrayDeliveryAddress = <T extends FieldValues>({
   const { fields, append, remove } = useFieldArray({ control, name });
   const watchedFields = useWatch({ name: name as Path<T>, control });
 
-  const debouncedSearch = useMemo(() => debounce(setSearchQuery, 800), []);
-  useEffect(() => () => debouncedSearch.cancel(), [debouncedSearch]);
+  const debouncedSetSearch = useMemo(
+    () => debounce((val: string) => setSearchQuery(val), 500),
+    []
+  );
+  useEffect(() => () => debouncedSetSearch.cancel(), [debouncedSetSearch]);
+
+  const handleInputChange = (val: string) => {
+    setInputValue(val);
+    debouncedSetSearch(val);
+  };
 
   const cityIds = personLocations.map((c) => c.id).filter(Boolean);
   const cityIdsQuery = cityIds.map((i) => `ids=${i}`).toString();
@@ -106,7 +115,7 @@ const FormArrayDeliveryAddress = <T extends FieldValues>({
     const newAddress: Partial<DeliveryAddress> = {
       type: deliveryType,
       is_main: fields.length === 0,
-      np_city_ref: selectedCity.ref,
+      city_id: selectedCity.id,
     };
 
     if (deliveryType === "warehouse") {
@@ -176,7 +185,7 @@ const FormArrayDeliveryAddress = <T extends FieldValues>({
             className="w-full flex lg:w-fit flex-col items-start lg:flex-row lg:items-end justify-start gap-3"
           >
             <div className="flex flex-row items-center lg:gap-2.5 lg:items-end">
-              <div className="flex flex-col gap-1">
+              <div className="flex flex-col gap-1 w-[240px] lg:w-full">
                 <InfoLabel>{t("person.delivery_address")}</InfoLabel>
                 <InfoValue className="text-sm">{label}</InfoValue>
               </div>
@@ -300,8 +309,8 @@ const FormArrayDeliveryAddress = <T extends FieldValues>({
                 displayKey="np_warehouse"
                 valueKey="np_warehouse_ref"
                 disabled={!selectedCity}
-                search={searchQuery}
-                setSearch={setSearchQuery}
+                search={inputValue}
+                setSearch={(val: string) => handleInputChange(val)}
                 className="min-w-full"
                 popoverContentClassName="min-w-[470px] max-w-[470px]"
                 isLoading={isLoadingWarehouses}

@@ -3,6 +3,8 @@
 import { Dispatch, SetStateAction, useState } from "react";
 import { ChevronDown, ChevronUp, Loader } from "lucide-react";
 import { useTranslation } from "react-i18next";
+
+import * as RadixPopover from "@radix-ui/react-popover";
 import { Button } from "@/components/ui/button";
 import {
   Command,
@@ -11,11 +13,6 @@ import {
   CommandInput,
   CommandItem,
 } from "@/components/ui/command";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 
 type Option<T> = {
@@ -37,7 +34,7 @@ type AsyncComboboxProps<T> = {
   displayKey?: keyof T;
   valueKey?: keyof T;
   search: string;
-  setSearch?: Dispatch<SetStateAction<string>>;
+  setSearch?: Dispatch<SetStateAction<string>> | ((value: string) => void);
 };
 
 const AsyncCombobox = <T,>({
@@ -76,8 +73,8 @@ const AsyncCombobox = <T,>({
         </span>
       )}
 
-      <Popover open={open} onOpenChange={setOpen}>
-        <PopoverTrigger asChild>
+      <RadixPopover.Popover open={open} onOpenChange={setOpen}>
+        <RadixPopover.Trigger asChild>
           <Button
             type="button"
             role="combobox"
@@ -88,70 +85,71 @@ const AsyncCombobox = <T,>({
             )}
             disabled={disabled}
           >
-            {selectedLabel}
+            <span className="truncate overflow-hidden whitespace-nowrap w-full text-left">
+              {selectedLabel}
+            </span>
             <div className="absolute top-1.5 right-2">
               {open ? <ChevronUp /> : <ChevronDown />}
             </div>
           </Button>
-        </PopoverTrigger>
-
-        <PopoverContent
-          className={cn(
-            "w-full p-0 max-h-64 overflow-y-auto",
-            popoverContentClassName
-          )}
-          align="start"
-        >
-          <Command
-            filter={(value, search) => {
-              const item = options.filter((opt) =>
-                opt.label.toLowerCase().includes(search.toLowerCase())
-              );
-
-              return item?.length ? 1 : 0;
-            }}
+        </RadixPopover.Trigger>
+          <RadixPopover.Content
+            className={cn(
+              "w-full p-0 max-h-64 overflow-y-auto fixed z-[9999] overflow-auto",
+              popoverContentClassName
+            )}
+            align="start"
           >
-            <CommandInput
-              placeholder={t("placeholders.choose")}
-              value={search}
-              onValueChange={setSearch}
-            />
-
-            {isLoading && (
-              <Loader className="size-6 text-center text-brand-default my-2 animate-spin self-center" />
-            )}
-
-            {!isLoading && (
-              <CommandEmpty>{t("messages.info.no_results")}</CommandEmpty>
-            )}
-
-            <CommandGroup>
-              {options.map((option) => {
-                const label = displayKey
-                  ? (option.data?.[displayKey] as string)
-                  : option.label;
-
-                const value = valueKey
-                  ? (option.data?.[valueKey] as string | number)
-                  : option.value;
-
-                return (
-                  <CommandItem
-                    key={value}
-                    value={value.toString()}
-                    onSelect={() => {
-                      onChange(option);
-                      setOpen(false);
-                    }}
-                  >
-                    {label}
-                  </CommandItem>
+            <Command
+              filter={(value, search) => {
+                const item = options.filter((opt) =>
+                  opt.label.toLowerCase().includes(search.toLowerCase())
                 );
-              })}
-            </CommandGroup>
-          </Command>
-        </PopoverContent>
-      </Popover>
+
+                return item?.length ? 1 : 0;
+              }}
+            >
+              <CommandInput
+                placeholder={t("placeholders.choose")}
+                value={search}
+                onValueChange={setSearch}
+              />
+
+              {isLoading && (
+                <Loader className="size-6 text-center text-brand-default my-2 animate-spin self-center" />
+              )}
+
+              {!isLoading && (
+                <CommandEmpty>{t("messages.info.no_results")}</CommandEmpty>
+              )}
+
+              <CommandGroup className="z-100 overflow-y-scroll">
+                {options.map((option) => {
+                  const label = displayKey
+                    ? (option.data?.[displayKey] as string)
+                    : option.label;
+
+                  const value = valueKey
+                    ? (option.data?.[valueKey] as string | number)
+                    : option.value;
+
+                  return (
+                    <CommandItem
+                      key={value}
+                      value={value.toString()}
+                      onSelect={() => {
+                        onChange(option);
+                        setOpen(false);
+                      }}
+                    >
+                      {label}
+                    </CommandItem>
+                  );
+                })}
+              </CommandGroup>
+            </Command>
+          </RadixPopover.Content>
+      </RadixPopover.Popover>
     </div>
   );
 };

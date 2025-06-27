@@ -67,7 +67,7 @@ const FormInput = <T extends FieldValues>({
             ) : (
               <Input
                 className={cn(
-                  "min-w-[240px] font-medium rounded-xs h-8 px-2.5 border-ui-border text-sm focus-visible:ring-[1px]",
+                  "lg:min-w-[240px] font-medium rounded-xs h-8 px-2.5 border-ui-border text-sm focus-visible:ring-[1px]",
                   inputStyles
                 )}
                 {...field}
