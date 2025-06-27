@@ -174,9 +174,8 @@ const FormAsyncCombobox = <T extends FieldValues, O>({
                                   } else {
                                     field.onChange({ value, label });
                                   }
-                                  console.log("onChange", onChange)
+
                                   if (typeof onChange === "function") {
-                                    console.log("option", option)
                                     onChange(option);
                                   }
                                   setOpen(false);

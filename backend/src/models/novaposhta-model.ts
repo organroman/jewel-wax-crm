@@ -78,7 +78,6 @@ export const NovaPoshtaModel = {
   async createDeclaration(
     data: CreateDeclarationInput
   ): Promise<NPResponse<DeliveryDeclaration>> {
-    console.log("payload", data);
     const res = await axiosClient.post("", {
       apiKey,
       modelName: "InternetDocumentGeneral",

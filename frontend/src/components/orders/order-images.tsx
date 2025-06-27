@@ -124,8 +124,6 @@ const OrderImages = ({
       const items = e.clipboardData?.items;
       if (!items) return;
 
-      console.log("handlepaste");
-
       const files: File[] = [];
 
       for (const item of items) {
