@@ -11,7 +11,7 @@ import { useFieldArray, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import dayjs from "dayjs";
 import { UseMutationResult } from "@tanstack/react-query";
-import { SetStateAction, useState } from "react";
+import { SetStateAction, useEffect, useState } from "react";
 
 import { usePerson } from "@/api/persons/use-person";
 import { useDialog } from "@/hooks/use-dialog";
@@ -41,6 +41,7 @@ import {
 } from "@/constants/orders.constants";
 import { ORDER_STAGE, ORDER_STAGE_STATUS } from "@/constants/enums.constants";
 import { cn } from "@/lib/utils";
+import CreateDeliveryDeclaration from "./create-delivery-declaration";
 
 interface OrderFormProps {
   order?: Order;
@@ -49,6 +50,7 @@ interface OrderFormProps {
   setIsDeleteDialogOpen?: (v: SetStateAction<boolean>) => void;
   uploadImagesMutation: UseMutationResult<ResultUploadedFile[], Error, File[]>;
   mutation: UseMutationResult<Order, Error, UpdateOrderSchema>;
+  userId: number;
 }
 
 const OrderForm = ({
@@ -58,6 +60,7 @@ const OrderForm = ({
   isDeleteDialogOpen,
   setIsDeleteDialogOpen,
   uploadImagesMutation,
+  userId,
 }: OrderFormProps) => {
   const { t } = useTranslation();
 
@@ -129,6 +132,35 @@ const OrderForm = ({
     },
   });
 
+  useEffect(() => {
+    if (order) {
+      form.reset({
+        id: order.id,
+        number: order.number || "",
+        name: order.name || "",
+        description: order.description || "",
+        amount: order.amount || 0.0,
+        modeller: order.modeller || null,
+        modeling_cost: order.modeling_cost || 0.0,
+        miller: order.miller || null,
+        milling_cost: order.milling_cost || 0.0,
+        printer: order.printer || null,
+        printing_cost: order.printing_cost || 0.0,
+        delivery: {
+          ...order.delivery,
+          declaration_number: order.delivery?.declaration_number || "",
+          cost: order.delivery?.cost || "0.00",
+        },
+        notes: order.notes || "",
+        customer: order.customer || null,
+        stages: defaultOrderStages,
+        active_stage: order.active_stage || "new",
+        linked_orders: order.linked_orders || [],
+        media: order.media || [],
+      });
+    }
+  }, [order]);
+
   const { fields: stages } = useFieldArray({
     control: form.control,
     name: "stages",
@@ -173,6 +205,18 @@ const OrderForm = ({
   const handleUpdateImages = (media: OrderMedia[]) => {
     form.setValue("media", media);
   };
+
+  const deliveryOptions = order?.customer.delivery_addresses
+    ? order?.customer.delivery_addresses?.map((a) => ({
+        label: a.address_line,
+        value: a.delivery_address_id,
+        data: {
+          ...a,
+          declaration_number: "",
+          cost: "0.00",
+        },
+      }))
+    : [];
 
   return (
     <div className="h-full w-full overflow-y-auto bg-ui-sidebar p-4 flex flex-col rounded-bl-md rounded-br-md ">
@@ -252,7 +296,7 @@ const OrderForm = ({
                       <FormInput
                         name="amount"
                         control={form.control}
-                        inputStyles="min-w-[100px] max-w-[100px]"
+                        inputStyles="lg:min-w-[100px] lg:max-w-[100px]"
                       />
                     </div>
                     <div className="flex items-center justify-between">
@@ -292,7 +336,7 @@ const OrderForm = ({
                       <FormInput
                         name="modeling_cost"
                         control={form.control}
-                        inputStyles="min-w-[100px] max-w-[100px]"
+                        inputStyles="lg:min-w-[100px] lg:max-w-[100px]"
                       />
                     </div>
                     <div className="flex items-center justify-between">
@@ -332,7 +376,7 @@ const OrderForm = ({
                       <FormInput
                         name="milling_cost"
                         control={form.control}
-                        inputStyles="min-w-[100px] max-w-[100px]"
+                        inputStyles="lg:min-w-[100px] lg:max-w-[100px]"
                       />
                     </div>
                     <div className="flex items-center justify-between">
@@ -372,7 +416,7 @@ const OrderForm = ({
                       <FormInput
                         name="printing_cost"
                         control={form.control}
-                        inputStyles="min-w-[100px] max-w-[100px]"
+                        inputStyles="lg:min-w-[100px] lg:max-w-[100px]"
                       />
                     </div>
                     <div className="flex items-center justify-between gap-5">
@@ -388,15 +432,7 @@ const OrderForm = ({
                             valueKey="delivery_address_id"
                             displayKey="address_line"
                             saveFullObject
-                            options={
-                              (order?.customer.delivery_addresses &&
-                                order.customer.delivery_addresses.map((m) => ({
-                                  label: m.address_line,
-                                  value: m.delivery_address_id,
-                                  data: m,
-                                }))) ||
-                              []
-                            }
+                            options={deliveryOptions}
                           />
                           <Button
                             variant="outline"
@@ -412,7 +448,7 @@ const OrderForm = ({
                       <FormInput
                         name="delivery.cost"
                         control={form.control}
-                        inputStyles="min-w-[100px] max-w-[100px]"
+                        inputStyles="lg:min-w-[100px] lg:max-w-[100px]"
                         // defaultValue="0.00"
                       />
                     </div>
@@ -425,15 +461,13 @@ const OrderForm = ({
                           name="delivery.declaration_number"
                           control={form.control}
                         />
-                        <Button
-                          variant="secondary"
-                          type="button"
-                          size="sm"
-                          className="rounded-tl-none rounded-bl-none text-xs"
-                          // onClick={onCreateCountry}
-                        >
-                          {t("buttons.create")}
-                        </Button>
+                        <CreateDeliveryDeclaration
+                          orderName={form.getValues("name")}
+                          customer={form.getValues("customer")}
+                          delivery={form.getValues("delivery")}
+                          orderId={form.getValues("id")}
+                          userId={userId}
+                        />
                       </div>
                     </div>
                     <div className="flex items-center gap-2.5 w-full">

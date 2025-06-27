@@ -56,7 +56,8 @@
     "email": "Введіть email",
     "password": "Введіть пароль",
     "not_appointed": "Не призначено",
-    "not_chosen": "Не обрано"
+    "not_chosen": "Не обрано",
+    "choose_date": "Оберіть дату"
   },
   "buttons": {
     "cancel": "Скасувати",
@@ -310,6 +311,18 @@
       "linked_order": {
         "title": "Додати прив'язане замовлення",
         "desc_first": "Оберіть замовлення"
+      },
+      "create_declaration": {
+        "title": "Створтити ТТН",
+        "desc_first": "Заповніть поля і натисніть Зберігти",
+        "payer_type": {
+          "sender": "Відправник",
+          "recipient": "Отримувач"
+        },
+        "payment_method": {
+          "cash": "Готівка",
+          "nonCash": "Безготівковий розрахунок"
+        }
       }
     },
 
@@ -326,7 +339,19 @@
       "stage_status": "$t(dictionary.stage_status)",
       "date": "$t(dictionary.date)",
       "common_delivery": "Обєднати замовлення для доставки",
-      "main_photo": "Основне фото"
+      "main_photo": "Основне фото",
+      "payer_type": "Платник",
+      "payment_method": "Метод оплати",
+      "cargo_type": "Тип вантажу",
+      "send_date": "Дата відправки",
+      "volume_general": "Об'єм, м.куб",
+      "weight": "Вага, кг",
+      "seats_amount": "Місць",
+      "delivery_description": "Опис",
+      "good_cost": "Оціночна вартість",
+      "delivery_length": "Довжина",
+      "delivery_width": "Ширина",
+      "delivery_height": "Висота"
     }
   },
 
@@ -357,7 +382,20 @@
       "min_six_characters": "Мінімум шість символів",
       "warehouse_required": "Відділення обов'язкове",
       "street_required": "Вулиця обов'язкова",
-      "house_number": "Будинок обов'язковий"
+      "house_number": "Будинок обов'язковий",
+      "payer_type": "Оберіть платника",
+      "payment_method": "Метод оплати обовʼязковий",
+      "cargo_type_required": "Тип вантажу обовʼязковий",
+      "send_date": "Дата відправки обов'язкова",
+      "volume_general": "Обʼєм обовʼязковий",
+      "order_weight": "Вага обов'язкова",
+      "seats_amount": "Кількість місць обовʼязкове",
+      "delivery_description": "Опис обов'язковий",
+      "good_cost": "Оціночна вартість обов'язкова",
+      "city_required": "Місто обовʼязкове",
+      "width_required": "Ширина обовʼязкова",
+      "length_required": "Довжина обовʼязкова",
+      "height_required": "Ширина обовʼязкова"
     },
     "info": {
       "no_results": "Дані відсутні",
