@@ -6,7 +6,7 @@ import {
 } from "@/constants/enums.constants";
 import { PaginatedResult } from "./shared.types";
 import { updateOrderSchema } from "@/validators/order.validator";
-import { Phone } from "./person.types";
+import { DeliveryType, Phone } from "./person.types";
 
 export interface OrderPerson {
   id: number;
@@ -22,9 +22,9 @@ export interface OrderCustomer {
   id: number;
   first_name: string;
   last_name: string;
-  patronymic?: string;
+  patronymic?: string | null;
   phones: Phone[];
-  delivery_addresses: OrderCustomerDelivery[];
+  delivery_addresses?: OrderCustomerDelivery[];
 }
 
 export interface OrderMedia {
@@ -60,11 +60,29 @@ export interface OrderStage {
 
 export interface OrderDelivery {
   id: number;
-  cost: number;
-  delivery_address_id: number;
-  address_line: string;
-  order_id: number;
-  declaration_number: string;
+  cost: number | string;
+  delivery_address_id?: number;
+  address_line?: string;
+  order_id?: number;
+  declaration_number: string | null;
+  actual_delivery_date?: string | null;
+  delivery_service?: string;
+  estimated_delivery_date?: string | null;
+  flat_number: string | null;
+  house_number: string | null;
+  city_ref: string | null;
+  np_warehouse: string | null;
+  np_warehouse_ref: string | null;
+  np_warehouse_siteKey: string | null;
+  np_recipient_ref: string | null;
+  np_contact_recipient_ref: string | null;
+  street: string | null;
+  street_ref: string | null;
+  type: DeliveryType;
+  settlement_type: string;
+  city_name: string | null;
+  area?: string | null;
+  region?: string | null;
 }
 
 export interface LinkedOrder {

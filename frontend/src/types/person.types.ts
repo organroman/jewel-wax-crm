@@ -53,7 +53,7 @@ export interface DeliveryAddress {
   type: DeliveryType;
   street?: string;
   street_ref?: string;
-  np_city_ref?: string;
+  city_id?: number;
   np_warehouse_ref?: string;
   np_warehouse?: string;
   np_warehouse_siteKey?: string;
@@ -67,7 +67,7 @@ export interface Location {
   country_id: number;
   country_name: string;
   is_main: boolean;
-  id?: number;
+  id: number;
 }
 
 export interface Phone {

@@ -7,7 +7,7 @@ import {
 } from "@/constants/enums.constants";
 
 const chanelSchema = z.enum(CHANEL_SOURCE);
-const deliveryTypeSchema = z.enum(DELIVERY_TYPE);
+export const deliveryTypeSchema = z.enum(DELIVERY_TYPE);
 
 const locationSchema = z.object({
   city_id: z.number().nullable().optional(),
@@ -113,7 +113,7 @@ const deliveryAddressSchema = z.object({
   id: z.number().optional(),
   is_main: z.boolean(),
   type: deliveryTypeSchema,
-  np_city_ref: z.string({ required_error: "City is required" }).min(1),
+  city_id: z.number({ required_error: "messages.validation.city_required" }).min(1),
   np_warehouse_ref: z.string().optional().nullable(),
   np_warehouse: z.string().optional().nullable(),
   np_warehouse_siteKey: z.string().optional().nullable(),

@@ -10,7 +10,9 @@ export interface ModalFooterProps {
   submit?: boolean;
   formId?: string;
   actionId?: number;
-  action?: (id?: number) => void;
+  action?:
+    | ((id?: number) => void)
+    | ((e?: React.BaseSyntheticEvent) => Promise<void>);
   buttonActionTitle: string;
   buttonActionTitleContinuous: string;
   destructive?: boolean;

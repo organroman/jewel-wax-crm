@@ -55,6 +55,17 @@ export type FormInputProps<T extends FieldValues> = {
   defaultValue?: string | number;
 };
 
+export type FormDatePickerProps<T extends FieldValues> = {
+  name: Path<T>;
+  label?: string;
+  placeholder?: string;
+  control: Control<T>;
+  required?: boolean;
+  labelPosition?: "top" | "left";
+  inputStyles?: string;
+  isFullWidth?: boolean;
+};
+
 export type Option<T> = {
   label: string;
   value: string | number;
@@ -69,6 +80,8 @@ export type FormSelectProps<T extends FieldValues, O> = {
   options: Option<O>[];
   required?: boolean;
   className?: string;
+  labelPosition?: "top" | "left";
+  isFullWidth?: boolean;
 };
 
 export interface FormArrayLocationProps<T extends FieldValues> {
@@ -137,6 +150,7 @@ export interface FormAsyncComboboxProps<T extends FieldValues, O>
   searchQuery?: string;
   setSearchQuery?: Dispatch<SetStateAction<string>>;
   isOptionsLoading?: boolean;
+  onChange?: (option: Option<O>) => void;
 }
 
 export interface FormArrayComboboxProps<T extends FieldValues, O> {
