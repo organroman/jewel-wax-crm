@@ -20,9 +20,8 @@ import OrderForm from "@/components/orders/form/order/order-form";
 import OrderPayments from "@/components/orders/order-payments";
 import OrderChat from "@/components/orders/order-chat";
 
-import { translateKeyValueList } from "@/lib/translate-constant-labels";
 import { ORDER_CARD_TABS_LIST } from "@/constants/orders.constants";
-import { useDialog } from "@/hooks/use-dialog";
+import { translateKeyValueList } from "@/lib/translate-constant-labels";
 import { getFullName } from "@/lib/utils";
 
 const OrderClient = ({ id, userId }: { id: number; userId: number }) => {
@@ -31,24 +30,8 @@ const OrderClient = ({ id, userId }: { id: number; userId: number }) => {
   const { t } = useTranslation();
   const searchParams = useSearchParams();
 
-  const {
-    dialogOpen: isDeleteDialogOpen,
-    setDialogOpen,
-    closeDialog,
-  } = useDialog();
-
   const { updateMutation } = useOrder.update({ queryClient, t });
   const { uploadImagesMutation } = useUpload.uploadImages();
-
-  const handleDeleteSuccess = () => {
-    closeDialog();
-    router.replace("/orders");
-  };
-  const { deleteOrderMutation } = useOrder.delete({
-    queryClient,
-    t,
-    handleSuccess: handleDeleteSuccess,
-  });
 
   const tabParam = searchParams.get("tab");
 
@@ -123,9 +106,6 @@ const OrderClient = ({ id, userId }: { id: number; userId: number }) => {
         {selectedTab.value === "order" && (
           <OrderForm
             order={order}
-            deleteMutation={deleteOrderMutation}
-            isDeleteDialogOpen={isDeleteDialogOpen}
-            setIsDeleteDialogOpen={setDialogOpen}
             uploadImagesMutation={uploadImagesMutation}
             mutation={updateMutation}
             userId={userId}

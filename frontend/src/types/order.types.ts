@@ -80,7 +80,7 @@ export interface OrderDelivery {
   np_contact_recipient_ref?: string | null;
   street?: string | null;
   street_ref?: string | null;
-  type?: DeliveryType;
+  type?: DeliveryType | null;
   settlement_type?: string;
   city_name?: string | null;
   area?: string | null;

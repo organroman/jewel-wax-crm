@@ -60,7 +60,7 @@ const orderDeliveryAddressSchema = z.object({
   house_number: z.string().nullable().optional(),
   flat_number: z.string().nullable().optional(),
   declaration_number: z.string().nullable(),
-  type: deliveryTypeSchema.optional(),
+  type: deliveryTypeSchema.nullable().optional(),
   estimated_delivery_date: z.string().nullable().optional(),
   actual_delivery_date: z.string().nullable().optional(),
   delivery_service: z.string().optional(),
