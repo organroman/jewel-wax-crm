@@ -99,19 +99,34 @@ export const NovaPoshtaModel = {
     FirstName: string;
     LastName: string;
     Phone: string;
+    EDRPOU?: string;
   }): Promise<NPResponse<NPCounterParty>> {
-    const res = await axiosClient.post("", {
-      apiKey,
-      modelName: "CounterpartyGeneral",
-      calledMethod: "save",
-      methodProperties: {
-        FirstName: data.FirstName,
-        LastName: data.LastName,
-        Phone: data.Phone,
-        CounterpartyType: "PrivatePerson",
-        CounterpartyProperty: "Recipient",
-      },
-    });
+    const res = await axiosClient.post(
+      "",
+      data.EDRPOU
+        ? {
+            apiKey,
+            modelName: "CounterpartyGeneral",
+            calledMethod: "save",
+            methodProperties: {
+              CounterpartyType: "Organization",
+              EDRPOU: data.EDRPOU,
+              CounterpartyProperty: "Recipient",
+            },
+          }
+        : {
+            apiKey,
+            modelName: "CounterpartyGeneral",
+            calledMethod: "save",
+            methodProperties: {
+              FirstName: data.FirstName,
+              LastName: data.LastName,
+              Phone: data.Phone,
+              CounterpartyType: "PrivatePerson",
+              CounterpartyProperty: "Recipient",
+            },
+          }
+    );
     return res.data;
   },
   async getSettlements(cityName: string): Promise<NPResponse<NPSettlement>> {

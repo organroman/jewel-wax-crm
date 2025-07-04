@@ -150,6 +150,8 @@ export interface CreateDeclarationInput {
   SenderAddress: string;
   ContactSender: string;
   CityRecipient: string;
+  RecipientCityName?: string;
+  RecipientAreaRegions?: string;
   RecipientAddress?: string;
   RecipientsPhone: string;
   RecipientType: string;
@@ -157,7 +159,13 @@ export interface CreateDeclarationInput {
   ContactRecipient: string;
   RecipientFirstName: string;
   RecipientLastName: string;
+  RecipientRegion?: string | null;
   OrderId: number;
+  isThirdParty: boolean;
+  thirdPartyCityName?: string;
+  thirdPartyWarehouseName?: string;
+  delivery_address_id?: number;
+  tax_id?: number;
 }
 
 export interface DeliveryDeclaration {

@@ -32,14 +32,19 @@ const stageSchema = z.object({
 
 const deliverySchema = z.object({
   id: z.number().optional(),
-  order_id: z.number().optional(),
-  delivery_address_id: z.number({
-    required_error: ERROR_MESSAGES.DELIVERY_ADDRESS_REQUIRED,
-  }),
+  order_id: z
+    .number({ message: `Order id ${ERROR_MESSAGES.NUMBER}` })
+    .optional(),
+  delivery_address_id: z
+    .number({
+      required_error: ERROR_MESSAGES.DELIVERY_ADDRESS_REQUIRED,
+    })
+    .nullable(),
   delivery_service: z.string().optional(),
-  cost: z.number().default(0.0),
-  declaration_number: z.number().optional().nullable(),
+  cost: z.number({ message: `Cost ${ERROR_MESSAGES.NUMBER}` }).default(0.0),
+  declaration_number: z.string().optional().nullable(),
   address_line: z.string().optional(),
+  is_third_party: z.boolean(),
 });
 
 const baseSchema = z.object({
@@ -50,9 +55,15 @@ const baseSchema = z.object({
     invalid_type_error: ERROR_MESSAGES.AMOUNT_SHOULD_BE_NUMBER,
   }),
   notes: z.string().optional(),
-  modeling_cost: z.number().optional(),
-  milling_cost: z.number().optional(),
-  printing_cost: z.number().optional(),
+  modeling_cost: z
+    .number({ message: `Modeling cost ${ERROR_MESSAGES.NUMBER}` })
+    .optional(),
+  milling_cost: z
+    .number({ message: `Milling cost  ${ERROR_MESSAGES.NUMBER}` })
+    .optional(),
+  printing_cost: z
+    .number({ message: `Printing cost ${ERROR_MESSAGES.NUMBER}` })
+    .optional(),
   modeller: personSchema.optional().nullable(),
   miller: personSchema.optional().nullable(),
   printer: personSchema.optional().nullable(),

@@ -19,7 +19,6 @@ import db from "../db/db";
 import { getFullName, stripPassword } from "../utils/helpers";
 import { paginateQuery } from "../utils/pagination";
 
-
 export const PersonModel = {
   async getAll({
     page,
@@ -270,10 +269,29 @@ export const PersonModel = {
   async getDeliveryAddressesByPersonId(
     personId: number
   ): Promise<DeliveryAddress[]> {
-    return await db<DeliveryAddress>("delivery_addresses").where(
-      "person_id",
-      personId
-    );
+    return await db<DeliveryAddress>("delivery_addresses")
+      .where("person_id", personId)
+      .leftJoin("cities", "delivery_addresses.city_id", "cities.id")
+      .select(
+        "delivery_addresses.id",
+        "delivery_addresses.person_id",
+        "delivery_addresses.type",
+        "delivery_addresses.np_warehouse_ref",
+        "delivery_addresses.np_warehouse",
+        "delivery_addresses.np_warehouse_siteKey",
+        "delivery_addresses.street",
+        "delivery_addresses.street_ref",
+        "delivery_addresses.house_number",
+        "delivery_addresses.flat_number",
+        "delivery_addresses.np_recipient_ref",
+        "delivery_addresses.np_contact_recipient_ref",
+        "delivery_addresses.is_main",
+        "delivery_addresses.city_id",
+        "cities.name as city_name",
+        "cities.ref as city_ref",
+        "cities.region",
+        "cities.area"
+      );
   },
 
   async createDeliveryAddresses(

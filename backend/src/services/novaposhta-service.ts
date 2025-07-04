@@ -7,6 +7,7 @@ import {
 
 import { NovaPoshtaModel } from "../models/novaposhta-model";
 import { OrderModel } from "../models/order-model";
+import { LocationModel } from "../models/location-model";
 
 import { ensureRecipientExists } from "../utils/novaposhta";
 import AppError from "../utils/AppError";
@@ -84,8 +85,16 @@ export const NovaPoshtaService = {
   async createDeclaration(
     data: CreateDeclarationInput
   ): Promise<DeliveryDeclaration[]> {
+    const {
+      thirdPartyCityName,
+      thirdPartyWarehouseName,
+      delivery_address_id,
+      tax_id,
+      ...restData
+    } = data;
+
     const payload: Record<string, any> = {};
-    for (const [key, value] of Object.entries(data)) {
+    for (const [key, value] of Object.entries(restData)) {
       const newKey = key.charAt(0).toUpperCase() + key.slice(1);
       const newValue =
         typeof value === "string"
@@ -99,14 +108,85 @@ export const NovaPoshtaService = {
       {
         np_recipient_ref: payload.RecipientRef,
         np_contact_recipient_ref: payload.ContactRecipientRef,
-        delivery_address_id: payload.Delivery_address_id,
+        delivery_address_id: delivery_address_id,
       },
       {
         firstName: payload.RecipientFirstName,
         lastName: payload.RecipientLastName,
         phone: payload.RecipientsPhone,
-      }
+        tax_id: tax_id?.toString(),
+      },
+      data.isThirdParty
     );
+
+    let RecipientRegion = null;
+
+    if (restData.isThirdParty && payload.RecipientCityName) {
+      const existingCity = await LocationModel.findCityByName(
+        payload.RecipientCityName
+      );
+
+      if (!existingCity.region) {
+        const { success, data } = await NovaPoshtaModel.getSettlements(
+          payload.RecipientCityName
+        );
+
+        if (!success || !data?.[0]?.Addresses?.length) {
+          console.warn(
+            `No region data found for city: ${payload.RecipientCityName}`
+          );
+        }
+
+        const region = data[0].Addresses[0].Region;
+        RecipientRegion = region;
+
+        await LocationModel.updateCity(existingCity.id, { region: region });
+      }
+    }
+    const existingDelivery = await OrderModel.getDelivery(payload.OrderId);
+
+    if (restData.isThirdParty) {
+      const flat = payload.RecipientFlat
+        ? `кв. ${payload.RecipientFlat}`
+        : null;
+      const deliveryAddress =
+        payload.ServiceType === "WarehouseDoors"
+          ? `${payload.RecipientCityName}, ${
+              payload.RecipientAddressName
+            }, буд. ${payload.RecipientHouse} ${flat ?? ""}`
+          : `${thirdPartyCityName} ${thirdPartyWarehouseName}`;
+      const phoneNumber = payload.RecipientsPhone;
+      const recipientFullName = tax_id
+        ? `${payload.RecipientFirstName}`
+        : `${payload.RecipientLastName}, ${payload.RecipientFirstName}`;
+
+      if (existingDelivery) {
+        await OrderModel.updateDelivery(payload.OrderId, {
+          manual_recipient_phone: phoneNumber,
+          manual_recipient_name: recipientFullName,
+          manual_delivery_address: deliveryAddress,
+        });
+      } else
+        await OrderModel.insertDelivery({
+          manual_recipient_phone: phoneNumber,
+          manual_recipient_name: recipientFullName,
+          manual_delivery_address: deliveryAddress,
+          is_third_party: restData.isThirdParty,
+          order_id: payload.OrderId,
+          delivery_service: "nova_poshta",
+        });
+    }
+
+    if (!existingDelivery && !restData.isThirdParty) {
+      await OrderModel.insertDelivery({
+        delivery_service: "nova_poshta",
+        cost: 0.0,
+        declaration_number: "",
+        order_id: payload.OrderId,
+        delivery_address_id: delivery_address_id,
+        is_third_party: restData.isThirdParty,
+      });
+    }
 
     const {
       success,
@@ -117,6 +197,7 @@ export const NovaPoshtaService = {
       CitySender: process.env.NOVA_POSHAT_SENDER_CITY_REF,
       Sender: process.env.NOVA_POSHTA_COUNTERPARTY_REF,
       ContactSender: process.env.NOVA_POSHTA_SENDER_CONTACT_REF,
+      RecipientRegion,
       Recipient: recipientRef,
       ContactRecipient: contactRef,
     } as CreateDeclarationInput);

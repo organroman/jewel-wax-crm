@@ -8,13 +8,15 @@ export async function ensureRecipientExists(
   address: {
     np_recipient_ref: string;
     np_contact_recipient_ref: string;
-    delivery_address_id: string;
+    delivery_address_id?: number;
   },
   customer: {
     firstName: string;
     lastName: string;
     phone: string;
-  }
+    tax_id?: string;
+  },
+  isThirdParty: boolean
 ): Promise<{
   recipientRef: string;
   contactRef: string;
@@ -30,6 +32,7 @@ export async function ensureRecipientExists(
     FirstName: customer.firstName,
     LastName: customer.lastName,
     Phone: customer.phone,
+    EDRPOU: customer.tax_id,
   });
 
   if (!success || !data?.[0]) {
@@ -41,12 +44,14 @@ export async function ensureRecipientExists(
 
   const newRecipient = data?.[0];
 
-  await db("delivery_addresses")
-    .where({ id: address.delivery_address_id })
-    .update({
-      np_recipient_ref: newRecipient.Ref,
-      np_contact_recipient_ref: newRecipient.ContactPerson.data?.[0].Ref,
-    });
+  !isThirdParty &&
+    (await db("delivery_addresses")
+      .where({ id: address.delivery_address_id })
+      .update({
+        np_recipient_ref: newRecipient.Ref,
+        np_contact_recipient_ref: newRecipient.ContactPerson.data?.[0].Ref,
+        recipient_type: newRecipient.CounterpartyType,
+      }));
 
   return {
     recipientRef: newRecipient.Ref,

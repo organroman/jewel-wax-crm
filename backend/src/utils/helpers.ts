@@ -1,4 +1,4 @@
-import { AdminOrder, UserOrder } from "../types/orders.types";
+import { AdminOrder, UserOrder } from "../types/order.types";
 import { PersonRole } from "../types/person.types";
 
 export const formatLabel = (value: string): string => {

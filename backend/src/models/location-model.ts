@@ -1,7 +1,7 @@
 import { CreateCityInput, CreateCountryInput } from "../types/location-types";
-import db from "../db/db";
 import { City, Country } from "./../types/location-types";
 import { PaginatedResult } from "../types/shared.types";
+import db from "../db/db";
 import { paginateQuery } from "../utils/pagination";
 
 export const LocationModel = {

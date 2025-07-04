@@ -4,7 +4,7 @@ import {
   PaginatedOrdersResult,
   UpdateOrderInput,
   UserOrder,
-} from "../types/orders.types";
+} from "../types/order.types";
 import { PersonRole } from "../types/person.types";
 
 import cloudinary from "../cloudinary/config";
@@ -128,15 +128,18 @@ export const OrderService = {
           patronymic: customerFull.patronymic,
           phones: customerFull.phones,
           delivery_addresses: customerFull.delivery_addresses
-            ? customerFull.delivery_addresses?.map((i) => ({
-                ...i,
-                delivery_address_id: i.id,
-                address_line: i.type
-                  ? i.type === "door"
-                    ? getDoorAddress(i.street, i.house_number, i.flat_number)
-                    : i.np_warehouse
-                  : "",
-              }))
+            ? customerFull.delivery_addresses?.map((i) => {
+                const { id, ...rest } = i;
+                return {
+                  ...rest,
+                  delivery_address_id: i.id,
+                  address_line: i.type
+                    ? i.type === "door"
+                      ? getDoorAddress(i.street, i.house_number, i.flat_number)
+                      : i.np_warehouse
+                    : "",
+                };
+              })
             : [],
         }
       : null;
@@ -329,19 +332,21 @@ export const OrderService = {
     }
 
     if (delivery) {
-      const isNew = delivery.hasOwnProperty(delivery.id);
+      const isNew = !delivery.hasOwnProperty(delivery.id);
       if (isNew) {
         await OrderModel.insertDelivery({
           cost: delivery.cost,
           declaration_number: delivery.declaration_number,
           delivery_address_id: delivery.delivery_address_id,
           order_id: orderId,
+          is_third_party: delivery.is_third_party,
           delivery_service: "nova_poshta",
         });
       } else
         await OrderModel.updateDelivery(orderId, {
           delivery_address_id: delivery.delivery_address_id,
           cost: delivery.cost,
+          is_third_party: delivery.is_third_party,
           updated_at: new Date(),
           declaration_number: delivery.declaration_number,
         });

@@ -33,7 +33,8 @@ export const LocationService = {
     search: string,
     ids: number[]
   ): Promise<PaginatedResult<City>> {
-    return await LocationModel.getPaginatedCities({ search, ids });
+    const cities = await LocationModel.getPaginatedCities({ search, ids });
+    return cities;
   },
 
   async getCityById(cityId: number): Promise<City | null> {

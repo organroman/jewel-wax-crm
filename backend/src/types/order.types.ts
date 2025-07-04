@@ -65,9 +65,10 @@ export interface OrderStage {
 export interface OrderDelivery {
   id: number;
   order_id: number;
-  delivery_address_id: number;
+  delivery_address_id: number | null;
   delivery_service: string;
   cost: number | string;
+  is_third_party: boolean;
   status: string;
   declaration_number: string | null;
   type: DeliveryType;
@@ -86,6 +87,9 @@ export interface OrderDelivery {
   flat_number: string | null;
   updated_at?: Date;
   estimated_delivery_date: Date;
+  manual_recipient_name?: string | null;
+  manual_recipient_phone?: string | null;
+  manual_delivery_address?: string | null;
 }
 
 export interface OrderBase {

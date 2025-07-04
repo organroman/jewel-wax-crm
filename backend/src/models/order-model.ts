@@ -10,7 +10,7 @@ import {
   OrderStage,
   Stage,
   StageStatus,
-} from "../types/orders.types";
+} from "../types/order.types";
 import { PersonRole } from "../types/person.types";
 
 import db from "../db/db";
@@ -335,7 +335,7 @@ export const OrderModel = {
   async getDelivery(orderId: number): Promise<OrderDelivery> {
     const delivery = await db<OrderDelivery>("order_deliveries")
       .where("order_id", orderId)
-      .join(
+      .leftJoin(
         "delivery_addresses",
         "delivery_addresses.id",
         "order_deliveries.delivery_address_id"
@@ -351,6 +351,10 @@ export const OrderModel = {
         "order_deliveries.declaration_number",
         "order_deliveries.estimated_delivery_date",
         "order_deliveries.actual_delivery_date",
+        "order_deliveries.is_third_party",
+        "order_deliveries.manual_recipient_name",
+        "order_deliveries.manual_recipient_phone",
+        "order_deliveries.manual_delivery_address",
         "delivery_addresses.id as delivery_address_id",
         "delivery_addresses.type",
         "delivery_addresses.np_warehouse_ref",

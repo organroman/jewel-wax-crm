@@ -29,15 +29,15 @@ export const LocationController = {
     try {
       const { search, ids } = req.query;
 
-      const idsArr = Array(ids);
+      const idsArr = ids?.toString().split(",");
 
       const numericIds = idsArr
-        .map((id) => Number(id))
+        ?.map((id) => Number(id))
         .filter((id) => !isNaN(id));
 
       const cities = await LocationService.getPaginatedCities(
         search as string,
-        numericIds
+        numericIds ?? []
       );
 
       res.status(200).json(cities);
@@ -58,7 +58,7 @@ export const LocationController = {
       next(error);
     }
   },
-  
+
   async getCityById(req: Request, res: Response, next: NextFunction) {
     try {
       const city = await LocationService.getCityById(Number(req.params.id));
