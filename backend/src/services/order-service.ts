@@ -332,8 +332,7 @@ export const OrderService = {
     }
 
     if (delivery) {
-      const isNew = !delivery.hasOwnProperty(delivery.id);
-      if (isNew) {
+      if (!delivery.id) {
         await OrderModel.insertDelivery({
           cost: delivery.cost,
           declaration_number: delivery.declaration_number,
@@ -426,5 +425,17 @@ export const OrderService = {
   async getOrdersNumbers({ search }: { search: string }) {
     const orders = await OrderModel.getOrdersNumbers({ search });
     return orders;
+  },
+  async delete(orderId: number, authorId?: number): Promise<number> {
+    const result = await OrderModel.deleteOrder(orderId);
+
+    await ActivityLogModel.logAction({
+      actor_id: authorId ?? null,
+      action: LOG_ACTIONS.DELETE_ORDER,
+      target_id: orderId,
+      target_type: LOG_TARGETS.ORDER,
+    });
+
+    return result;
   },
 };
