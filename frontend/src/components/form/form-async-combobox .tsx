@@ -7,6 +7,8 @@ import Image from "next/image";
 import { ChevronDown, ChevronUp, Loader } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
+import * as RadixPopover from "@radix-ui/react-popover";
+
 import {
   FormControl,
   FormField,
@@ -47,6 +49,8 @@ const FormAsyncCombobox = <T extends FieldValues, O>({
   disabled = false,
   isOptionsLoading,
   onChange,
+  labelPosition = "left",
+  popoverContentClassName,
 }: FormAsyncComboboxProps<T, O>) => {
   const [open, setOpen] = useState(false);
   const { t } = useTranslation();
@@ -78,7 +82,12 @@ const FormAsyncCombobox = <T extends FieldValues, O>({
         })();
 
         return (
-          <FormItem className="flex flex-col lg:flex-row gap-0.5 lg:gap-2.5">
+          <FormItem
+            className={cn(
+              "flex flex-col lg:flex-row gap-0.5 lg:gap-2.5",
+              labelPosition === "top" && "lg:flex-col lg:gap-0.5"
+            )}
+          >
             {label && (
               <div className="flex items-start justify-between">
                 <FormLabel className="text-xs lg:text-sm mt-1.5">
@@ -98,8 +107,8 @@ const FormAsyncCombobox = <T extends FieldValues, O>({
             <div className="flex flex-col gap-1">
               <FormControl>
                 <div>
-                  <Popover open={open} onOpenChange={setOpen}>
-                    <PopoverTrigger asChild>
+                  <RadixPopover.Popover open={open} onOpenChange={setOpen}>
+                    <RadixPopover.PopoverTrigger asChild>
                       <Button
                         {...field}
                         type="button"
@@ -119,11 +128,12 @@ const FormAsyncCombobox = <T extends FieldValues, O>({
                           {open ? <ChevronUp /> : <ChevronDown />}
                         </div>
                       </Button>
-                    </PopoverTrigger>
+                    </RadixPopover.PopoverTrigger>
 
-                    <PopoverContent
+                    <RadixPopover.PopoverContent
                       className={cn(
-                        "lg:w-[240px] p-0 max-h-64 overflow-y-auto"
+                        "w-full p-0 max-h-64 overflow-y-auto z-[100]",
+                        popoverContentClassName
                       )}
                     >
                       <Command
@@ -187,8 +197,8 @@ const FormAsyncCombobox = <T extends FieldValues, O>({
                           })}
                         </CommandGroup>
                       </Command>
-                    </PopoverContent>
-                  </Popover>
+                    </RadixPopover.PopoverContent>
+                  </RadixPopover.Popover>
                 </div>
               </FormControl>
               <FormMessage />

@@ -61,6 +61,9 @@ const FormCombobox = <T extends FieldValues, O>({
             return placeholder || t("placeholders.choose");
 
           if (saveFullObject) {
+            if (field.value[displayKey ?? "label"] === "") {
+              return placeholder;
+            }
             return field.value[displayKey ?? "label"] ?? placeholder;
           }
           if (saveOnlyValue) {
@@ -104,7 +107,9 @@ const FormCombobox = <T extends FieldValues, O>({
                         variant="outline"
                         aria-invalid={fieldState.invalid}
                         className={cn(
-                          " min-w-[160px] lg:min-w-[240px] lg:max-w-[240px] justify-between h-8 rounded-xs text-sm font-semibold relative",
+                          " min-w-[160px] lg:min-w-[240px] lg:max-w-[240px] justify-between h-8 rounded-xs text-sm font-medium text-text-light relative",
+                          field.value?.delivery_address_id &&
+                            "text-text-regular",
                           className
                         )}
                         disabled={disabled}

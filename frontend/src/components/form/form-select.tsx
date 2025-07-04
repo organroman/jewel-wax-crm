@@ -83,7 +83,7 @@ const FormSelect = <T extends FieldValues, O>({
                 <SelectTrigger
                   size="sm"
                   className={cn(
-                    "w-full lg:min-w-[240px] h-8 rounded-xs text-sm font-semibold focus-visible:ring-[1px] text-text-muted hover:text-text-regular",
+                    "w-full lg:min-w-[240px] h-8 rounded-xs text-sm focus-visible:ring-[1px] text-text-regular hover:text-text-light",
                     className
                   )}
                 >

@@ -73,12 +73,12 @@ const FormDatePicker = <T extends FieldValues>({
                   <Button
                     variant="outline"
                     className={cn(
-                      "w-full justify-start text-left font-semibold text-text-muted h-8 px-2.5 text-sm",
+                      "w-full justify-start text-left text-text-regular hover:text-text-light h-8 px-2.5 text-sm",
                       !field.value && "text-muted-foreground",
                       inputStyles
                     )}
                   >
-                    <CalendarIcon className="mr-2 h-4 w-4 text-text-muted" />
+                    <CalendarIcon className="mr-2 h-4 w-4 text-text-regular hover:text-text-light" />
                     {field.value
                       ? format(field.value, "dd.MM.yyyy")
                       : placeholder || t("placeholder.choose_date")}

@@ -70,7 +70,7 @@ const FormArrayDeliveryAddress = <T extends FieldValues>({
   const cityIds = personLocations.map((c) => c.id).filter(Boolean);
   const cityIdsQuery = cityIds.map((i) => `ids=${i}`).toString();
   const { data: cities, isLoading: isLoadingCities } = useLocation.getCities({
-    query: cityIdsQuery,
+    query: `ids=${cityIds}`,
     enabled: Boolean(cityIdsQuery) && dialogOpen,
   });
 

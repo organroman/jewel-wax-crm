@@ -44,7 +44,7 @@ const FormArrayLocation = <T extends FieldValues>({
   const [, setDebouncedValue] = useState("");
 
   const debouncedSearchQuery = useMemo(
-    () => debounce((value: string) => setDebouncedValue(value), 1000),
+    () => debounce((value: string) => setDebouncedValue(value), 300),
     []
   );
 
@@ -176,7 +176,7 @@ const FormArrayLocation = <T extends FieldValues>({
                 }
                 displayKey="name"
                 valueKey="id"
-                saveOnlyValue={true}
+                saveOnlyValue
               />
               <Button
                 variant="outline"
@@ -223,6 +223,7 @@ const FormArrayLocation = <T extends FieldValues>({
                     selected?.data?.city_name as PathValue<T, any>
                   );
                 }}
+                popoverContentClassName="lg:w-[240px]"
               />
               <Button
                 variant="outline"

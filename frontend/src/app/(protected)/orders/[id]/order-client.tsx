@@ -16,7 +16,7 @@ import { Separator } from "@/components/ui/separator";
 
 import CustomTabs from "@/components/shared/custom-tabs";
 import OrderCardHeader from "@/components/orders/order-card-header";
-import OrderForm from "@/components/orders/order-form";
+import OrderForm from "@/components/orders/form/order/order-form";
 import OrderPayments from "@/components/orders/order-payments";
 import OrderChat from "@/components/orders/order-chat";
 

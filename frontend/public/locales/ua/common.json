@@ -216,9 +216,7 @@
   },
   "log_actions": {
     "date": "$t(dictionary.date)",
-    "login": "Вхід в систему (Login)",
-    "create_person": "Контрагента створено",
-    "update_person": "Контрагента оновлено"
+    "login": "Вхід в систему (Login)"
   },
   "order": {
     "order": "$t(dictionary.order)",
@@ -236,7 +234,8 @@
       "done": "$t(dictionary.done)"
     },
     "placeholders": {
-      "search": "Пошук замовлення"
+      "search": "Пошук замовлення",
+      "tax_id": "ЄДРПОУ"
     },
     "sorting": {
       "created_at": "$t(dictionary.created)",
@@ -322,6 +321,9 @@
         "payment_method": {
           "cash": "Готівка",
           "nonCash": "Безготівковий розрахунок"
+        },
+        "cargo_type": {
+          "parcel": "Посилка"
         }
       }
     },
@@ -351,7 +353,13 @@
       "good_cost": "Оціночна вартість",
       "delivery_length": "Довжина",
       "delivery_width": "Ширина",
-      "delivery_height": "Висота"
+      "delivery_height": "Висота",
+      "postomat_delivery": "Відправка на поштомат",
+      "third_party": "На третю особу",
+      "recipient_name": "Ім'я отримувача",
+      "recipient_surname": "Прізвище отримувача",
+      "recipient_phone": "Телефон отримувача",
+      "fop": "ФОП"
     }
   },
 
@@ -415,7 +423,8 @@
       "important_removed": "Видалено з важливого",
       "order_created": "Замовлення створено",
       "order_updated": "Замовлення оновлено",
-      "order_deleted": "Замовлення видалено"
+      "order_deleted": "Замовлення видалено",
+      "ttn_created": "ТТН створена"
     }
   }
 }

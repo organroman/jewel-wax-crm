@@ -19,6 +19,12 @@ export interface FormSwitchProps<T extends FieldValues> {
   unCheckedLabel?: string;
 }
 
+export interface FormCheckboxProps<T extends FieldValues> {
+  control: Control<T>;
+  name: Path<T>;
+  label: string;
+}
+
 export type FormPhoneInputProps<T extends FieldValues> = {
   name: Path<T>;
   control: Control<T>;
@@ -148,9 +154,11 @@ export interface FormComboboxProps<T extends FieldValues, O> {
 export interface FormAsyncComboboxProps<T extends FieldValues, O>
   extends FormComboboxProps<T, O> {
   searchQuery?: string;
-  setSearchQuery?: Dispatch<SetStateAction<string>>;
+  setSearchQuery?: Dispatch<SetStateAction<string>> | ((value: string) => void);
   isOptionsLoading?: boolean;
   onChange?: (option: Option<O>) => void;
+  labelPosition?: "left" | "top";
+  popoverContentClassName?: string;
 }
 
 export interface FormArrayComboboxProps<T extends FieldValues, O> {

@@ -35,6 +35,7 @@ type AsyncComboboxProps<T> = {
   valueKey?: keyof T;
   search: string;
   setSearch?: Dispatch<SetStateAction<string>> | ((value: string) => void);
+  labelPosition?: "left" | "top";
 };
 
 const AsyncCombobox = <T,>({
@@ -51,6 +52,7 @@ const AsyncCombobox = <T,>({
   search,
   setSearch,
   popoverContentClassName,
+  labelPosition = "left",
 }: AsyncComboboxProps<T>) => {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
@@ -93,62 +95,62 @@ const AsyncCombobox = <T,>({
             </div>
           </Button>
         </RadixPopover.Trigger>
-          <RadixPopover.Content
-            className={cn(
-              "w-full p-0 max-h-64 overflow-y-auto fixed z-[9999] overflow-auto",
-              popoverContentClassName
-            )}
-            align="start"
+        <RadixPopover.Content
+          className={cn(
+            "w-full p-0 max-h-64 overflow-y-auto fixed z-[9999] overflow-auto",
+            popoverContentClassName
+          )}
+          align="start"
+        >
+          <Command
+            filter={(value, search) => {
+              const item = options.filter((opt) =>
+                opt.label.toLowerCase().includes(search.toLowerCase())
+              );
+
+              return item?.length ? 1 : 0;
+            }}
           >
-            <Command
-              filter={(value, search) => {
-                const item = options.filter((opt) =>
-                  opt.label.toLowerCase().includes(search.toLowerCase())
+            <CommandInput
+              placeholder={t("placeholders.choose")}
+              value={search}
+              onValueChange={setSearch}
+            />
+
+            {isLoading && (
+              <Loader className="size-6 text-center text-brand-default my-2 animate-spin self-center" />
+            )}
+
+            {!isLoading && (
+              <CommandEmpty>{t("messages.info.no_results")}</CommandEmpty>
+            )}
+
+            <CommandGroup className="z-100 overflow-y-scroll">
+              {options.map((option) => {
+                const label = displayKey
+                  ? (option.data?.[displayKey] as string)
+                  : option.label;
+
+                const value = valueKey
+                  ? (option.data?.[valueKey] as string | number)
+                  : option.value;
+
+                return (
+                  <CommandItem
+                    key={value}
+                    value={value.toString()}
+                    onSelect={() => {
+                      onChange(option);
+                      setOpen(false);
+                    }}
+                  >
+                    {label}
+                  </CommandItem>
                 );
-
-                return item?.length ? 1 : 0;
-              }}
-            >
-              <CommandInput
-                placeholder={t("placeholders.choose")}
-                value={search}
-                onValueChange={setSearch}
-              />
-
-              {isLoading && (
-                <Loader className="size-6 text-center text-brand-default my-2 animate-spin self-center" />
-              )}
-
-              {!isLoading && (
-                <CommandEmpty>{t("messages.info.no_results")}</CommandEmpty>
-              )}
-
-              <CommandGroup className="z-100 overflow-y-scroll">
-                {options.map((option) => {
-                  const label = displayKey
-                    ? (option.data?.[displayKey] as string)
-                    : option.label;
-
-                  const value = valueKey
-                    ? (option.data?.[valueKey] as string | number)
-                    : option.value;
-
-                  return (
-                    <CommandItem
-                      key={value}
-                      value={value.toString()}
-                      onSelect={() => {
-                        onChange(option);
-                        setOpen(false);
-                      }}
-                    >
-                      {label}
-                    </CommandItem>
-                  );
-                })}
-              </CommandGroup>
-            </Command>
-          </RadixPopover.Content>
+              })}
+            </CommandGroup>
+          </Command>
+        </RadixPopover.Content>
       </RadixPopover.Popover>
     </div>
   );

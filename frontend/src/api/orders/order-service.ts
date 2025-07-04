@@ -35,17 +35,28 @@ export const orderService = {
     return apiService.get<Order>(`orders/${id}`);
   },
   update: (data: UpdateOrderSchema) => {
-    const { stages, linked_orders, ...order } = data;
+    const { stages, linked_orders, delivery, ...order } = data;
 
-    const delivery = order.delivery?.delivery_address_id
-      ? {
-          ...order.delivery,
-          declaration_number:
-            order.delivery.declaration_number !== ""
-              ? order.delivery.declaration_number
-              : null,
-        }
-      : null;
+    let deliveryPayload;
+
+    if (delivery?.delivery_address_id)
+      deliveryPayload = {
+        ...delivery,
+        declaration_number:
+          delivery.declaration_number !== ""
+            ? delivery.declaration_number
+            : null,
+      };
+    else if (delivery?.is_third_party) {
+      deliveryPayload = {
+        ...delivery,
+        delivery_address_id: delivery.delivery_address_id ?? null,
+        declaration_number:
+          delivery.declaration_number !== ""
+            ? delivery.declaration_number
+            : null,
+      };
+    } else deliveryPayload = null;
 
     const updatedStages = stages.map((s) => ({
       ...s,
@@ -64,7 +75,7 @@ export const orderService = {
     const payload = {
       ...order,
       stages: updatedStages,
-      delivery: delivery,
+      delivery: deliveryPayload,
       linked_orders: linked,
     };
     return apiService.patch<Order>(`orders/${data.id}`, payload);
