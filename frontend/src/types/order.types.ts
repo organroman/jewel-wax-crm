@@ -59,30 +59,35 @@ export interface OrderStage {
 }
 
 export interface OrderDelivery {
-  id: number;
-  cost: number | string;
-  delivery_address_id?: number;
-  address_line?: string;
+  id?: number;
+  cost: number;
   order_id?: number;
+  is_third_party: boolean;
+  delivery_address_id?: number | null;
+  address_line?: string;
   declaration_number: string | null;
   actual_delivery_date?: string | null;
   delivery_service?: string;
   estimated_delivery_date?: string | null;
-  flat_number: string | null;
-  house_number: string | null;
-  city_ref: string | null;
-  np_warehouse: string | null;
-  np_warehouse_ref: string | null;
-  np_warehouse_siteKey: string | null;
-  np_recipient_ref: string | null;
-  np_contact_recipient_ref: string | null;
-  street: string | null;
-  street_ref: string | null;
-  type: DeliveryType;
-  settlement_type: string;
-  city_name: string | null;
+  flat_number?: string | null;
+  city_id?: number | null;
+  house_number?: string | null;
+  city_ref?: string | null;
+  np_warehouse?: string | null;
+  np_warehouse_ref?: string | null;
+  np_warehouse_siteKey?: string | null;
+  np_recipient_ref?: string | null;
+  np_contact_recipient_ref?: string | null;
+  street?: string | null;
+  street_ref?: string | null;
+  type?: DeliveryType;
+  settlement_type?: string;
+  city_name?: string | null;
   area?: string | null;
   region?: string | null;
+  manual_recipient_name?: string | null;
+  manual_recipient_phone?: string | null;
+  manual_delivery_address?: string | null;
 }
 
 export interface LinkedOrder {
@@ -125,12 +130,5 @@ export interface Order {
 export interface PaginatedOrdersResult<T> extends PaginatedResult<T> {
   stage_counts: Record<string, number>;
 }
-export type UpdateOrderSchema = {
-  amount: number | string;
-  modeling_cost: number | string;
-  milling_cost: number | string;
-  printing_cost: number | string;
-} & Omit<
-  z.infer<typeof updateOrderSchema>,
-  "amount" | "modeling_cost" | "milling_cost" | "printing_cost"
->;
+
+export type UpdateOrderSchema = z.infer<typeof updateOrderSchema>;

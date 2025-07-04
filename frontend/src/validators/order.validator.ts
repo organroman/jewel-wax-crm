@@ -4,12 +4,10 @@ import { ORDER_STAGE, ORDER_STAGE_STATUS } from "@/constants/enums.constants";
 import { PAYER_TYPE, PAYMENT_METHOD } from "@/constants/novaposhta.constants";
 import { deliveryTypeSchema } from "./person.validator";
 
-const costField = z
-  .union([
-    z.number(),
-    z.string().regex(/^\d+(\.\d+)?$/, "Must be a valid number string"),
-  ])
-  .transform((val) => (typeof val === "string" ? parseFloat(val) : val));
+const costField: z.ZodType<number, z.ZodTypeDef, unknown> = z.preprocess(
+  (val) => (typeof val === "string" ? parseFloat(val) : val),
+  z.number()
+);
 
 const numberField = z
   .union([z.number(), z.string().regex(/^\d+$/, "Must be a numeric string")])
@@ -44,30 +42,32 @@ const orderCustomerSchema = z.object({
 });
 
 const orderDeliveryAddressSchema = z.object({
-  id: z.number(),
+  id: z.number().optional(),
   cost: costField,
   order_id: z.number().optional(),
-  delivery_address_id: z.number().optional(),
+  is_third_party: z.boolean(),
+  delivery_address_id: z.number().nullable().optional(),
   address_line: z.string().optional(),
-  city_ref: z.string().nullable(),
-  np_warehouse_ref: z.string().nullable(),
-  np_warehouse: z.string().nullable(),
-  np_warehouse_siteKey: z.string().nullable(),
-  np_recipient_ref: z.string().nullable(),
-  np_contact_recipient_ref: z.string().nullable(),
-  street: z.string().nullable(),
-  street_ref: z.string().nullable(),
-  house_number: z.string().nullable(),
-  flat_number: z.string().nullable(),
+  city_id: z.number().nullable().optional(),
+  city_ref: z.string().nullable().optional(),
+  np_warehouse_ref: z.string().nullable().optional(),
+  np_warehouse: z.string().nullable().optional(),
+  np_warehouse_siteKey: z.string().nullable().optional(),
+  np_recipient_ref: z.string().nullable().optional(),
+  np_contact_recipient_ref: z.string().nullable().optional(),
+  street: z.string().nullable().optional(),
+  street_ref: z.string().nullable().optional(),
+  house_number: z.string().nullable().optional(),
+  flat_number: z.string().nullable().optional(),
   declaration_number: z.string().nullable(),
-  type: deliveryTypeSchema,
+  type: deliveryTypeSchema.optional(),
   estimated_delivery_date: z.string().nullable().optional(),
   actual_delivery_date: z.string().nullable().optional(),
   delivery_service: z.string().optional(),
-  settlement_type: z.string(),
-  city_name: z.string().nullable(),
+  settlement_type: z.string().optional(),
+  city_name: z.string().nullable().optional(),
   area: z.string().nullable().optional(),
-  region: z.string().nullable(),
+  region: z.string().nullable().optional(),
 });
 
 const stageSchema = z.enum(ORDER_STAGE);
@@ -94,7 +94,7 @@ const linkedOrderSchema = z.object({
   linked_order_id: z.number(),
   linked_order_number: numberField,
   comment: z.string().optional(),
-  is_common_delivery: z.boolean().default(false),
+  is_common_delivery: z.boolean(),
 });
 
 const orderMediaSchema = z.object({
@@ -142,6 +142,19 @@ const cargoTypeSchema = z.object(
   { required_error: "messages.validation.cargo_type_required" }
 );
 
+const thirdPartyCitySchema = z.object({
+  id: z.number(),
+  name: z.string(),
+  ref: z.string(),
+  area: z.string(),
+  region: z.string().nullable(),
+  settlement_type: z.string(),
+});
+const thirdPartyWarehouse = z.object({
+  np_warehouse_ref: z.string(),
+  np_warehouse: z.string(),
+});
+
 export const createDeclarationSchema = z.object({
   payerType: z.object(
     { value: payerTypeSchema, label: z.string() },
@@ -168,4 +181,14 @@ export const createDeclarationSchema = z.object({
   volumetricHeight: z
     .string({ required_error: "messages.validation.height_required" })
     .optional(),
+  thirdPartyRecipientName: z.string().optional(),
+  thirdPartyRecipientSurname: z.string().optional(),
+  thirdPartyRecipientPhone: z.string().optional(),
+  thirdPartyCity: thirdPartyCitySchema.optional(),
+  thirdPartyWarehouse: thirdPartyWarehouse.optional(),
+  thirdPartyStreet: z.string().optional(),
+  thirdPartyHouse: z.string().optional(),
+  thirdPartyFlat: z.string().optional(),
+  delivery_address_id: z.number().nullable().optional(),
+  tax_id: z.string().optional(),
 });
