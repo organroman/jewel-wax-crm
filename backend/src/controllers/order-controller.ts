@@ -144,4 +144,19 @@ export const OrderController = {
       next(error);
     }
   },
+  async delete(req: Request, res: Response, next: NextFunction) {
+    try {
+      const currentUser = req.user?.id;
+      const deletedCount = await OrderService.delete(
+        Number(req.params.id),
+        currentUser
+      );
+      if (!deletedCount) {
+        throw new AppError(ERROR_MESSAGES.ITEM_NOT_FOUND, 404);
+      }
+      res.status(204).send();
+    } catch (error) {
+      next(error);
+    }
+  },
 };

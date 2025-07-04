@@ -417,4 +417,8 @@ export const OrderModel = {
       order: "desc",
     });
   },
+
+  async deleteOrder(orderId: number): Promise<number> {
+    return await db<OrderBase>("orders").where("id", orderId).del();
+  },
 };

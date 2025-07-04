@@ -51,4 +51,6 @@ router.patch(
   OrderController.update
 );
 
+router.delete("/:id", verifyToken, checkPermission("ORDERS", "DELETE"), OrderController.delete)
+
 export default router;
