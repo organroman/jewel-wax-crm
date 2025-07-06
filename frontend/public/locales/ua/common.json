@@ -359,7 +359,8 @@
       "recipient_name": "Ім'я отримувача",
       "recipient_surname": "Прізвище отримувача",
       "recipient_phone": "Телефон отримувача",
-      "fop": "ФОП"
+      "fop": "ФОП",
+      "another": "Інша"
     }
   },
 

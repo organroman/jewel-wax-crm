@@ -81,6 +81,16 @@ const FormAsyncCombobox = <T extends FieldValues, O>({
           return field.value?.label ?? placeholder;
         })();
 
+        const isSelectedValue = (() => {
+          if (
+            selectedLabel !== placeholder &&
+            selectedLabel !== t("placeholders.choose")
+          ) {
+            return true;
+          }
+          return false;
+        })();
+
         return (
           <FormItem
             className={cn(
@@ -116,7 +126,8 @@ const FormAsyncCombobox = <T extends FieldValues, O>({
                         variant="outline"
                         aria-invalid={fieldState.invalid}
                         className={cn(
-                          "min-w-[160px] lg:min-w-[240px] lg:max-w-[240px] justify-between h-8 rounded-xs text-sm font-semibold relative",
+                          "min-w-[160px] lg:min-w-[240px] lg:max-w-[240px] justify-between h-8 rounded-xs text-sm font-semibold text-text-light relative",
+                          isSelectedValue && "text-text-regular",
                           className
                         )}
                         disabled={disabled}

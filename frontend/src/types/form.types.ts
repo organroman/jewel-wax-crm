@@ -149,6 +149,7 @@ export interface FormComboboxProps<T extends FieldValues, O> {
   saveFullObject?: boolean;
   saveOnlyValue?: boolean;
   disabled?: boolean;
+  isFullWidth?: boolean
 }
 
 export interface FormAsyncComboboxProps<T extends FieldValues, O>

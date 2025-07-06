@@ -57,10 +57,10 @@ const OrderStagesFields = ({ form }: OrderStagesFieldsProps) => {
       <div className="border-l-4 border-ui-border pl-2 flex flex-col gap-5">
         {stages.map((field, index) => {
           return (
-            <div key={field.stage} className="flex items-center gap-7 relative">
+            <div key={field.stage} className="flex items-center gap-4 lg:gap-7 relative">
               <div
                 className={cn(
-                  "flex items-center justify-center w-[120px] h-[32px] text-xs rounded-xs",
+                  "flex items-center justify-center w-[110px] lg:w-[120px] h-[32px] text-xs rounded-xs",
                   STAGE_COLORS[field.stage]
                 )}
               >
@@ -78,7 +78,7 @@ const OrderStagesFields = ({ form }: OrderStagesFieldsProps) => {
                   label: t(`order.stage_statuses.${s}`),
                 }))}
                 className={cn(
-                  "lg:min-w-[140px] lg:max-w-[140px]",
+                  "min-w-[130px] lg:min-w-[140px] lg:max-w-[140px]",
                   field.status?.value &&
                     STAGE_STATUS_COLORS[field.status?.value]
                 )}

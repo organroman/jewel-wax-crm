@@ -34,8 +34,8 @@ const OrderDeliveryFields = ({ order, form, userId }: OrderDeliveryFields) => {
     : [];
   return (
     <>
-      <div className="flex items-center justify-between gap-5">
-        <div className="flex items-center gap-2.5">
+      <div className="flex items-end lg:items-center lg:justify-between lg:gap-5">
+        <div className="flex w-full flex-col lg:flex-row lg:items-center gap-1 lg:gap-2.5">
           <InfoLabel className="text-sm w-[100px]">
             {t("order.stages.delivery")}
           </InfoLabel>
@@ -48,11 +48,13 @@ const OrderDeliveryFields = ({ order, form, userId }: OrderDeliveryFields) => {
               displayKey="address_line"
               saveFullObject
               options={deliveryOptions}
+              isFullWidth
+              className="min-w-full w-full"
             />
-            <div className="flex flex-row items-center gap-1 ml-2.5 w-[73px]">
+            <div className="hidden lg:flex flex-row items-center gap-1 ml-2.5 w-[73px]">
               <FormCheckbox
                 name="delivery.is_third_party"
-                label="Інша"
+                label={t("order.labels.another")}
                 control={form.control}
               />
             </div>
@@ -61,11 +63,18 @@ const OrderDeliveryFields = ({ order, form, userId }: OrderDeliveryFields) => {
         <FormInput
           name="delivery.cost"
           control={form.control}
-          inputStyles="lg:min-w-[100px] lg:max-w-[100px]"
+          inputStyles="hidden lg:flex min-w-[100px] max-w-[100px] lg:min-w-[100]"
           // defaultValue="0.00"
         />
       </div>
-      <div className="flex items-center gap-2.5">
+      <div className="flex lg:hidden flex-row items-center gap-1 w-[73px]">
+        <FormCheckbox
+          name="delivery.is_third_party"
+          label={t("order.labels.another")}
+          control={form.control}
+        />
+      </div>
+      <div className="flex w-full flex-col lg:flex-row lg:items-center gap-1 lg:gap-2.5">
         <InfoLabel className="text-sm w-[100px]">
           {t("order.labels.declaration_number")}
         </InfoLabel>
@@ -73,6 +82,8 @@ const OrderDeliveryFields = ({ order, form, userId }: OrderDeliveryFields) => {
           <FormInput
             name="delivery.declaration_number"
             control={form.control}
+            inputStyles="w-full"
+            isFullWidth
           />
           <CreateDeliveryDeclaration
             orderName={form.getValues("name")}
@@ -86,7 +97,7 @@ const OrderDeliveryFields = ({ order, form, userId }: OrderDeliveryFields) => {
       </div>
       {order?.delivery?.is_third_party &&
         order?.delivery?.declaration_number !== "" && (
-          <div className="flex items-center gap-2.5 w-full">
+          <div className="flex w-full flex-col lg:flex-row lg:items-center gap-1 lg:gap-2.5">
             <InfoLabel className="text-sm w-[100px] shrink-0">
               {t("order.modal.create_declaration.payer_type.recipient")}
             </InfoLabel>

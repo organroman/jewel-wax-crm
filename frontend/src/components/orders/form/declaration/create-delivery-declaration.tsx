@@ -234,7 +234,7 @@ const CreateDeliveryDeclaration = ({
         variant="secondary"
         type="button"
         size="sm"
-        className="rounded-tl-none rounded-bl-none text-xs"
+        className="min-w-[100px] lg:min-w-fit rounded-tl-none rounded-bl-none text-xs"
         onClick={() => setDialogOpen(true)}
       >
         {t("buttons.create")}
@@ -284,26 +284,28 @@ const CreateDeliveryDeclaration = ({
                 isFullWidth
               />
 
-              <div className="flex items-center gap-6 h-8">
-                <div className="flex flex-row items-center gap-2.5 shrink-0" >
-                  <Checkbox
-                    id="postomatCheckbox"
-                    checked={isPostomat}
-                    onCheckedChange={() => setIsPostomat(!isPostomat)}
-                  />
-                  <Label htmlFor="postomatCheckbox">
-                    {t("order.labels.postomat_delivery")}
-                  </Label>
-                </div>
-                <div className="flex flex-row items-center gap-2.5">
-                  <Checkbox
-                    id="thirdPartyCheckbox"
-                    checked={isFop}
-                    onCheckedChange={() => setIsFop(!isFop)}
-                  />
-                  <Label htmlFor="thirdPartyCheckbox">
-                    {t("order.labels.fop")}
-                  </Label>
+              <div className="flex flex-col lg:flex-row lg:items-center gap-2 lg:gap-6 lg:h-8">
+                <div className="flex items-center gap-6">
+                  <div className="flex flex-row items-center gap-2.5 shrink-0">
+                    <Checkbox
+                      id="postomatCheckbox"
+                      checked={isPostomat}
+                      onCheckedChange={() => setIsPostomat(!isPostomat)}
+                    />
+                    <Label htmlFor="postomatCheckbox">
+                      {t("order.labels.postomat_delivery")}
+                    </Label>
+                  </div>
+                  <div className="flex flex-row items-center gap-2.5">
+                    <Checkbox
+                      id="thirdPartyCheckbox"
+                      checked={isFop}
+                      onCheckedChange={() => setIsFop(!isFop)}
+                    />
+                    <Label htmlFor="thirdPartyCheckbox">
+                      {t("order.labels.fop")}
+                    </Label>
+                  </div>
                 </div>
                 {isFop && (
                   <FormInput

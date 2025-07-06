@@ -101,7 +101,7 @@ export interface LinkedOrder {
 
 export interface Order {
   id: number;
-  created_at: Date;
+  created_at: string | null;
   number: number;
   description: string;
   name: string;

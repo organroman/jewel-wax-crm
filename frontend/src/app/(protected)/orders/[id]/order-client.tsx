@@ -77,7 +77,7 @@ const OrderClient = ({ id, userId }: { id: number; userId: number }) => {
       <Button
         onClick={() => router.push("/orders")}
         variant="link"
-        className=" w-fit has-[>svg]:p-0 text-text-light h-4"
+        className="w-fit has-[>svg]:p-0 text-text-light h-4"
       >
         <ChevronLeftIcon /> {t("buttons.back_to_table")}
       </Button>

@@ -43,6 +43,7 @@ const FormCombobox = <T extends FieldValues, O>({
   saveFullObject = false,
   saveOnlyValue = false,
   disabled = false,
+  isFullWidth,
 }: FormComboboxProps<T, O>) => {
   const [open, setOpen] = useState(false);
   const { t } = useTranslation();
@@ -77,8 +78,18 @@ const FormCombobox = <T extends FieldValues, O>({
           return field.value?.label ?? placeholder;
         })();
 
+        const isSelectedValue = (() => {
+          if (
+            selectedLabel !== placeholder &&
+            selectedLabel !== t("placeholders.choose")
+          ) {
+            return true;
+          }
+          return false;
+        })();
+
         return (
-          <FormItem className="flex flex-col lg:flex-row gap-0.5 lg:gap-2.5">
+          <FormItem className={cn("flex flex-col lg:flex-row gap-0.5 lg:gap-2.5", isFullWidth && "w-full lg:w-fit")}>
             {label && (
               <div className="flex items-start justify-between">
                 <FormLabel className="text-xs lg:text-sm lg:mt-1.5">
@@ -95,7 +106,12 @@ const FormCombobox = <T extends FieldValues, O>({
                 )}
               </div>
             )}
-            <div className="flex flex-col gap-0.5 lg:gap-1">
+            <div
+              className={cn(
+                "flex flex-col gap-0.5 lg:gap-1",
+                isFullWidth && "w-full"
+              )}
+            >
               <FormControl>
                 <div>
                   <Popover open={open} onOpenChange={setOpen}>
@@ -108,8 +124,7 @@ const FormCombobox = <T extends FieldValues, O>({
                         aria-invalid={fieldState.invalid}
                         className={cn(
                           " min-w-[160px] lg:min-w-[240px] lg:max-w-[240px] justify-between h-8 rounded-xs text-sm font-medium text-text-light relative",
-                          field.value?.delivery_address_id &&
-                            "text-text-regular",
+                          isSelectedValue && "text-text-regular",
                           className
                         )}
                         disabled={disabled}

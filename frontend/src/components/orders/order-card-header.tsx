@@ -28,17 +28,19 @@ const OrderCardHeader = ({
 }: OrderCardHeaderProps) => {
   const { t } = useTranslation();
   return (
-    <div className="flex w-full items-center rounded-sm bg-ui-border py-3 px-6 gap-4">
-      <OrderFavorite orderId={orderId} is_favorite={isFavorite} />
-      {/* //TODO: add condition by role */}
-      <OrderImportant
-        orderId={orderId}
-        is_important={isImportant}
-        disabled={false}
-      />
+    <div className="flex w-full lg:items-center flex-col lg:flex-row rounded-sm bg-ui-border lg:py-3 lg:px-6 py-2 px-4 gap-1 lg:gap-4">
       <div className="flex items-center gap-2.5">
-        <InfoLabel>{t("order.order")} №</InfoLabel>
-        <InfoValue>{orderNumber}</InfoValue>
+        <OrderFavorite orderId={orderId} is_favorite={isFavorite} />
+        {/* //TODO: add condition by role */}
+        <OrderImportant
+          orderId={orderId}
+          is_important={isImportant}
+          disabled={false}
+        />
+        <div className="flex items-center gap-2.5">
+          <InfoLabel>{t("order.order")} №</InfoLabel>
+          <InfoValue>{orderNumber}</InfoValue>
+        </div>
       </div>
       <div className="flex items-center gap-2.5">
         <InfoLabel>{t("dictionary.customer")}</InfoLabel>
@@ -47,7 +49,7 @@ const OrderCardHeader = ({
         </p>
         <p className="text-sm underline font-semibold">{customerFullName}</p>
       </div>
-      <div className="ml-auto flex items-center gap-5">
+      <div className="lg:ml-auto flex items-center gap-5">
         <Button variant="secondary" className="bg-transparent rounded-sm">
           {t("order.buttons.create_invoice")}
         </Button>

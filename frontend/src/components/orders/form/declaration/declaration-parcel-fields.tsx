@@ -16,7 +16,7 @@ const DeclarationParcelFields = ({ form }: DeclarationParcelFields) => {
         control={form.control}
         label={t("order.labels.weight")}
         labelPosition="top"
-        inputStyles="lg:min-w-[60px]"
+        inputStyles="min-w-[100px] max-w-[100px] lg:min-w-[60px]"
       />
       <FormInput
         name="goodCost"

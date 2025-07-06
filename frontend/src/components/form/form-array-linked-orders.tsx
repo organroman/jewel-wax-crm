@@ -1,4 +1,5 @@
 import { FormArrayLinkedOrdersProps } from "@/types/form.types";
+import { LinkedOrder } from "@/types/order.types";
 
 import {
   FieldValues,
@@ -9,24 +10,22 @@ import {
 } from "react-hook-form";
 import { Trash2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import Link from "next/link";
+import { useEffect, useMemo, useState } from "react";
+import debounce from "lodash.debounce";
 
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
+import { Dialog } from "@components/ui/dialog";
 
-import FormArrayInputItem from "./form-array-input-item";
-import InfoLabel from "../shared/typography/info-label";
-import Link from "next/link";
+import InfoLabel from "@components/shared/typography/info-label";
+import Modal from "@components/shared/modal/modal";
+import AsyncCombobox from "@components/shared/async-combobox";
 import FormInput from "./form-input";
-import { Dialog } from "../ui/dialog";
-import Modal from "../shared/modal/modal";
-import AsyncComboBox from "../shared/filter/filter-async-combobox";
+
 import { useDialog } from "@/hooks/use-dialog";
-import { useEffect, useMemo, useState } from "react";
-import debounce from "lodash.debounce";
 import { useOrder } from "@/api/orders/use-order";
-import { LinkedOrder } from "@/types/order.types";
-import AsyncCombobox from "../shared/async-combobox";
 
 type Option<T> = {
   label: string;
@@ -117,8 +116,8 @@ const FormArrayLinkedOrders = <T extends FieldValues>({
             className="flex w-full lg:w-full flex-col items-start justify-start gap-3"
           >
             <div className="flex w-full flex-col items-start gap-2.5">
-              <div className="flex w-full items-end lg:items-start gap-2.5">
-                <div className="flex items-center gap-2.5">
+              <div className="flex w-full flex-col lg:flex-row lg:items-start gap-1 lg:gap-2.5">
+                <div className="flex flex-col lg:flex-row lg:items-center gap-1 lg:gap-2.5">
                   <div className="flex items-center gap-2.5">
                     <InfoLabel className="text-sm whitespace-nowrap">
                       {t("order.order")} №
@@ -130,28 +129,32 @@ const FormArrayLinkedOrders = <T extends FieldValues>({
                       {linkedOrderNumber}
                     </Link>
                   </div>
-                  <div className="flex mb-1.5 lg:mb-0 items-center gap-2">
-                    <Switch
-                      checked={isCommonDelivery}
-                      onCheckedChange={() => handleToggleCommonDelivery(index)}
-                    />
-                    <Label className="hidden lg:block text-xs whitespace-nowrap">
-                      {t("order.labels.common_delivery")}
-                    </Label>
-                    <Label className="block lg:hidden text-xs">
-                      {t("order.labels.common_delivery")}
-                    </Label>
-                  </div>
+                  <div className="flex items-center gap-2.5">
+                    <div className="flex lg:mb-0 items-center gap-2">
+                      <Switch
+                        checked={isCommonDelivery}
+                        onCheckedChange={() =>
+                          handleToggleCommonDelivery(index)
+                        }
+                      />
+                      <Label className="hidden lg:block text-xs whitespace-nowrap">
+                        {t("order.labels.common_delivery")}
+                      </Label>
+                      <Label className="block lg:hidden text-xs">
+                        {t("order.labels.common_delivery")}
+                      </Label>
+                    </div>
 
-                  <div className="flex">
-                    <Button
-                      type="button"
-                      variant="ghostDestructive"
-                      size="sm"
-                      onClick={() => remove(index)}
-                    >
-                      <Trash2 className="size-4" />
-                    </Button>
+                    <div className="flex">
+                      <Button
+                        type="button"
+                        variant="ghostDestructive"
+                        size="sm"
+                        onClick={() => remove(index)}
+                      >
+                        <Trash2 className="size-4" />
+                      </Button>
+                    </div>
                   </div>
                 </div>
                 <div className="flex w-full flex-col gap-0.5">
@@ -224,6 +227,7 @@ const FormArrayLinkedOrders = <T extends FieldValues>({
               valueKey="id"
               onChange={(data) => onSelect(data)}
               isLoading={isLoading}
+              popoverContentClassName="min-w-[240px] max-w-[240px]"
             />
           </div>
         </Modal>

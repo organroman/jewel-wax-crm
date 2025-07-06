@@ -95,6 +95,7 @@ const OrderForm = ({
       active_stage: order?.active_stage || "new",
       linked_orders: order?.linked_orders || [],
       media: order?.media || [],
+      created_at: order?.created_at ?? null,
     },
   });
 
@@ -124,6 +125,7 @@ const OrderForm = ({
         active_stage: order.active_stage || "new",
         linked_orders: order.linked_orders || [],
         media: order.media || [],
+        created_at: order?.created_at ?? null,
       });
     }
   }, [order]);
@@ -157,7 +159,10 @@ const OrderForm = ({
         },
       });
       setNewFiles([]);
-    } else mutation.mutate(formData);
+    } else
+      mutation.mutate({
+        ...formData,
+      });
   };
 
   const handleUpdateImages = (media: OrderMedia[]) => {
@@ -173,8 +178,8 @@ const OrderForm = ({
           className="flex flex-col h-full flex-1"
         >
           <div className="flex flex-col gap-5">
-            <div className="flex gap-7">
-              <div className="w-1/3 overflow-x-hidden">
+            <div className="flex flex-col lg:flex-row gap-7">
+              <div className="w-full lg:w-1/3 overflow-x-hidden">
                 <OrderImages
                   newFiles={newFiles}
                   setNewFiles={setNewFiles}
@@ -184,8 +189,8 @@ const OrderForm = ({
                   handleUpdateMedia={handleUpdateImages}
                 />
               </div>
-              <div className="w-3/4">
-                <div className="flex items-end w-full gap-5 mb-3.5">
+              <div className="w-full lg:w-3/4">
+                <div className="flex items-end w-full gap-5 lg:mb-3.5 relative">
                   <FormInput
                     name="name"
                     label={t("order.labels.name")}
@@ -196,7 +201,7 @@ const OrderForm = ({
                     inputStyles="w-full"
                     isFullWidth
                   />
-                  <div className="flex items-center gap-2.5 mb-0.5">
+                  <div className="flex items-center gap-2.5 mb-0.5 absolute lg:static right-0 -top-2">
                     <p className="text-text-muted text-sm whitespace-nowrap">
                       {t("order.labels.days")}
                     </p>
@@ -215,7 +220,7 @@ const OrderForm = ({
                   fieldType="textarea"
                   rows={3}
                 />
-                <div className="flex items-start gap-5 mt-7">
+                <div className="flex flex-col lg:flex-row items-start gap-5 mt-7">
                   <OrderOperationsFields
                     order={order}
                     form={form}

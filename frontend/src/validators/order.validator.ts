@@ -131,6 +131,7 @@ export const updateOrderSchema = z.object({
   active_stage: stageSchema,
   linked_orders: z.array(linkedOrderSchema).optional(),
   media: z.array(orderMediaSchema),
+  created_at: z.string().nullable(),
 });
 
 const payerTypeSchema = z.enum(PAYER_TYPE);
