@@ -33,6 +33,7 @@ const ERROR_MESSAGES = {
   UNKNOWN_NP_ERROR: "Unknown Nova Poshta error",
   FAILED_TO_CREATE_NP_RECIPIENT: "Failed to create recipient",
   NUMBER: "should be a number",
+  NO_FILES: "No files uploaded"
 } as const;
 
 export default ERROR_MESSAGES;

@@ -8,10 +8,10 @@ import { verifyToken } from "../middlewares/auth-middleware";
 const router = Router();
 
 router.post(
-  "/images",
+  "/media",
   verifyToken,
   uploadImages.array("images", 10),
-  UploadController.uploadImages
+  UploadController.uploadMedia
 );
 
 export default router;

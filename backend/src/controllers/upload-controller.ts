@@ -1,8 +1,10 @@
 import { NextFunction, Request, Response } from "express";
-import cloudinary from "../cloudinary/config";
+
+import { UploadService } from "../services/upload-service";
+import ERROR_MESSAGES from "../constants/error-messages";
 
 export const UploadController = {
-  async uploadImages(
+  async uploadMedia(
     req: Request,
     res: Response,
     next: NextFunction
@@ -12,38 +14,13 @@ export const UploadController = {
       const userId = req.user?.id;
 
       if (!files || files.length === 0) {
-        res.status(400).json({ message: "No files uploaded" });
+        res.status(400).json({ message: ERROR_MESSAGES.NO_FILES });
         return;
       }
 
-      const uploadResults = await Promise.all(
-        files.map((file) => {
-          const base64 = `data:${file.mimetype};base64,${file.buffer.toString(
-            "base64"
-          )}`;
-          return cloudinary.uploader
-            .upload(base64, {
-              folder: "uploads",
-            })
-            .then((result) => ({
-              ...result,
-              name: file.originalname,
-            }));
-        })
-      );
+      const uploadResult = await UploadService.upload(files, Number(userId));
 
-      const response = uploadResults.map((result) => ({
-        url: result.secure_url,
-        public_id: result.public_id,
-        format: result.format,
-        width: result.width,
-        height: result.height,
-        bytes: result.bytes,
-        name: result.name,
-        uploaded_by: Number(userId),
-      }));
-
-      res.status(200).json(response);
+      res.status(200).json(uploadResult);
     } catch (error) {
       next(error);
     }
