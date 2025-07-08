@@ -119,7 +119,7 @@ export const getOrdersColumns = (
       id: "customer",
       header: t("order.table_headers.customer"),
       cell: ({ row }) => {
-        const customer = row.original.customer.fullname;
+        const customer = `${row.original.customer.last_name} ${row.original.customer.first_name}`;
         return <span>{customer}</span>;
       },
       size: 100,

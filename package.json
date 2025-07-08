@@ -1,0 +1,12 @@
+{
+  "name": "jewel-wax-crm",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "deploy:test": "./deploy:test.sh"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}

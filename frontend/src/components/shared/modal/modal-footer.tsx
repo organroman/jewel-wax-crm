@@ -20,7 +20,9 @@ const ModalFooter = ({
   const { t } = useTranslation();
   return (
     <DialogFooter
-      className={cn("sm:justify-start w-ful flex flex-row mt-4 lg:mt-8 space-x-2 ")}
+      className={cn(
+        "sm:justify-start w-ful flex flex-row mt-4 lg:mt-8 space-x-2 "
+      )}
     >
       <DialogClose asChild>
         <Button
@@ -37,7 +39,15 @@ const ModalFooter = ({
         form={submit ? formId : undefined}
         className="flex-1 rounded-sm"
         variant={destructive ? "destructive" : "default"}
-        onClick={!submit && action ? () => action(actionId) : undefined}
+        onClick={
+          !submit && action
+            ? () => {
+                if (typeof action === "function") {
+                  (action as (id?: number) => void)(actionId);
+                }
+              }
+            : undefined
+        }
         disabled={isPending}
       >
         {isPending ? (

@@ -417,4 +417,10 @@ export const OrderModel = {
   async deleteOrder(orderId: number): Promise<number> {
     return await db<OrderBase>("orders").where("id", orderId).del();
   },
+  async syncAllOrderPaymentStatuses() {
+    const orders = await db("orders").select("id");
+    for (const order of orders) {
+      await OrderModel.updateOrderPaymentStatus(order.id);
+    }
+  },
 };

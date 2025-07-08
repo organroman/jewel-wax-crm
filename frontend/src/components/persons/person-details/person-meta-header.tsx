@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { PrinterIcon } from "lucide-react";
 
 interface PersonDetailsMetaHeaderProps {
-  createdAt?: Date;
+  createdAt?: string;
   id?: number;
   isActive: boolean;
   handlePrint: () => void;
