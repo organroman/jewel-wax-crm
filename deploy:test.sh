@@ -2,7 +2,7 @@
 
 # === CONFIG ========================
 SERVER=root@test-crm.jewel-wax.com.ua
-APP_DIR=/root/jewel-wax-crm
+APP_DIR=jewel-wax-crm
 TARBALL=deploy-test.tar.gz
 TEMP_DIR=.deploy-build-test
 # ==================================
@@ -20,13 +20,17 @@ NODE_OPTIONS="--max-old-space-size=1024" npx tsc
 cp -r dist package.json package-lock.json ../$TEMP_DIR/backend
 cd ..
 
+
 # === FRONTEND =====================
 echo "🌐 Building frontend..."
 cd frontend
 npm install
-npm run build
-cp -r .next public next.config.js package.json package-lock.json ../$TEMP_DIR/frontend
+rm -rf .next  
+NODE_OPTIONS="--max-old-space-size=1024" npx tsc -p tsconfig.build.json
+NODE_OPTIONS="--max-old-space-size=1024" npm run build
+cp -r .next public next.config.ts package.json package-lock.json ../$TEMP_DIR/frontend
 cd ..
+
 
 # === PACKAGE ======================
 echo "📦 Packaging build..."
@@ -52,12 +56,12 @@ ssh $SERVER << EOF
   echo "🧩 Installing backend deps..."
   cd $APP_DIR/backend
   npm install
-  pm2 restart crm-backend || pm2 start dist/index.js --name crm-backend
+  pm2 restart backend || pm2 start dist/index.js --name backend
 
   echo "🧩 Installing frontend deps..."
   cd $APP_DIR/frontend
   npm install
-  pm2 restart crm-frontend || pm2 start "npm run start" --name crm-frontend
+  pm2 restart frontend || pm2 start "npm run start" --name frontend
 
   echo "💾 Saving PM2 state..."
   pm2 save

@@ -36,3 +36,8 @@ frontend/.next/
 frontend/dist/
 frontend/build/
 frontend/.env.local
+
+# Local deploy artifacts
+.deploy-build-test/
+.deploy-build-prod/
+deploy-*.tar.gz
