@@ -1,9 +1,9 @@
-import { UploadApiResponse } from "cloudinary";
-import cloudinary from "../cloudinary/config";
 import { UploadedFileMeta } from "../types/upload.types";
 import path from "path";
-import { randomUUID } from "crypto";
+
 import { s3 } from "../digital-ocean/spaces-client";
+import { UploadApiResponse } from "cloudinary";
+import cloudinary from "../cloudinary/config";
 
 export const UploadModel = {
   async uploadImages(
@@ -33,7 +33,7 @@ export const UploadModel = {
 
     for (const file of files) {
       const ext = path.extname(file.originalname);
-      const uniqueKey = `${folder}/${randomUUID()}${ext}`;
+      const uniqueKey = `${folder}/${file.originalname}${ext}`;
 
       const upload = await s3
         .upload({

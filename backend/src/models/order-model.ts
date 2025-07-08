@@ -192,11 +192,7 @@ export const OrderModel = {
 
     return await baseQuery;
   },
-  async getOrderImages({
-    orderId,
-  }: {
-    orderId: number;
-  }): Promise<OrderMedia[]> {
+  async getOrderMedia({ orderId }: { orderId: number }): Promise<OrderMedia[]> {
     const media = await db<OrderMedia>("order_media").where(
       "order_id",
       orderId

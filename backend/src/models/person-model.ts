@@ -11,6 +11,7 @@ import {
   Location,
   PersonContact,
   BankDetails,
+  PersonRole,
 } from "../types/person.types";
 import { PaginatedResult } from "../types/shared.types";
 
@@ -480,5 +481,10 @@ export const PersonModel = {
     }));
 
     return printers;
+  },
+
+  async getRoleById(id: number): Promise<{ role: PersonRole }> {
+    const [role] = await db<Person>("persons").where("id", id).select("role");
+    return role;
   },
 };

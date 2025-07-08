@@ -110,7 +110,7 @@ export interface OrderBase {
   milling_cost?: number;
   modeling_cost?: number;
   active_stage_status?: StageStatus | null;
-  media: OrderMedia | null;
+  media: OrderMedia[];
   modeller_first_name?: string;
   modeller_last_name?: string;
   modeller_patronymic?: string;
@@ -134,7 +134,7 @@ export interface UserOrder {
   name: string;
   modeller?: OrderPerson | null;
   miller?: OrderPerson | null;
-  media: OrderMedia | null;
+  media: OrderMedia[];
   modelling_cost?: number;
   milling_cost?: number;
   is_favorite: boolean;
@@ -161,7 +161,7 @@ export interface AdminOrder {
   processing_days: number;
   stages: OrderStage[];
   delivery?: OrderDelivery | null;
-  createdBy: string;
+  created_by: string;
   milling_cost?: number;
   modeling_cost?: number;
   printing_cost?: number;

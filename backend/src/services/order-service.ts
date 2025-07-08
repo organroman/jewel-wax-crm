@@ -8,6 +8,7 @@ import {
 import { PersonRole } from "../types/person.types";
 
 import cloudinary from "../cloudinary/config";
+import { s3 } from "../digital-ocean/spaces-client";
 
 import { OrderModel } from "../models/order-model";
 import { ActivityLogModel } from "../models/activity-log-model";
@@ -117,7 +118,18 @@ export const OrderService = {
     );
     const is_favorite = favorite ? true : false;
 
-    const media = await OrderModel.getOrderImages({ orderId });
+    const media = await OrderModel.getOrderMedia({ orderId });
+
+    const enrichedMedia = await Promise.all(
+      media.map(async (f) => {
+        const uploadedByRole = await PersonModel.getRoleById(f.uploaded_by);
+
+        return {
+          ...f,
+          is_uploaded_by_modeller: uploadedByRole.role === "modeller",
+        };
+      })
+    );
     const customerFull = await PersonModel.findById(order.customer_id);
 
     const customer = customerFull
@@ -229,7 +241,7 @@ export const OrderService = {
     const enrichedOrder = {
       ...rest,
       is_favorite,
-      media,
+      media: enrichedMedia,
       customer: customer,
       modeller,
       miller,
@@ -318,9 +330,29 @@ export const OrderService = {
 
     if (toDelete.length) {
       await OrderModel.deleteMediaByIds(toDelete.map((m) => m.id));
-      await Promise.all(
-        toDelete.map((m) => cloudinary.uploader.destroy(m.public_id))
+      const imagesToDelete = toDelete.filter((file) => file.type === "image");
+      const otherFilesToDelete = toDelete.filter(
+        (file) => file.type === "other"
       );
+
+      if (imagesToDelete.length) {
+        await Promise.all(
+          imagesToDelete.map((m) => cloudinary.uploader.destroy(m.public_id))
+        );
+      }
+
+      if (otherFilesToDelete.length) {
+        await Promise.all(
+          otherFilesToDelete.map((file) =>
+            s3
+              .deleteObject({
+                Bucket: process.env.DO_SPACES_BUCKET!,
+                Key: file.public_id,
+              })
+              .promise()
+          )
+        );
+      }
     }
 
     if (toUpdate.length) {
