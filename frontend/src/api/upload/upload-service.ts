@@ -10,7 +10,7 @@ export const uploadService = {
       formData.append("images", file);
     });
 
-    const res = await fetch(`${API_URL}/upload/images`, {
+    const res = await fetch(`${API_URL}/upload/media`, {
       method: "POST",
       credentials: "include",
       body: formData,

@@ -1,4 +1,6 @@
 import { z } from "zod";
+import { Dispatch, SetStateAction } from "react";
+
 import {
   ORDER_STAGE,
   ORDER_STAGE_STATUS,
@@ -7,6 +9,15 @@ import {
 import { PaginatedResult } from "./shared.types";
 import { updateOrderSchema } from "@/validators/order.validator";
 import { DeliveryType, Phone } from "./person.types";
+
+export interface OrderMediaFilesProps {
+  previews: OrderMedia[];
+  setPreviews: Dispatch<SetStateAction<OrderMedia[]>>;
+  newFiles: File[];
+  setNewFiles: Dispatch<SetStateAction<File[]>>;
+  currentMedia: OrderMedia[];
+  handleUpdateMedia: (media: OrderMedia[]) => void;
+}
 
 export interface OrderPerson {
   id: number;
@@ -39,6 +50,7 @@ export interface OrderMedia {
   updated_at?: string;
   public_id?: string;
   is_main?: boolean;
+  is_uploaded_by_modeller?: boolean;
 }
 
 export type Stage = (typeof ORDER_STAGE)[number];

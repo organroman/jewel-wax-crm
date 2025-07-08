@@ -14,7 +14,7 @@ import { Separator } from "@components/ui/separator";
 import FormArrayLinkedOrders from "@components/form/form-array-linked-orders";
 import FormInput from "@components/form/form-input";
 
-import OrderImages from "../../order-images";
+import OrderMediaComponent from "@/components/orders/media/order-media";
 import OrderStagesFields from "./order-stages-fiedls";
 import DeleteOrder from "./delete-order";
 import OrderOperationsFields from "./order-operations-fields";
@@ -137,7 +137,7 @@ const OrderForm = ({
           const currentMedia = form.getValues("media");
           const newMedia = data.map((media) => ({
             url: media.url,
-            type: "image",
+            type: media.format === "image" ? "image" : "other",
             public_id: media.public_id,
             uploaded_by: +media.uploaded_by,
             is_main: false,
@@ -179,8 +179,8 @@ const OrderForm = ({
         >
           <div className="flex flex-col gap-5">
             <div className="flex flex-col lg:flex-row gap-7">
-              <div className="w-full lg:w-1/3 overflow-x-hidden">
-                <OrderImages
+              <div className="w-full lg:w-1/3 overflow-x-hidden flex flex-col gap-5">
+                <OrderMediaComponent
                   newFiles={newFiles}
                   setNewFiles={setNewFiles}
                   previews={previews}

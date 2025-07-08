@@ -360,7 +360,8 @@
       "recipient_surname": "Прізвище отримувача",
       "recipient_phone": "Телефон отримувача",
       "fop": "ФОП",
-      "another": "Інша"
+      "another": "Інша",
+      "files": "Файли"
     }
   },
 

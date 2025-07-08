@@ -158,7 +158,7 @@ const FormArrayLinkedOrders = <T extends FieldValues>({
                   </div>
                 </div>
                 <div className="flex w-full flex-col gap-0.5">
-                  <InfoLabel>Коментар </InfoLabel>
+                  <InfoLabel>{t("order.labels.comment")} </InfoLabel>
                   <FormInput
                     name={`${base}.comment` as Path<T>}
                     control={control}
