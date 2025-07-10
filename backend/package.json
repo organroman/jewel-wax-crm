@@ -8,7 +8,8 @@
     "migrate": "npx knex --knexfile knexfile.ts migrate:latest",
     "rollback:last": "npx knex migrate:rollback",
     "seed:dev": "ts-node src/seeds/dev-seed.ts",
-    "sync:np-cities": "ts-node src/scripts/syncNpCities.ts"
+    "sync:np-cities": "ts-node src/scripts/syncNpCities.ts",
+    "seed:admin": "NODE_ENV=production node dist/scripts/insertAdmin.js"
   },
   "keywords": [],
   "author": "",

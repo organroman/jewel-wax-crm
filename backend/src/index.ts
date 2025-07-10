@@ -15,6 +15,13 @@ import locationRoutes from "./routes/location-routes";
 import activityLogRoutes from "./routes/activity-logs-routes";
 import uploadRoutes from "./routes/upload-routes";
 import novaPoshtaRoutes from "./routes/novaposhta-routes";
+import * as dotenv from "dotenv";
+import * as path from "path";
+
+const envFile =
+  process.env.NODE_ENV === "production" ? ".env.prod" : ".env.local";
+
+dotenv.config({ path: path.resolve(__dirname, "..", envFile) });
 
 const app = express();
 const PORT = process.env.PORT || 8000;
@@ -23,7 +30,14 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(
   cors({
-    origin: ["http://localhost:8000", "http://localhost:3000"],
+    origin: [
+      "http://localhost:8000",
+      "http://localhost:3000",
+      "http://test-crm.jewel-wax.com.ua",
+      "https://test-crm.jewel-wax.com.ua",
+      "http://crm.jewel-wax.com.ua",
+      "https://crm.jewel-wax.com.ua",
+    ],
     credentials: true,
   })
 );

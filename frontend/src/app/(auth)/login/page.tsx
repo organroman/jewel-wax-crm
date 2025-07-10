@@ -2,14 +2,12 @@
 
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import Image from "next/image";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Cookies from "js-cookie";
 import { Loader } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
-
 import { loginSchema, LoginSchema } from "@/validators/login-schema";
 
 import { UseAuth } from "@/api/auth/use-auth";
@@ -24,10 +22,13 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import LogoIcon from "@/assets/icons/logo.svg";
+import { useTheme } from "next-themes";
 
 const LoginPage = () => {
   const router = useRouter();
   const { t } = useTranslation();
+  const { theme } = useTheme();
 
   const form = useForm<LoginSchema>({
     resolver: zodResolver(loginSchema),
@@ -55,12 +56,9 @@ const LoginPage = () => {
   return (
     <Card className="w-full h-full md:w-[487px] shadow-md">
       <CardHeader className="flex flex-col gap-6 items-center justify-center text-center p-6">
-        <Image
-          src="/img/logo.png"
-          alt="logo"
-          width={80}
-          height={80}
-          className="text-center"
+        <LogoIcon
+          fill={theme === "dark" ? "white" : "black"}
+          className="self-center"
         />
         {/* <CardTitle className="text-3xl font-bold text-stone-900">
           З поверненням в CRM

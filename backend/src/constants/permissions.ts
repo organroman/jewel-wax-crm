@@ -1,4 +1,3 @@
-import { PersonRoleValue } from "./../../../frontend/src/types/person.types";
 import { PermissionMap } from "../types/permission.types";
 
 export const PERMISSIONS: PermissionMap = {

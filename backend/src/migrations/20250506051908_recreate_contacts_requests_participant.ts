@@ -7,29 +7,6 @@ export async function up(knex: Knex): Promise<void> {
   await knex.schema.dropTableIfExists("requests");
   await knex.schema.dropTableIfExists("contacts");
 
-//   await knex.raw(`
-//   DO $$ BEGIN
-//     CREATE TYPE contact_source AS ENUM ('telegram', 'viber', 'facebook', 'instagram', 'whatsapp', 'form', 'manual');
-//   EXCEPTION
-//     WHEN duplicate_object THEN null;
-//   END $$;
-// `);
-
-//   await knex.raw(`
-//   DO $$ BEGIN
-//     CREATE TYPE request_source AS ENUM ('telegram', 'viber', 'facebook', 'instagram', 'whatsapp', 'form', 'manual');
-//   EXCEPTION
-//     WHEN duplicate_object THEN null;
-//   END $$;
-// `);
-//   await knex.raw(`
-//     DO $$ BEGIN
-//       CREATE TYPE request_status AS ENUM ('new', 'in_progress', 'done', 'canceled');
-//     EXCEPTION
-//       WHEN duplicate_object THEN null;
-//     END $$;
-//   `);
-
   // Contacts table
   await knex.schema.createTable("contacts", (table) => {
     table.increments("id").primary();

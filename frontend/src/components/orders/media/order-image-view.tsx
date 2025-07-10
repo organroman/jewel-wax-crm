@@ -9,7 +9,7 @@ const OrderImageView = ({ previews, currentIdx }: OrderImageViewProps) => {
   return (
     <div className="w-full flex-1 overflow-hidden flex items-center justify-center">
       <img
-        src={previews?.[currentIdx]?.url ?? previews?.[0].url}
+        src={previews?.[currentIdx]?.url ?? previews?.[0]?.url}
         alt=""
         className="h-full aspect-auto rounded-t-md self-center"
       />

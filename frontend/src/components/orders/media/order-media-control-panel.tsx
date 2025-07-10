@@ -40,7 +40,7 @@ const OrderMediaControlPanel = ({
         </Label>
       </div>
       <a
-        href={previews?.[currentIdx]?.url ?? previews?.[0].url}
+        href={previews?.[currentIdx]?.url ?? previews?.[0]?.url}
         target="_blank"
       >
         <ExternalLinkIcon className="size-4 text-action-plus" />

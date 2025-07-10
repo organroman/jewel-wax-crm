@@ -19,7 +19,7 @@ const OrderFilesPreview = ({
 }: OrderFilesPreviewProps) => {
   return (
     <div className="mt-5 flex flex-row w-full gap-2.5 overflow-x-scroll">
-      {previews.map((file, index) => (
+      {previews?.map((file, index) => (
         <div
           key={file.url}
           className={cn(
@@ -27,7 +27,7 @@ const OrderFilesPreview = ({
           )}
           onClick={() => setCurrentIdx(index)}
         >
-          {file.is_uploaded_by_modeller ? (
+          {file?.is_uploaded_by_modeller ? (
             <FileCheckIcon
               className={cn(
                 "size-7 stroke-1 text-brand-default",
