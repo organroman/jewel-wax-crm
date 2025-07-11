@@ -12,6 +12,7 @@ import {
   DeliveryDeclaration,
 } from "@/types/novaposhta.types";
 import dayjs from "dayjs";
+import { defineDeliveryPayload } from "@/lib/utils";
 
 export const orderService = {
   getAll: async (query: string) => {
@@ -34,29 +35,36 @@ export const orderService = {
   getById: (id: number) => {
     return apiService.get<Order>(`orders/${id}`);
   },
+  create: (data: UpdateOrderSchema) => {
+    const { stages, linked_orders, delivery, ...order } = data;
+
+    const deliveryPayload = defineDeliveryPayload(delivery);
+    const updatedStages = stages.map((s) => ({
+      ...s,
+      status: s.status?.value,
+    }));
+
+    const linked = linked_orders?.map(
+      ({ is_common_delivery, id, order_id, linked_order_id, comment }) => ({
+        id,
+        order_id,
+        linked_order_id,
+        comment,
+        is_common_delivery,
+      })
+    );
+    const payload = {
+      ...order,
+      stages: updatedStages,
+      delivery: deliveryPayload,
+      linked_orders: linked,
+    };
+    return apiService.post<Order>(`orders`, payload);
+  },
   update: (data: UpdateOrderSchema) => {
     const { stages, linked_orders, delivery, ...order } = data;
 
-    let deliveryPayload;
-
-    if (delivery?.delivery_address_id)
-      deliveryPayload = {
-        ...delivery,
-        declaration_number:
-          delivery.declaration_number !== ""
-            ? delivery.declaration_number
-            : null,
-      };
-    else if (delivery?.is_third_party) {
-      deliveryPayload = {
-        ...delivery,
-        delivery_address_id: delivery.delivery_address_id ?? null,
-        declaration_number:
-          delivery.declaration_number !== ""
-            ? delivery.declaration_number
-            : null,
-      };
-    } else deliveryPayload = null;
+    let deliveryPayload = defineDeliveryPayload(delivery);
 
     const updatedStages = stages.map((s) => ({
       ...s,

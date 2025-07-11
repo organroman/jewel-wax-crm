@@ -1,6 +1,8 @@
 import {
   CreatePersonSchema,
+  DeliveryAddress,
   Person,
+  Phone,
   UpdatePersonSchema,
 } from "@/types/person.types";
 import apiService from "../api-service";
@@ -25,19 +27,21 @@ export const personService = {
 
   delete: (id: number) => apiService.delete(`persons/${id}`),
 
-  getModellers: async () => {
+  getOrderPerformers: async (query: string) => {
     return await apiService.get<{ id: number; fullname: string }[]>(
-      "persons/modellers"
+      `persons/performers?${query}`
     );
   },
-  getMillers: async () => {
-    return await apiService.get<{ id: number; fullname: string }[]>(
-      "persons/millers"
-    );
-  },
-  getPrinters: async () => {
-    return await apiService.get<{ id: number; fullname: string }[]>(
-      "persons/printers"
-    );
+  getCustomers: async (query: string) => {
+    return await apiService.get<
+      PaginatedResult<{
+        id: number;
+        first_name: string;
+        last_name: string;
+        patronymic?: string;
+        phones: Phone[];
+        delivery_addresses: DeliveryAddress[];
+      }>
+    >(`persons/customers?${query}`);
   },
 };

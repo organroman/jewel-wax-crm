@@ -99,22 +99,28 @@ export const usePerson = {
     return { deletePersonMutation: mutation };
   },
 
-  getModellers: () => {
+  getModellers: (query: string) => {
     return useQuery({
       queryKey: ["modellers"],
-      queryFn: () => personService.getModellers(),
+      queryFn: () => personService.getOrderPerformers(query),
     });
   },
-  getMillers: () => {
+  getMillers: (query: string) => {
     return useQuery({
       queryKey: ["millers"],
-      queryFn: () => personService.getMillers(),
+      queryFn: () => personService.getOrderPerformers(query),
     });
   },
-  getPrinters: () => {
+  getPrinters: (query: string) => {
     return useQuery({
       queryKey: ["printers"],
-      queryFn: () => personService.getPrinters(),
+      queryFn: () => personService.getOrderPerformers(query),
+    });
+  },
+  getCustomers: (query: string) => {
+    return useQuery({
+      queryKey: ["customers", query],
+      queryFn: () => personService.getCustomers(query),
     });
   },
 };

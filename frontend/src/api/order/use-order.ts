@@ -104,6 +104,30 @@ export const useOrder = {
 
     return { updateMutation: mutation };
   },
+  create: ({
+    queryClient,
+    handleOnSuccess,
+    t,
+  }: {
+    queryClient: QueryClient;
+    handleOnSuccess?: (data: Order) => void;
+    t: (key: string) => string;
+  }) => {
+    const mutation = useMutation<Order, Error, UpdateOrderSchema>({
+      mutationFn: async (data) => orderService.create(data),
+      onSuccess: (data) => {
+        toast.success(t("messages.success.order_created"));
+        queryClient.invalidateQueries({
+          queryKey: ["orders"],
+        });
+        handleOnSuccess && handleOnSuccess(data);
+      },
+      onError: (error) => {
+        toast.error(error.message);
+      },
+    });
+    return { createMutation: mutation };
+  },
   delete: ({
     queryClient,
     handleSuccess,
@@ -156,7 +180,7 @@ export const useOrder = {
     queryClient: QueryClient;
     handleSuccess?: () => void;
     t: (key: string) => string;
-    orderId?: number;
+    orderId?: number | null;
   }) => {
     const mutation = useMutation({
       mutationFn: async (data: CreateDeclarationSchema) =>
