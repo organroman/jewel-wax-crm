@@ -458,6 +458,7 @@ export const OrderService = {
     const orders = await OrderModel.getOrdersNumbers({ search });
     return orders;
   },
+
   async delete(orderId: number, authorId?: number): Promise<number> {
     const result = await OrderModel.deleteOrder(orderId);
 

@@ -1,4 +1,5 @@
 import { SortOrder } from "../types/shared.types";
+import { PersonRole } from "../types/person.types";
 
 import { Request, Response, NextFunction } from "express";
 
@@ -105,29 +106,28 @@ export const PersonController = {
     }
   },
 
-  async getModellers(req: Request, res: Response, next: NextFunction) {
+  async getOrderPerformersByRole(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
     try {
-      const modellers = await PersonService.getModellers();
+      const { role } = req.query;
+      const performers = await PersonService.getOrderPerformersByRole(
+        role as PersonRole
+      );
 
-      res.status(200).json(modellers);
+      res.status(200).json(performers);
     } catch (error) {
       next(error);
     }
   },
-  async getMillers(req: Request, res: Response, next: NextFunction) {
+  async getCustomers(req: Request, res: Response, next: NextFunction) {
     try {
-      const millers = await PersonService.getMillers();
+      const { search } = req.query;
 
-      res.status(200).json(millers);
-    } catch (error) {
-      next(error);
-    }
-  },
-  async getPrinters(req: Request, res: Response, next: NextFunction) {
-    try {
-      const printers = await PersonService.getPrinters();
-
-      res.status(200).json(printers);
+      const customers = await PersonService.getCustomers(search as string);
+      res.status(200).json(customers);
     } catch (error) {
       next(error);
     }

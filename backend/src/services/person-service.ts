@@ -1,8 +1,11 @@
 import {
   CreatePersonInput,
+  DeliveryAddress,
   GetAllPersonsOptions,
+  PersonRole,
   SafePerson,
   UpdatePersonInput,
+  Phone,
 } from "../types/person.types";
 import { Location } from "../types/person.types";
 import { PaginatedResult } from "../types/shared.types";
@@ -17,6 +20,8 @@ import { NovaPoshtaModel } from "../models/novaposhta-model";
 import AppError from "../utils/AppError";
 import ERROR_MESSAGES from "../constants/error-messages";
 import { LOG_ACTIONS, LOG_TARGETS } from "../constants/activity-log";
+import { CustomerDeliveryAddress, OrderDelivery } from "../types/order.types";
+import { getDoorAddress, getFullName } from "../utils/helpers";
 
 export const PersonService = {
   async getAll({
@@ -42,6 +47,40 @@ export const PersonService = {
       throw new AppError(ERROR_MESSAGES.INVALID_DATA, 400);
     }
     return await PersonModel.findById(userId);
+  },
+  async getCustomers(search?: string): Promise<
+    PaginatedResult<{
+      id?: number;
+      first_name?: string;
+      last_name?: string;
+      patronymic?: string;
+      phones?: Phone[];
+      delivery_addresses?: Partial<DeliveryAddress>[];
+    }>
+  > {
+    const customers = await PersonModel.getCustomers(search);
+
+    const { data, page, total, limit } = customers;
+
+    const enriched = data.map((customer) => ({
+      id: customer.id,
+      first_name: customer.first_name,
+      last_name: customer.last_name,
+      patronymic: customer.patronymic,
+      phones: customer.phones,
+      delivery_addresses: customer.delivery_addresses?.map((a) => {
+        const { id, ...rest } = a;
+        return {
+          ...rest,
+          delivery_address_id: id,
+          address_line:
+            a.type === "door"
+              ? getDoorAddress(a.street, a.house_number, a.flat_number)
+              : a.np_warehouse || "",
+        };
+      }),
+    }));
+    return { page, total, limit, data: enriched };
   },
 
   async create(
@@ -318,14 +357,10 @@ export const PersonService = {
     return result;
   },
 
-  async getModellers(): Promise<{ id: number; fullname: string }[]> {
-    return await PersonModel.getModellers();
-  },
-  async getMillers(): Promise<{ id: number; fullname: string }[]> {
-    return await PersonModel.getMillers();
-  },
-  async getPrinters(): Promise<{ id: number; fullname: string }[]> {
-    return await PersonModel.getPrinters();
+  async getOrderPerformersByRole(
+    role: PersonRole
+  ): Promise<{ id: number; fullname: string }[]> {
+    return await PersonModel.getOrderPerformersByRole(role);
   },
   async updateCitiesWithRegion(locations: Location[]) {
     const existingCities = await Promise.all(

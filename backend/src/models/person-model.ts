@@ -124,6 +124,46 @@ export const PersonModel = {
     };
   },
 
+  async getCustomers(
+    search?: string
+  ): Promise<PaginatedResult<Partial<SafePersonWithRole>>> {
+    const baseQuery = db<Person>("persons").where("role", "client").select("*");
+
+    if (search) {
+      baseQuery.where((qb) => {
+        qb.whereILike("first_name", `%${search}%`).orWhereILike(
+          "last_name",
+          `%${search}%`
+        );
+      });
+    }
+
+    const paginated = await paginateQuery<Person>(baseQuery, {
+      page: 1,
+      limit: 20,
+    });
+
+    const enriched = await Promise.all(
+      paginated.data.map(async (person) => {
+        const delivery_addresses = await db("delivery_addresses").where(
+          "person_id",
+          person.id
+        );
+        const phones = await db("phones").where("person_id", person.id);
+
+        return {
+          ...(stripPassword(person) as SafePerson),
+          delivery_addresses,
+          phones,
+        };
+      })
+    );
+    return {
+      ...paginated,
+      data: enriched,
+    };
+  },
+
   async findById(personId: number): Promise<SafePersonWithRole | null> {
     const [person] = await db<Person>("persons")
       .where("id", personId)
@@ -444,35 +484,11 @@ export const PersonModel = {
     return db("phones").whereIn("number", phoneNumbers).first();
   },
 
-  async getModellers(): Promise<{ id: number; fullname: string }[]> {
-    const modellersFull = await db<Person>("persons")
-      .where("role", "modeller")
-      .select("id", "first_name", "last_name", "patronymic");
-
-    const modellers = modellersFull.map((item) => ({
-      id: item.id,
-      fullname: getFullName(item.first_name, item.last_name, item.patronymic),
-    }));
-
-    return modellers;
-  },
-
-  async getMillers(): Promise<{ id: number; fullname: string }[]> {
-    const millersFull = await db<Person>("persons")
-      .where("role", "miller")
-      .select("id", "first_name", "last_name", "patronymic");
-
-    const millers = millersFull.map((item) => ({
-      id: item.id,
-      fullname: getFullName(item.first_name, item.last_name, item.patronymic),
-    }));
-
-    return millers;
-  },
-
-  async getPrinters(): Promise<{ id: number; fullname: string }[]> {
+  async getOrderPerformersByRole(
+    role: PersonRole
+  ): Promise<{ id: number; fullname: string }[]> {
     const printersFull = await db<Person>("persons")
-      .where("role", "print")
+      .where("role", role)
       .select("id", "first_name", "last_name", "patronymic");
 
     const printers = printersFull.map((item) => ({
