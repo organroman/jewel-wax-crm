@@ -132,6 +132,25 @@ export const OrderController = {
       next(error);
     }
   },
+  async create(req: Request, res: Response, next: NextFunction) {
+    try {
+      const currentUserId = req.user?.id;
+      const currentUserRole = req.user?.role;
+
+      const newOrder = await OrderService.create({
+        role: currentUserRole as PersonRole,
+        userId: Number(currentUserId),
+        data: req.body,
+      });
+
+      if (!newOrder) {
+        throw new AppError(ERROR_MESSAGES.ITEM_NOT_FOUND, 404);
+      }
+      res.status(200).json(newOrder);
+    } catch (error) {
+      next(error);
+    }
+  },
   async getOrderNumbers(req: Request, res: Response, next: NextFunction) {
     try {
       const { search } = req.query;

@@ -1,5 +1,6 @@
 import {
   AdminOrder,
+  CreateOrderInput,
   GetAllOrdersOptions,
   PaginatedOrdersResult,
   UpdateOrderInput,
@@ -130,7 +131,8 @@ export const OrderService = {
         };
       })
     );
-    const customerFull = await PersonModel.findById(order.customer_id);
+
+    const customerFull = await PersonModel.findById(order?.customer_id);
 
     const customer = customerFull
       ? {
@@ -250,16 +252,110 @@ export const OrderService = {
       active_stage_status: activeStageStatus || null,
       processing_days:
         order.processing_days ??
-        Math.ceil(
-          (Date.now() - new Date(order.created_at).getTime()) /
-            (1000 * 60 * 60 * 24)
-        ),
+        (order?.created_at &&
+          Math.ceil(
+            (Date.now() - new Date(order?.created_at).getTime()) /
+              (1000 * 60 * 60 * 24)
+          )),
       delivery: enrichedDelivery,
       linked_orders,
       createdBy,
     };
 
     return enrichedOrder;
+  },
+  async create({
+    userId,
+    role,
+    data,
+  }: {
+    userId: number;
+    role: PersonRole;
+    data: CreateOrderInput;
+  }) {
+    const {
+      customer,
+      delivery,
+      miller,
+      stages,
+      linked_orders,
+      media,
+      modeller,
+      printer,
+      ...baseOrder
+    } = data;
+
+    const newOrder = await OrderModel.createBaseOrder({
+      ...baseOrder,
+      customer_id: customer.id,
+      created_by: userId,
+      miller_id: miller?.id ?? null,
+      modeller_id: modeller?.id ?? null,
+      printer_id: printer?.id ?? null,
+      processing_days: null,
+      is_important: false,
+      created_at: new Date(),
+    });
+
+    if (!newOrder) {
+      return null;
+    }
+
+    if (linked_orders?.length) {
+      await OrderModel.createLinkedOrders(newOrder.id, linked_orders);
+    }
+    if (media?.length) {
+      await OrderModel.insertMedia(newOrder.id, media);
+    }
+
+    if (delivery) {
+      await OrderModel.insertDelivery({
+        cost: delivery.cost,
+        declaration_number: delivery.declaration_number,
+        delivery_address_id: delivery.delivery_address_id,
+        order_id: newOrder.id,
+        is_third_party: delivery.is_third_party,
+        delivery_service: "nova_poshta",
+      });
+    }
+    if (stages?.length) {
+      await Promise.all(
+        stages.map(async (s) => {
+          const isStageStarted =
+            !s.started_at &&
+            s.status &&
+            [
+              "clarification",
+              "in_process",
+              "negotiation",
+              "pending",
+              "processed",
+            ].includes(s.status);
+
+          const isStageCompleted = s.status === "done" && !s.completed_at;
+
+          await OrderModel.insertStage({
+            stage: s.stage,
+            status: s.status,
+            order_id: newOrder.id,
+            started_at: s.started_at ?? (isStageStarted ? new Date() : null),
+            completed_at:
+              s.completed_at ?? (isStageCompleted ? new Date() : null),
+          });
+        })
+      );
+    }
+    await ActivityLogModel.logAction({
+      actor_id: userId || null,
+      action: LOG_ACTIONS.CREATE_ORDER,
+      target_type: LOG_TARGETS.ORDER,
+      target_id: newOrder.id,
+      details: {
+        data,
+      },
+    });
+
+    return await OrderService.getById({ orderId: newOrder.id, userId, role });
   },
 
   async update({

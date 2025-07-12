@@ -23,6 +23,7 @@ export type CustomerDeliveryAddress = {
 };
 
 export interface OrderCustomer {
+  id: number;
   first_name: string;
   last_name: string;
   patronymic?: string;
@@ -110,9 +111,10 @@ export interface OrderBase {
   milling_cost?: number;
   modeling_cost?: number;
   active_stage_status?: StageStatus | null;
-  media: OrderMedia[];
+  media?: OrderMedia[];
   modeller_first_name?: string;
   modeller_last_name?: string;
+  notes?: string;
   modeller_patronymic?: string;
   miller_first_name?: string;
   miller_last_name?: string;
@@ -147,21 +149,21 @@ export interface AdminOrder {
   updated_at: Date;
   number: number;
   name: string;
-  customer: OrderCustomer | null;
+  customer: OrderCustomer | null | { id: number; fullname: string };
   modeller: OrderPerson | null;
   miller: OrderPerson | null;
   printer: OrderPerson | null;
-  media: OrderMedia[];
+  media?: OrderMedia[];
   amount: number;
   payment_status?: PaymentStatus;
   active_stage: Stage;
-  active_stage_status: StageStatus | null;
+  active_stage_status?: StageStatus | null;
   is_favorite: boolean;
   is_important: boolean;
   processing_days: number;
   stages: OrderStage[];
   delivery?: OrderDelivery | null;
-  created_by: string;
+  created_by?: number;
   milling_cost?: number;
   modeling_cost?: number;
   printing_cost?: number;
@@ -176,7 +178,7 @@ export interface LinkedOrder {
 }
 
 export interface CreateOrderInput {
-  customer: OrderPerson;
+  customer: OrderCustomer;
   name: string;
   description?: string;
   notes?: string;

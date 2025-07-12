@@ -281,6 +281,16 @@ export const OrderModel = {
 
     await db("orders").update({ payment_status: status }).where("id", orderId);
   },
+
+  async createBaseOrder(fields: Partial<OrderBase>) {
+    console.log("🚀 ~ createBaseOrder ~ fields:", fields)
+    
+    const [newOrder] = await db<OrderBase>("orders")
+      .insert(fields)
+      .returning<OrderBase[]>("*");
+
+    return newOrder;
+  },
   async updateBaseOrder(orderId: number, fields: Partial<OrderBase>) {
     return await db<OrderBase>("orders")
       .where("id", orderId)
@@ -293,6 +303,15 @@ export const OrderModel = {
       .where("order_id", orderId)
       .leftJoin("orders", "orders.id", "order_links.linked_order_id")
       .select("order_links.*", "orders.number as linked_order_number");
+  },
+
+  async createLinkedOrders(orderId: number, links: LinkedOrder[]) {
+    await db<LinkedOrder>("order_links").insert(
+      links.map((lo) => ({
+        ...lo,
+        order_id: orderId,
+      }))
+    );
   },
 
   async replaceLinkedOrders(orderId: number, links: LinkedOrder[]) {

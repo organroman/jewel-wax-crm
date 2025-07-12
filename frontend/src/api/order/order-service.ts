@@ -36,7 +36,7 @@ export const orderService = {
     return apiService.get<Order>(`orders/${id}`);
   },
   create: (data: UpdateOrderSchema) => {
-    const { stages, linked_orders, delivery, ...order } = data;
+    const { stages, linked_orders, delivery, id, number, ...order } = data;
 
     const deliveryPayload = defineDeliveryPayload(delivery);
     const updatedStages = stages.map((s) => ({

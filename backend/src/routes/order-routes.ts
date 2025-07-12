@@ -43,6 +43,14 @@ router.patch(
   OrderController.toggleImportant
 );
 
+router.post(
+  "/",
+  verifyToken,
+  checkPermission("ORDERS", "CREATE"),
+  // validateBody(create),
+  OrderController.create
+);
+
 router.patch(
   "/:id",
   verifyToken,
@@ -51,6 +59,11 @@ router.patch(
   OrderController.update
 );
 
-router.delete("/:id", verifyToken, checkPermission("ORDERS", "DELETE"), OrderController.delete)
+router.delete(
+  "/:id",
+  verifyToken,
+  checkPermission("ORDERS", "DELETE"),
+  OrderController.delete
+);
 
 export default router;

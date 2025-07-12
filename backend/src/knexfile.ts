@@ -1,12 +1,11 @@
 import * as dotenv from "dotenv";
 import * as path from "path";
+import type { Knex } from "knex";
 
 const envFile =
   process.env.NODE_ENV === "production" ? ".env.prod" : ".env.local";
 
 dotenv.config({ path: path.resolve(__dirname, "..", envFile) });
-
-import type { Knex } from "knex";
 
 const config: { [key: string]: Knex.Config } = {
   development: {
@@ -18,7 +17,7 @@ const config: { [key: string]: Knex.Config } = {
       database: process.env.DB_NAME,
     },
     migrations: {
-      directory: "./src/migrations",
+      directory: "./migrations",
       tableName: "knex_migrations",
     },
     seeds: {
