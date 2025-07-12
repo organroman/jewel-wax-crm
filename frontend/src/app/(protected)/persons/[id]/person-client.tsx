@@ -8,7 +8,7 @@ import { useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 
-import { usePerson } from "@/api/persons/use-person";
+import { usePerson } from "@/api/person/use-person";
 import { useLocation } from "@/api/locations/use-location";
 
 import { useDialog } from "@/hooks/use-dialog";

@@ -4,7 +4,7 @@ import { PersonRoleValue } from "@/types/person.types";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useTranslation } from "react-i18next";
 
-import { useOrder } from "@/api/orders/use-order";
+import { useOrder } from "@/api/order/use-order";
 import { useEnumStore } from "@/stores/use-enums-store";
 
 import { useQueryParams } from "@/hooks/use-query-params";

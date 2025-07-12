@@ -69,7 +69,7 @@ const OrderForm = ({
   const form = useForm<z.infer<typeof updateOrderSchema>>({
     resolver: zodResolver(updateOrderSchema) as any,
     defaultValues: {
-      id: order?.id,
+      id: order?.id || null,
       number: order?.number || "",
       name: order?.name || "",
       description: order?.description || "",
@@ -210,6 +210,7 @@ const OrderForm = ({
                     </div>
                   </div>
                 </div>
+
                 <FormInput
                   name="description"
                   label={t("order.labels.desc")}

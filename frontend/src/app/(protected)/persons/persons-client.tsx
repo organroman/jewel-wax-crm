@@ -5,7 +5,7 @@ import debounce from "lodash.debounce";
 
 import { useEnumStore } from "@/stores/use-enums-store";
 
-import { usePerson } from "@/api/persons/use-person";
+import { usePerson } from "@/api/person/use-person";
 import { useLocation } from "@/api/locations/use-location";
 import { useQueryParams } from "@/hooks/use-query-params";
 

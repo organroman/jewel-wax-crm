@@ -51,6 +51,7 @@ const FormAsyncCombobox = <T extends FieldValues, O>({
   onChange,
   labelPosition = "left",
   popoverContentClassName,
+  displayFn,
 }: FormAsyncComboboxProps<T, O>) => {
   const [open, setOpen] = useState(false);
   const { t } = useTranslation();
@@ -69,7 +70,9 @@ const FormAsyncCombobox = <T extends FieldValues, O>({
             return placeholder || t("placeholders.choose");
 
           if (saveFullObject) {
-            return field.value[displayKey ?? "label"];
+            if (displayFn) return displayFn(field.value);
+            if (displayKey) return field.value?.[displayKey];
+            return "";
           }
           if (saveOnlyValue) {
             const foundOption = options.find(

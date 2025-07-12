@@ -2,7 +2,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { StarIcon } from "lucide-react";
 
-import { useOrder } from "@/api/orders/use-order";
+import { useOrder } from "@/api/order/use-order";
 
 import { Button } from "../ui/button";
 import { cn } from "@/lib/utils";

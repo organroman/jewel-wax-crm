@@ -2,7 +2,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useTranslation } from "react-i18next";
 
-import { useOrder } from "@/api/orders/use-order";
+import { useOrder } from "@/api/order/use-order";
 
 import { Button } from "@/components/ui/button";
 import { Dialog } from "@/components/ui/dialog";

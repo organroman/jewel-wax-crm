@@ -235,7 +235,9 @@
     },
     "placeholders": {
       "search": "Пошук замовлення",
-      "tax_id": "ЄДРПОУ"
+      "tax_id": "ЄДРПОУ",
+      "name": "Введіть назву замовлення",
+      "desc": "Введіть опис замовлення"
     },
     "sorting": {
       "created_at": "$t(dictionary.created)",
@@ -361,7 +363,8 @@
       "recipient_phone": "Телефон отримувача",
       "fop": "ФОП",
       "another": "Інша",
-      "files": "Файли"
+      "files": "Файли",
+      "customer": "$t(dictionary.customer)"
     }
   },
 

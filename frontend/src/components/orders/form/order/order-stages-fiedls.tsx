@@ -57,7 +57,10 @@ const OrderStagesFields = ({ form }: OrderStagesFieldsProps) => {
       <div className="border-l-4 border-ui-border pl-2 flex flex-col gap-5">
         {stages.map((field, index) => {
           return (
-            <div key={field.stage} className="flex items-center gap-4 lg:gap-7 relative">
+            <div
+              key={field.stage}
+              className="flex items-center gap-4 lg:gap-7 relative"
+            >
               <div
                 className={cn(
                   "flex items-center justify-center w-[110px] lg:w-[120px] h-[32px] text-xs rounded-xs",

@@ -1,7 +1,7 @@
 import { InfoIcon, Loader } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
-import { usePerson } from "@/api/persons/use-person";
+import { usePerson } from "@/api/person/use-person";
 
 import { useDialog } from "@/hooks/use-dialog";
 

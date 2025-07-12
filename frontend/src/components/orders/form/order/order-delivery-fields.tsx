@@ -20,8 +20,11 @@ interface OrderDeliveryFields {
 const OrderDeliveryFields = ({ order, form, userId }: OrderDeliveryFields) => {
   const { t } = useTranslation();
 
-  const deliveryOptions = order?.customer.delivery_addresses
-    ? order?.customer.delivery_addresses?.map((a) => ({
+  const customer = order ? order.customer : form.watch("customer");
+  const customerDeliveries = customer?.delivery_addresses;
+
+  const deliveryOptions = customerDeliveries
+    ? customerDeliveries?.map((a) => ({
         label: a.address_line,
         value: a.delivery_address_id,
         data: {

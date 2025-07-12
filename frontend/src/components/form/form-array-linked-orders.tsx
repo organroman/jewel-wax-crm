@@ -25,7 +25,7 @@ import AsyncCombobox from "@components/shared/async-combobox";
 import FormInput from "./form-input";
 
 import { useDialog } from "@/hooks/use-dialog";
-import { useOrder } from "@/api/orders/use-order";
+import { useOrder } from "@/api/order/use-order";
 
 type Option<T> = {
   label: string;

@@ -160,6 +160,7 @@ export interface FormAsyncComboboxProps<T extends FieldValues, O>
   onChange?: (option: Option<O>) => void;
   labelPosition?: "left" | "top";
   popoverContentClassName?: string;
+  displayFn?: (item: O) => string;
 }
 
 export interface FormArrayComboboxProps<T extends FieldValues, O> {

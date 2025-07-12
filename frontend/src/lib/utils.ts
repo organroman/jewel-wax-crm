@@ -11,6 +11,7 @@ import { toast } from "sonner";
 import AppError from "./app-error";
 import { MESSENGERS_SOURCE_ICONS } from "@/constants/persons.constants";
 import ERROR_MESSAGES from "@/constants/error-messages";
+import { OrderDelivery } from "@/types/order.types";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -137,4 +138,25 @@ export const getRoleAndUserFromToken = (token: PersonRoleValue) => {
 
 export const hasPermission = (permission: string[], role: string) => {
   return permission.includes(role);
+};
+
+export const defineDeliveryPayload = (delivery?: OrderDelivery | null) => {
+  let deliveryPayload;
+
+  if (delivery?.delivery_address_id) {
+    deliveryPayload = {
+      ...delivery,
+      declaration_number:
+        delivery.declaration_number !== "" ? delivery.declaration_number : null,
+    };
+  } else if (delivery?.is_third_party) {
+    deliveryPayload = {
+      ...delivery,
+      delivery_address_id: delivery.delivery_address_id ?? null,
+      declaration_number:
+        delivery.declaration_number !== "" ? delivery.declaration_number : null,
+    };
+  } else deliveryPayload = null;
+
+  return deliveryPayload;
 };

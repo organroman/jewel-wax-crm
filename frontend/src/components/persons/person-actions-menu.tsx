@@ -2,7 +2,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { GalleryVerticalEndIcon, Loader } from "lucide-react";
 import Link from "next/link";
 
-import { usePerson } from "@/api/persons/use-person";
+import { usePerson } from "@/api/person/use-person";
 
 import { useDialog } from "@/hooks/use-dialog";
 

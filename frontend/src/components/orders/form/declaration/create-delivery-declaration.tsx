@@ -10,8 +10,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { useDialog } from "@/hooks/use-dialog";
 
-import { usePerson } from "@/api/persons/use-person";
-import { useOrder } from "@/api/orders/use-order";
+import { usePerson } from "@/api/person/use-person";
+import { useOrder } from "@/api/order/use-order";
 
 import { Button } from "@/components/ui/button";
 import { Dialog } from "@/components/ui/dialog";
@@ -37,7 +37,7 @@ interface CreateDeliveryDeclaration {
   orderName: string;
   delivery?: OrderDelivery | null;
   customer: OrderCustomer | null;
-  orderId?: number;
+  orderId?: number | null;
   userId: number;
   isThirdParty: boolean;
 }
@@ -236,6 +236,7 @@ const CreateDeliveryDeclaration = ({
         size="sm"
         className="min-w-[100px] lg:min-w-fit rounded-tl-none rounded-bl-none text-xs"
         onClick={() => setDialogOpen(true)}
+        disabled={!orderId}
       >
         {t("buttons.create")}
       </Button>

@@ -15,7 +15,7 @@ import { Loader } from "lucide-react";
 import { SetStateAction, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import { useContact } from "@/api/contacts/use-contact";
+import { useContact } from "@/api/contact/use-contact";
 
 import {
   createPersonSchema,

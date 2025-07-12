@@ -97,10 +97,11 @@ const AsyncCombobox = <T,>({
         </RadixPopover.Trigger>
         <RadixPopover.Content
           className={cn(
-            "w-full p-0 max-h-64 overflow-y-auto fixed z-[9999] overflow-auto border border-ui-border rounded-md",
+            "w-full p-0 max-h-64 overflow-y-auto fixed z-[9999] overflow-auto ",
             popoverContentClassName
           )}
           align="start"
+
         >
           <Command
             filter={(value, search) => {
@@ -125,7 +126,7 @@ const AsyncCombobox = <T,>({
               <CommandEmpty>{t("messages.info.no_results")}</CommandEmpty>
             )}
 
-            <CommandGroup className="z-100 overflow-y-scroll">
+            <CommandGroup className="z-100 overflow-y-scroll ">
               {options.map((option) => {
                 const label = displayKey
                   ? (option.data?.[displayKey] as string)

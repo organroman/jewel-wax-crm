@@ -112,7 +112,7 @@ const orderMediaSchema = z.object({
 });
 
 export const updateOrderSchema = z.object({
-  id: z.number().optional(),
+  id: z.number().optional().nullable(),
   number: numberField,
   customer: orderCustomerSchema.nullable(),
   name: z.string(),
@@ -131,7 +131,7 @@ export const updateOrderSchema = z.object({
   active_stage: stageSchema,
   linked_orders: z.array(linkedOrderSchema).optional(),
   media: z.array(orderMediaSchema),
-  created_at: z.string().nullable(),
+  created_at: z.string().nullable().optional(),
 });
 
 const payerTypeSchema = z.enum(PAYER_TYPE);

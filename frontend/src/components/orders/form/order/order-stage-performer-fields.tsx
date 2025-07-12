@@ -56,7 +56,6 @@ const OrderStagePerformerFields = ({
             saveFullObject={true}
             className="min-w-full max-w-full w-full"
             isFullWidth
-            
           />
           <Button
             variant="outline"

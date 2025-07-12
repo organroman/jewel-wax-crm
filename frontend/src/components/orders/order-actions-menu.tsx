@@ -5,7 +5,7 @@ import Link from "next/link";
 
 import { useDialog } from "@/hooks/use-dialog";
 
-import { useOrder } from "@/api/orders/use-order";
+import { useOrder } from "@/api/order/use-order";
 
 import ActionsMenu from "../shared/actions-menu";
 import Modal from "../shared/modal/modal";

@@ -8,7 +8,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { useState } from "react";
 
-import { useOrder } from "@/api/orders/use-order";
+import { useOrder } from "@/api/order/use-order";
 import { useUpload } from "@/api/upload/use-upload";
 
 import { Button } from "@/components/ui/button";
@@ -89,16 +89,8 @@ const OrderClient = ({ id, userId }: { id: number; userId: number }) => {
       <Separator className="bg-ui-border h-0.5 data-[orientation=horizontal]:h-0.5" />
       <div className="mt-4 h-full flex flex-1 flex-col overflow-hidden">
         <OrderCardHeader
-          orderId={order.id}
-          isFavorite={order.is_favorite}
-          isImportant={order.is_important}
-          customerId={order.customer.id}
-          customerFullName={getFullName(
-            order.customer.first_name,
-            order.customer.last_name,
-            order.customer.patronymic
-          )}
-          orderNumber={order.number}
+          order={order}
+          submitBtnTitle={t("buttons.save")}
           savingIsLoading={
             updateMutation.isPending || uploadImagesMutation.isPending
           }
