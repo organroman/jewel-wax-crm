@@ -10,9 +10,10 @@ const costField: z.ZodType<number, z.ZodTypeDef, unknown> = z.preprocess(
 );
 
 const numberField = z
-  .union([z.number(), z.string().regex(/^\d+$/, "Must be a numeric string")])
-  .optional()
-  .nullable()
+  .preprocess((val) => {
+    if (val === "" || val === undefined) return null;
+    return val;
+  }, z.union([z.number(), z.string().regex(/^\d+$/, "Must be a numeric string")]).nullable())
   .transform((val) => (typeof val === "string" ? val.padStart(4, "0") : val));
 
 const orderPersonSchema = z.object({
@@ -113,7 +114,7 @@ const orderMediaSchema = z.object({
 
 export const updateOrderSchema = z.object({
   id: z.number().optional().nullable(),
-  number: numberField,
+  number: numberField.nullable().optional(),
   customer: orderCustomerSchema.nullable(),
   name: z.string(),
   processing_days: z.number().readonly().optional(),
