@@ -1,3 +1,11 @@
+import * as dotenv from "dotenv";
+import * as path from "path";
+
+const envFile =
+  process.env.NODE_ENV === "production" ? ".env.prod" : ".env.local";
+
+dotenv.config({ path: path.resolve(__dirname, "..", envFile) });
+
 import express from "express";
 import morgan from "morgan";
 import cors from "cors";
@@ -15,13 +23,6 @@ import locationRoutes from "./routes/location-routes";
 import activityLogRoutes from "./routes/activity-logs-routes";
 import uploadRoutes from "./routes/upload-routes";
 import novaPoshtaRoutes from "./routes/novaposhta-routes";
-import * as dotenv from "dotenv";
-import * as path from "path";
-
-const envFile =
-  process.env.NODE_ENV === "production" ? ".env.prod" : ".env.local";
-
-dotenv.config({ path: path.resolve(__dirname, "..", envFile) });
 
 const app = express();
 const PORT = process.env.PORT || 8000;

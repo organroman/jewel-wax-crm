@@ -65,7 +65,12 @@ export const OrderService = {
             (Date.now() - new Date(order.created_at).getTime()) /
               (1000 * 60 * 60 * 24)
           ),
-        customer: formatPerson(order, "customer"),
+        customer: {
+          id: order.customer_id,
+          first_name: order.customer_first_name,
+          last_name: order.customer_last_name,
+          patronymic: order.customer_patronymic,
+        },
         modeller: formatPerson(order, "modeller"),
         miller: formatPerson(order, "miller"),
         printer: formatPerson(order, "printer"),

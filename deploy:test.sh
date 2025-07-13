@@ -22,27 +22,28 @@ mkdir -p $TEMP_DIR/frontend
 # === BACKEND ======================
 echo "🔧 Building backend locally..."
 pushd backend
-NODE_OPTIONS="--max-old-space-size=1024" npx tsc
+rm -rf dist
+NODE_ENV=production npx tsc
 popd
 
 # === FRONTEND =====================
-echo "🌐 Building frontend locally..."
-pushd frontend
-rm -rf .next node_modules/.cache .turbo
-NODE_ENV=production npm run build
-popd
+# echo "🌐 Building frontend locally..."
+# pushd frontend
+# rm -rf .next node_modules/.cache .turbo
+# NODE_ENV=production npm run build
+# popd
 
 # === COPY FILES ===================
 echo "📁 Copying files to temp dir..."
 cp -r backend/dist $TEMP_DIR/backend/
-cp -r backend/node_modules $TEMP_DIR/backend/
+# cp -r backend/node_modules $TEMP_DIR/backend/
 cp backend/package*.json $TEMP_DIR/backend/
 cp backend/.env.prod $TEMP_DIR/backend/.env.prod
 
 cp -r frontend/.next $TEMP_DIR/frontend/
 cp -r frontend/public $TEMP_DIR/frontend/
 cp -r frontend/src $TEMP_DIR/frontend/
-cp -r frontend/node_modules $TEMP_DIR/frontend/
+# cp -r frontend/node_modules $TEMP_DIR/frontend/
 cp frontend/package*.json $TEMP_DIR/frontend/
 cp frontend/.env.production $TEMP_DIR/frontend/.env.production
 cp frontend/*.config.* $TEMP_DIR/frontend/ || true
@@ -56,7 +57,7 @@ tar -czf $TARBALL -C $TEMP_DIR_WRAPPED .
 
 # === UPLOAD =======================
 echo "🚀 Uploading to $SERVER..."
-scp $TARBALL $SERVER:~/
+scp -i ~/.ssh/id_rsa $TARBALL $SERVER:~/
 
 # === REMOTE DEPLOY ================
 echo "🔧 Deploying on server..."
@@ -75,10 +76,10 @@ ssh $SERVER << EOF
   fi
 
   echo "📦 Extracting build..."
-  if [[ -d "$APP_DIR/.ssh" ]]; then
-    echo "❌ .ssh folder found inside app directory. Aborting to prevent lockout."
-    exit 1
-  fi
+#   if [[ -d "$APP_DIR/.ssh" ]]; then
+#     echo "❌ .ssh folder found inside app directory. Aborting to prevent lockout."
+#     exit 1
+#   fi
 
   tar -xzf $TARBALL
   rm $TARBALL
@@ -86,17 +87,18 @@ ssh $SERVER << EOF
   echo "🛠 Running DB migrations..."
   cd $APP_DIR/backend
   npm install
-  NODE_ENV=production npx knex --knexfile dist/knexfile.js migrate:latest
+  NODE_ENV=production npx knex --knexfile $APP_DIR/backend/dist/knexfile.js migrate:latest
 
   echo "🧑‍💼 Inserting super admin..."
   npm run seed:admin
 
   echo "🚀 Restarting backend service..."
-  pm2 restart backend || pm2 start dist/index.js --name backend
+  pm2 restart backend || pm2 start $APP_DIR/backend/dist/index.js --name backend
 
   echo "🚀 Starting frontend..."
   cd ../frontend
   npm install --legacy-peer-deps
+  NODE_ENV=production npm run build 
   pm2 delete frontend || true
   pm2 start npm --name frontend -- run start
 

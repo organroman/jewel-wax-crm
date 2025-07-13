@@ -1,12 +1,14 @@
 import * as dotenv from "dotenv";
 import * as path from "path";
-import type { Knex } from "knex";
+const NODE_ENV = process.env.NODE_ENV || "production";
 
-const envFile =
-  process.env.NODE_ENV === "production" ? ".env.prod" : ".env.local";
+// 👉 Визначаємо файл залежно від середовища
+const envFile = NODE_ENV === "production" ? ".env.prod" : ".env.local";
 
+// 👉 Завантажуємо змінні з правильного .env файлу
 dotenv.config({ path: path.resolve(__dirname, "..", envFile) });
 
+import type { Knex } from "knex";
 const config: { [key: string]: Knex.Config } = {
   development: {
     client: "pg",

@@ -4,7 +4,7 @@ import { FormAsyncComboboxProps } from "@/types/form.types";
 import { FieldValues } from "react-hook-form";
 import { useState } from "react";
 import Image from "next/image";
-import { ChevronDown, ChevronUp, Loader } from "lucide-react";
+import { ChevronDown, ChevronUp, Loader, XIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 import * as RadixPopover from "@radix-ui/react-popover";
@@ -176,6 +176,21 @@ const FormAsyncCombobox = <T extends FieldValues, O>({
                             {t("messages.info.no_results")}
                           </CommandEmpty>
                         )}
+                        {isSelectedValue && (
+                          <CommandItem
+                            onSelect={() => {
+                              if (saveOnlyValue) {
+                                field.onChange("");
+                              } else {
+                                field.onChange(null);
+                              }
+                              setOpen(false);
+                            }}
+                          >
+                            <XIcon className="size-4" /> {t("buttons.delete")}
+                          </CommandItem>
+                        )}
+                        <CommandGroup></CommandGroup>
                         <CommandGroup>
                           {options.map((option) => {
                             const label = displayKey

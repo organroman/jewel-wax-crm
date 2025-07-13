@@ -126,7 +126,7 @@ const OrderOperationsFields = ({
       />
       <OrderStagePerformerFields
         stageLabel={t("order.stages.milling")}
-        performerName="modeller"
+        performerName="miller"
         performerPlaceholder={t("placeholders.not_appointed")}
         form={form}
         performerOptions={millers}

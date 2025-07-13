@@ -5,7 +5,7 @@ import { FieldValues } from "react-hook-form";
 import { useState } from "react";
 import Image from "next/image";
 import { useTranslation } from "react-i18next";
-import { ChevronDown, ChevronUp } from "lucide-react";
+import { ChevronDown, ChevronUp, XIcon } from "lucide-react";
 
 import {
   FormControl,
@@ -89,7 +89,12 @@ const FormCombobox = <T extends FieldValues, O>({
         })();
 
         return (
-          <FormItem className={cn("flex flex-col lg:flex-row gap-0.5 lg:gap-2.5", isFullWidth && "w-full lg:w-fit")}>
+          <FormItem
+            className={cn(
+              "flex flex-col lg:flex-row gap-0.5 lg:gap-2.5",
+              isFullWidth && "w-full lg:w-fit"
+            )}
+          >
             {label && (
               <div className="flex items-start justify-between">
                 <FormLabel className="text-xs lg:text-sm lg:mt-1.5">
@@ -144,6 +149,22 @@ const FormCombobox = <T extends FieldValues, O>({
                         <CommandEmpty>
                           {t("messages.info.no_results")}
                         </CommandEmpty>
+                        {isSelectedValue && (
+                          <CommandItem
+                            onSelect={() => {
+                              if (saveOnlyValue) {
+                                field.onChange("");
+                              } else {
+                                field.onChange(null);
+                              }
+                              setOpen(false);
+                            }}
+                            className="text-action-minus data-[selected=true]:bg-accent-pink data-[selected=true]:text-action-minus"
+                          >
+                            <XIcon className="size-4 text-action-minus group-hover:text-action-alert" />{" "}
+                            {t("buttons.delete")}
+                          </CommandItem>
+                        )}
                         <CommandGroup>
                           {options.map((option) => {
                             const label = displayKey

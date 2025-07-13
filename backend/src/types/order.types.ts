@@ -27,8 +27,8 @@ export interface OrderCustomer {
   first_name: string;
   last_name: string;
   patronymic?: string;
-  phones: Phone[];
-  delivery_addresses: CustomerDeliveryAddress[];
+  phones?: Phone[];
+  delivery_addresses?: CustomerDeliveryAddress[];
 }
 
 export interface OrderMedia {
@@ -119,9 +119,9 @@ export interface OrderBase {
   miller_first_name?: string;
   miller_last_name?: string;
   miller_patronymic?: string;
-  customer_first_name?: string;
-  customer_last_name?: string;
-  customer_patronymic?: string;
+  customer_first_name: string;
+  customer_last_name: string;
+  customer_patronymic: string;
   printer_first_name?: string;
   printer_last_name?: string;
   printer_patronymic?: string;
@@ -149,7 +149,7 @@ export interface AdminOrder {
   updated_at: Date;
   number: number;
   name: string;
-  customer: OrderCustomer | null | { id: number; fullname: string };
+  customer: OrderCustomer
   modeller: OrderPerson | null;
   miller: OrderPerson | null;
   printer: OrderPerson | null;
