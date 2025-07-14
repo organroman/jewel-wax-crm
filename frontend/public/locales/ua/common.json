@@ -42,7 +42,9 @@
     "comment": "Коментар",
     "stage": "Етап",
     "stage_status": "Готовність",
-    "warehouse": "Відділення"
+    "warehouse": "Відділення",
+    "created_at-desc": "Останні додані",
+    "created_at-asc": "Перші додані"
   },
   "labels": {
     "main": "$t(dictionary.main)",
@@ -113,10 +115,13 @@
       }
     },
     "sorting": {
-      "first_name": "$t(dictionary.first_name)",
-      "last_name": "$t(dictionary.last_name)",
-      "created_at": "$t(dictionary.created)",
-      "role": "$t(dictionary.role)"
+      "first_name-desc": "По імені Я-А",
+      "first_name-asc": "По імені А-Я",
+      "last_name-desc": "По прізвищу Я-А",
+      "last_name-asc": "По прізвищу А-Я",
+      "created_at-desc": "$t(dictionary.created_at-desc)",
+      "created_at-asc": "$t(dictionary.created_at-asc)",
+      "role": "По ролі"
     },
     "tabs": {
       "general_info": "$t(dictionary.info)",
@@ -240,7 +245,8 @@
       "desc": "Введіть опис замовлення"
     },
     "sorting": {
-      "created_at": "$t(dictionary.created)",
+      "created_at-desc": "$t(dictionary.created_at-desc)",
+      "created_at-asc": "$t(dictionary.created_at-asc)",
       "is_favorite": "Обране",
       "is_important": "Важливе"
     },

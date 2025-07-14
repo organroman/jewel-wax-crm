@@ -1,4 +1,4 @@
-import { EnumItem, FilterGroup } from "@/types/shared.types";
+import { FilterGroup, SortOption } from "@/types/shared.types";
 import { Plus, SlidersHorizontal, XIcon } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 
@@ -12,7 +12,7 @@ import FilterDropdown from "./filter/filter-dropdown";
 import { toggleParam } from "@/lib/utils";
 
 interface ToolbarFilterProps {
-  sortOptions?: EnumItem<string>[];
+  sortOptions?: SortOption[];
   searchPlaceholder?: string;
   addLabel?: string;
   onAdd?: () => void;

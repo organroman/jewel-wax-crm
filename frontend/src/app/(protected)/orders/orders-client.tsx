@@ -28,6 +28,7 @@ import {
 
 import { translateFilterGroups } from "@/lib/translate-constant-labels";
 import { hasPermission } from "@/lib/utils";
+import { ORDERS_SORT_FIELDS } from "@/constants/sortable-fields";
 
 const OrdersClient = ({ userRole }: { userRole: PersonRoleValue }) => {
   const { t } = useTranslation();
@@ -36,11 +37,9 @@ const OrdersClient = ({ userRole }: { userRole: PersonRoleValue }) => {
 
   const permission = hasPermission(PERMISSIONS.ORDERS.CREATE, userRole);
 
-  const sortFields = useEnumStore((s) => s.getByType("order_sort_fields"));
-
-  const sortOptions = sortFields.map((opt) => ({
-    ...opt,
-    label: t(`order.sorting.${opt.value}`),
+  const sortOptions = ORDERS_SORT_FIELDS.map((opt) => ({
+    value: opt,
+    label: t(`order.sorting.${opt}`),
   }));
 
   const tabsOptions =

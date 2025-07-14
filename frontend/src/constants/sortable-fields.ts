@@ -1,7 +1,10 @@
 export const PERSON_SORT_FIELDS = [
-  "first_name",
-  "last_name",
-  "created_at",
+  "first_name-desc",
+  "first_name-asc",
+  "last_name-desc",
+  "last_name-asc",
+  "created_at-desc",
+  "created_at-asc",
   "role",
 ] as const;
 
@@ -18,4 +21,11 @@ export const REQUEST_SORT_FIELDS = [
   "status",
   "full_name",
   "message",
+];
+
+export const ORDERS_SORT_FIELDS = [
+  "is_favorite",
+  "is_important",
+  "created_at-desc",
+  "created_at-asc",
 ];

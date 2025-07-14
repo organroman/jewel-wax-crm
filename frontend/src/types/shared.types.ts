@@ -11,6 +11,10 @@ export interface PaginatedResult<T> {
 }
 
 export type SortOrder = "asc" | "desc";
+export type SortOption = {
+  value: string;
+  label: string;
+};
 
 export interface PaginationOptions {
   page?: number;

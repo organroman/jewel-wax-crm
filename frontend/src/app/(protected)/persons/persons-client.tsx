@@ -28,18 +28,18 @@ import {
   translateFilterGroups,
   translateSingleLabel,
 } from "@/lib/translate-constant-labels";
+import { PERSON_SORT_FIELDS } from "@/constants/sortable-fields";
 
 const PersonsClient = () => {
   const { t } = useTranslation("common");
   const router = useRouter();
   const personsColumns = getPersonsColumns(t);
 
-  const sortFields = useEnumStore((s) => s.getByType("person_sort_fields"));
   const roles = useEnumStore((s) => s.getByType("person_role"));
 
-  const sortOptions = sortFields.map((opt) => ({
-    ...opt,
-    label: t(`person.sorting.${opt.value}`),
+  const sortOptions = PERSON_SORT_FIELDS.map((opt) => ({
+    value: opt,
+    label: t(`person.sorting.${opt}`),
   }));
 
   const [searchCity, setSearchCity] = useState("");
