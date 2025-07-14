@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "../ui/badge";
+import { cn } from "@/lib/utils";
 
 interface TabsFilterProps {
   param: string;
@@ -35,7 +36,7 @@ const TabsFilter = ({ param, options, counts }: TabsFilterProps) => {
       onValueChange={handleChange}
       className="mt-2 lg:mt-7.5"
     >
-      <TabsList className="w-full overflow-x-auto justify-start gap-6 border-none  bg-transparent px-1 ">
+      <TabsList className="w-full overflow-x-auto justify-start gap-4 border-none  bg-transparent px-1 ">
         {options.map(({ value, label }) => {
           return (
             <TabsTrigger
@@ -43,12 +44,16 @@ const TabsFilter = ({ param, options, counts }: TabsFilterProps) => {
               value={value}
               className="p-0 grow-0 flex items-center font-semibold pb-5 cursor-pointer data-[state=active]:border-b-2 data-[state=active]:border-brand-default   data-[state=active]:text-primary data-[state=active]:shadow-none data-[state=active]:bg-transparent border-t-0 border-l-0 border-r-0 data-[state=active]:rounded-none"
             >
-              {label}{" "}
-              {counts && counts?.[value] && (
-                <Badge className="bg-transparent p-0 ml-1.5 text-sm font-medium text-brand-default">
-                  {counts?.[value]}
-                </Badge>
-              )}
+              {label} {/* {counts && counts?.[value] && ( */}
+              <Badge
+                className={cn(
+                  "bg-transparent block p-0 text-sm font-medium text-brand-default",
+                  value !== "all" && "w-[12px]"
+                )}
+              >
+                {counts && counts?.[value] && counts?.[value]}
+                {/* counts?.[value]} */}
+              </Badge>
             </TabsTrigger>
           );
         })}
