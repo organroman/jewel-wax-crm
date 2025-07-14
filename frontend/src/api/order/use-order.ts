@@ -93,7 +93,7 @@ export const useOrder = {
       onSuccess: (data) => {
         toast.success(t("messages.success.order_updated"));
         queryClient.invalidateQueries({
-          queryKey: ["orders", "order"],
+          queryKey: ["orders"],
         });
         handleOnSuccess && handleOnSuccess(data);
       },
