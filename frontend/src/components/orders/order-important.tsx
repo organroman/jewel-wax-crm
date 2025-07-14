@@ -33,7 +33,7 @@ const OrderImportant = ({
     >
       <CircleAlertIcon
         className={cn(
-          "size-5 text-ui-row",
+          "size-5 text-text-light",
           is_important && "text-action-alert"
         )}
       />

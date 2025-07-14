@@ -30,7 +30,7 @@ const OrderFavorite = ({
     >
       <StarIcon
         className={cn(
-          "size-5 fill-current stroke-brand-default",
+          "size-5 fill-current stroke-text-light",
           is_favorite
             ? "text-brand-default stroke-brand-default"
             : "text-transparent"

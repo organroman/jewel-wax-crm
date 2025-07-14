@@ -22,7 +22,6 @@ import OrderChat from "@/components/orders/order-chat";
 
 import { ORDER_CARD_TABS_LIST } from "@/constants/orders.constants";
 import { translateKeyValueList } from "@/lib/translate-constant-labels";
-import { getFullName } from "@/lib/utils";
 
 const OrderClient = ({ id, userId }: { id: number; userId: number }) => {
   const router = useRouter();

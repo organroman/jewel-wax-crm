@@ -35,6 +35,9 @@ export const useOrder = {
         queryClient.invalidateQueries({
           queryKey: ["orders"],
         });
+        queryClient.invalidateQueries({
+          queryKey: ["order", orderId],
+        });
       },
       onError: (error) => {
         toast.error(error.message);
@@ -64,6 +67,9 @@ export const useOrder = {
         );
         queryClient.invalidateQueries({
           queryKey: ["orders"],
+        });
+        queryClient.invalidateQueries({
+          queryKey: ["order"],
         });
       },
       onError: (error) => {
