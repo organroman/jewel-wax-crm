@@ -145,6 +145,11 @@ const OrderMediaComponent = ({
           }
         }
       }
+      previews.forEach((p) => {
+        if (p.url?.startsWith("blob:")) {
+          URL.revokeObjectURL(p.url);
+        }
+      });
 
       if (files.length) {
         setNewFiles((prev) => [...prev, ...files]);

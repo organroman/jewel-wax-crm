@@ -296,8 +296,6 @@ export const OrderModel = {
   },
 
   async createBaseOrder(fields: Partial<OrderBase>) {
-    console.log("🚀 ~ createBaseOrder ~ fields:", fields);
-
     const [newOrder] = await db<OrderBase>("orders")
       .insert(fields)
       .returning<OrderBase[]>("*");

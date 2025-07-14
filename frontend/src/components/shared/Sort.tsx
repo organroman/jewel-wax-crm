@@ -17,7 +17,6 @@ const Sort = ({
   param?: string;
   options: SortOption[];
 }) => {
-  console.log("🚀 ~ options:", options);
   const router = useRouter();
   const searchParams = useSearchParams();
   const { t } = useTranslation();

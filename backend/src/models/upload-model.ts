@@ -54,8 +54,6 @@ export const UploadModel = {
       });
     }
 
-    console.log(results);
-
     return results;
   },
 };
