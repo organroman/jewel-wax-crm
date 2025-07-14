@@ -29,7 +29,7 @@ export const STAGE_COLORS = {
 export const STAGE_STATUS_COLORS = {
   pending: "text-text-regular",
   processed: "text-brand-default",
-  in_process: "text-blue",
+  in_process: "text-accent-blue",
   negotiation: "text-accent-red",
   clarification: "text-accent-peach",
   done: "text-brand-default",
