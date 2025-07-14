@@ -93,7 +93,7 @@ ssh $SERVER << EOF
   npm run seed:admin
 
   echo "🚀 Restarting backend service..."
-  pm2 restart backend || pm2 start $APP_DIR/backend/dist/index.js --name backend
+  pm2 restart backend || pm2 start dist/index.js --name backend
 
   echo "🚀 Starting frontend..."
   cd ../frontend
