@@ -11,7 +11,7 @@ const OrderImagesPreview = ({
   setCurrentIdx,
 }: OrderImagesPreviewProps) => {
   return (
-    <div className="mt-5 h-19 pb-4 flex flex-row w-full gap-2.5 overflow-x-scroll">
+    <div className="mt-5 pb-4 flex flex-row w-full gap-2.5 overflow-x-scroll">
       {previews?.map((image, index) => (
         <div
           key={image?.url}
