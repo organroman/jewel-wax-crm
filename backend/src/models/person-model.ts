@@ -488,7 +488,7 @@ export const PersonModel = {
     role: PersonRole
   ): Promise<{ id: number; fullname: string }[]> {
     const printersFull = await db<Person>("persons")
-      .where("role", role)
+      .whereIn("role", ["super_admin", role])
       .select("id", "first_name", "last_name", "patronymic");
 
     const printers = printersFull.map((item) => ({
