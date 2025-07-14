@@ -116,6 +116,15 @@ export const OrderModel = {
           "orders.number",
           `%${search}%`
         );
+
+        const personRoles = ["customer", "modeller", "miller", "printer"];
+        personRoles.forEach((role) => {
+          if (visibleFields.includes(`${role}_id`)) {
+            qb.orWhereILike(`${role}s.first_name`, `%${search}%`)
+              .orWhereILike(`${role}s.last_name`, `%${search}%`)
+              .orWhereILike(`${role}s.patronymic`, `%${search}%`);
+          }
+        });
       });
     }
 
