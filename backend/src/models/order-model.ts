@@ -48,15 +48,19 @@ export const OrderModel = {
 
       qb.select(
         db.raw(`(
-          SELECT COALESCE(json_agg(m), '[]'::json)
+         SELECT COALESCE(json_agg(m), '[]'::json)
           FROM (
             SELECT id, url, public_id, is_main, created_at
-            FROM order_media
-            WHERE order_media.order_id = orders.id
-            ORDER BY created_at ASC
-            LIMIT 1
-          ) m
-        ) as media`)
+              FROM order_media
+              WHERE order_media.order_id = orders.id
+              AND type = 'image'
+            ORDER BY 
+            -- Prefer is_main=true first, then by created_at
+            CASE WHEN is_main THEN 0 ELSE 1 END,
+            created_at ASC
+        LIMIT 1
+        ) m
+      ) as media`)
       );
 
       if (user_role === "super_admin") {
@@ -283,8 +287,8 @@ export const OrderModel = {
   },
 
   async createBaseOrder(fields: Partial<OrderBase>) {
-    console.log("🚀 ~ createBaseOrder ~ fields:", fields)
-    
+    console.log("🚀 ~ createBaseOrder ~ fields:", fields);
+
     const [newOrder] = await db<OrderBase>("orders")
       .insert(fields)
       .returning<OrderBase[]>("*");
