@@ -272,7 +272,7 @@ export const getOrdersColumns = (
       header: t("order.table_headers.comment"),
       cell: ({ row }) => {
         const comment = row.original.notes;
-        return comment;
+        return <span className="block max-w-[300px] truncate">{comment}</span>;
       },
       size: 50,
     },
