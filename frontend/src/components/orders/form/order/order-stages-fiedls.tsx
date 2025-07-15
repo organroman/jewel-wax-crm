@@ -100,7 +100,7 @@ const OrderStagesFields = ({ form }: OrderStagesFieldsProps) => {
         type="button"
         size="sm"
         variant="secondary"
-        className="self-start text-xs px-5"
+        className="self-start text-xs px-6.5"
         onClick={() => changeStageOpenDialog()}
       >
         {t("order.buttons.change_stage")}
