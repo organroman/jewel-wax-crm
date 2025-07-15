@@ -22,7 +22,8 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import LogoIcon from "@/assets/icons/logo.svg";
+import LogoIconDark from "@/assets/icons/logo-dark.svg";
+import LogoIconLight from "@/assets/icons/logo-light.svg";
 import { useTheme } from "next-themes";
 
 const LoginPage = () => {
@@ -56,10 +57,11 @@ const LoginPage = () => {
   return (
     <Card className="w-full h-full md:w-[487px] shadow-md">
       <CardHeader className="flex flex-col gap-6 items-center justify-center text-center p-6">
-        <LogoIcon
-          fill={theme === "dark" ? "white" : "black"}
-          className="self-center"
-        />
+        {theme === "dark" ? (
+          <LogoIconDark className="self-center" />
+        ) : (
+          <LogoIconLight className="self-center" />
+        )}
         {/* <CardTitle className="text-3xl font-bold text-stone-900">
           З поверненням в CRM
         </CardTitle> */}

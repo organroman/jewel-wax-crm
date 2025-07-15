@@ -13,7 +13,8 @@ import { MENU_LIST } from "@/constants/sidebar.constants";
 import { checkPermission, cn } from "@/lib/utils";
 import { useTheme } from "next-themes";
 
-import LogoIcon from "@/assets/icons/logo.svg";
+import LogoIconDark from "@/assets/icons/logo-dark.svg";
+import LogoIconLight from "@/assets/icons/logo-light.svg";
 
 const SideBar = ({ role }: { role: PersonRoleValue }) => {
   const pathName = usePathname();
@@ -23,10 +24,11 @@ const SideBar = ({ role }: { role: PersonRoleValue }) => {
   return (
     <div className="h-full w-full">
       <div className="flex items-center justify-center mt-3 mb-10">
-        <LogoIcon
-          fill={theme === "dark" ? "white" : "black"}
-          className="self-center"
-        />
+        {theme === "dark" ? (
+          <LogoIconDark className="self-center" />
+        ) : (
+          <LogoIconLight className="self-center" />
+        )}
       </div>
       <Separator className="w-full bg-ui-border" />
       <ul className="flex flex-col">
