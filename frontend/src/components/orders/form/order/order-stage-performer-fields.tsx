@@ -6,6 +6,7 @@ import FormCombobox from "@/components/form/form-combobox";
 import FormInput from "@/components/form/form-input";
 import InfoLabel from "@/components/shared/typography/info-label";
 import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
 
 type PerformerOption = {
   id: number;
@@ -30,6 +31,7 @@ const OrderStagePerformerFields = ({
   stageCostName,
 }: OrderStagePerformerFieldsProps<UpdateOrderSchema, PerformerOption>) => {
   const { t } = useTranslation();
+  const router = useRouter();
 
   return (
     <div className="flex items-end lg:items-center justify-between">
@@ -62,7 +64,7 @@ const OrderStagePerformerFields = ({
             type="button"
             size="sm"
             className="hidden lg:flex rounded-tl-none rounded-bl-none text-xs w-[83px]"
-            // onClick={onCreateCountry}
+            onClick={() => router.push("/persons/new")}
           >
             {t("buttons.add")}
           </Button>
