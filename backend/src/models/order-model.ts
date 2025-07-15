@@ -87,8 +87,8 @@ export const OrderModel = {
             `orders.${role}_id`
           ).select(
             `${role}s.id as ${role}_id`,
-            `${role}s.first_name as ${role}_first_name`,
             `${role}s.last_name as ${role}_last_name`,
+            `${role}s.first_name as ${role}_first_name`,
             `${role}s.patronymic as ${role}_patronymic`
           );
         }

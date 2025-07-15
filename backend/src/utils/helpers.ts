@@ -26,7 +26,7 @@ export function getFullName(
   last?: string,
   patronymic?: string
 ): string {
-  return [first, patronymic, last].filter(Boolean).join(" ");
+  return [last, first, patronymic].filter(Boolean).join(" ");
 }
 
 export function formatPerson(row: any, prefix: string) {
@@ -35,8 +35,8 @@ export function formatPerson(row: any, prefix: string) {
   return {
     id,
     fullname: getFullName(
-      row[`${prefix}_last_name`],
       row[`${prefix}_first_name`],
+      row[`${prefix}_last_name`],
       row[`${prefix}_patronymic`]
     ),
   };
