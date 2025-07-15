@@ -87,7 +87,7 @@ ssh $SERVER << EOF
   echo "🛠 Running DB migrations..."
   cd $APP_DIR/backend
   npm install
-  NODE_ENV=production npx knex --knexfile $APP_DIR/backend/dist/knexfile.js migrate:latest
+  NODE_ENV=production npx knex --knexfile dist/knexfile.js migrate:latest
 
   echo "🧑‍💼 Inserting super admin..."
   npm run seed:admin
@@ -104,6 +104,7 @@ ssh $SERVER << EOF
 
   echo "💾 Saving PM2 state..."
   pm2 save
+
 EOF
 
 # === CLEANUP ======================
