@@ -68,7 +68,7 @@ export const orderService = {
 
     const updatedStages = stages.map((s) => ({
       ...s,
-      status: s.status?.value,
+      status: s.status === null ? null : s.status?.value,
     }));
 
     const linked = linked_orders?.map(

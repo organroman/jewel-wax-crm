@@ -2,6 +2,7 @@ import { FormSelectProps } from "@/types/form.types";
 
 import { FieldValues } from "react-hook-form";
 import Image from "next/image";
+import { XIcon } from "lucide-react";
 
 import {
   FormControl,
@@ -32,6 +33,7 @@ const FormSelect = <T extends FieldValues, O>({
   isFullWidth,
 }: FormSelectProps<T, O>) => {
   const { t } = useTranslation();
+
   return (
     <FormField
       control={control}
@@ -70,6 +72,10 @@ const FormSelect = <T extends FieldValues, O>({
             <Select
               value={field.value?.value ?? ""}
               onValueChange={(val) => {
+                if (val === "__clear__") {
+                  field.onChange(null);
+                  return;
+                }
                 const selected = options.find((opt) => opt.value === val);
                 if (selected) {
                   field.onChange({
@@ -94,6 +100,17 @@ const FormSelect = <T extends FieldValues, O>({
               </FormControl>
 
               <SelectContent>
+                {field.value?.value && (
+                  <SelectItem
+                    value="__clear__"
+                    className={cn(
+                      "text-action-minus focus:text-action-minus focus:bg-accent-pink"
+                    )}
+                  >
+                    <XIcon className="text-action-minus group-hover:text-action-alert" />
+                    {t("buttons.clear")}
+                  </SelectItem>
+                )}
                 {options.map((opt) => (
                   <SelectItem key={opt.value} value={opt.value.toString()}>
                     {opt.label}

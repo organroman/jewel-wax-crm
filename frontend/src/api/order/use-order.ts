@@ -101,6 +101,9 @@ export const useOrder = {
         queryClient.invalidateQueries({
           queryKey: ["orders"],
         });
+        queryClient.invalidateQueries({
+          queryKey: ["order", data.id],
+        });
         handleOnSuccess && handleOnSuccess(data);
       },
       onError: (error) => {

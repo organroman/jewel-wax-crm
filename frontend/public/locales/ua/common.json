@@ -73,7 +73,8 @@
     "create": "Створити",
     "add": "Додати",
     "add_more": "Додати ще",
-    "please_wait": "Зачекайте"
+    "please_wait": "Зачекайте",
+    "clear": "Очистити"
   },
   "auth": {
     "forget_password": "Забули пароль",

@@ -60,7 +60,7 @@ const OrderForm = ({
             value: pendingOption,
             label: t(`order.stage_statuses.${pendingOption}`),
           }
-        : undefined,
+        : null,
       started_at: existing?.started_at ?? undefined,
       completed_at: existing?.completed_at ?? undefined,
     };
@@ -99,6 +99,8 @@ const OrderForm = ({
     },
   });
 
+  console.log(form.getValues())
+
   useEffect(() => {
     if (order) {
       form.reset({
@@ -131,6 +133,7 @@ const OrderForm = ({
   }, [order]);
 
   const onSubmit = async (formData: UpdateOrderSchema) => {
+    console.log("🚀 ~ onSubmit ~ formData:", formData)
     if (newFiles.length) {
       uploadImagesMutation.mutate(newFiles, {
         onSuccess: (data) => {

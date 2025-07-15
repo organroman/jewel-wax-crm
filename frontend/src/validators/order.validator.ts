@@ -74,9 +74,10 @@ const orderDeliveryAddressSchema = z.object({
 const stageSchema = z.enum(ORDER_STAGE);
 const stageStatusSchema = z
   .object({
-    value: z.enum(ORDER_STAGE_STATUS),
+    value: z.enum(ORDER_STAGE_STATUS).nullable(),
     label: z.string(),
   })
+  .nullable()
   .optional();
 
 const orderStageSchema = z.object({

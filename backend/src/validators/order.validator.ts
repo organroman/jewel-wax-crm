@@ -9,7 +9,7 @@ export const toggleIsImportantSchema = z.object({
 const stageEnum = z.enum(ORDER_STAGE, {
   required_error: ERROR_MESSAGES.STAGE_REQUIRED,
 });
-const stageStatusEnum = z.enum(ORDER_STAGE_STATUS);
+const stageStatusEnum = z.enum(ORDER_STAGE_STATUS).nullable();
 
 const personSchema = z.object({
   id: z.number(),
