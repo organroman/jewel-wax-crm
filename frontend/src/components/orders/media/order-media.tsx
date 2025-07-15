@@ -185,7 +185,7 @@ const OrderMediaComponent = ({
           )}
           <div
             className={`w-full h-60 p-2.5 bg-ui-column rounded-md flex justify-center flex-col ${
-              isDragging ? " border-2 border-dashed border-brand-dark" : ""
+              isDragging ? " border-2 border-dashed border-text-regular" : ""
             } `}
           >
             {!previews?.length && (

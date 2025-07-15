@@ -89,7 +89,7 @@ const PersonActionsMenu = ({ id }: { id: number }) => {
           {error && <p>{error.message}</p>}
           {isLoading && <Loader />}
           {!isLoading && person && (
-            <>
+            <div className="flex flex-col gap-2">
               <CustomTabs
                 isModal={true}
                 tabsOptions={tabs}
@@ -97,7 +97,7 @@ const PersonActionsMenu = ({ id }: { id: number }) => {
               />
               <Separator className="bg-ui-border h-0.5 data-[orientation=horizontal]:h-0.5" />
               <PersonInfo person={person} />
-            </>
+            </div>
           )}
         </Modal>
       </Dialog>

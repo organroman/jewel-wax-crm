@@ -1,10 +1,10 @@
 
 
 export const PERSON_ROLE_VALUES = [
+  "client",
   "super_admin",
   "modeller",
   "miller",
-  "client",
   "print",
 ] as const;
 
