@@ -53,10 +53,10 @@ export const getPersonsColumns = (
     header: t("person.table_headers.full_name"),
     cell: ({ row }) => {
       const lastName = row.original.last_name;
-      const firstName = row.original.first_name.charAt(0);
+      const firstName = row.original.first_name;
       const secondName = row.original.patronymic?.charAt(0);
 
-      const full_name = lastName + " " + firstName + ".";
+      const full_name = lastName + " " + firstName;
       if (secondName) full_name + { secondName } + ".";
 
       return <span>{full_name}</span>;
@@ -95,7 +95,7 @@ export const getPersonsColumns = (
       return (
         <Badge
           className={cn(
-            "text-xs rounded-2xl font-medium px-3.5 py-[5px]",
+            "text-[10px] rounded-2xl font-medium",
             PERSON_ROLE_COLORS[role.value]
           )}
         >
