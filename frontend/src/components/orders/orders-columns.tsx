@@ -81,7 +81,7 @@ export const getOrdersColumns = (
       header: t("order.table_headers.number"),
       cell: ({ row }) => {
         const orderNumber = row.original.number;
-        return <span className="underline">{orderNumber}</span>;
+        return <span className="underline text-action-plus">{orderNumber}</span>;
       },
       size: 40,
     },
