@@ -99,6 +99,7 @@ const OrderDeliveryFields = ({ order, form, userId }: OrderDeliveryFields) => {
         </div>
       </div>
       {order?.delivery?.is_third_party &&
+        order?.delivery?.manual_recipient_name &&
         order?.delivery?.declaration_number !== "" && (
           <div className="flex w-full flex-col lg:flex-row lg:items-center gap-1 lg:gap-2.5">
             <InfoLabel className="text-sm w-[100px] shrink-0">
@@ -107,7 +108,9 @@ const OrderDeliveryFields = ({ order, form, userId }: OrderDeliveryFields) => {
             <div className="flex flex-col gap-1.5">
               <InfoValue>
                 {order?.delivery?.manual_recipient_name}, тел.{" "}
-                {order?.delivery?.manual_recipient_phone}
+                {order?.delivery?.manual_recipient_phone
+                  ? order?.delivery?.manual_recipient_phone
+                  : "-"}
               </InfoValue>
               <InfoValue>{order?.delivery?.manual_delivery_address}</InfoValue>
             </div>

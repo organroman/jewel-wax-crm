@@ -1,5 +1,6 @@
 "use client";
 
+import { useDeferredValue } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -22,22 +23,26 @@ const SearchInput = ({
   const searchParams = useSearchParams();
 
   const [value, setValues] = useState<string>(searchParams.get(param) || "");
+  const deferredValue = useDeferredValue(value);
 
   useEffect(() => {
     const handler = setTimeout(() => {
       const params = new URLSearchParams(searchParams);
 
-      if (value.trim()) {
-        params.set(param, value.trim());
+      if (deferredValue.trim()) {
+        params.set(param, deferredValue.trim());
       } else {
         params.delete(param);
       }
 
-      router.push(`?${params.toString()}`);
+      const newQuery = params.toString();
+      if (newQuery === searchParams.toString()) return;
+
+      router.push(`?${newQuery}`);
     }, delay);
 
-    return () => clearTimeout(handler); // clean up on re-typing
-  }, [value]);
+    return () => clearTimeout(handler);
+  }, [deferredValue]);
 
   // const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
   //   if (e.key === "Enter") {

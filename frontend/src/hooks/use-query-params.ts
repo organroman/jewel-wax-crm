@@ -28,7 +28,13 @@ export const useQueryParams = () => {
   }, [searchParams]);
 
   const query = useMemo(() => {
-    return new URLSearchParams(allParams).toString();
+    const sortedParams = new URLSearchParams();
+    Object.keys(allParams)
+      .sort()
+      .forEach((key) => {
+        sortedParams.set(key, allParams[key]);
+      });
+    return sortedParams.toString();
   }, [allParams]);
 
   const getParam = (key: string, fallback = "") => {
@@ -46,32 +52,16 @@ export const useQueryParams = () => {
     if (key !== "page") {
       params.set("page", String(DEFAULT_PAGE));
     }
-    router.push(`?${params.toString()}`);
+
+    const sorted = new URLSearchParams(
+      Array.from(params.entries()).sort(([a, b]) => a.localeCompare(b))
+    );
+
+    router.push(`?${sorted.toString()}`);
   };
 
   useEffect(() => {
-    const params = new URLSearchParams(searchParams);
-    let changed = false;
-
-    if (!params.has("page")) {
-      params.set("page", String(DEFAULT_PAGE));
-      changed = true;
-    }
-
-    if (!params.has("limit")) {
-      params.set("limit", String(DEFAULT_LIMIT));
-      changed = true;
-    }
-
-    if (changed) {
-      router.replace(`?${params.toString()}`);
-    } else {
-      setReady(true);
-    }
-  }, [router, searchParams]);
-
-  useEffect(() => {
-    if (searchParams.get("page") && searchParams.get("limit") && !ready) {
+    if (!ready && searchParams.get("page") && searchParams.get("limit")) {
       setReady(true);
     }
   }, [searchParams, ready]);
