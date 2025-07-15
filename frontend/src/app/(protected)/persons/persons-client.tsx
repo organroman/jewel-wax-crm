@@ -3,8 +3,6 @@ import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import debounce from "lodash.debounce";
 
-import { useEnumStore } from "@/stores/use-enums-store";
-
 import { usePerson } from "@/api/person/use-person";
 import { useLocation } from "@/api/locations/use-location";
 import { useQueryParams } from "@/hooks/use-query-params";
@@ -29,13 +27,12 @@ import {
   translateSingleLabel,
 } from "@/lib/translate-constant-labels";
 import { PERSON_SORT_FIELDS } from "@/constants/sortable-fields";
+import { PERSON_ROLE_VALUES } from "@/constants/enums.constants";
 
 const PersonsClient = () => {
   const { t } = useTranslation("common");
   const router = useRouter();
   const personsColumns = getPersonsColumns(t);
-
-  const roles = useEnumStore((s) => s.getByType("person_role"));
 
   const sortOptions = PERSON_SORT_FIELDS.map((opt) => ({
     value: opt,
@@ -97,9 +94,9 @@ const PersonsClient = () => {
     {
       ...roleAll,
     },
-    ...roles.map((role) => ({
-      ...role,
-      label: t(`person.roles.${role.value}`),
+    ...PERSON_ROLE_VALUES.map((role) => ({
+      value: role,
+      label: t(`person.roles.${role}`),
     })),
   ];
 
@@ -118,9 +115,6 @@ const PersonsClient = () => {
 
   return (
     <div className="h-full flex flex-col">
-      <div className="hidden lg:flex">
-        <EntityTitle title={t("person.person_plural")} />
-      </div>
       <TabsFilter param="role" options={rolesWithAllOption} />
       <Separator className="bg-ui-border h-0.5 data-[orientation=horizontal]:h-0.5" />
       <Toolbar
