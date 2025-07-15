@@ -81,7 +81,9 @@ export const getOrdersColumns = (
       header: t("order.table_headers.number"),
       cell: ({ row }) => {
         const orderNumber = row.original.number;
-        return <span className="underline text-action-plus">{orderNumber}</span>;
+        return (
+          <span className="underline text-action-plus">{orderNumber}</span>
+        );
       },
       size: 40,
     },
@@ -111,7 +113,7 @@ export const getOrdersColumns = (
       header: t("order.table_headers.name"),
       cell: ({ row }) => {
         const name = row.original.name;
-        return <span>{name}</span>;
+        return <span className="block max-w-[160px] truncate">{name}</span>;
       },
       size: 160,
     },

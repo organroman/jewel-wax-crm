@@ -9,7 +9,6 @@ import { useQueryParams } from "@/hooks/use-query-params";
 
 import { Separator } from "@/components/ui/separator";
 
-import EntityTitle from "@/components/shared/entity-title";
 import TabsFilter from "@/components/shared/tabs-filter";
 import Toolbar from "@/components/shared/tool-bar";
 import { DataTable } from "@/components/shared/data-table";

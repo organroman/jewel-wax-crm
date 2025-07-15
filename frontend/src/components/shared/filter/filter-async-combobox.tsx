@@ -74,14 +74,11 @@ const FilterAsyncCombobox = ({
       <PopoverContent className="w-[180px] p-0 max-h-64 overflow-y-auto">
         <Command
           filter={(value, search) => {
-            const item = options.find((opt) =>
+            const item = options.filter((opt) =>
               opt.label.toLowerCase().includes(search.toLowerCase())
             );
 
-            if (item?.value === +value) {
-              return 1;
-            }
-            return 0;
+            return item?.length ? 1 : 0;
           }}
         >
           <CommandInput

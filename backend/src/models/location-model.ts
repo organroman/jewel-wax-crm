@@ -44,7 +44,7 @@ export const LocationModel = {
     }
     return await paginateQuery<City>(baseQuery, {
       page: 1,
-      limit: 20,
+      limit: search ? 100 : 20,
     });
   },
 
