@@ -113,7 +113,7 @@ export const getOrdersColumns = (
         const name = row.original.name;
         return <span>{name}</span>;
       },
-      size: 80,
+      size: 160,
     },
     {
       id: "customer",
@@ -122,7 +122,7 @@ export const getOrdersColumns = (
         const customer = `${row.original.customer.last_name} ${row.original.customer.first_name}`;
         return <span>{customer}</span>;
       },
-      size: 100,
+      size: 140,
     },
     {
       id: "modeller",
@@ -131,7 +131,7 @@ export const getOrdersColumns = (
         const modeller = row.original.modeller?.fullname;
         return modeller;
       },
-      size: 100,
+      size: 140,
     },
     {
       id: "miller",
@@ -140,7 +140,7 @@ export const getOrdersColumns = (
         const miller = row.original.miller?.fullname;
         return miller;
       },
-      size: 100,
+      size: 140,
     },
     {
       id: "printer",
@@ -149,7 +149,7 @@ export const getOrdersColumns = (
         const printer = row.original.printer?.fullname;
         return printer;
       },
-      size: 100,
+      size: 140,
     },
     {
       id: "amount",
@@ -165,7 +165,7 @@ export const getOrdersColumns = (
       cell: ({ row }) => {
         return row.original.modeling_cost;
       },
-      size: 50,
+      size: 60,
     },
     {
       id: "payment_status",
@@ -181,6 +181,7 @@ export const getOrdersColumns = (
           </span>
         );
       },
+      size: 50,
     },
     {
       id: "active_stage",
@@ -255,7 +256,7 @@ export const getOrdersColumns = (
             </span>
           );
       },
-      size: 40,
+      size: 100,
     },
 
     {
@@ -274,7 +275,7 @@ export const getOrdersColumns = (
         const comment = row.original.notes;
         return <span className="block max-w-[300px] truncate">{comment}</span>;
       },
-      size: 50,
+      size: 300,
     },
     {
       id: "actions",
