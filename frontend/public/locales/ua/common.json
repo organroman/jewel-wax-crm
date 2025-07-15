@@ -44,7 +44,8 @@
     "stage_status": "Готовність",
     "warehouse": "Відділення",
     "created_at-desc": "Останні додані",
-    "created_at-asc": "Перші додані"
+    "created_at-asc": "Початкові додані",
+    "person_type": "Тип контрагента"
   },
   "labels": {
     "main": "$t(dictionary.main)",
@@ -101,7 +102,7 @@
       "avatar_url": "$t(dictionary.photo)",
       "full_name": "$t(dictionary.full_name)",
       "phone": "$t(dictionary.phone)",
-      "role": "$t(dictionary.role)",
+      "role": "$t(dictionary.person_type)",
       "city": "$t(dictionary.city)",
       "post": "$t(dictionary.post)",
       "created_at": "$t(dictionary.created)",
@@ -121,7 +122,7 @@
       "last_name-asc": "По прізвищу А-Я",
       "created_at-desc": "$t(dictionary.created_at-desc)",
       "created_at-asc": "$t(dictionary.created_at-asc)",
-      "role": "По ролі"
+      "role": "$t(dictionary.person_type)"
     },
     "tabs": {
       "general_info": "$t(dictionary.info)",
@@ -375,9 +376,9 @@
   },
 
   "main_menu": {
-    "dashboard": "Дашбоард",
+    "dashboard": "Дашборд",
     "requests": "Заявки",
-    "orders": "Завдання",
+    "orders": "Замовлення",
     "finance": "Фінанси",
     "reports": "Звіти",
     "statistic": "Статистика",
