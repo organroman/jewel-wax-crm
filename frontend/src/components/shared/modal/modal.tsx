@@ -5,10 +5,24 @@ import { DialogContent, DialogTitle } from "@/components/ui/dialog";
 
 import ModalHeader from "./modal-header";
 import ModalFooter from "./modal-footer";
+import { cn } from "@/lib/utils";
 
-const Modal = ({ header, children, footer, destructive }: ModalProps) => {
+const Modal = ({
+  header,
+  children,
+  footer,
+  destructive,
+  hideClose,
+  dialogContentClassname,
+}: ModalProps) => {
   return (
-    <DialogContent className="max-w-[95vw] mi-h-fit max-h-[80vh] lg:max-h-[90vh] p-2.5 lg:p-5 lg:pr-2 min-w-fit w-full lg:max-w-lg overflow-visible bg-ui-sidebar">
+    <DialogContent
+      hideClose={hideClose}
+      className={cn(
+        "max-w-[95vw] mi-h-fit max-h-[80vh] lg:max-h-[90vh] p-2.5 lg:p-5 lg:pr-2 min-w-fit w-full lg:max-w-lg overflow-visible bg-ui-sidebar",
+        dialogContentClassname
+      )}
+    >
       {!header?.title && (
         <DialogTitle asChild>
           <VisuallyHidden>Modal</VisuallyHidden>
@@ -22,7 +36,9 @@ const Modal = ({ header, children, footer, destructive }: ModalProps) => {
           destructive={destructive}
         />
       )}
-      <div className="h-full overflow-y-auto pr-5">{children}</div>
+      <div className={cn("h-full overflow-y-auto pr-5", hideClose && "pr-0")}>
+        {children}
+      </div>
       {footer && (
         <ModalFooter
           isPending={footer.isPending}

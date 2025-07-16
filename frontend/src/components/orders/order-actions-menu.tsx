@@ -1,7 +1,7 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
-import { GalleryVerticalEndIcon, Loader } from "lucide-react";
 import Link from "next/link";
+import { Loader } from "lucide-react";
 
 import { useDialog } from "@/hooks/use-dialog";
 
@@ -9,14 +9,10 @@ import { useOrder } from "@/api/order/use-order";
 
 import ActionsMenu from "../shared/actions-menu";
 import Modal from "../shared/modal/modal";
-import CustomTabs from "../shared/custom-tabs";
 
 import { Dialog } from "../ui/dialog";
-import { DropdownMenuItem } from "../ui/dropdown-menu";
-import { Separator } from "../ui/separator";
 
-import { translateKeyValueList } from "@/lib/translate-constant-labels";
-import { ORDER_CARD_TABS_LIST } from "@/constants/orders.constants";
+import OrderInfo from "./order-info";
 
 const OrderActionsMenu = ({ id }: { id: number }) => {
   const queryClient = useQueryClient();
@@ -42,12 +38,6 @@ const OrderActionsMenu = ({ id }: { id: number }) => {
     isLoading,
     error,
   } = useOrder.getById({ id, enabled: isViewDialogOpen });
-
-  const tabs = translateKeyValueList(
-    ORDER_CARD_TABS_LIST,
-    t,
-    "order.tabs"
-  ).filter((t) => t.value === "general_info");
 
   return (
     <>
@@ -85,19 +75,14 @@ const OrderActionsMenu = ({ id }: { id: number }) => {
         />
       </Dialog>
       <Dialog open={isViewDialogOpen} onOpenChange={setIsViewDialogOpen}>
-        <Modal>
+        <Modal hideClose dialogContentClassname="p-0 lg:p-0 lg:pr-0">
           {error && <p>{error.message}</p>}
           {isLoading && <Loader />}
           {!isLoading && order && (
-            <>
-              <CustomTabs
-                isModal={true}
-                tabsOptions={tabs}
-                selectedTab={tabs[0]}
-              />
-              <Separator className="bg-ui-border h-0.5 data-[orientation=horizontal]:h-0.5" />
-              {/* TODO:  ORDER VIEW */}
-            </>
+            <div className="flex flex-col gap-2">
+             
+              <OrderInfo order={order} />
+            </div>
           )}
         </Modal>
       </Dialog>

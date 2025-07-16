@@ -11,6 +11,7 @@ import { Badge } from "../ui/badge";
 import OrderFavorite from "./order-favorite";
 import OrderImportant from "./order-important";
 import OrderActionsMenu from "./order-actions-menu";
+import ViewOrder from "./view-order";
 
 import { cn } from "@/lib/utils";
 import {
@@ -82,7 +83,7 @@ export const getOrdersColumns = (
       cell: ({ row }) => {
         const orderNumber = row.original.number;
         return (
-          <span className="underline text-action-plus">{orderNumber}</span>
+          <ViewOrder orderId={row.original.id} orderNumber={orderNumber} />
         );
       },
       size: 40,

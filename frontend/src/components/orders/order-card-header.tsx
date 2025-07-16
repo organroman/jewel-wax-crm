@@ -11,8 +11,8 @@ import { getFullName } from "@/lib/utils";
 
 interface OrderCardHeaderProps {
   order?: Order;
-  savingIsLoading: boolean;
-  submitBtnTitle: string;
+  savingIsLoading?: boolean;
+  submitBtnTitle?: string;
 }
 
 const OrderCardHeader = ({
@@ -54,26 +54,28 @@ const OrderCardHeader = ({
         </div>
       )}
       <div className="lg:ml-auto flex items-center gap-5">
-        {order && (
+        {order && submitBtnTitle && (
           <Button variant="secondary" className="bg-transparent rounded-sm">
             {t("order.buttons.create_invoice")}
           </Button>
         )}
-        <Button
-          type="submit"
-          form="orderForm"
-          className="text-white"
-          disabled={savingIsLoading}
-        >
-          {savingIsLoading ? (
-            <div className="flex items-center gap-2.5">
-              <Loader className="size-4 text-white animate-spin" />
-              {submitBtnTitle}
-            </div>
-          ) : (
-            submitBtnTitle
-          )}
-        </Button>
+        {submitBtnTitle && savingIsLoading && (
+          <Button
+            type="submit"
+            form="orderForm"
+            className="text-white"
+            disabled={savingIsLoading}
+          >
+            {savingIsLoading ? (
+              <div className="flex items-center gap-2.5">
+                <Loader className="size-4 text-white animate-spin" />
+                {submitBtnTitle}
+              </div>
+            ) : (
+              submitBtnTitle
+            )}
+          </Button>
+        )}
       </div>
     </div>
   );

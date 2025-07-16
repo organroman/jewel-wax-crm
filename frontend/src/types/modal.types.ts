@@ -23,4 +23,6 @@ export interface ModalProps {
   children?: React.ReactNode;
   footer?: ModalFooterProps;
   destructive?: boolean;
+  hideClose?: boolean;
+  dialogContentClassname?: string
 }
