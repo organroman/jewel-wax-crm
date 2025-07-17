@@ -137,6 +137,7 @@ export interface Order {
   createdBy: string;
   delivery: OrderDelivery;
   linked_orders: LinkedOrder[];
+  chat_id: number | null;
 }
 
 export interface PaginatedOrdersResult<T> extends PaginatedResult<T> {

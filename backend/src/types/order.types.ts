@@ -142,6 +142,7 @@ export interface UserOrder {
   is_favorite: boolean;
   is_important: boolean;
   stages: OrderStage[];
+  chat_id?: number | null;
 }
 export interface AdminOrder {
   id: number;
@@ -149,7 +150,7 @@ export interface AdminOrder {
   updated_at: Date;
   number: number;
   name: string;
-  customer: OrderCustomer
+  customer: OrderCustomer;
   modeller: OrderPerson | null;
   miller: OrderPerson | null;
   printer: OrderPerson | null;
@@ -167,6 +168,7 @@ export interface AdminOrder {
   milling_cost?: number;
   modeling_cost?: number;
   printing_cost?: number;
+  chat_id?: number | null;
 }
 
 export interface LinkedOrder {

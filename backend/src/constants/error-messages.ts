@@ -33,7 +33,11 @@ const ERROR_MESSAGES = {
   UNKNOWN_NP_ERROR: "Unknown Nova Poshta error",
   FAILED_TO_CREATE_NP_RECIPIENT: "Failed to create recipient",
   NUMBER: "should be a number",
-  NO_FILES: "No files uploaded"
+  NO_FILES: "No files uploaded",
+  CHAT_ID_REQUIRED: "Chat ID is required",
+  CHAT_NOT_FOUND: "Chat not found",
+  ORDER_NOT_FOUND: "Order not found",
+  NO_TOKEN: "No token provided"
 } as const;
 
 export default ERROR_MESSAGES;

@@ -59,7 +59,7 @@ const OrderCardHeader = ({
             {t("order.buttons.create_invoice")}
           </Button>
         )}
-        {submitBtnTitle && savingIsLoading && (
+        {submitBtnTitle && (
           <Button
             type="submit"
             form="orderForm"

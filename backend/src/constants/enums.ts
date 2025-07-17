@@ -60,4 +60,7 @@ export const INVOICE_STATUS = [
   "failed",
 ] as const;
 
-export const DELIVERY_TYPE = ["door", "warehouse"] as const 
+export const DELIVERY_TYPE = ["door", "warehouse"] as const;
+
+export const ORDER_PERFORMER_TYPE = ["modeller", "miller", "printer"];
+export const ORDER_CHAT_MEDIA_TYPE = ["image", "video", "file", "audio"];

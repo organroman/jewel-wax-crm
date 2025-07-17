@@ -12,8 +12,11 @@ import cloudinary from "../cloudinary/config";
 import { s3 } from "../digital-ocean/spaces-client";
 
 import { OrderModel } from "../models/order-model";
+import { OrderChatModel } from "../models/order-chat-model";
 import { ActivityLogModel } from "../models/activity-log-model";
 import { PersonModel } from "../models/person-model";
+
+import { OrderChatService } from "./order-chat-service";
 
 import {
   formatPerson,
@@ -236,6 +239,13 @@ export const OrderService = {
 
     const linked_orders = await OrderModel.getLinkedOrders(orderId);
 
+    console.log("orderService, orderID", orderId);
+
+    const order_chat = await OrderChatModel.getChatByOrderId({
+      orderId: orderId,
+      type: "modeller",
+    });
+
     const {
       customer_id,
       miller_id,
@@ -265,6 +275,7 @@ export const OrderService = {
       delivery: enrichedDelivery,
       linked_orders,
       createdBy,
+      chat_id: order_chat?.id ?? null,
     };
 
     return enrichedOrder;
@@ -304,6 +315,13 @@ export const OrderService = {
 
     if (!newOrder) {
       return null;
+    }
+
+    if (modeller) {
+      await OrderChatService.getOrCreateChat({
+        orderId: newOrder.id,
+        type: "modeller",
+      });
     }
 
     if (linked_orders?.length) {
@@ -409,6 +427,13 @@ export const OrderService = {
 
     if (!updatedOrder) {
       return null;
+    }
+
+    if (modeller) {
+      await OrderChatService.getOrCreateChat({
+        orderId,
+        type: "modeller",
+      });
     }
 
     if (linked_orders?.length) {

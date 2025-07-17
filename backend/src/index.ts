@@ -26,9 +26,9 @@ import locationRoutes from "./routes/location-routes";
 import activityLogRoutes from "./routes/activity-logs-routes";
 import uploadRoutes from "./routes/upload-routes";
 import novaPoshtaRoutes from "./routes/novaposhta-routes";
+import chatRoutes from "./routes/order-chat-routes";
 
 import { registerSocketHandlers } from "./sockets";
-
 
 const app = express();
 const server = http.createServer(app);
@@ -83,6 +83,7 @@ app.use("/locations", locationRoutes);
 app.use("/activity-logs", activityLogRoutes);
 app.use("/upload", uploadRoutes);
 app.use("/np", novaPoshtaRoutes);
+app.use("/chats", chatRoutes);
 
 app.use(errorHandler);
 
