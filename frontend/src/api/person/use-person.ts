@@ -68,6 +68,9 @@ export const usePerson = {
         queryClient.invalidateQueries({
           queryKey: ["persons"],
         });
+        queryClient.invalidateQueries({
+          queryKey: ["person", data.id],
+        });
         handleOnSuccess && handleOnSuccess(data);
       },
       onError: (error) => {

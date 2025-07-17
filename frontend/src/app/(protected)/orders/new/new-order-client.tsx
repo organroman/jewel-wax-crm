@@ -40,7 +40,7 @@ const NewOrderClient = ({ userId }: { userId: number }) => {
   return (
     <div className="h-full flex flex-col overflow-hidden">
       <Button
-        onClick={() => router.push("/orders")}
+        onClick={() => router.back()}
         variant="link"
         className="w-fit has-[>svg]:p-0 text-text-light h-4"
       >

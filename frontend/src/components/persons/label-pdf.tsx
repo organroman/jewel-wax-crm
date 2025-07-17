@@ -6,6 +6,7 @@ import {
   View,
   StyleSheet,
   Font,
+  Image,
 } from "@react-pdf/renderer";
 
 const mmToPt = (mm: number) => mm * 2.83465;
@@ -42,12 +43,13 @@ const styles = StyleSheet.create({
     color: "white",
     padding: 4,
     flexDirection: "row",
+    alignItems: "center",
     justifyContent: "space-between",
     fontSize: 7,
   },
   logo: {
-    fontSize: 16,
-    fontWeight: "bold",
+    width: 30,
+    height: 16,
   },
   contacts: {
     display: "flex",
@@ -100,10 +102,11 @@ const LabelPDF = ({
   <Document>
     <Page size={[mmToPt(40), mmToPt(30)]} style={styles.page}>
       <View style={styles.header}>
-        <Text style={styles.logo}>JW</Text>
+        <Image style={styles.logo} src="/img/logo.png" />
         <View style={styles.contacts}>
           <Text>Jewel-wax.com.ua</Text>
           <Text>+38(066) 302-60-44</Text>
+          <Text>+38(093) 302-60-44</Text>
         </View>
       </View>
       <View style={styles.content}>
