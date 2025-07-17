@@ -5,6 +5,8 @@ import { QueryProvider } from "@/providers/query-provider";
 import { Toaster } from "sonner";
 import { ThemeProvider } from "@/providers/theme-provider";
 import TranslationProvider from "@/providers/translation-provider";
+import { cookies } from "next/headers";
+import { SocketProvider } from "@/providers/socket-provider";
 
 const inter = Inter({
   variable: "--font-inter-sans",
@@ -22,6 +24,9 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const cookiesStore = await cookies();
+  const token = cookiesStore.get("token")?.value;
+
   return (
     <html lang="ua" suppressHydrationWarning>
       <body
@@ -35,17 +40,19 @@ export default async function RootLayout({
             disableTransitionOnChange
           >
             <QueryProvider>
-              {children}
-              <Toaster
-                position="top-right"
-                offset={{ top: "5vh", right: "36px" }}
-                richColors
-                toastOptions={{
-                  classNames: {
-                    toast: "!py-3",
-                  },
-                }}
-              />
+              <SocketProvider token={token}>
+                {children}
+                <Toaster
+                  position="top-right"
+                  offset={{ top: "5vh", right: "36px" }}
+                  richColors
+                  toastOptions={{
+                    classNames: {
+                      toast: "!py-3",
+                    },
+                  }}
+                />
+              </SocketProvider>
             </QueryProvider>
           </ThemeProvider>
         </TranslationProvider>

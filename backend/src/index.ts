@@ -9,9 +9,12 @@ dotenv.config({ path: path.resolve(__dirname, "..", envFile) });
 import express from "express";
 import morgan from "morgan";
 import cors from "cors";
+import http from "http";
+import { Server } from "socket.io";
 
 import errorHandler from "./middlewares/error-handler-middleware";
 import { verifyToken } from "./middlewares/auth-middleware";
+import { socketAuthMiddleware } from "./middlewares/socket-auth-middleware";
 
 import authRoutes from "./routes/auth-rotes";
 import enumRoutes from "./routes/enum-routes";
@@ -24,7 +27,29 @@ import activityLogRoutes from "./routes/activity-logs-routes";
 import uploadRoutes from "./routes/upload-routes";
 import novaPoshtaRoutes from "./routes/novaposhta-routes";
 
+import { registerSocketHandlers } from "./sockets";
+
+
 const app = express();
+const server = http.createServer(app);
+const io = new Server(server, {
+  cors: {
+    origin: [
+      "http://localhost:8000",
+      "http://localhost:3000",
+      "http://test-crm.jewel-wax.com.ua",
+      "https://test-crm.jewel-wax.com.ua",
+      "http://crm.jewel-wax.com.ua",
+      "https://crm.jewel-wax.com.ua",
+    ],
+    methods: ["GET", "POST"],
+  },
+});
+io.use(socketAuthMiddleware);
+app.set("io", io);
+
+registerSocketHandlers(io);
+
 const PORT = process.env.PORT || 8000;
 
 app.use(express.json());
@@ -65,6 +90,6 @@ if (process.env.NODE_ENV !== "production") {
   app.use(morgan("dev"));
 }
 
-app.listen(PORT, async () => {
+server.listen(PORT, async () => {
   console.log(`Server is running on port ${PORT}`);
 });
