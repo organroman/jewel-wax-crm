@@ -97,6 +97,8 @@ const PersonForm = ({
     }
   );
 
+  const customerRole = PERSON_ROLE_VALUES.find((r) => r === "client");
+
   const form = useForm<UpdatePersonSchema | CreatePersonSchema>({
     resolver: zodResolver(schema),
     defaultValues: {
@@ -104,8 +106,8 @@ const PersonForm = ({
       role: person
         ? person?.role
         : {
-            value: PERSON_ROLE_VALUES[3],
-            label: t(`person.roles.${PERSON_ROLE_VALUES[3]}`),
+            value: customerRole,
+            label: t(`person.roles.${customerRole}`),
           },
       first_name: person?.first_name || "",
       patronymic: person?.patronymic || "",

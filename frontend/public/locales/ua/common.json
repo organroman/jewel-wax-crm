@@ -167,7 +167,7 @@
       "last_name": "$t(dictionary.last_name)",
       "first_name": "$t(dictionary.first_name)",
       "patronymic": "$t(dictionary.patronymic)",
-      "role": "$t(dictionary.role)",
+      "role": "$t(dictionary.person_type)",
       "bank": "Банк",
       "card_number": "Номер картки",
       "bank_code": "МФО",
@@ -181,7 +181,7 @@
       "last_name": "Введіть прізвище",
       "first_name": "Введіть ім'я",
       "patronymic": "Введіть по батькові",
-      "role": "Оберіть роль",
+      "role": "Оберіть тип контрагента",
       "phone": "Введіть номер",
       "bank": "Введіть назву банку",
       "bank_code": "Введіть МФО",
@@ -422,7 +422,8 @@
       "no_results": "Дані відсутні",
       "confirm_delete": "Ви впевненні, що бажаєте видалити?",
       "action_undone": "Цю дію неможливо відмінити!",
-      "no_image": "Зображення відсутнє"
+      "no_image": "Зображення відсутнє",
+      "no_chat": "Чат відстутній. Додайте модельєра."
     },
     "success": {
       "person_created": "Контрагента створено",

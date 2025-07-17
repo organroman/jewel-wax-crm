@@ -36,7 +36,7 @@ export const LocationModel = {
 
     if (search) {
       baseQuery.where((qb) => {
-        qb.whereILike("name", `%${search}%`);
+        qb.whereILike("name", `${search}%`);
       });
     }
     if (ids?.length) {
@@ -45,6 +45,8 @@ export const LocationModel = {
     return await paginateQuery<City>(baseQuery, {
       page: 1,
       limit: search ? 100 : 20,
+      sortBy: "name",
+      order: "asc",
     });
   },
 
@@ -69,6 +71,7 @@ export const LocationModel = {
       page: 1,
       limit: 20,
       sortBy: "name",
+      order: "asc",
     });
   },
 

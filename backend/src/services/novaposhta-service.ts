@@ -93,11 +93,19 @@ export const NovaPoshtaService = {
       ...restData
     } = data;
 
+    const keysToFormat = new Set([
+      "PayerType",
+      "PaymentMethod",
+      "CargoType",
+      "ServiceType",
+    ]);
+
     const payload: Record<string, any> = {};
     for (const [key, value] of Object.entries(restData)) {
       const newKey = key.charAt(0).toUpperCase() + key.slice(1);
+
       const newValue =
-        typeof value === "string"
+        keysToFormat.has(newKey) && typeof value === "string"
           ? value.charAt(0).toUpperCase() + value.slice(1)
           : value;
 

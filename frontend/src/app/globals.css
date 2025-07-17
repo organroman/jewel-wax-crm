@@ -16,7 +16,7 @@
   --color-ui-sidebar: oklch(1 0 0); /* #ffffff  Бічна панель*/
   --color-ui-row-even: oklch(96.72% 0 0); /* "#F4F4F4", Фон строка */
   --color-ui-row-odd: oklch(1 0 0); /* #ffffff Фон строка */
-  --color-ui-row-hover: oklch(91.59% 0.004 271.37); /* # e2e3e6 ховер строки */
+  --color-ui-row-hover: oklch(0.6477 0.0104 222.12 / 30%); /*# e2e3e6 ховер строки
   --color-ui-border: oklch(90.67% 0 0); /* "#E0E0E0", Обведення та лінії */
   --color-ui-column: oklch(
     87.7% 0.003 145.55

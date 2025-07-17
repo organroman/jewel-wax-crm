@@ -99,7 +99,6 @@ const OrderForm = ({
     },
   });
 
-  console.log(form.getValues())
 
   useEffect(() => {
     if (order) {
@@ -133,7 +132,6 @@ const OrderForm = ({
   }, [order]);
 
   const onSubmit = async (formData: UpdateOrderSchema) => {
-    console.log("🚀 ~ onSubmit ~ formData:", formData)
     if (newFiles.length) {
       uploadImagesMutation.mutate(newFiles, {
         onSuccess: (data) => {

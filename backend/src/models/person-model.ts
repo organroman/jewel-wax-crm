@@ -32,7 +32,7 @@ export const PersonModel = {
     const baseQuery = db<Person>("persons").select("*");
 
     if (filters?.role) baseQuery.where("role", filters.role);
-    if (typeof filters?.is_active === "boolean")
+    if (filters?.is_active?.length)
       baseQuery.whereIn("is_active", filters.is_active);
 
     if (filters?.city && filters.city.length > 0)

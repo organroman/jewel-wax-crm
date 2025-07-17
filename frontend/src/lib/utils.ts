@@ -67,8 +67,12 @@ export const formatPhone = (raw: string): string => {
   const phone = parsePhoneNumberFromString(raw);
   return phone?.formatInternational() ?? raw;
 };
-
 export const copyToClipboard = async (text: string): Promise<boolean> => {
+  if (typeof window === "undefined" || !navigator?.clipboard) {
+    // You’re on the server or clipboard API is not available
+    return false;
+  }
+
   try {
     await navigator.clipboard.writeText(text);
     return true;

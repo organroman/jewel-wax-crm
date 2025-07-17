@@ -239,8 +239,6 @@ export const OrderService = {
 
     const linked_orders = await OrderModel.getLinkedOrders(orderId);
 
-    console.log("orderService, orderID", orderId);
-
     const order_chat = await OrderChatModel.getChatByOrderId({
       orderId: orderId,
       type: "modeller",

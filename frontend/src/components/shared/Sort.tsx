@@ -38,7 +38,7 @@ const Sort = ({
   };
 
   return (
-    <div className="flex w-[220px] items-center gap-2">
+    <div className="flex items-center gap-2">
       <span className="text-xs text-text-light font-semibold focus-visible:outline-none">
         {t("dictionary.sorting")}:
       </span>

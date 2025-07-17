@@ -17,7 +17,6 @@ export const OrderChatModel = {
     orderId: number;
     type: OrderPerformer;
   }): Promise<OrderChat> {
-    console.log("OrderChat, orderId", orderId);
     const [chat] = await db<OrderChat>("order_chats")
       .where("order_id", orderId)
       .andWhere("type", type);

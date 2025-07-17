@@ -71,7 +71,7 @@ export const PaginationControls = ({
         </PaginationItem>
 
         {visiblePages.map((page, idx) => (
-          <PaginationItem key={idx}>
+          <PaginationItem key={idx} className="cursor-pointer">
             {page === "..." ? (
               <PaginationEllipsis />
             ) : (

@@ -21,6 +21,8 @@ const TabsFilter = ({ param, options, counts }: TabsFilterProps) => {
   const handleChange = (value: string) => {
     const params = new URLSearchParams(searchParams);
 
+    params.set("page", "1");
+
     if (value === "all") {
       params.delete(param);
     } else {
