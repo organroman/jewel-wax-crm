@@ -25,7 +25,7 @@ const OrderInfo = ({ order }: OrderInfoProps) => {
     <div className="w-full h-full flex flex-col gap-4 rounded-md">
       <OrderCardHeader order={order} />
       <div className="flex flex-row gap-5 p-5 ">
-        <div className="w-2/5 flex-flex-col gap-5 ">
+        <div className="w-2/5 max-w-[280px] flex-flex-col gap-5 ">
           <div className="w-full h-45 p-2.5 bg-ui-column rounded-md flex justify-center items-center text-center">
             {mainImage ? (
               <img
