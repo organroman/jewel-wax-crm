@@ -21,4 +21,4 @@ export const REQUEST_SORT_FIELDS = [
   "message",
 ];
 
-export const ORDERS_SORT_FIELDS = ["is_favorite", "is_important", "created_at"];
+export const ORDERS_SORT_FIELDS = ["created_at"];

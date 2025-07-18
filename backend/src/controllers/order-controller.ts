@@ -1,6 +1,6 @@
 import { SortOrder } from "../types/shared.types";
 import { PersonRole } from "../types/person.types";
-import { PaymentStatus, Stage } from "../types/order.types";
+import { PaymentStatus, Stage, StageStatus } from "../types/order.types";
 
 import { Request, Response, NextFunction } from "express";
 
@@ -11,7 +11,11 @@ import { ORDERS_SORT_FIELDS } from "../constants/sortable-fields";
 import ERROR_MESSAGES from "../constants/error-messages";
 
 import AppError from "../utils/AppError";
-import { parseStringArray, parseSortParams } from "../utils/parse-query-params";
+import {
+  parseStringArray,
+  parseSortParams,
+  parseBooleanArray,
+} from "../utils/parse-query-params";
 
 export const OrderController = {
   async getAllOrders(req: Request, res: Response, next: NextFunction) {
@@ -22,10 +26,22 @@ export const OrderController = {
       if (!userId || !userRole)
         throw new AppError(ERROR_MESSAGES.UNAUTHORIZED, 401);
 
-      const { page, limit, search, active_stage, payment_status } = req.query;
+      const {
+        page,
+        limit,
+        search,
+        active_stage,
+        payment_status,
+        is_important,
+        is_favorite,
+        active_stage_status,
+      } = req.query;
 
       const parsedPaymentStatus =
         parseStringArray<PaymentStatus>(payment_status);
+      const parsedIsImportant = parseBooleanArray(is_important);
+      const parsedIsFavorite = parseBooleanArray(is_favorite);
+      const parsedActiveStageStatus = parseStringArray(active_stage_status);
 
       const { sortBy, order } = parseSortParams(
         req.query.sortBy as string,
@@ -40,6 +56,9 @@ export const OrderController = {
         filters: {
           active_stage: active_stage as Stage,
           payment_status: parsedPaymentStatus,
+          is_important: parsedIsImportant as boolean[],
+          is_favorite: parsedIsFavorite as boolean[],
+          active_stage_status: parsedActiveStageStatus as StageStatus[],
         },
         search: search as string,
         sortBy: sortBy as string,

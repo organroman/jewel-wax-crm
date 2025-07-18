@@ -16,15 +16,16 @@ export function translateFilterGroups(
   prefix: string
 ): FilterGroup[] {
   return data.map((item) => {
+    const labelKey = `${prefix}.${item.key}`;
     const translated: FilterGroup = {
       param: item.param,
-      label: t(`${prefix}.${item.key}`),
+      label: t(`${labelKey}.label`),
     };
 
     if (item.options) {
       translated.options = item.options.map((opt) => ({
         value: opt.value,
-        label: t(`${prefix}.options.${opt.key}`),
+        label: t(`${labelKey}.options.${opt.key}`),
       }));
     }
 

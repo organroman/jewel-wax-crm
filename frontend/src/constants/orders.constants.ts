@@ -1,4 +1,8 @@
-import { ORDER_STAGE, PAYMENT_STATUS } from "./enums.constants";
+import {
+  ORDER_STAGE,
+  ORDER_STAGE_STATUS,
+  PAYMENT_STATUS,
+} from "./enums.constants";
 
 export const ORDER_STAGES = ["all", ...ORDER_STAGE];
 
@@ -7,6 +11,30 @@ export const STATIC_ORDER_FILTERS = [
     param: "payment_status",
     key: "payment_status",
     options: PAYMENT_STATUS.map((ps) => ({ key: ps, value: ps })),
+    permission: ["super_admin"],
+  },
+  {
+    param: "is_important",
+    key: "is_important",
+    options: [
+      { key: "important", value: true },
+      { key: "not_important", value: false },
+    ],
+    permission: "super_admin",
+  },
+  {
+    param: "is_favorite",
+    key: "is_favorite",
+    options: [
+      { key: "favorite", value: true },
+      { key: "not_favorite", value: false },
+    ],
+    permission: "super_admin",
+  },
+  {
+    param: "active_stage_status",
+    key: "active_stage_status",
+    options: ORDER_STAGE_STATUS.map((s) => ({ key: s, value: s })),
     permission: "super_admin",
   },
 ];

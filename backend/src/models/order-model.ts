@@ -109,6 +109,45 @@ export const OrderModel = {
     if (filters?.payment_status && filters.payment_status.length > 0) {
       baseQuery.whereIn("payment_status", filters.payment_status);
     }
+    if (filters?.is_important?.length) {
+      baseQuery.whereIn("is_important", filters.is_important);
+    }
+
+    if (filters?.is_favorite?.length) {
+      baseQuery.where(function () {
+        if (filters?.is_favorite?.includes(true)) {
+          this.orWhereExists(function () {
+            this.select("*")
+              .from("order_favorites")
+              .whereRaw("order_favorites.order_id = orders.id")
+              .andWhere("order_favorites.person_id", user_id);
+          });
+        }
+
+        if (filters.is_favorite?.includes(false)) {
+          this.orWhereNotExists(function () {
+            this.select("*")
+              .from("order_favorites")
+              .whereRaw("order_favorites.order_id = orders.id")
+              .andWhere("order_favorites.person_id", user_id);
+          });
+        }
+      });
+    }
+
+    if (filters?.active_stage_status?.length) {
+      baseQuery.whereRaw(
+        `(
+           SELECT status
+           FROM order_stage_statuses
+           WHERE order_stage_statuses.order_id = orders.id
+             AND order_stage_statuses.stage = orders.active_stage::order_stage
+           ORDER BY created_at DESC
+           LIMIT 1
+        ) = ANY(?)`,
+        [filters.active_stage_status]
+      );
+    }
 
     if (search) {
       baseQuery.where((qb) => {

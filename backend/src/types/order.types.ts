@@ -207,6 +207,9 @@ export interface GetAllOrdersOptions
   extends GetAllOptions<{
     active_stage?: Stage;
     payment_status?: PaymentStatus[];
+    is_important?: boolean[];
+    is_favorite?: boolean[];
+    active_stage_status?: StageStatus[];
   }> {
   user_id: number;
   user_role: PersonRole;

@@ -45,7 +45,9 @@
     "warehouse": "Відділення",
     "created_at-desc": "Останні додані",
     "created_at-asc": "Початкові додані",
-    "person_type": "Тип контрагента"
+    "person_type": "Тип контрагента",
+    "is_favorite": "Обране",
+    "is_important": "Важливе"
   },
   "labels": {
     "main": "$t(dictionary.main)",
@@ -110,10 +112,12 @@
       "actions": "$t(dictionary.actions)"
     },
     "filters": {
-      "status": "$t(dictionary.status)",
-      "options": {
-        "active": "$t(dictionary.active_plural)",
-        "inactive": "$t(dictionary.inactive_plural)"
+      "status": {
+        "label": "$t(dictionary.status)",
+        "options": {
+          "active": "$t(dictionary.active_plural)",
+          "inactive": "$t(dictionary.inactive_plural)"
+        }
       }
     },
     "sorting": {
@@ -248,16 +252,41 @@
     },
     "sorting": {
       "created_at-desc": "$t(dictionary.created_at-desc)",
-      "created_at-asc": "$t(dictionary.created_at-asc)",
-      "is_favorite": "Обране",
-      "is_important": "Важливе"
+      "created_at-asc": "$t(dictionary.created_at-asc)"
     },
     "filters": {
-      "payment_status": "$t(dictionary.payment_status)",
-      "options": {
-        "paid": "Оплачено",
-        "unpaid": "Не оплачено",
-        "partly_paid": "Частково оплачено"
+      "payment_status": {
+        "label": "$t(dictionary.payment_status)",
+        "options": {
+          "paid": "Оплачено",
+          "unpaid": "Не оплачено",
+          "partly_paid": "Частково оплачено"
+        }
+      },
+      "is_favorite": {
+        "label": "$t(dictionary.is_favorite)",
+        "options": {
+          "favorite": "Обране",
+          "not_favorite": "Не обране"
+        }
+      },
+      "is_important": {
+        "label": "$t(dictionary.is_important)",
+        "options": {
+          "important": "Важливе",
+          "not_important": "Звичайне"
+        }
+      },
+      "active_stage_status": {
+        "label": "$t(dictionary.stage_status)",
+        "options": {
+          "pending": "$t(order.stage_statuses.pending)",
+          "processed": "$t(order.stage_statuses.processed)",
+          "in_process": "$t(order.stage_statuses.in_process)",
+          "clarification": "$t(order.stage_statuses.clarification)",
+          "negotiation": "$t(order.stage_statuses.negotiation)",
+          "done": "$t(order.stage_statuses.done)"
+        }
       }
     },
     "table_headers": {
