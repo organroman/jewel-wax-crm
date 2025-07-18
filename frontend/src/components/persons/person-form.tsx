@@ -112,7 +112,10 @@ const PersonForm = ({
       first_name: person?.first_name || "",
       patronymic: person?.patronymic || "",
       last_name: person?.last_name || "",
-      is_active: person?.is_active || true,
+      is_active:
+        person?.is_active !== undefined || person?.is_active === null
+          ? person.is_active
+          : true,
       emails: person ? person.emails : [],
       phones: person?.phones || [],
       locations: person?.locations || [],

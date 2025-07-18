@@ -21,25 +21,27 @@ const FormSwitch = <T extends FieldValues>({
     <FormField
       name={name}
       control={control}
-      render={({ field }) => (
-        <FormItem className="">
-          <FormControl>
-            <div className="flex items-center gap-2">
-              <Switch
-                id={name}
-                checked={field.value}
-                onCheckedChange={field.onChange}
-              />
-              <FormLabel htmlFor={name} className="text-xs">
-                {!unCheckedLabel && checkedLabel}
-                {unCheckedLabel &&
-                  (field.value === true ? checkedLabel : unCheckedLabel)}
-              </FormLabel>
-            </div>
-          </FormControl>
-          <FormMessage />
-        </FormItem>
-      )}
+      render={({ field }) => {
+        return (
+          <FormItem className="">
+            <FormControl>
+              <div className="flex items-center gap-2">
+                <Switch
+                  id={name}
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                />
+                <FormLabel htmlFor={name} className="text-xs">
+                  {!unCheckedLabel && checkedLabel}
+                  {unCheckedLabel &&
+                    (field.value === true ? checkedLabel : unCheckedLabel)}
+                </FormLabel>
+              </div>
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        );
+      }}
     />
   );
 };

@@ -2,7 +2,6 @@ import jwt from "jsonwebtoken";
 import { PersonModel } from "../models/person-model";
 import { JwtPayload } from "../types/jwt.types";
 import { ExtendedError, Socket } from "socket.io";
-
 import ERROR_MESSAGES from "../constants/error-messages";
 
 export async function socketAuthMiddleware(
@@ -17,18 +16,27 @@ export async function socketAuthMiddleware(
     }
 
     const secret = process.env.JWT_SECRET!;
-    const decoded = jwt.verify(token, secret) as JwtPayload;
+    let decoded: JwtPayload;
 
-    const isUserExist = await PersonModel.findById(+decoded.id);
-    if (!isUserExist) return next(new Error(ERROR_MESSAGES.UNAUTHORIZED));
+    try {
+      decoded = jwt.verify(token, secret) as JwtPayload;
+    } catch (err) {
+      return next(new Error("Unauthorized: Invalid or expired token"));
+    }
+
+    const user = await PersonModel.findById(+decoded.id);
+    if (!user) {
+      return next(new Error(ERROR_MESSAGES.UNAUTHORIZED));
+    }
 
     socket.data.user = {
       id: decoded.id,
       role: decoded.role,
     };
 
-    next();
+    return next();
   } catch (err) {
-    next(new Error("Unauthorized: Invalid token"));
+    // fallback (дуже рідко сюди дійде, але хай буде)
+    return next(new Error("Internal authentication error"));
   }
 }

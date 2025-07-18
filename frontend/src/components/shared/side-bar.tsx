@@ -23,7 +23,7 @@ const SideBar = ({ role }: { role: PersonRoleValue }) => {
 
   return (
     <div className="h-full w-full">
-      <div className="flex items-center justify-center mt-3 mb-10">
+      <div className="flex items-center justify-center mt-5 mb-10">
         {theme === "dark" ? (
           <LogoIconDark className="self-center" />
         ) : (
