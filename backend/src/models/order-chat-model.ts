@@ -1,5 +1,7 @@
 import db from "../db/db";
 import {
+  ChatParticipant,
+  ChatParticipantInput,
   OrderChat,
   OrderChatInput,
   OrderChatMedia,
@@ -25,10 +27,25 @@ export const OrderChatModel = {
   },
 
   async createChat(data: OrderChatInput): Promise<OrderChat> {
-    const [newOrder] = await db<OrderChat>("order_chats")
+    const [newChat] = await db<OrderChat>("order_chats")
       .insert(data)
       .returning("*");
-    return newOrder;
+    return newChat;
+  },
+  async createChatParticipant(
+    data: ChatParticipantInput
+  ): Promise<ChatParticipant> {
+    const [newParticipant] = await db<ChatParticipant>("chat_participants")
+      .insert(data)
+      .returning("*");
+
+    return newParticipant;
+  },
+
+  async getChatParticipants(chatId: number): Promise<ChatParticipant[]> {
+    return await db<ChatParticipant>("chat_participants")
+      .where("chat_id", chatId)
+      .select("*");
   },
 
   async getOrCreateChatByOrderId({

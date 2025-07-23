@@ -6,7 +6,7 @@
     "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
     "migrate": "npx knex --knexfile ./src/knexfile.ts migrate:latest",
-    "rollback:last": "npx knex migrate:rollback",
+    "rollback:last": "npx knex --knexfile ./src/knexfile.ts migrate:rollback",
     "seed:dev": "ts-node ./src/seeds/dev-seed.ts",
     "sync:np-cities": "ts-node ./src/scripts/syncNpCities.ts",
     "sync:np-cities-prod": "NODE_ENV=production node dist/scripts/syncNpCities.js",

@@ -5,7 +5,7 @@ export function registerOrderChatHandlers(io: Server) {
   io.on("connection", (socket: Socket) => {
     console.log("User connected:", socket.id);
 
-    const user = socket.handshake.auth.user;
+    const user = socket.data.user;
 
     socket.on("chat:join", ({ chatId }) => {
       socket.join(chatId);
@@ -15,7 +15,7 @@ export function registerOrderChatHandlers(io: Server) {
     socket.on("chat:send", async ({ chatId, message, media }) => {
       const msg = await OrderChatService.sendMessage({
         chatId,
-        senderId: user.id,
+        senderId: user?.id,
         message,
         media,
       });

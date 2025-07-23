@@ -1,3 +1,4 @@
+import { PersonRole } from "./person.types";
 
 import {
   ORDER_CHAT_MEDIA_TYPE,
@@ -13,6 +14,30 @@ export interface OrderChat {
   type: OrderPerformer;
   created_at: string;
   updated_at: string;
+}
+
+export interface ChatParticipant {
+  id: number;
+  person_id: number;
+  chat_id: number;
+  joined_at: number;
+}
+
+export interface ChatParticipantInput {
+  person_id: number;
+  chat_id: number;
+}
+
+export interface ChatParticipantFull {
+  id: number;
+  person_id: number;
+  chat_id: number;
+  joined_at: number;
+  first_name: string;
+  last_name: string;
+  patronymic?: string;
+  phone: string;
+  role: PersonRole;
 }
 
 export interface OrderChatInput {

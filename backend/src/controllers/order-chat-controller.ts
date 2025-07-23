@@ -25,6 +25,21 @@ export const OrderChatController = {
       next(error);
     }
   },
+  async getChatDetails(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { chatId } = req.params;
+      const limit = Number(req.query.limit || 50);
+
+      const chat = await OrderChatService.getChatDetails({
+        chatId: Number(chatId),
+        limit,
+      });
+
+      res.status(200).json(chat);
+    } catch (error) {
+      next(error);
+    }
+  },
 
   async sendMessage(req: Request, res: Response, next: NextFunction) {
     try {

@@ -13,6 +13,13 @@ router.get(
   OrderChatController.getLatestMessages
 );
 
+router.get(
+  "/:chatId/details",
+  verifyToken,
+  isChatParticipant,
+  OrderChatController.getChatDetails
+);
+
 router.post(
   "/:chatId/messages",
   verifyToken,

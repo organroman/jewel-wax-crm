@@ -3,7 +3,6 @@ import {
   Person,
   SafePerson,
   GetAllPersonsOptions,
-  SafePersonWithRole,
   PersonBase,
   Phone,
   Email,
@@ -126,7 +125,7 @@ export const PersonModel = {
 
   async getCustomers(
     search?: string
-  ): Promise<PaginatedResult<Partial<SafePersonWithRole>>> {
+  ): Promise<PaginatedResult<Partial<SafePerson>>> {
     const baseQuery = db<Person>("persons").where("role", "client").select("*");
 
     if (search) {
@@ -164,7 +163,7 @@ export const PersonModel = {
     };
   },
 
-  async findById(personId: number): Promise<SafePersonWithRole | null> {
+  async findById(personId: number): Promise<SafePerson | null> {
     const [person] = await db<Person>("persons")
       .where("id", personId)
       .select("*");
@@ -211,7 +210,7 @@ export const PersonModel = {
 
     const base = stripPassword(person);
 
-    const safePerson: SafePersonWithRole = {
+    const safePerson: SafePerson = {
       ...base,
       role,
       delivery_addresses: addresses,

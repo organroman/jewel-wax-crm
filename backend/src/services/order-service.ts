@@ -318,6 +318,8 @@ export const OrderService = {
     if (modeller) {
       await OrderChatService.getOrCreateChat({
         orderId: newOrder.id,
+        currentUser: userId,
+        opponentId: modeller.id,
         type: "modeller",
       });
     }
@@ -431,6 +433,8 @@ export const OrderService = {
       await OrderChatService.getOrCreateChat({
         orderId,
         type: "modeller",
+        currentUser: userId,
+        opponentId: modeller.id,
       });
     }
 
