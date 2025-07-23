@@ -17,12 +17,12 @@
   --color-ui-row-even: oklch(96.72% 0 0); /* "#F4F4F4", Фон строка */
   --color-ui-row-odd: oklch(1 0 0); /* #ffffff Фон строка */
   --color-ui-row-hover: oklch(
-    0.6477 0.0104 222.12 / 30%
+    0.6429 0.0121 243.75 / 10%
   ); /*# e2e3e6 ховер строки */
   --color-ui-border: oklch(90.67% 0 0); /* "#E0E0E0", Обведення та лінії */
   --color-ui-column: oklch(
     87.7% 0.003 145.55
-  ); /* "#D5D7D5", Найменування колонок */  
+  ); /* "#D5D7D5", Найменування колонок */
 
   --color-accent-yellow: oklch(0.94 0.0418 87.36); /* "#F7EACC" */
   --color-accent-peach: oklch(0.72 0.1429 82.35); /* #d19b1a*/
