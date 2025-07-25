@@ -37,7 +37,8 @@ const ERROR_MESSAGES = {
   CHAT_ID_REQUIRED: "Chat ID is required",
   CHAT_NOT_FOUND: "Chat not found",
   ORDER_NOT_FOUND: "Order not found",
-  NO_TOKEN: "No token provided"
+  NO_TOKEN: "No token provided",
+  FAILED_TO_SEND_MESSAGE: "Failed to create message",
 } as const;
 
 export default ERROR_MESSAGES;

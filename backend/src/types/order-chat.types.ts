@@ -50,7 +50,7 @@ export interface OrderChatMessage {
   chat_id: number;
   sender_id: number;
   message: string | null;
-  media_id: number;
+  media: OrderChatMedia[];
   reply_to_message_id: number | null;
   is_edited: boolean;
   is_deleted: boolean;
@@ -62,7 +62,7 @@ export interface OrderChatMessageInput {
   chat_id: number;
   sender_id: number;
   message?: string;
-  media_id?: number;
+  media_ids?: number[];
   reply_to_message_id?: number;
 }
 
@@ -70,6 +70,7 @@ export interface OrderChatMedia {
   id: number;
   uploader_id: number;
   type: OrderChatMediaType;
+  public_id: string;
   url: string;
   name: string;
   size: number;
@@ -82,4 +83,10 @@ export interface OrderChatMediaInput {
   url: string;
   name: string;
   size: number;
+}
+
+export interface OrderChatMessageMedia {
+  id: number;
+  message_id: number;
+  media_id: number;
 }

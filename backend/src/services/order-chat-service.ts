@@ -3,12 +3,17 @@ import { OrderChatModel } from "../models/order-chat-model";
 import {
   ChatParticipantFull,
   OrderChat,
+  OrderChatMedia,
   OrderChatMediaInput,
   OrderChatMessage,
   OrderPerformer,
 } from "../types/order-chat.types";
 import AppError from "../utils/AppError";
 import ERROR_MESSAGES from "../constants/error-messages";
+import { ActivityLogModel } from "../models/activity-log-model";
+import { LOG_ACTIONS, LOG_TARGETS } from "../constants/activity-log";
+import cloudinary from "../cloudinary/config";
+import { s3 } from "../digital-ocean/spaces-client";
 
 export const OrderChatService = {
   async getOrCreateChat({
@@ -86,13 +91,15 @@ export const OrderChatService = {
   }): Promise<{
     messages: OrderChatMessage[];
     participants: ChatParticipantFull[];
+    media: OrderChatMedia[];
   }> {
-    const [messages, participants] = await Promise.all([
+    const [messages, participants, media] = await Promise.all([
       OrderChatModel.getLatestMessagesByChatId({ chatId, limit }),
       this.getChatParticipants(chatId),
+      OrderChatModel.getChatMedia(chatId),
     ]);
 
-    return { messages, participants };
+    return { messages, participants, media };
   },
 
   async sendMessage({
@@ -104,26 +111,83 @@ export const OrderChatService = {
     chatId: number;
     senderId: number;
     message?: string;
-    media?: OrderChatMediaInput;
+    media?: OrderChatMediaInput[];
   }): Promise<OrderChatMessage> {
-    let mediaId = undefined;
-
-    if (media) {
-      const newMedia = await OrderChatModel.createChatMedia({
-        ...media,
-        uploader_id: senderId,
-      });
-      mediaId = newMedia.id;
-    }
-
     const msg = await OrderChatModel.createChatMessage({
       chat_id: chatId,
       sender_id: senderId,
       message: message,
-      media_id: mediaId,
     });
-    return msg;
+
+    if (!msg) throw new AppError(ERROR_MESSAGES.FAILED_TO_SEND_MESSAGE, 500);
+
+    let mediaIds: number[] = [];
+
+    if (media?.length) {
+      const mediaList = await Promise.all(
+        media.map(
+          async (m) =>
+            await OrderChatModel.createChatMedia({
+              ...m,
+              uploader_id: senderId,
+            })
+        )
+      );
+      mediaIds = mediaList.map((item) => item.id);
+    }
+
+    if (mediaIds.length) {
+      await Promise.all(
+        mediaIds.map(async (mediaId) =>
+          OrderChatModel.createChatMessageMedia({
+            message_id: msg.id,
+            media_id: mediaId,
+          })
+        )
+      );
+    }
+
+    return await OrderChatModel.getMessageById(msg.id);
   },
+
+  async deleteChat(chatId: number, authorId?: number): Promise<number> {
+    const chatMedia = await OrderChatModel.getChatMedia(chatId);
+
+    const images = chatMedia.filter((m) => m.type === "image") ?? [];
+    const files = chatMedia.filter((m) => m.type === "file") ?? [];
+
+    const result = await OrderChatModel.deleteChat(chatId);
+
+    if (chatMedia.length) {
+      await OrderChatModel.deleteChatMedia(chatMedia.map((m) => m.id));
+    }
+
+    if (images.length) {
+      await Promise.all(
+        images.map((i) => cloudinary.uploader.destroy(i.public_id))
+      );
+    }
+
+    if (files.length) {
+      await Promise.all(
+        files.map((f) =>
+          s3.deleteObject({
+            Bucket: process.env.DO_SPACES_BUCKET!,
+            Key: f.public_id,
+          })
+        )
+      );
+    }
+
+    await ActivityLogModel.logAction({
+      actor_id: authorId ?? null,
+      action: LOG_ACTIONS.DELETE_ORDER_CHAT,
+      target_id: chatId,
+      target_type: LOG_TARGETS.ORDER,
+    });
+    return result;
+  },
+
   async markMessageAsRead(messageId: number, readerId: number) {
     return await OrderChatModel.markAsRead(messageId, readerId);
   },

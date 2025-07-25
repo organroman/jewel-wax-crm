@@ -25,6 +25,10 @@ export const PERMISSIONS: PermissionMap = {
     UPDATE: ["super_admin", "modeller"],
     DELETE: ["super_admin"],
   },
+  CHAT: {
+    VIEW: ["super_admin", "modeller", "miller", "print"],
+    CREATE: ["super_admin"],
+    UPDATE: ["super_admin", "modeller"],
+    DELETE: ["super_admin"],
+  },
 } as const;
-
-

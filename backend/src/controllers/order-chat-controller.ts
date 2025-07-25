@@ -1,5 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { OrderChatService } from "../services/order-chat-service";
+import AppError from "../utils/AppError";
+import ERROR_MESSAGES from "../constants/error-messages";
 
 export const OrderChatController = {
   async getMessages(req: Request, res: Response, next: NextFunction) {
@@ -57,6 +59,22 @@ export const OrderChatController = {
       io.to(chatId).emit("chat:newMessage", newMessage);
 
       res.status(201).json(newMessage);
+    } catch (error) {
+      next(error);
+    }
+  },
+  async deleteChat(req: Request, res: Response, next: NextFunction) {
+    try {
+      const currentUser = req.user?.id;
+      const deletedCount = await OrderChatService.deleteChat(
+        Number(req.params.chatId),
+        currentUser
+      );
+
+      if (!deletedCount) {
+        throw new AppError(ERROR_MESSAGES.ITEM_NOT_FOUND, 404);
+      }
+      res.status(204).send();
     } catch (error) {
       next(error);
     }
