@@ -18,10 +18,12 @@ import CustomTabs from "@/components/shared/custom-tabs";
 import OrderCardHeader from "@/components/orders/order-card-header";
 import OrderForm from "@/components/orders/form/order/order-form";
 import OrderPayments from "@/components/orders/order-payments";
-import OrderChat from "@/components/orders/order-chat";
+import OrderChat from "@/components/orders/chat/order-chat";
+import ChatItemEmpty from "@/components/orders/chat/chat-item-empty";
 
 import { ORDER_CARD_TABS_LIST } from "@/constants/orders.constants";
 import { translateKeyValueList } from "@/lib/translate-constant-labels";
+
 
 const OrderClient = ({ id, userId }: { id: number; userId: number }) => {
   const router = useRouter();
@@ -47,13 +49,15 @@ const OrderClient = ({ id, userId }: { id: number; userId: number }) => {
   );
 
   const handleChange = (value: string) => {
+    const params = new URLSearchParams(searchParams);
     if (selectedTab.value === value) return;
 
     const selected = tabs.find((t) => t.value === value);
     if (!selected) {
       return;
     }
-
+    params.set("tab", value);
+    router.replace(`?${params.toString()}`);
     setSelectedTab(selected);
   };
 
@@ -103,7 +107,19 @@ const OrderClient = ({ id, userId }: { id: number; userId: number }) => {
           />
         )}
         {selectedTab.value === "payments" && <OrderPayments />}
-        {selectedTab.value === "chat" && <OrderChat chatId={order.chat_id} />}
+        {selectedTab.value === "chat" &&
+          (order.chat_id === null ? (
+            <div className="w-full h-full overflow-hidden rounded-b-sm bg-ui-sidebar pt-7">
+              <ChatItemEmpty info={t("messages.info.no_chat")} />
+            </div>
+          ) : (
+            <OrderChat
+              chatId={order.chat_id}
+              orderId={order.id}
+              orderName={order.name}
+              currentUserId={userId}
+            />
+          ))}
       </div>
     </div>
   );

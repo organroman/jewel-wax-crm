@@ -98,13 +98,16 @@ const PersonClient = ({ id }: { id: number }) => {
   );
 
   const handleChange = (value: string) => {
+    const params = new URLSearchParams(searchParams);
+
     if (selectedTab.value === value) return;
 
     const selected = tabs.find((t) => t.value === value);
     if (!selected) {
       return;
     }
-
+    params.set("tab", value);
+    router.replace(`?${params.toString()}`);
     setSelectedTab(selected);
   };
   const {
