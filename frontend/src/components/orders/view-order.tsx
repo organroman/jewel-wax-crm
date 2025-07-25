@@ -28,7 +28,7 @@ const ViewOrder = ({ orderId, orderNumber }: ViewOrderProps) => {
       <Button
         variant="ghost"
         onClick={() => setDialogOpen(true)}
-        className="underline text-action-plus hover:bg-transparent hover:text-indigo-400  text-xs cursor-pointer"
+        className="underline text-action-plus hover:bg-transparent hover:text-indigo-400 font-medium  text-xs cursor-pointer"
       >
         {orderNumber}
       </Button>

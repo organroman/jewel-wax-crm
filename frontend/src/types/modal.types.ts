@@ -16,6 +16,7 @@ export interface ModalFooterProps {
   buttonActionTitle: string;
   buttonActionTitleContinuous: string;
   destructive?: boolean;
+  onCancel?: () => void;
 }
 
 export interface ModalProps {
@@ -24,5 +25,5 @@ export interface ModalProps {
   footer?: ModalFooterProps;
   destructive?: boolean;
   hideClose?: boolean;
-  dialogContentClassname?: string
+  dialogContentClassname?: string;
 }

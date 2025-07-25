@@ -5,4 +5,5 @@ export interface ResultUploadedFile {
   uploaded_by: string;
   is_main: boolean;
   name: string;
+  size: number;
 }

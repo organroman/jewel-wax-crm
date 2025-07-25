@@ -72,7 +72,7 @@ const OrderMediaComponent = ({
     setPreviews((prev) => [
       ...prev,
       ...files.map((f) => ({
-        type: type, //"image",
+        type: type,
         url: URL.createObjectURL(f),
         name: f.name,
         is_main: false,

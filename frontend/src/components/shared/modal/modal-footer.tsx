@@ -16,15 +16,19 @@ const ModalFooter = ({
   actionId,
   buttonActionTitleContinuous,
   buttonActionTitle,
+  onCancel,
 }: ModalFooterProps) => {
   const { t } = useTranslation();
+  const handleCancel = () => {
+    onCancel && onCancel();
+  };
   return (
     <DialogFooter
       className={cn(
-        "sm:justify-start w-ful flex flex-row mt-4 lg:mt-8 space-x-2 "
+        "sm:justify-start w-full flex flex-row mt-4 lg:mt-8 space-x-2 "
       )}
     >
-      <DialogClose asChild>
+      <DialogClose asChild onClick={handleCancel}>
         <Button
           type="button"
           variant="secondary"
@@ -52,7 +56,7 @@ const ModalFooter = ({
       >
         {isPending ? (
           <div className="flex flex-row items-center">
-            <Loader className="size-6 animate-spin text-text-regular mr-2" />
+            <Loader className="size-6 animate-spin text-brand-default mr-2" />
             <span>{buttonActionTitleContinuous}</span>
           </div>
         ) : (
