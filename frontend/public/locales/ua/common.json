@@ -47,7 +47,9 @@
     "created_at-asc": "Початкові додані",
     "person_type": "Тип контрагента",
     "is_favorite": "Обране",
-    "is_important": "Важливе"
+    "is_important": "Важливе",
+    "today": "Сьогодні",
+    "yesterday": "Вчора"
   },
   "labels": {
     "main": "$t(dictionary.main)",
@@ -76,7 +78,9 @@
     "add": "Додати",
     "add_more": "Додати ще",
     "please_wait": "Зачекайте",
-    "clear": "Очистити"
+    "clear": "Очистити",
+    "send": "Відправити",
+    "send_continuous": "Відправляю"
   },
   "auth": {
     "forget_password": "Забули пароль",
@@ -404,6 +408,19 @@
       "customer": "$t(dictionary.customer)"
     }
   },
+  "order_chat": {
+    "images": "Зображення чату",
+    "delete": "Видалити переписку",
+    "selected_items": "обрано файлів",
+    "send_image": "Відправити зображення",
+    "send_file": "Відправити файл",
+    "comment": "$t(dictionary.comment)",
+    "modal": {
+      "delete": {
+        "title": "Видалення чату"
+      }
+    }
+  },
 
   "main_menu": {
     "dashboard": "Дашборд",
@@ -452,7 +469,10 @@
       "confirm_delete": "Ви впевненні, що бажаєте видалити?",
       "action_undone": "Цю дію неможливо відмінити!",
       "no_image": "Зображення відсутнє",
-      "no_chat": "Чат відстутній. Додайте модельєра."
+      "no_chat": "Чат відстутній. Додайте модельєра.",
+      "no_messages": "Повідомлень ще немає. Почніть спілкування.",
+      "no_images": "Зображень немає.",
+      "no_opponent": "Співрозмовника не знайдено"
     },
     "success": {
       "person_created": "Контрагента створено",
@@ -468,6 +488,7 @@
       "order_created": "Замовлення створено",
       "order_updated": "Замовлення оновлено",
       "order_deleted": "Замовлення видалено",
+      "order_chat_deleted": "Чат видалено",
       "ttn_created": "ТТН створена"
     }
   }
