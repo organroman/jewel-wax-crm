@@ -109,7 +109,7 @@ const ChatInfo = ({ opponent, media, chatId, orderId }: ChatInfoProps) => {
             descriptionSecond: t("messages.info.action_undone"),
           }}
           footer={{
-            buttonActionTitleContinuous: t("buttons.delete.delete_continuous"),
+            buttonActionTitleContinuous: t("buttons.delete_continuous"),
             buttonActionTitle: t("buttons.delete"),
             actionId: chatId,
             isPending: deleteChat.isPending,
