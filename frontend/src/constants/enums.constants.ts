@@ -1,5 +1,3 @@
-
-
 export const PERSON_ROLE_VALUES = [
   "client",
   "super_admin",
@@ -32,6 +30,11 @@ export const REQUEST_STATUS = [
 ] as const;
 
 export const PAYMENT_STATUS = ["paid", "unpaid", "partly_paid"] as const;
+export const PAYMENT_METHOD = [
+  "cash",
+  "card_transfer",
+  "payment_system",
+] as const;
 
 export const ORDER_STAGE = [
   "new",

@@ -421,6 +421,21 @@
       }
     }
   },
+  "finance": {
+    "modal": {
+      "title": "Створення рахунку"
+    },
+
+    "payment_method": {
+      "cash": "Готівка",
+      "card_transfer": "Переказ на карту",
+      "payment_system": "Платіжна система"
+    },
+    "labels": {
+      "amount": "Сума в грн.",
+      "description": "Опис"
+    }
+  },
 
   "main_menu": {
     "dashboard": "Дашборд",

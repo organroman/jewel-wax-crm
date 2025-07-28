@@ -27,6 +27,7 @@ const FormInput = <T extends FieldValues>({
   inputStyles,
   isFullWidth = false,
   defaultValue,
+  labelClassName,
 }: FormInputProps<T>) => (
   <FormField
     name={name}
@@ -45,7 +46,8 @@ const FormInput = <T extends FieldValues>({
           <div
             className={cn(
               "flex mt-1.5 items-start gap-1 w-full",
-              labelPosition === "top" ? "lg:justify-start" : "lg:justify-end"
+              labelPosition === "top" ? "lg:justify-start" : "lg:justify-end",
+              labelClassName
             )}
           >
             <FormLabel className=" text-sm">{label}</FormLabel>

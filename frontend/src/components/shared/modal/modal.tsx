@@ -19,7 +19,7 @@ const Modal = ({
     <DialogContent
       hideClose={hideClose}
       className={cn(
-        "max-w-[95vw] mi-h-fit max-h-[80vh] lg:max-h-[90vh] p-2.5 lg:p-5 lg:pr-2 min-w-fit w-full lg:max-w-lg overflow-visible bg-ui-sidebar",
+        "max-w-[95vw] mi-h-fit max-h-[80vh] lg:max-h-[90vh] p-2.5 lg:p-5 min-w-fit w-full lg:max-w-lg overflow-visible bg-ui-sidebar",
         dialogContentClassname
       )}
     >

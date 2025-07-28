@@ -5,6 +5,7 @@ import OrderFavorite from "./order-favorite";
 import OrderImportant from "./order-important";
 import InfoLabel from "../shared/typography/info-label";
 import InfoValue from "../shared/typography/info-value";
+import CreateInvoice from "../shared/create-invoice";
 import { Button } from "../ui/button";
 import { Order } from "@/types/order.types";
 import { getFullName } from "@/lib/utils";
@@ -55,9 +56,7 @@ const OrderCardHeader = ({
       )}
       <div className="lg:ml-auto flex items-center gap-5">
         {order && submitBtnTitle && (
-          <Button variant="secondary" className="bg-transparent rounded-sm">
-            {t("order.buttons.create_invoice")}
-          </Button>
+          <CreateInvoice order={order} />
         )}
         {submitBtnTitle && (
           <Button

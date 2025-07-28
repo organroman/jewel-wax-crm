@@ -95,7 +95,7 @@ export const getOrdersColumns = (
         const imageUrl = row.original.media.at(0)?.url || "";
 
         return imageUrl ? (
-          <div className="w-6 h-6 rounded-full">
+          <div className="w-8 h-8 rounded-full">
             <img
               src={imageUrl}
               alt="img"
@@ -103,7 +103,7 @@ export const getOrdersColumns = (
             />
           </div>
         ) : (
-          <div className="w-6 h-6 rounded-full bg-text-light"></div>
+          <div className="w-8 h-8 rounded-full bg-text-light"></div>
         );
       },
 
@@ -194,14 +194,16 @@ export const getOrdersColumns = (
       cell: ({ row }) => {
         const stage = row.original.active_stage;
         return (
-          <Badge
-            className={cn(
-              "text-[10px] rounded-2xl font-medium",
-              STAGE_COLORS[stage]
-            )}
-          >
-            {t(`order.stages.${stage}`)}
-          </Badge>
+          <div className="text-center">
+            <Badge
+              className={cn(
+                "text-[10px] rounded-2xl font-medium",
+                STAGE_COLORS[stage]
+              )}
+            >
+              {t(`order.stages.${stage}`)}
+            </Badge>
+          </div>
         );
       },
       size: 50,

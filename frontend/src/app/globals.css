@@ -17,7 +17,7 @@
   --color-ui-row-even: oklch(96.72% 0 0); /* "#F4F4F4", Фон строка */
   --color-ui-row-odd: oklch(1 0 0); /* #ffffff Фон строка */
   --color-ui-row-hover: oklch(
-    0.6429 0.0121 243.75 / 10%
+    0.6429 0.0121 243.75 / 5%
   ); /*# e2e3e6 ховер строки */
   --color-ui-border: oklch(90.67% 0 0); /* "#E0E0E0", Обведення та лінії */
   --color-ui-column: oklch(
@@ -139,7 +139,7 @@
   --color-ui-screen: oklch(0.22 0.0187 266.14); /* #171b24 Фон екрана  */
   --color-ui-row-even: oklch(0.19 0.0088 264.34); /* #111317 */
   --color-ui-row-odd: oklch(0.23 0.0041 264.49); /* #1d1e20 */
-  --color-ui-row-hover: oklch(31.75% 0.011 271.05); /* #303238 ховер строки */
+  --color-ui-row-hover: oklch(31.75% 0.011 271.05 / 15%); /* #303238 ховер строки */
   --color-ui-column: oklch(0.33 0.0106 278.26); /*#33343a*/
   --color-ui-border: oklch(0.36 0.0034 286.23); /* #3e3e40 */
 

@@ -59,6 +59,7 @@ export type FormInputProps<T extends FieldValues> = {
   inputStyles?: string;
   isFullWidth?: boolean;
   defaultValue?: string | number;
+  labelClassName?: string;
 };
 
 export type FormDatePickerProps<T extends FieldValues> = {
@@ -88,6 +89,7 @@ export type FormSelectProps<T extends FieldValues, O> = {
   className?: string;
   labelPosition?: "top" | "left";
   isFullWidth?: boolean;
+  labelClassName?: string;
 };
 
 export interface FormArrayLocationProps<T extends FieldValues> {
@@ -149,7 +151,7 @@ export interface FormComboboxProps<T extends FieldValues, O> {
   saveFullObject?: boolean;
   saveOnlyValue?: boolean;
   disabled?: boolean;
-  isFullWidth?: boolean
+  isFullWidth?: boolean;
 }
 
 export interface FormAsyncComboboxProps<T extends FieldValues, O>

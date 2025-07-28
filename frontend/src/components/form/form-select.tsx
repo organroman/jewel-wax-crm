@@ -31,6 +31,7 @@ const FormSelect = <T extends FieldValues, O>({
   className,
   labelPosition = "left",
   isFullWidth,
+  labelClassName,
 }: FormSelectProps<T, O>) => {
   const { t } = useTranslation();
 
@@ -42,7 +43,7 @@ const FormSelect = <T extends FieldValues, O>({
         return (
           <FormItem
             className={cn(
-              "flex flex-col  lg:flex-row lg:items-center gap-0.5 lg:gap-2.5",
+              "flex flex-col lg:flex-row lg:items-center lg:justify-start gap-0.5 lg:gap-2.5",
               labelPosition === "top" &&
                 "lg:flex-col lg:gap-0.5 lg:items-start",
               isFullWidth && "w-full"
@@ -52,7 +53,8 @@ const FormSelect = <T extends FieldValues, O>({
               <div
                 className={cn(
                   "flex items-start lg:justify-end gap-1 w-full",
-                  labelPosition === "top" && "lg:justify-start"
+                  labelPosition === "top" && "lg:justify-start",
+                  labelClassName
                 )}
               >
                 <FormLabel className="text-text-muted font-normal text-sm">
