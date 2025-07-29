@@ -32,7 +32,7 @@ const NewOrderClient = ({ userId }: { userId: number }) => {
   const { createMutation } = useOrder.create({
     queryClient,
     handleOnSuccess(data) {
-      router.push(`${data.id}`);
+      router.replace(`${data.id}`);
     },
     t,
   });

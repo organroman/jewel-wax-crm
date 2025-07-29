@@ -41,7 +41,7 @@ const NewPersonClient = () => {
   const { createPersonMutation } = usePerson.createPerson({
     queryClient,
     handleOnSuccess(data) {
-      router.push(`${data.id}`);
+      router.replace(`${data.id}`);
     },
     t,
   });
