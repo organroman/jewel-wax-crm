@@ -13,4 +13,11 @@ router.post(
   FinanceController.createInvoice
 );
 
+router.get(
+  "/invoices/:orderId",
+  verifyToken,
+  checkPermission("INVOICES", "VIEW"),
+  FinanceController.getInvoicesByOrderId
+);
+
 export default router;

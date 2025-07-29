@@ -39,6 +39,7 @@ const ERROR_MESSAGES = {
   ORDER_NOT_FOUND: "Order not found",
   NO_TOKEN: "No token provided",
   FAILED_TO_SEND_MESSAGE: "Failed to create message",
+  MISSING_ORDER_ID: "Order id is required",
 } as const;
 
 export default ERROR_MESSAGES;

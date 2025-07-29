@@ -27,4 +27,17 @@ export const FinanceController = {
       next(error);
     }
   },
+  async getInvoicesByOrderId(req: Request, res: Response, next: NextFunction) {
+    try {
+      const orderId = req.params.orderId;
+
+      if (!orderId) {
+        throw new AppError(ERROR_MESSAGES.MISSING_ORDER_ID, 400);
+      }
+      const invoices = FinanceService.getInvoicesByOrderId(Number(orderId));
+      res.status(200).json(invoices);
+    } catch (error) {
+      next(error);
+    }
+  },
 };

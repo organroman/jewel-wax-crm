@@ -50,4 +50,9 @@ export const FinanceService = {
 
     return invoice;
   },
+
+  async getInvoicesByOrderId(orderId: number): Promise<Invoice[]> {
+    const invoices = await FinanceModel.getInvoicesByOrder(orderId);
+    return invoices;
+  },
 };
