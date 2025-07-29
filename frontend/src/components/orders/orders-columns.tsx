@@ -95,15 +95,15 @@ export const getOrdersColumns = (
         const imageUrl = row.original.media.at(0)?.url || "";
 
         return imageUrl ? (
-          <div className="w-8 h-8 rounded-full">
+          <div className="w-8 h-8 rounded-full border border-ui-border">
             <img
               src={imageUrl}
               alt="img"
-              className="text-xs rounded-full h-full aspect-square"
+              className="text-xs rounded-full w-8 h-8 aspect-square"
             />
           </div>
         ) : (
-          <div className="w-8 h-8 rounded-full bg-text-light"></div>
+          <div className="w-8 h-8 rounded-full bg-text-light/35 border border-ui-border"></div>
         );
       },
 
@@ -175,15 +175,16 @@ export const getOrdersColumns = (
       header: t("order.table_headers.payment_status"),
       cell: ({ row }) => {
         return (
-          <span
+          <div
             className={cn(
+              "text-center",
               PAYMENT_STATUS_COLORS[row.original.payment_status || "unpaid"]
             )}
           >
             {t(
               `order.filters.payment_status.options.${row.original.payment_status}`
             )}
-          </span>
+          </div>
         );
       },
       size: 50,
@@ -215,14 +216,14 @@ export const getOrdersColumns = (
         const status = row.original.active_stage_status;
         if (status)
           return (
-            <span
+            <div
               className={cn(
-                "font-medium",
+                "font-medium text-center",
                 status && STAGE_STATUS_COLORS[status]
               )}
             >
               {t(`order.stage_statuses.${status}`)}
-            </span>
+            </div>
           );
       },
       size: 40,
@@ -271,7 +272,7 @@ export const getOrdersColumns = (
       header: t("order.table_headers.days"),
       cell: ({ row }) => {
         const days = row.original.processing_days;
-        return days;
+        return <div className="text-center">{days}</div>;
       },
       size: 16,
     },
