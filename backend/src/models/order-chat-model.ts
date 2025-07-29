@@ -38,6 +38,8 @@ export const OrderChatModel = {
   ): Promise<ChatParticipant> {
     const [newParticipant] = await db<ChatParticipant>("chat_participants")
       .insert(data)
+      .onConflict(["chat_id", "person_id"])
+      .ignore()
       .returning("*");
 
     return newParticipant;
