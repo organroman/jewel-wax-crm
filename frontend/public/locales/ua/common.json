@@ -75,6 +75,7 @@
     "back_to_table": "Повернутись до таблиці",
     "save_changes": "Зберігти зміни",
     "create": "Створити",
+    "create_continuous": "Створюю",
     "add": "Додати",
     "add_more": "Додати ще",
     "please_wait": "Зачекайте",
@@ -504,6 +505,7 @@
       "order_updated": "Замовлення оновлено",
       "order_deleted": "Замовлення видалено",
       "order_chat_deleted": "Чат видалено",
+      "invoice_created": "Рахунок сформовано",
       "ttn_created": "ТТН створена"
     }
   }

@@ -32,10 +32,6 @@ const CreateInvoice = ({ order }: CreateInvoiceProps) => {
   const queryClient = useQueryClient();
 
   const { dialogOpen, setDialogOpen } = useDialog();
-  const { createInvoiceMutation } = useFinance.createInvoice({
-    t,
-    queryClient,
-  });
 
   const form = useForm({
     resolver: zodResolver(createInvoiceSchema),
@@ -55,11 +51,23 @@ const CreateInvoice = ({ order }: CreateInvoiceProps) => {
     value: pm,
   }));
 
+  console.log(form.formState.errors);
+
+  const handleOnSuccess = () => {
+    setDialogOpen(false);
+    form.reset();
+  };
+
+  const { createInvoiceMutation } = useFinance.createInvoice({
+    t,
+    queryClient,
+    handleOnSuccess,
+  });
+
   const onSubmit = (formData: CreateInvoiceSchema) => {
     createInvoiceMutation?.mutate(formData);
   };
 
-  console.log(paymentOptions);
   return (
     <div className="w-full h-full">
       <Button
@@ -78,6 +86,9 @@ const CreateInvoice = ({ order }: CreateInvoiceProps) => {
           footer={{
             buttonActionTitle: t("buttons.create"),
             buttonActionTitleContinuous: t("buttons.create_continuous"),
+            submit: true,
+            formId: "createInvoiceForm",
+            isPending: createInvoiceMutation.isPending,
           }}
         >
           <Form {...form}>
