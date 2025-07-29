@@ -5,23 +5,17 @@ import { useActivityLog } from "@/api/activity-logs/use-activity-log";
 
 import ChangesHistoryTable from "../shared/changes-history-table";
 
-import { getFullName } from "@/lib/utils";
-
-interface PersonChangesHistoryProps {
-  id: number;
-  lastName: string;
-  firstName: string;
-  patronymic?: string;
+interface OrderChangesHistoryProps {
+  orderId: number;
+  orderNumber: number;
 }
 
-const PersonChangesHistory = ({
-  id,
-  lastName,
-  firstName,
-  patronymic,
-}: PersonChangesHistoryProps) => {
+const OrderChangesHistory = ({
+  orderId,
+  orderNumber,
+}: OrderChangesHistoryProps) => {
   const { t } = useTranslation();
-  const query = `target=person&targetId=${id}`;
+  const query = `target=order&targetId=${orderId}`;
 
   const { data, isLoading, error } = useActivityLog.getLogsByTargetAndId({
     query,
@@ -43,15 +37,14 @@ const PersonChangesHistory = ({
     );
   }
 
-  const personFullname = getFullName(firstName, lastName, patronymic);
-
   return (
     <ChangesHistoryTable
-      titleLabel={t("person.person_changes")}
-      titleValue={personFullname}
+      titleLabel={t("order.order_changes")}
+      titleValue={`№ ${orderNumber.toString()}`}
       logs={data}
+      titleValueClassName="text-action-plus underline"
     />
   );
 };
 
-export default PersonChangesHistory;
+export default OrderChangesHistory;

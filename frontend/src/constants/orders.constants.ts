@@ -76,5 +76,9 @@ export const ORDER_CARD_TABS_LIST = [
     key: "chat",
     value: "chat",
   },
+  {
+    key: "changes_history",
+    value: "changes_history",
+  },
   { value: "new", key: "new" },
 ];

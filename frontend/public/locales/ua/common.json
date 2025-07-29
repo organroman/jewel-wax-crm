@@ -50,7 +50,10 @@
     "is_important": "Важливе",
     "today": "Сьогодні",
     "yesterday": "Вчора",
-    "paid": "Оплачено"
+    "paid": "Оплачено",
+    "changes_history": "Історія змін",
+    "create_order": "Замовлення створено",
+    "update_order": "Замовлення оновлено"
   },
   "labels": {
     "main": "$t(dictionary.main)",
@@ -137,7 +140,7 @@
     },
     "tabs": {
       "general_info": "$t(dictionary.info)",
-      "changes_history": "Історія змін",
+      "changes_history": "$t(dictionary.changes_history)",
       "orders_history": "$t(dictionary.orders_history)",
       "new": "Новий контрагент"
     },
@@ -233,11 +236,18 @@
   },
   "log_actions": {
     "date": "$t(dictionary.date)",
-    "login": "Вхід в систему (Login)"
+    "login": "Вхід в систему (Login)",
+    "update_person": "Оновлено контрагента",
+    "create_person": "Створено контрагента",
+    "create_order": "$t(dictionary.create_order)",
+    "update_order": "$t(dictionary.update_order)",
+    "delete_order_chat": "Чат замовлення видалено",
+    "create_invoice": "Сформовано рахунок"
   },
   "order": {
     "order": "$t(dictionary.order)",
     "add_order": "Додати завдання",
+    "order_changes": "Історія змін по замовленню",
     "linked_orders": {
       "linked": "Прив'язані замовлення"
     },
@@ -333,7 +343,9 @@
       "order": "$t(dictionary.order)",
       "payments": "Оплати",
       "chat": "Чат JW",
-      "new": "Нове замовлення"
+      "new": "Нове замовлення",
+      "changes_history": "$t(dictionary.changes_history)",
+      "all": "Всі замовлення"
     },
     "buttons": {
       "create_invoice": "Сформувати рахунок",
@@ -519,8 +531,8 @@
       "favorite_removed": "Видалено з обраного",
       "important_added": "Додано в важливе",
       "important_removed": "Видалено з важливого",
-      "order_created": "Замовлення створено",
-      "order_updated": "Замовлення оновлено",
+      "order_created": "$t(dictionary.create_order)",
+      "order_updated": "$t(dictionary.update_order)",
       "order_deleted": "Замовлення видалено",
       "order_chat_deleted": "Чат видалено",
       "invoice_created": "Рахунок сформовано",

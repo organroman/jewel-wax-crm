@@ -20,6 +20,7 @@ import OrderForm from "@/components/orders/form/order/order-form";
 import OrderPayments from "@/components/orders/payments/order-payments";
 import OrderChat from "@/components/orders/chat/order-chat";
 import ChatItemEmpty from "@/components/orders/chat/chat-item-empty";
+import OrderChangesHistory from "@/components/orders/order-changes-history";
 
 import { ORDER_CARD_TABS_LIST } from "@/constants/orders.constants";
 import { translateKeyValueList } from "@/lib/translate-constant-labels";
@@ -90,13 +91,15 @@ const OrderClient = ({ id, userId }: { id: number; userId: number }) => {
       />
       <Separator className="bg-ui-border h-0.5 data-[orientation=horizontal]:h-0.5" />
       <div className="mt-4 h-full flex flex-1 flex-col overflow-hidden">
-        <OrderCardHeader
-          order={order}
-          submitBtnTitle={t("buttons.save")}
-          savingIsLoading={
-            updateMutation.isPending || uploadImagesMutation.isPending
-          }
-        />
+        {selectedTab.value !== "changes_history" && (
+          <OrderCardHeader
+            order={order}
+            submitBtnTitle={t("buttons.save")}
+            savingIsLoading={
+              updateMutation.isPending || uploadImagesMutation.isPending
+            }
+          />
+        )}
         {selectedTab.value === "order" && (
           <OrderForm
             order={order}
@@ -121,6 +124,9 @@ const OrderClient = ({ id, userId }: { id: number; userId: number }) => {
               currentUserId={userId}
             />
           ))}
+        {selectedTab.value === "changes_history" && (
+          <OrderChangesHistory orderId={order.id} orderNumber={order.number} />
+        )}
       </div>
     </div>
   );
