@@ -29,38 +29,44 @@ interface DataTableProps<TData, TValue> {
   onRowSelectionChange?: (selection: RowSelectionState) => void;
   columnVisibility?: VisibilityState;
   onColumnVisibilityChange?: (visibility: VisibilityState) => void;
+  isLoading: boolean;
+
+  enablePagination?: boolean;
+  currentPage?: number;
+  currentLimit?: number;
+  totalItems?: number;
+  onPageChange?: (page: number) => void;
+  //   onLimitChange: (limit: number) => void;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
-  totalItems,
-  currentPage,
-  currentLimit,
-  isLoading,
+  enablePagination = true,
+  totalItems = 0,
+  currentPage = 1,
+  currentLimit = 10,
+  isLoading = false,
   onPageChange,
   columnVisibility,
   onColumnVisibilityChange,
 }: //   onLimitChange,
-DataTableProps<TData, TValue> & {
-  currentPage: number;
-  currentLimit: number;
-  totalItems: number;
-  isLoading: boolean;
-  onPageChange: (page: number) => void;
-  //   onLimitChange: (limit: number) => void;
-}) {
+DataTableProps<TData, TValue> & {}) {
   const { t } = useTranslation();
-  const totalPages = Math.ceil(totalItems / currentLimit);
+  const totalPages = enablePagination
+    ? Math.ceil(totalItems / currentLimit)
+    : 1;
+
   const [rowSelection, setRowSelection] = useState({});
+
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
-    manualPagination: true,
+    manualPagination: enablePagination,
     enableRowSelection: true,
     onRowSelectionChange: setRowSelection,
-    pageCount: totalPages,
+    pageCount: enablePagination ? totalPages : undefined,
     onColumnVisibilityChange: (updater) => {
       if (onColumnVisibilityChange) {
         const newValue =
@@ -72,7 +78,9 @@ DataTableProps<TData, TValue> & {
     },
     state: {
       rowSelection: rowSelection,
-      pagination: { pageIndex: currentPage - 1, pageSize: currentLimit },
+      ...(enablePagination && {
+        pagination: { pageIndex: currentPage - 1, pageSize: currentLimit },
+      }),
       columnVisibility,
     },
     rowCount: totalItems,
@@ -151,13 +159,15 @@ DataTableProps<TData, TValue> & {
           </TableBody>
         </Table>
       </div>
-      <div className="shrink-0 mt-4">
-        <PaginationControls
-          totalPages={totalPages}
-          currentPage={currentPage}
-          onPageChange={onPageChange}
-        />
-      </div>
+      {enablePagination && (
+        <div className="shrink-0 mt-4">
+          <PaginationControls
+            totalPages={totalPages}
+            currentPage={currentPage}
+            onPageChange={onPageChange!}
+          />
+        </div>
+      )}
     </div>
   );
 }

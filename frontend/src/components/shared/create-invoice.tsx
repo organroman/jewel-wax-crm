@@ -1,10 +1,12 @@
 import { Order } from "@/types/order.types";
 import { CreateInvoiceSchema } from "@/types/finance.types";
+import { useQueryClient } from "@tanstack/react-query";
 
 import { useTranslation } from "react-i18next";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
+import { useFinance } from "@/api/finance/use-finance";
 import { useDialog } from "@/hooks/use-dialog";
 
 import { Button } from "../ui/button";
@@ -20,8 +22,6 @@ import FormSelect from "../form/form-select";
 import { createInvoiceSchema } from "@/validators/finance.validator";
 import { getFullName } from "@/lib/utils";
 import { PAYMENT_METHOD } from "@/constants/enums.constants";
-import { useFinance } from "@/api/finance/use-finance";
-import { useQueryClient } from "@tanstack/react-query";
 
 interface CreateInvoiceProps {
   order: Order;
@@ -45,13 +45,6 @@ const CreateInvoice = ({ order }: CreateInvoiceProps) => {
       description: "",
     },
   });
-
-  const paymentOptions = PAYMENT_METHOD.map((pm) => ({
-    label: t(`finance.payment_method.${pm}`),
-    value: pm,
-  }));
-
-  console.log(form.formState.errors);
 
   const handleOnSuccess = () => {
     setDialogOpen(false);

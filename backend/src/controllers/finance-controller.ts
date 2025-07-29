@@ -34,7 +34,10 @@ export const FinanceController = {
       if (!orderId) {
         throw new AppError(ERROR_MESSAGES.MISSING_ORDER_ID, 400);
       }
-      const invoices = FinanceService.getInvoicesByOrderId(Number(orderId));
+      const invoices = await FinanceService.getInvoicesByOrderId(
+        Number(orderId)
+      );
+
       res.status(200).json(invoices);
     } catch (error) {
       next(error);

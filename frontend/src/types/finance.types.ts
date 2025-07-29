@@ -1,8 +1,8 @@
-import { PAYMENT_METHOD } from "@/constants/enums.constants";
+import { INVOICE_STATUS, PAYMENT_METHOD } from "@/constants/enums.constants";
 import { createInvoiceSchema } from "@/validators/finance.validator";
 import z from "zod";
-import { PaymentStatus } from "./order.types";
 
+export type InvoiceStatus = (typeof INVOICE_STATUS)[number];
 export type PaymentMethod = (typeof PAYMENT_METHOD)[number];
 export type CreateInvoiceSchema = z.infer<typeof createInvoiceSchema>;
 
@@ -13,8 +13,10 @@ export interface Invoice {
   amount: number;
   currency: string;
   payment_method: PaymentMethod;
-  status: PaymentStatus;
-  paid_at: string;
+  status: InvoiceStatus;
+  amount_paid: number | null;
+  paid_at: string | null;
   invoice_url: string;
   created_at: string;
+  description: string | null;
 }

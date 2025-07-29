@@ -49,7 +49,8 @@
     "is_favorite": "Обране",
     "is_important": "Важливе",
     "today": "Сьогодні",
-    "yesterday": "Вчора"
+    "yesterday": "Вчора",
+    "paid": "Оплачено"
   },
   "labels": {
     "main": "$t(dictionary.main)",
@@ -263,7 +264,7 @@
       "payment_status": {
         "label": "$t(dictionary.payment_status)",
         "options": {
-          "paid": "Оплачено",
+          "paid": "$t(dictionary.paid)",
           "unpaid": "Не оплачено",
           "partly_paid": "Частково оплачено"
         }
@@ -426,6 +427,9 @@
     "modal": {
       "title": "Створення рахунку"
     },
+    "payment": "Оплата",
+    "paid": "$t(dictionary.paid)",
+    "debt": "Борг",
 
     "payment_method": {
       "cash": "Готівка",
@@ -435,6 +439,20 @@
     "labels": {
       "amount": "Сума в грн.",
       "description": "Опис"
+    },
+    "invoice_status": {
+      "paid": "$t(dictionary.paid)",
+      "pending": "Не оплачено"
+    },
+    "table_headers": {
+      "created_at": "$t(dictionary.created_at)",
+      "invoice_url": "Посилання",
+      "amount": "Сума, ₴",
+      "payment_status": "$t(dictionary.payment_status)",
+      "paid_at": "Дата оплати",
+      "payment_method": "Метод оплати",
+      "description": "Опис",
+      "actions": "$t(dictionary.actions)"
     }
   },
 

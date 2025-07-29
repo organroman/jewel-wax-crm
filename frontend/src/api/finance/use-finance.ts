@@ -1,5 +1,5 @@
 import { CreateInvoiceSchema, Invoice } from "@/types/finance.types";
-import { QueryClient, useMutation } from "@tanstack/react-query";
+import { QueryClient, useMutation, useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { financeService } from "./finance-service";
 
@@ -27,5 +27,18 @@ export const useFinance = {
       },
     });
     return { createInvoiceMutation: mutation };
+  },
+  getInvoicesByOrderId: ({
+    orderId,
+    enabled,
+  }: {
+    orderId: number;
+    enabled: boolean;
+  }) => {
+    return useQuery({
+      queryKey: ["invoices", orderId],
+      queryFn: () => financeService.getInvoicesByOrderId(orderId),
+      enabled,
+    });
   },
 };

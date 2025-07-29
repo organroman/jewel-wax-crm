@@ -17,13 +17,12 @@ import { Separator } from "@/components/ui/separator";
 import CustomTabs from "@/components/shared/custom-tabs";
 import OrderCardHeader from "@/components/orders/order-card-header";
 import OrderForm from "@/components/orders/form/order/order-form";
-import OrderPayments from "@/components/orders/order-payments";
+import OrderPayments from "@/components/orders/payments/order-payments";
 import OrderChat from "@/components/orders/chat/order-chat";
 import ChatItemEmpty from "@/components/orders/chat/chat-item-empty";
 
 import { ORDER_CARD_TABS_LIST } from "@/constants/orders.constants";
 import { translateKeyValueList } from "@/lib/translate-constant-labels";
-
 
 const OrderClient = ({ id, userId }: { id: number; userId: number }) => {
   const router = useRouter();
@@ -106,7 +105,9 @@ const OrderClient = ({ id, userId }: { id: number; userId: number }) => {
             userId={userId}
           />
         )}
-        {selectedTab.value === "payments" && <OrderPayments />}
+        {selectedTab.value === "payments" && (
+          <OrderPayments orderId={order.id} orderAmount={order.amount} />
+        )}
         {selectedTab.value === "chat" &&
           (order.chat_id === null ? (
             <div className="w-full h-full overflow-hidden rounded-b-sm bg-ui-sidebar pt-7">

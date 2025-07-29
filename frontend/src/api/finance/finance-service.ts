@@ -7,4 +7,7 @@ export const financeService = {
       ...data,
       payment_method: data.payment_method.value,
     }),
+  getInvoicesByOrderId: async (orderId: number) => {
+    return await apiService.get<Invoice[]>(`finance/invoices/${orderId}`);
+  },
 };
