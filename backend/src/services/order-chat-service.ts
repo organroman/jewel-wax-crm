@@ -90,16 +90,14 @@ export const OrderChatService = {
     limit: number;
   }): Promise<{
     messages: OrderChatMessage[];
-    participants: ChatParticipantFull[];
     media: OrderChatMedia[];
   }> {
-    const [messages, participants, media] = await Promise.all([
+    const [messages, media] = await Promise.all([
       OrderChatModel.getLatestMessagesByChatId({ chatId, limit }),
-      this.getChatParticipants(chatId),
       OrderChatModel.getChatMedia(chatId),
     ]);
 
-    return { messages, participants, media };
+    return { messages, media };
   },
 
   async sendMessage({

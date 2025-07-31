@@ -3,6 +3,7 @@ import {
   ORDER_STAGE_STATUS,
   PAYMENT_STATUS,
 } from "../constants/enums";
+import { ChatParticipantFull } from "./order-chat.types";
 import { DeliveryType, PersonRole, Phone } from "./person.types";
 import { GetAllOptions, PaginatedResult } from "./shared.types";
 
@@ -144,6 +145,7 @@ export interface UserOrder {
   stages: OrderStage[];
   chat_id?: number | null;
 }
+
 export interface AdminOrder {
   id: number;
   created_at: Date;
@@ -168,7 +170,7 @@ export interface AdminOrder {
   milling_cost?: number;
   modeling_cost?: number;
   printing_cost?: number;
-  chat_id?: number | null;
+  chat?: { chat_id: number; participants: ChatParticipantFull[] } | null;
 }
 
 export interface LinkedOrder {

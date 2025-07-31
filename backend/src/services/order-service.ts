@@ -6,6 +6,7 @@ import {
   UpdateOrderInput,
   UserOrder,
 } from "../types/order.types";
+import { ChatParticipantFull } from "../types/order-chat.types";
 import { PersonRole } from "../types/person.types";
 
 import cloudinary from "../cloudinary/config";
@@ -244,6 +245,14 @@ export const OrderService = {
       type: "modeller",
     });
 
+    let chatParticipants: ChatParticipantFull[] = [];
+
+    if (order_chat) {
+      chatParticipants = await OrderChatService.getChatParticipants(
+        order_chat.id
+      );
+    }
+
     const {
       customer_id,
       miller_id,
@@ -273,7 +282,10 @@ export const OrderService = {
       delivery: enrichedDelivery,
       linked_orders,
       createdBy,
-      chat_id: order_chat?.id ?? null,
+      chat: {
+        chat_id: order_chat?.id ?? null,
+        participants: chatParticipants,
+      },
     };
 
     return enrichedOrder;
