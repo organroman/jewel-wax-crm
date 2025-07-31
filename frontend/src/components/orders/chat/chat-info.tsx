@@ -23,9 +23,16 @@ interface ChatInfoProps {
   media: ChatMedia[];
   chatId: number;
   orderId: number;
+  canDeleteOrderChat: boolean;
 }
 
-const ChatInfo = ({ opponent, media, chatId, orderId }: ChatInfoProps) => {
+const ChatInfo = ({
+  opponent,
+  media,
+  chatId,
+  orderId,
+  canDeleteOrderChat,
+}: ChatInfoProps) => {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
 
@@ -93,13 +100,15 @@ const ChatInfo = ({ opponent, media, chatId, orderId }: ChatInfoProps) => {
           <ChatImages images={images} />
         </div>
       </div>
-      <Button
-        variant="ghostDestructive"
-        className="self-end text-action-minus text-xs underline underline-offset-3 mb-2 cursor-pointer"
-        onClick={() => setIsDeleteDialogOpen(true)}
-      >
-        {t("order_chat.delete")}
-      </Button>
+      {canDeleteOrderChat && (
+        <Button
+          variant="ghostDestructive"
+          className="self-end text-action-minus text-xs underline underline-offset-3 mb-2 cursor-pointer"
+          onClick={() => setIsDeleteDialogOpen(true)}
+        >
+          {t("order_chat.delete")}
+        </Button>
+      )}
       <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
         <Modal
           destructive

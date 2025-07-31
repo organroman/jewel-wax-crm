@@ -20,6 +20,7 @@ interface OrderStagePerformerFieldsProps<T extends FieldValues, O> {
   performerOptions: PerformerOption[];
   form: UseFormReturn<UpdateOrderSchema>;
   stageCostName: Path<UpdateOrderSchema>;
+  canEditField?: (field: string) => boolean;
 }
 
 const OrderStagePerformerFields = ({
@@ -29,9 +30,13 @@ const OrderStagePerformerFields = ({
   form,
   performerOptions = [],
   stageCostName,
+  canEditField = () => true,
 }: OrderStagePerformerFieldsProps<UpdateOrderSchema, PerformerOption>) => {
   const { t } = useTranslation();
   const router = useRouter();
+
+  const canEditPerformer = canEditField(performerName);
+  const canEditCost = canEditField(stageCostName);
 
   return (
     <div className="flex items-end lg:items-center justify-between">
@@ -58,22 +63,28 @@ const OrderStagePerformerFields = ({
             saveFullObject={true}
             className="min-w-full max-w-full w-full"
             isFullWidth
+            disabled={!canEditPerformer}
           />
-          <Button
-            variant="outline"
-            type="button"
-            size="sm"
-            className="hidden lg:flex rounded-tl-none rounded-bl-none text-xs w-[83px]"
-            onClick={() => router.push("/persons/new")}
-          >
-            {t("buttons.add")}
-          </Button>
+          {canEditPerformer ? (
+            <Button
+              variant="outline"
+              type="button"
+              size="sm"
+              className="hidden lg:flex rounded-tl-none rounded-bl-none text-xs w-[83px]"
+              onClick={() => router.push("/persons/new")}
+            >
+              {t("buttons.add")}
+            </Button>
+          ) : (
+            <div className="w-[83px]"></div>
+          )}
         </div>
       </div>
       <FormInput
         name={stageCostName}
         control={form.control}
         inputStyles="min-w-[100px] max-w-[100px] lg:min-w-[100px] lg:max-w-[100px]"
+        disabled={!canEditCost}
       />
     </div>
   );

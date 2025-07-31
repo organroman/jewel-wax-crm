@@ -23,7 +23,6 @@ export interface ChatParticipant {
 
 export interface ChatDetails {
   messages: ChatMessage[];
-  participants: ChatParticipant[];
   media: ChatMedia[];
 }
 

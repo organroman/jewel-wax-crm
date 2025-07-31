@@ -39,6 +39,8 @@ const FormArrayLinkedOrders = <T extends FieldValues>({
   setValue,
   orderId,
   required = false,
+  canDeleteField,
+  canEditField,
 }: FormArrayLinkedOrdersProps<T>) => {
   const { fields, append, remove } = useFieldArray({ control, name });
   const watchedFields = useWatch({ name: name as Path<T>, control });
@@ -145,16 +147,18 @@ const FormArrayLinkedOrders = <T extends FieldValues>({
                       </Label>
                     </div>
 
-                    <div className="flex">
-                      <Button
-                        type="button"
-                        variant="ghostDestructive"
-                        size="sm"
-                        onClick={() => remove(index)}
-                      >
-                        <Trash2 className="size-4" />
-                      </Button>
-                    </div>
+                    {canDeleteField && (
+                      <div className="flex">
+                        <Button
+                          type="button"
+                          variant="ghostDestructive"
+                          size="sm"
+                          onClick={() => remove(index)}
+                        >
+                          <Trash2 className="size-4" />
+                        </Button>
+                      </div>
+                    )}
                   </div>
                 </div>
                 <div className="flex w-full flex-col gap-0.5">
@@ -170,7 +174,7 @@ const FormArrayLinkedOrders = <T extends FieldValues>({
               </div>
             </div>
 
-            {fields.length === index + 1 && (
+            {fields.length === index + 1 && canEditField && (
               <Button
                 type="button"
                 variant="link"
@@ -185,7 +189,7 @@ const FormArrayLinkedOrders = <T extends FieldValues>({
         );
       })}
 
-      {fields.length === 0 && (
+      {fields.length === 0 && canEditField && (
         <Button
           type="button"
           variant="link"

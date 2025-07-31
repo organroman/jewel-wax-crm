@@ -32,6 +32,7 @@ const FormSelect = <T extends FieldValues, O>({
   labelPosition = "left",
   isFullWidth,
   labelClassName,
+  disabled = false,
 }: FormSelectProps<T, O>) => {
   const { t } = useTranslation();
 
@@ -86,6 +87,7 @@ const FormSelect = <T extends FieldValues, O>({
                   });
                 }
               }}
+              disabled={disabled}
             >
               <FormControl>
                 <SelectTrigger

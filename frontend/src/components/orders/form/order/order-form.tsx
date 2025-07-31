@@ -1,5 +1,11 @@
-import { Order, OrderMedia, UpdateOrderSchema } from "@/types/order.types";
+import {
+  Order,
+  OrderMedia,
+  Stage,
+  UpdateOrderSchema,
+} from "@/types/order.types";
 import { ResultUploadedFile } from "@/types/upload.types";
+import { Action } from "@/types/permission.types";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -15,7 +21,7 @@ import FormArrayLinkedOrders from "@components/form/form-array-linked-orders";
 import FormInput from "@components/form/form-input";
 
 import OrderMediaComponent from "@/components/orders/media/order-media";
-import OrderStagesFields from "./order-stages-fiedls";
+import OrderStagesFields from "./order-stages-fields";
 import DeleteOrder from "./delete-order";
 import OrderOperationsFields from "./order-operations-fields";
 
@@ -28,6 +34,12 @@ interface OrderFormProps {
   uploadImagesMutation: UseMutationResult<ResultUploadedFile[], Error, File[]>;
   mutation: UseMutationResult<Order, Error, UpdateOrderSchema>;
   userId: number;
+  hasExtraAccess?: (action: Action, entity: string) => boolean;
+  canViewField?: (field: string) => boolean;
+  canEditField?: (field: string) => boolean;
+  canDeleteField?: (field: string) => boolean;
+  canViewStage?: (stage: Stage) => boolean;
+  canEditStage?: (stage: Stage) => boolean;
 }
 
 const OrderForm = ({
@@ -35,13 +47,24 @@ const OrderForm = ({
   mutation,
   uploadImagesMutation,
   userId,
+  hasExtraAccess = () => true,
+  canViewStage = () => true,
+  canEditStage = () => true,
+  canViewField = () => true,
+  canEditField = () => true,
+  canDeleteField = () => true,
 }: OrderFormProps) => {
   const { t } = useTranslation();
 
   const [newFiles, setNewFiles] = useState<File[]>([]);
   const [previews, setPreviews] = useState<OrderMedia[]>(order?.media ?? []);
 
-  const defaultOrderStages = ORDER_STAGE.map((stageKey) => {
+  const canViewCustomer = hasExtraAccess("VIEW", "customer");
+  const canDeleteOrder = hasExtraAccess("DELETE", "order");
+
+  const defaultOrderStages = ORDER_STAGE.filter((stageKey) =>
+    canViewStage(stageKey)
+  ).map((stageKey) => {
     const existing = order?.stages.find((s) => s.stage === stageKey);
     const statusKey = existing?.status ?? undefined;
     const statusOption = ORDER_STAGE_STATUS.find((s) => s === statusKey);
@@ -98,7 +121,6 @@ const OrderForm = ({
       created_at: order?.created_at ?? null,
     },
   });
-
 
   useEffect(() => {
     if (order) {
@@ -188,6 +210,7 @@ const OrderForm = ({
                   setPreviews={setPreviews}
                   currentMedia={form.getValues("media")}
                   handleUpdateMedia={handleUpdateImages}
+                  hasExtraAccess={hasExtraAccess}
                 />
               </div>
               <div className="w-full lg:w-3/4">
@@ -227,25 +250,36 @@ const OrderForm = ({
                     order={order}
                     form={form}
                     userId={userId}
+                    canViewField={canViewField}
+                    canEditField={canEditField}
+                    canViewCustomer={canViewCustomer}
                   />
 
-                  <OrderStagesFields form={form} />
+                  <OrderStagesFields
+                    form={form}
+                    canEditStage={canEditStage}
+                    canEditField={canEditField}
+                  />
                 </div>
               </div>
             </div>
-            <div className=" flex flex-col w-full">
-              <p className="font-medium text-text-regular mb-2.5">
-                {t("order.linked_orders.linked")}
-              </p>
-              <Separator className="bg-ui-border h-[1px] data-[orientation=horizontal]:h-[1px0]" />
-              <FormArrayLinkedOrders
-                control={form.control}
-                name="linked_orders"
-                setValue={form.setValue}
-                orderId={order?.id ?? null}
-              />
-            </div>
-            {order && <DeleteOrder orderId={order.id} />}
+            {canViewField("linked_orders") && (
+              <div className=" flex flex-col w-full">
+                <p className="font-medium text-text-regular mb-2.5">
+                  {t("order.linked_orders.linked")}
+                </p>
+                <Separator className="bg-ui-border h-[1px] data-[orientation=horizontal]:h-[1px0]" />
+                <FormArrayLinkedOrders
+                  control={form.control}
+                  name="linked_orders"
+                  setValue={form.setValue}
+                  orderId={order?.id ?? null}
+                  canEditField={canEditField("linked_orders")}
+                  canDeleteField={canDeleteField("linked_orders")}
+                />
+              </div>
+            )}
+            {order && canDeleteOrder && <DeleteOrder orderId={order.id} />}
           </div>
         </form>
       </Form>

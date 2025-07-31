@@ -15,19 +15,17 @@ import Toolbar from "@/components/shared/tool-bar";
 import { getOrdersColumns } from "@/components/orders/orders-columns";
 import { Separator } from "@/components/ui/separator";
 
+import { getColumnVisibilityByRole } from "@/permissions/order.permissions";
 import ERROR_MESSAGES from "@/constants/error-messages";
 import {
   ORDER_STAGES,
   STATIC_ORDER_FILTERS,
 } from "@/constants/orders.constants";
-import {
-  getColumnVisibilityByRole,
-  PERMISSIONS,
-} from "@/constants/permissions.constants";
+import { PERMISSIONS } from "@/constants/permissions.constants";
+import { ORDERS_SORT_FIELDS } from "@/constants/sortable-fields";
 
 import { translateFilterGroups } from "@/lib/translate-constant-labels";
 import { hasPermission } from "@/lib/utils";
-import { ORDERS_SORT_FIELDS } from "@/constants/sortable-fields";
 
 const OrdersClient = ({ userRole }: { userRole: PersonRoleValue }) => {
   const { t } = useTranslation();

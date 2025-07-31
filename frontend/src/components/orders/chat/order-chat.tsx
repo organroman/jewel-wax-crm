@@ -7,19 +7,23 @@ import { useChat } from "@/api/order-chat/use-order-chat";
 
 import ChatRoom from "./chat-room";
 import ChatInfo from "./chat-info";
+import { ChatParticipant } from "@/types/order-chat.types";
+import { Action } from "@/types/permission.types";
 
 interface OrderChatProps {
-  chatId: number;
+  chat: { chat_id: number; participants: ChatParticipant[] };
   orderName: string;
   currentUserId: number;
   orderId: number;
+  hasExtraAccess?: (action: Action, entity: string) => boolean;
 }
 
 const OrderChat = ({
-  chatId,
+  chat,
   orderName,
   currentUserId,
   orderId,
+  hasExtraAccess = () => true,
 }: OrderChatProps) => {
   const { t } = useTranslation();
 
@@ -27,9 +31,14 @@ const OrderChat = ({
     data: chatDetails,
     isLoading,
     error,
-  } = useChat.getChatDetails({ chatId, enabled: Boolean(chatId) });
+  } = useChat.getChatDetails({
+    chatId: chat.chat_id,
+    enabled: Boolean(chat.chat_id),
+  });
 
-  const opponent = chatDetails?.participants.find(
+  const canDeleteOrderChat = hasExtraAccess("DELETE", "chat");
+
+  const opponent = chat?.participants.find(
     (p) => p.person_id !== currentUserId
   );
 
@@ -49,15 +58,16 @@ const OrderChat = ({
     <div className="w-full h-full overflow-hidden rounded-b-sm bg-ui-sidebar pt-7">
       <div className="w-full h-full overflow-hidden flex gap-10">
         <ChatRoom
-          chatId={chatId}
+          chatId={chat.chat_id}
           orderName={orderName}
           currentUserId={currentUserId}
         />
         <ChatInfo
           opponent={opponent}
           media={chatDetails?.media ?? []}
-          chatId={chatId}
+          chatId={chat.chat_id}
           orderId={orderId}
+          canDeleteOrderChat={canDeleteOrderChat}
         />
       </div>
     </div>

@@ -1,15 +1,17 @@
 "use client";
 
 import { TabOption } from "@/types/shared.types";
+import { PersonRoleValue } from "@/types/person.types";
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { ChevronLeftIcon, Loader } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { useOrder } from "@/api/order/use-order";
 import { useUpload } from "@/api/upload/use-upload";
+import { useOrderPermissions } from "@/hooks/use-order-permissions";
 
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -25,32 +27,57 @@ import OrderChangesHistory from "@/components/orders/order-changes-history";
 import { ORDER_CARD_TABS_LIST } from "@/constants/orders.constants";
 import { translateKeyValueList } from "@/lib/translate-constant-labels";
 
-const OrderClient = ({ id, userId }: { id: number; userId: number }) => {
+const OrderClient = ({
+  id,
+  userId,
+  role,
+}: {
+  id: number;
+  userId: number;
+  role: PersonRoleValue;
+}) => {
   const router = useRouter();
   const queryClient = useQueryClient();
   const { t } = useTranslation();
   const searchParams = useSearchParams();
+  const {
+    data: order,
+    isLoading,
+    error,
+  } = useOrder.getById({ id, enabled: !!id });
 
   const { updateMutation } = useOrder.update({ queryClient, t });
   const { uploadImagesMutation } = useUpload.uploadImages();
 
   const tabParam = searchParams.get("tab");
+  const permissions = useOrderPermissions(role, userId, order);
 
-  const tabs = translateKeyValueList(
-    ORDER_CARD_TABS_LIST,
-    t,
-    "order.tabs"
-  ).filter((tab) => tab.value !== "new");
+  const canViewOrder = permissions.hasExtraAccess("VIEW", "order");
+  const canViewPayments = permissions.hasExtraAccess("VIEW", "payments");
+  const canViewHistory = permissions.hasExtraAccess("VIEW", "changes_history");
 
-  const currentTab = tabs.find((t) => t.value === tabParam);
+  const tabs = translateKeyValueList(ORDER_CARD_TABS_LIST, t, "order.tabs")
+    .filter((tab) => tab.value !== "new")
+    .filter((tab) => {
+      return permissions.hasExtraAccess("VIEW", tab.value);
+    });
 
-  const [selectedTab, setSelectedTab] = useState<TabOption>(
-    currentTab || tabs[0]
-  );
+  useEffect(() => {
+    if (!isLoading && !canViewOrder) {
+      router.push("/orders");
+    }
+  }, [isLoading, canViewOrder, router]);
+
+  const currentTab = tabs?.find((t) => t.value === tabParam) ?? {
+    value: "order",
+    label: t("order.tabs.order"),
+  };
+
+  const [selectedTab, setSelectedTab] = useState<TabOption>(currentTab);
 
   const handleChange = (value: string) => {
     const params = new URLSearchParams(searchParams);
-    if (selectedTab.value === value) return;
+    if (!selectedTab || selectedTab.value === value) return;
 
     const selected = tabs.find((t) => t.value === value);
     if (!selected) {
@@ -61,14 +88,8 @@ const OrderClient = ({ id, userId }: { id: number; userId: number }) => {
     setSelectedTab(selected);
   };
 
-  const {
-    data: order,
-    isLoading,
-    error,
-  } = useOrder.getById({ id, enabled: id ? true : false });
-
-  if (isLoading) {
-    return <Loader />;
+  if (!canViewOrder || isLoading) {
+    return <Loader className="animate-spin size-5 text-brand-default" />;
   }
 
   if (error || !order) {
@@ -98,6 +119,7 @@ const OrderClient = ({ id, userId }: { id: number; userId: number }) => {
             savingIsLoading={
               updateMutation.isPending || uploadImagesMutation.isPending
             }
+            hasExtraAccess={permissions.hasExtraAccess}
           />
         )}
         {selectedTab.value === "order" && (
@@ -106,25 +128,32 @@ const OrderClient = ({ id, userId }: { id: number; userId: number }) => {
             uploadImagesMutation={uploadImagesMutation}
             mutation={updateMutation}
             userId={userId}
+            hasExtraAccess={permissions.hasExtraAccess}
+            canViewField={permissions.canViewField}
+            canEditField={permissions.canEditField}
+            canViewStage={permissions.canViewStage}
+            canEditStage={permissions.canEditStage}
+            canDeleteField={permissions.canDeleteField}
           />
         )}
-        {selectedTab.value === "payments" && (
+        {selectedTab.value === "payments" && canViewPayments && (
           <OrderPayments orderId={order.id} orderAmount={order.amount} />
         )}
         {selectedTab.value === "chat" &&
-          (order.chat_id === null ? (
+          (order.chat === null ? (
             <div className="w-full h-full overflow-hidden rounded-b-sm bg-ui-sidebar pt-7">
               <ChatItemEmpty info={t("messages.info.no_chat")} />
             </div>
           ) : (
             <OrderChat
-              chatId={order.chat_id}
+              chat={order.chat}
               orderId={order.id}
               orderName={order.name}
               currentUserId={userId}
+              hasExtraAccess={permissions.hasExtraAccess}
             />
           ))}
-        {selectedTab.value === "changes_history" && (
+        {selectedTab.value === "changes_history" && canViewHistory && (
           <OrderChangesHistory orderId={order.id} orderNumber={order.number} />
         )}
       </div>

@@ -60,6 +60,7 @@ export type FormInputProps<T extends FieldValues> = {
   isFullWidth?: boolean;
   defaultValue?: string | number;
   labelClassName?: string;
+  disabled?: boolean;
 };
 
 export type FormDatePickerProps<T extends FieldValues> = {
@@ -90,6 +91,7 @@ export type FormSelectProps<T extends FieldValues, O> = {
   labelPosition?: "top" | "left";
   isFullWidth?: boolean;
   labelClassName?: string;
+  disabled?: boolean;
 };
 
 export interface FormArrayLocationProps<T extends FieldValues> {
@@ -129,6 +131,8 @@ export interface FormArrayLinkedOrdersProps<T extends FieldValues> {
   setValue: UseFormSetValue<T>;
   required?: boolean;
   orderId: number | null;
+  canEditField: boolean;
+  canDeleteField: boolean;
 }
 
 export interface FormArrayDeliveryAddressProps<T extends FieldValues> {

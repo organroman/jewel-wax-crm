@@ -1,5 +1,9 @@
-import { PermissionMap } from "@/types/permission.types";
-import { PersonRoleValue } from "@/types/person.types";
+import {
+  ExtraPermissionsMap,
+  FieldPermissionsMap,
+  PermissionMap,
+  StagePermissionMap,
+} from "@/types/permission.types";
 
 export const PERMISSIONS: PermissionMap = {
   PERSONS: {
@@ -52,34 +56,124 @@ export const PERMISSIONS: PermissionMap = {
   },
 } as const;
 
-export const getColumnVisibilityByRole = (
-  role: PersonRoleValue,
-  query: string
-) => {
-  const includesModeling = query.includes("modeling");
-  const includesMilling = query.includes("milling");
-  const includesPrinting = query.includes("printing");
+export const ORDER_FIELD_PERMISSIONS: FieldPermissionsMap = {
+  number: {
+    VIEW: ["super_admin", "modeller", "miller", "print"],
+    UPDATE: ["super_admin"],
+  },
+  name: {
+    VIEW: ["super_admin", "modeller", "miller", "print"],
+    UPDATE: ["super_admin", "modeller", "miller", "print"],
+  },
+  description: {
+    VIEW: ["super_admin", "modeller", "miller", "print"],
+    UPDATE: ["super_admin", "modeller", "miller", "print"],
+  },
+  amount: {
+    VIEW: ["super_admin"],
+    UPDATE: ["super_admin"],
+  },
+  modeller: {
+    VIEW: ["super_admin", "modeller"],
+    UPDATE: ["super_admin"],
+  },
+  modeling_cost: {
+    VIEW: ["super_admin", "modeller"],
+    UPDATE: ["super_admin"],
+  },
+  miller: {
+    VIEW: ["super_admin", "miller"],
+    UPDATE: ["super_admin"],
+  },
+  milling_cost: {
+    VIEW: ["super_admin", "miller"],
+    UPDATE: ["super_admin"],
+  },
+  printer: {
+    VIEW: ["super_admin", "print"],
+    UPDATE: ["super_admin"],
+  },
+  printing_cost: {
+    VIEW: ["super_admin", "print"],
+    UPDATE: ["super_admin"],
+  },
+  delivery: {
+    VIEW: ["super_admin"],
+    UPDATE: ["super_admin"],
+  },
+  notes: {
+    VIEW: ["super_admin"],
+    UPDATE: ["super_admin"],
+  },
+  customer: {
+    VIEW: ["super_admin"],
+    UPDATE: ["super_admin"],
+  },
+  active_stage: {
+    VIEW: ["super_admin", "miller", "modeller", "print"],
+    UPDATE: ["super_admin"],
+  },
+  linked_orders: {
+    VIEW: ["super_admin", "miller", "modeller", "print"],
+    UPDATE: ["super_admin"],
+    DELETE: ["super_admin"],
+  },
+};
 
-  return {
-    is_favorite: true,
-    is_important: true,
-    created_at: true,
-    number: true,
-    image: true,
-    name: true,
-    customer: role === "super_admin",
-    modeller: includesModeling,
-    miller: includesMilling,
-    printer: includesPrinting,
-    amount: role === "super_admin",
-    modeling_cost: role === "modeller",
-    payment_status: role === "super_admin",
-    active_stage: role === "super_admin",
-    active_stage_status: role === "super_admin",
-    specific_stage: role === "modeller" || role === "miller",
-    specific_stage_status: role === "modeller" || role === "miller",
-    processing_days: role === "super_admin",
-    notes: role === "super_admin",
-    actions: true,
-  };
+export const ORDER_STAGE_PERMISSIONS: StagePermissionMap = {
+  new: {
+    VIEW: ["super_admin", "modeller", "miller", "print"],
+    UPDATE: ["super_admin"],
+  },
+  modeling: {
+    VIEW: ["super_admin", "modeller"],
+    UPDATE: ["super_admin", "modeller"],
+  },
+  milling: {
+    VIEW: ["super_admin", "miller"],
+    UPDATE: ["super_admin", "miller"],
+  },
+  printing: {
+    VIEW: ["super_admin", "print"],
+    UPDATE: ["super_admin", "print"],
+  },
+  delivery: {
+    VIEW: ["super_admin"],
+    UPDATE: ["super_admin"],
+  },
+  done: {
+    VIEW: ["super_admin"],
+    UPDATE: ["super_admin"],
+  },
+};
+
+export const ORDER_EXTRA_PERMISSIONS: ExtraPermissionsMap = {
+  payments: {
+    VIEW: ["super_admin"],
+    CREATE: ["super_admin"],
+  },
+  important: {
+    VIEW: ["super_admin", "miller", "modeller", "print"],
+    UPDATE: ["super_admin"],
+  },
+  chat: {
+    VIEW: ["super_admin"],
+    DELETE: ["super_admin"],
+  },
+  changes_history: {
+    VIEW: ["super_admin"],
+  },
+  order: {
+    VIEW: ["super_admin", "miller", "modeller", "print"],
+    DELETE: ["super_admin"],
+  },
+  customer: {
+    VIEW: ["super_admin"],
+  },
+  media: {
+    VIEW: ["super_admin", "miller", "modeller", "print"],
+    UPDATE: ["super_admin"],
+    DELETE: ["super_admin"],
+    CREATE: ["super_admin", "miller", "modeller", "print"],
+  },
 };

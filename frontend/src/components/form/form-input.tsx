@@ -28,6 +28,7 @@ const FormInput = <T extends FieldValues>({
   isFullWidth = false,
   defaultValue,
   labelClassName,
+  disabled = false,
 }: FormInputProps<T>) => (
   <FormField
     name={name}
@@ -76,6 +77,7 @@ const FormInput = <T extends FieldValues>({
                 placeholder={placeholder}
                 type={type}
                 defaultValue={defaultValue}
+                disabled={disabled}
               />
             )}
           </FormControl>

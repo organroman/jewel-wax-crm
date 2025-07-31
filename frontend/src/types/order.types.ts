@@ -9,6 +9,8 @@ import {
 import { PaginatedResult } from "./shared.types";
 import { updateOrderSchema } from "@/validators/order.validator";
 import { DeliveryType, Phone } from "./person.types";
+import { ChatParticipant } from "./order-chat.types";
+import { Action } from "./permission.types";
 
 export interface OrderMediaFilesProps {
   previews: OrderMedia[];
@@ -17,6 +19,7 @@ export interface OrderMediaFilesProps {
   setNewFiles: Dispatch<SetStateAction<File[]>>;
   currentMedia: OrderMedia[];
   handleUpdateMedia: (media: OrderMedia[]) => void;
+  hasExtraAccess?: (action: Action, entity: string) => boolean;
 }
 
 export interface OrderPerson {
@@ -137,7 +140,7 @@ export interface Order {
   createdBy: string;
   delivery: OrderDelivery;
   linked_orders: LinkedOrder[];
-  chat_id: number | null;
+  chat: { chat_id: number; participants: ChatParticipant[] } | null;
 }
 
 export interface PaginatedOrdersResult<T> extends PaginatedResult<T> {

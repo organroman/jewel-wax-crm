@@ -120,10 +120,11 @@ export const usePerson = {
       queryFn: () => personService.getOrderPerformers(query),
     });
   },
-  getCustomers: (query: string) => {
+  getCustomers: (query: string, enabled: boolean) => {
     return useQuery({
       queryKey: ["customers", query],
       queryFn: () => personService.getCustomers(query),
+      enabled,
     });
   },
 };

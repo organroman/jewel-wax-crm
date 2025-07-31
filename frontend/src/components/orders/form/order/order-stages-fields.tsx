@@ -23,8 +23,14 @@ import {
 
 interface OrderStagesFieldsProps {
   form: UseFormReturn<UpdateOrderSchema>;
+  canEditStage?: (stage: Stage) => boolean;
+  canEditField?: (field: string) => boolean;
 }
-const OrderStagesFields = ({ form }: OrderStagesFieldsProps) => {
+const OrderStagesFields = ({
+  form,
+  canEditStage = () => true,
+  canEditField = () => true,
+}: OrderStagesFieldsProps) => {
   const { t } = useTranslation();
 
   const {
@@ -85,6 +91,7 @@ const OrderStagesFields = ({ form }: OrderStagesFieldsProps) => {
                   field.status?.value &&
                     STAGE_STATUS_COLORS[field.status?.value]
                 )}
+                disabled={!canEditStage(field.stage)}
               />
 
               <p className="text-xs font-medium">
@@ -96,15 +103,17 @@ const OrderStagesFields = ({ form }: OrderStagesFieldsProps) => {
           );
         })}
       </div>
-      <Button
-        type="button"
-        size="sm"
-        variant="secondary"
-        className="self-start text-xs px-6.5"
-        onClick={() => changeStageOpenDialog()}
-      >
-        {t("order.buttons.change_stage")}
-      </Button>
+      {canEditField("active_stage") && (
+        <Button
+          type="button"
+          size="sm"
+          variant="secondary"
+          className="self-start text-xs px-6.5"
+          onClick={() => changeStageOpenDialog()}
+        >
+          {t("order.buttons.change_stage")}
+        </Button>
+      )}
       <Dialog
         open={changeStageDialogOpen}
         onOpenChange={changeStageSetDialogOpen}

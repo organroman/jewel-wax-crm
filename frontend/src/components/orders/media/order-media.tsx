@@ -11,13 +11,13 @@ import OrderFilesPreview from "./order-files-preview";
 
 import { Separator } from "@/components/ui/separator";
 
-
 const OrderMediaComponent = ({
   setNewFiles,
   setPreviews,
   previews = [],
   currentMedia,
   handleUpdateMedia,
+  hasExtraAccess = () => true,
 }: OrderMediaFilesProps) => {
   const { t } = useTranslation();
   const [currentImageIdx, setCurrentImageIdx] = useState(0);
@@ -26,6 +26,10 @@ const OrderMediaComponent = ({
 
   const imagesPreviews = previews.filter((file) => file.type === "image");
   const otherPreviews = previews.filter((file) => file.type === "other");
+
+  const canUpdateMedia = hasExtraAccess("UPDATE", "media");
+  const canCreateMedia = hasExtraAccess("CREATE", "media");
+  const canDeleteMedia = hasExtraAccess("DELETE", "media");
 
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -212,6 +216,9 @@ const OrderMediaComponent = ({
                 handleDeleteImage={handleDeleteImage}
                 handleFileChange={handleFileChange}
                 type="image"
+                canDeleteMedia={canDeleteMedia}
+                canCreateMedia={canCreateMedia}
+                canUpdateMedia={canUpdateMedia}
               />
             )}
           </div>
@@ -255,6 +262,9 @@ const OrderMediaComponent = ({
                   handleDeleteImage={handleDeleteImage}
                   handleFileChange={handleFileChange}
                   type="other"
+                  canDeleteMedia={canDeleteMedia}
+                  canCreateMedia={canCreateMedia}
+                  canUpdateMedia={canUpdateMedia}
                 />
               </div>
             )}

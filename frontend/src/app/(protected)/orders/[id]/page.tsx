@@ -10,9 +10,11 @@ const OrderPage = async ({ params }: { params: Promise<{ id: string }> }) => {
   const cookieStore = await cookies();
   const token = cookieStore.get("token")?.value;
 
-  const { id: userId } = getRoleAndUserFromToken(token as PersonRoleValue);
+  const { id: userId, role } = getRoleAndUserFromToken(
+    token as PersonRoleValue
+  );
 
-  return <OrderClient id={Number(id)} userId={userId} />;
+  return <OrderClient id={Number(id)} userId={userId} role={role} />;
 };
 
 export default OrderPage;
