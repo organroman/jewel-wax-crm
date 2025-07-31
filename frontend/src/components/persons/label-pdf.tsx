@@ -54,11 +54,11 @@ const styles = StyleSheet.create({
   contacts: {
     display: "flex",
     flexDirection: "column",
-    gap: 2,
+    gap: 1,
     alignItems: "flex-end",
   },
   content: {
-    padding: 2,
+    padding: 1,
     fontSize: 7,
     display: "flex",
     flexDirection: "column",
@@ -85,7 +85,7 @@ const styles = StyleSheet.create({
     textAlign: "right",
     paddingRight: 4,
     paddingBottom: 2,
-    paddingTop: 4,
+    paddingTop: 2,
     borderTop: "1pt dashed gray",
   },
 });
