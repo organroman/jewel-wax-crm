@@ -19,6 +19,7 @@ interface ToolbarFilterProps {
   showFilterButton?: boolean;
   filterOptions: FilterGroup[];
   filterPlaceholder?: string;
+  extraAction?: React.ReactNode;
 }
 
 const Toolbar = ({
@@ -29,6 +30,7 @@ const Toolbar = ({
   showFilterButton = true,
   filterOptions,
   filterPlaceholder = "Фільтри",
+  extraAction,
 }: ToolbarFilterProps) => {
   const [filterOpen, setFilterOpen] = useState<boolean>(false);
   const searchParams = useSearchParams();
@@ -102,23 +104,28 @@ const Toolbar = ({
           )}
           <div className="flex justify-between ">
             <SearchInput placeholder={searchPlaceholder} />
-            {onAdd && (
-              <Button onClick={onAdd} size="icon" className="flex lg:hidden">
-                <Plus className="size-4" />
-              </Button>
-            )}
+            <div className="flex items-center gap-5 lg:hidden">
+              {extraAction && extraAction}
+              {onAdd && (
+                <Button onClick={onAdd} size="icon" className="flex lg:hidden">
+                  <Plus className="size-4" />
+                </Button>
+              )}
+            </div>
           </div>
         </div>
-
-        {onAdd && (
-          <Button
-            onClick={onAdd}
-            className="hidden lg:flex whitespace-nowrap text-xs/tight font-semibold"
-          >
-            <Plus className="size-3" />
-            {addLabel}
-          </Button>
-        )}
+        <div className="flex items-center gap-5">
+          {extraAction && extraAction}
+          {onAdd && (
+            <Button
+              onClick={onAdd}
+              className="hidden lg:flex whitespace-nowrap text-xs/tight font-semibold"
+            >
+              <Plus className="size-3" />
+              {addLabel}
+            </Button>
+          )}
+        </div>
       </div>
       {filterOpen && (
         <div className="hidden lg:flex gap-5">

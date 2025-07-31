@@ -442,11 +442,20 @@
     "payment": "Оплата",
     "paid": "$t(dictionary.paid)",
     "debt": "Борг",
+    "add_expenses": "Витрати",
 
     "payment_method": {
       "cash": "Готівка",
       "card_transfer": "Переказ на карту",
       "payment_system": "Платіжна система"
+    },
+    "types": {
+      "all": "Всі фінанси",
+      "client_payment": "Оплата від клієнта",
+      "modeller_payment": "Оплата модельєру",
+      "print_payment": "Оплата 3D друк",
+      "expenses": "Витрати",
+      "history": "Історія транзакцій"
     },
     "labels": {
       "amount": "Сума в грн.",
@@ -465,6 +474,13 @@
       "payment_method": "Метод оплати",
       "description": "Опис",
       "actions": "$t(dictionary.actions)"
+    },
+    "placeholders": {
+      "search": "Пошук"
+    },
+    "sorting": {
+      "created_at-asc": "$t(dictionary.created_at-asc)",
+      "created_at-desc": "$t(dictionary.created_at-desc)"
     }
   },
 

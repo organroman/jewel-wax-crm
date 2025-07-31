@@ -12,7 +12,7 @@ const paymentMethodSchema = z.object({
 });
 
 export const createInvoiceSchema = z.object({
-  order_id: z.number(),
+  order_id: z.number().nullable(),
   payment_method: paymentMethodSchema,
   amount: costField,
   description: z

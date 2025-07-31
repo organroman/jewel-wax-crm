@@ -24,7 +24,7 @@ import { getFullName } from "@/lib/utils";
 import { PAYMENT_METHOD } from "@/constants/enums.constants";
 
 interface CreateInvoiceProps {
-  order: Order;
+  order?: Order;
 }
 
 const CreateInvoice = ({ order }: CreateInvoiceProps) => {
@@ -33,15 +33,17 @@ const CreateInvoice = ({ order }: CreateInvoiceProps) => {
 
   const { dialogOpen, setDialogOpen } = useDialog();
 
+  //TODO: ADD select orders and display customer name;
+
   const form = useForm({
     resolver: zodResolver(createInvoiceSchema),
     defaultValues: {
-      order_id: order.id,
+      order_id: order?.id ?? null,
       payment_method: {
         value: "card_transfer",
         label: t("finance.payment_method.card_transfer"),
       },
-      amount: order.amount,
+      amount: order?.amount ?? 0,
       description: "",
     },
   });
@@ -91,21 +93,25 @@ const CreateInvoice = ({ order }: CreateInvoiceProps) => {
                   <InfoLabel className="w-[116px] text-sm">
                     {t("order.order")}:
                   </InfoLabel>
-                  <InfoValue className="text-sm font-medium">
-                    №{order.number}
-                  </InfoValue>
+                  {order && (
+                    <InfoValue className="text-sm font-medium">
+                      №{order.number}
+                    </InfoValue>
+                  )}
                 </div>
                 <div className="flex items-center">
                   <InfoLabel className="w-[116px] text-sm">
                     {t("person.person")}:
                   </InfoLabel>
-                  <InfoValue className="text-sm font-medium">
-                    {getFullName(
-                      order.customer.first_name,
-                      order.customer.last_name,
-                      order.customer.patronymic
-                    )}
-                  </InfoValue>
+                  {order && (
+                    <InfoValue className="text-sm font-medium">
+                      {getFullName(
+                        order.customer.first_name,
+                        order.customer.last_name,
+                        order.customer.patronymic
+                      )}
+                    </InfoValue>
+                  )}
                 </div>
                 <FormSelect
                   name="payment_method"
