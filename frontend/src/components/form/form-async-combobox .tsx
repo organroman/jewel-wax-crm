@@ -23,11 +23,7 @@ import {
   CommandGroup,
   CommandItem,
 } from "@/components/ui/command";
-import {
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
-} from "@/components/ui/popover";
+
 import { Button } from "@/components/ui/button";
 
 import { cn } from "@/lib/utils";
@@ -52,6 +48,7 @@ const FormAsyncCombobox = <T extends FieldValues, O>({
   labelPosition = "left",
   popoverContentClassName,
   displayFn,
+  searchPlaceholder = "Пошук",
 }: FormAsyncComboboxProps<T, O>) => {
   const [open, setOpen] = useState(false);
   const { t } = useTranslation();
@@ -120,7 +117,13 @@ const FormAsyncCombobox = <T extends FieldValues, O>({
             <div className="flex flex-col gap-1">
               <FormControl>
                 <div>
-                  <RadixPopover.Popover open={open} onOpenChange={setOpen}>
+                  <RadixPopover.Popover
+                    open={open}
+                    onOpenChange={(isOpen) => {
+                      setOpen(isOpen);
+                      if (!isOpen && setSearchQuery) setSearchQuery("");
+                    }}
+                  >
                     <RadixPopover.PopoverTrigger asChild>
                       <Button
                         {...field}
@@ -164,7 +167,7 @@ const FormAsyncCombobox = <T extends FieldValues, O>({
                         }}
                       >
                         <CommandInput
-                          placeholder={t("placeholders.choose")}
+                          placeholder={searchPlaceholder}
                           value={searchQuery}
                           onValueChange={setSearchQuery}
                         />

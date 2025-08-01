@@ -1,12 +1,15 @@
 import { Order } from "@/types/order.types";
 import { CreateInvoiceSchema } from "@/types/finance.types";
 import { useQueryClient } from "@tanstack/react-query";
-
 import { useTranslation } from "react-i18next";
 import { useForm } from "react-hook-form";
+import { useEffect, useMemo, useState } from "react";
+import debounce from "lodash.debounce";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { useFinance } from "@/api/finance/use-finance";
+import { useOrder } from "@/api/order/use-order";
 import { useDialog } from "@/hooks/use-dialog";
 
 import { Button } from "../ui/button";
@@ -18,6 +21,7 @@ import InfoValue from "./typography/info-value";
 
 import FormInput from "../form/form-input";
 import FormSelect from "../form/form-select";
+import FormAsyncCombobox from "../form/form-async-combobox ";
 
 import { createInvoiceSchema } from "@/validators/finance.validator";
 import { getFullName } from "@/lib/utils";
@@ -33,12 +37,34 @@ const CreateInvoice = ({ order }: CreateInvoiceProps) => {
 
   const { dialogOpen, setDialogOpen } = useDialog();
 
-  //TODO: ADD select orders and display customer name;
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [inputValue, setInputValue] = useState<string>("");
+
+  const debouncedSetSearch = useMemo(
+    () => debounce((val: string) => setSearchQuery(val), 500),
+    []
+  );
+  useEffect(() => () => debouncedSetSearch.cancel(), [debouncedSetSearch]);
+
+  const handleInputChange = (val: string) => {
+    setInputValue(val);
+    debouncedSetSearch(val);
+  };
 
   const form = useForm({
     resolver: zodResolver(createInvoiceSchema),
     defaultValues: {
-      order_id: order?.id ?? null,
+      order: order
+        ? {
+            id: order.id,
+            customer: {
+              id: order.customer.id,
+              first_name: order.customer.first_name,
+              last_name: order.customer.last_name,
+              patronymic: order.customer.patronymic,
+            },
+          }
+        : undefined,
       payment_method: {
         value: "card_transfer",
         label: t("finance.payment_method.card_transfer"),
@@ -47,6 +73,12 @@ const CreateInvoice = ({ order }: CreateInvoiceProps) => {
       description: "",
     },
   });
+
+  const { data: orders, isLoading: ordersIsLoading } =
+    useOrder.getPaginatedOrders({
+      query: `search=${searchQuery}`,
+      enabled: dialogOpen && !order,
+    });
 
   const handleOnSuccess = () => {
     setDialogOpen(false);
@@ -63,6 +95,17 @@ const CreateInvoice = ({ order }: CreateInvoiceProps) => {
     createInvoiceMutation?.mutate(formData);
   };
 
+  const watchedOrder = form.watch("order") ?? order;
+
+  const personFullname =
+    watchedOrder?.customer.first_name && watchedOrder?.customer?.last_name
+      ? getFullName(
+          watchedOrder?.customer?.first_name,
+          watchedOrder?.customer?.last_name,
+          watchedOrder?.customer?.patronymic
+        )
+      : "-";
+  console.log(form.getValues());
   return (
     <div className="w-full h-full">
       <Button
@@ -93,25 +136,41 @@ const CreateInvoice = ({ order }: CreateInvoiceProps) => {
                   <InfoLabel className="w-[116px] text-sm">
                     {t("order.order")}:
                   </InfoLabel>
-                  {order && (
+                  {order ? (
                     <InfoValue className="text-sm font-medium">
                       №{order.number}
                     </InfoValue>
+                  ) : (
+                    <FormAsyncCombobox
+                      name="order"
+                      control={form.control}
+                      options={
+                        orders?.data
+                          ? orders?.data.map((o) => ({
+                              data: o,
+                              value: o?.id,
+                              label: String(o.number),
+                            }))
+                          : []
+                      }
+                      valueKey="id"
+                      displayKey="number"
+                      searchQuery={inputValue}
+                      setSearchQuery={(val: string) => handleInputChange(val)}
+                      saveFullObject
+                      isOptionsLoading={ordersIsLoading}
+                      className="lg:min-w-[280px]"
+                      popoverContentClassName="min-w-[280px] !border mt-1 !border-ui-border !shadow-md !rounded-md"
+                    />
                   )}
                 </div>
                 <div className="flex items-center">
                   <InfoLabel className="w-[116px] text-sm">
                     {t("person.person")}:
                   </InfoLabel>
-                  {order && (
-                    <InfoValue className="text-sm font-medium">
-                      {getFullName(
-                        order.customer.first_name,
-                        order.customer.last_name,
-                        order.customer.patronymic
-                      )}
-                    </InfoValue>
-                  )}
+                  <InfoValue className="text-sm font-medium">
+                    {personFullname}
+                  </InfoValue>
                 </div>
                 <FormSelect
                   name="payment_method"

@@ -1,4 +1,9 @@
-import { CreateInvoiceSchema, Invoice } from "@/types/finance.types";
+import {
+  CreateExpenseSchema,
+  CreateInvoiceSchema,
+  Expense,
+  Invoice,
+} from "@/types/finance.types";
 import { QueryClient, useMutation, useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { financeService } from "./finance-service";
@@ -20,6 +25,9 @@ export const useFinance = {
         queryClient.invalidateQueries({
           queryKey: ["orders"],
         });
+        queryClient.invalidateQueries({
+          queryKey: ["finance-all"],
+        });
         handleOnSuccess && data && handleOnSuccess(data);
       },
       onError: (error) => {
@@ -27,6 +35,30 @@ export const useFinance = {
       },
     });
     return { createInvoiceMutation: mutation };
+  },
+  createExpense: ({
+    queryClient,
+    handleOnSuccess,
+    t,
+  }: {
+    queryClient: QueryClient;
+    handleOnSuccess?: (data: Expense) => void;
+    t: (key: string) => string;
+  }) => {
+    const mutation = useMutation<Expense, Error, CreateExpenseSchema>({
+      mutationFn: async (data) => financeService.createExpense(data),
+      onSuccess: (data) => {
+        toast.success(t("messages.success.expense_created"));
+        queryClient.invalidateQueries({
+          queryKey: ["finance-all"],
+        });
+        handleOnSuccess && data && handleOnSuccess(data);
+      },
+      onError: (error) => {
+        toast.error(error.message);
+      },
+    });
+    return { createExpenseMutation: mutation };
   },
   getInvoicesByOrderId: ({
     orderId,

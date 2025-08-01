@@ -439,12 +439,14 @@
   },
   "finance": {
     "modal": {
-      "title": "Створення рахунку"
+      "title": "Створення рахунку",
+      "expenses_title": "Внесення витрат"
     },
     "payment": "Оплата",
     "paid": "$t(dictionary.paid)",
     "debt": "Борг",
     "add_expenses": "Витрати",
+    "expenses_type": "Тип витрат",
 
     "payment_method": {
       "cash": "Готівка",
@@ -456,6 +458,13 @@
       "paid": "$t(dictionary.paid)",
       "unpaid": "$t(dictionary.unpaid)",
       "partly_paid": "$t(dictionary.partly_paid)"
+    },
+    "expenses_category": {
+      "modelling": "Оплата модельєру",
+      "printing": "Оплата фрезерування",
+      "milling": "Оплата 3D друк",
+      "materials": "Оплата за матеріали",
+      "other": "Інші витрати"
     },
     "types": {
       "all": "Всі фінанси",
@@ -575,6 +584,7 @@
       "order_deleted": "Замовлення видалено",
       "order_chat_deleted": "Чат видалено",
       "invoice_created": "Рахунок сформовано",
+      "expense_created": "Витрати додано",
       "ttn_created": "ТТН створена"
     }
   }

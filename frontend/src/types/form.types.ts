@@ -167,6 +167,7 @@ export interface FormAsyncComboboxProps<T extends FieldValues, O>
   labelPosition?: "left" | "top";
   popoverContentClassName?: string;
   displayFn?: (item: O) => string;
+  searchPlaceholder?: string;
 }
 
 export interface FormArrayComboboxProps<T extends FieldValues, O> {

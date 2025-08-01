@@ -10,10 +10,11 @@ import { Separator } from "@/components/ui/separator";
 import { Dialog } from "@/components/ui/dialog";
 
 import Toolbar from "@/components/shared/tool-bar";
-import Modal from "@/components/shared/modal/modal";
+
 import CreateInvoice from "@/components/shared/create-invoice";
 import CustomTabs from "@/components/shared/custom-tabs";
 import AllFinance from "@/components/finance/all-finance/all-finance";
+import CreateExpenseForm from "@/components/finance/create-expense-form";
 
 import { FINANCE_TYPE } from "@/constants/finance.constants";
 import { FINANCE_SORT_FIELDS } from "@/constants/sortable-fields";
@@ -23,10 +24,10 @@ const FinanceClient = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
 
-    const {
-      dialogOpen: expensesDialogOpen,
-      setDialogOpen: expensesSetDialogOpen,
-    } = useDialog();
+  const {
+    dialogOpen: expensesDialogOpen,
+    setDialogOpen: expensesSetDialogOpen,
+  } = useDialog();
 
   const tabsOptions = FINANCE_TYPE.map((type) => ({
     value: type,
@@ -80,7 +81,10 @@ const FinanceClient = () => {
       />
       {selectedTab.value === "all" && <AllFinance />}
       <Dialog open={expensesDialogOpen} onOpenChange={expensesSetDialogOpen}>
-        <Modal>add expenses</Modal>
+        <CreateExpenseForm
+          setDialogOpen={expensesSetDialogOpen}
+          dialogOpen={expensesDialogOpen}
+        />
       </Dialog>
     </div>
   );

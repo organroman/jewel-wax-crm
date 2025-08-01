@@ -38,6 +38,13 @@ export const PAYMENT_METHOD = [
 ] as const;
 
 export const INVOICE_STATUS = ["paid", "pending"] as const;
+export const EXPENSE_CATEGORY = [
+  "modelling",
+  "printing",
+  "milling",
+  "materials",
+  "other",
+] as const;
 
 export const ORDER_STAGE = [
   "new",

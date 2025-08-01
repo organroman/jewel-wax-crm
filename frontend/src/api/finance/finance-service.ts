@@ -1,5 +1,7 @@
 import {
+  CreateExpenseSchema,
   CreateInvoiceSchema,
+  Expense,
   FinanceOrderItem,
   Invoice,
 } from "@/types/finance.types";
@@ -10,18 +12,24 @@ import apiService from "../api-service";
 export const financeService = {
   createInvoice: (data: CreateInvoiceSchema) =>
     apiService.post<Invoice>("finance/invoices", {
-      ...data,
+      order_id: data.order?.id,
+      amount: data.amount,
+      description: data.description ?? null,
       payment_method: data.payment_method.value,
     }),
   getInvoicesByOrderId: async (orderId: number) => {
     return await apiService.get<Invoice[]>(`finance/invoices/${orderId}`);
   },
-  // createExpense: (data: CreateExpenseSchema) => {
-  //   apiService.post<Expense>("finance/expenses", {
-  //     ...data,
-  //     payment_method: data.payment_method.value,
-  //   });
-  // },
+  createExpense: async (data: CreateExpenseSchema) => {
+    return await apiService.post<Expense>("finance/expenses", {
+      order_id: data.order?.id ?? null,
+      related_person_id: data.person?.id ?? null,
+      category: data.category.value,
+      amount: data.amount,
+      description: data.description ?? null,
+      payment_method: data.payment_method.value,
+    });
+  },
   getAllFinance: async (query: string) => {
     return await apiService.get<PaginatedResult<FinanceOrderItem>>(
       `finance/all-finance?${query}`
