@@ -34,6 +34,7 @@ export const PAYMENT_METHOD = [
   "cash",
   "card_transfer",
   "payment_system",
+  "bank_transfer",
 ] as const;
 
 export const INVOICE_STATUS = ["paid", "pending"] as const;

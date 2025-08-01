@@ -1,4 +1,10 @@
-import { CreateInvoiceSchema, Invoice } from "@/types/finance.types";
+import {
+  CreateInvoiceSchema,
+  FinanceOrderItem,
+  Invoice,
+} from "@/types/finance.types";
+import { PaginatedResult } from "@/types/shared.types";
+
 import apiService from "../api-service";
 
 export const financeService = {
@@ -9,5 +15,16 @@ export const financeService = {
     }),
   getInvoicesByOrderId: async (orderId: number) => {
     return await apiService.get<Invoice[]>(`finance/invoices/${orderId}`);
+  },
+  // createExpense: (data: CreateExpenseSchema) => {
+  //   apiService.post<Expense>("finance/expenses", {
+  //     ...data,
+  //     payment_method: data.payment_method.value,
+  //   });
+  // },
+  getAllFinance: async (query: string) => {
+    return await apiService.get<PaginatedResult<FinanceOrderItem>>(
+      `finance/all-finance?${query}`
+    );
   },
 };

@@ -15,7 +15,7 @@ export const getOrderPaymentsColumns = (
 ): ColumnDef<Invoice>[] => [
   {
     accessorKey: "created_at",
-    header: t("finance.table_headers.created_at"),
+    header: t("finance.table_headers.order_payments.created_at"),
 
     cell: ({ row }) => {
       const formattedDate = dayjs(row.original.created_at).format("DD.MM.YYYY");
@@ -25,7 +25,7 @@ export const getOrderPaymentsColumns = (
   },
   {
     accessorKey: "invoice_url",
-    header: t("finance.table_headers.invoice_url"),
+    header: t("finance.table_headers.order_payments.invoice_url"),
 
     cell: ({ row }) => {
       const url = row.original.invoice_url;
@@ -50,7 +50,7 @@ export const getOrderPaymentsColumns = (
   },
   {
     accessorKey: "amount",
-    header: t("finance.table_headers.amount"),
+    header: t("finance.table_headers.order_payments.amount"),
 
     cell: ({ row }) => {
       const amount = row.original.amount;
@@ -60,13 +60,13 @@ export const getOrderPaymentsColumns = (
   },
   {
     accessorKey: "status",
-    header: t("finance.table_headers.payment_status"),
+    header: t("finance.table_headers.order_payments.payment_status"),
 
     cell: ({ row }) => {
       const status = row.original.status;
       return (
         <div className={cn("text-center", INVOICE_STATUS_COLORS[status])}>
-          {t(`finance.invoice_status.${status}`)}
+          {t(`finance.payment_status.${status}`)}
         </div>
       );
     },
@@ -74,7 +74,7 @@ export const getOrderPaymentsColumns = (
   },
   {
     accessorKey: "paid_at",
-    header: t("finance.table_headers.paid_at"),
+    header: t("finance.table_headers.order_payments.paid_at"),
 
     cell: ({ row }) => {
       const formattedDate = dayjs(row.original.paid_at).format("DD.MM.YYYY");
@@ -84,7 +84,7 @@ export const getOrderPaymentsColumns = (
   },
   {
     accessorKey: "payment_method",
-    header: t("finance.table_headers.payment_method"),
+    header: t("finance.table_headers.order_payments.payment_method"),
 
     cell: ({ row }) => {
       const paymentMethod = row.original.payment_method;
@@ -98,7 +98,7 @@ export const getOrderPaymentsColumns = (
   },
   {
     accessorKey: "description",
-    header: t("finance.table_headers.description"),
+    header: t("finance.table_headers.order_payments.description"),
 
     cell: ({ row }) => {
       return <div className="">{row.original.description}</div>;
@@ -108,7 +108,9 @@ export const getOrderPaymentsColumns = (
   {
     id: "actions",
     header: () => (
-      <div className="text-center">{t("finance.table_headers.actions")}</div>
+      <div className="text-center">
+        {t("finance.table_headers.order_payments.actions")}
+      </div>
     ),
     cell: ({ row }) => {
       return (

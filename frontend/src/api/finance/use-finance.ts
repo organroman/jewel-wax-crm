@@ -41,4 +41,11 @@ export const useFinance = {
       enabled,
     });
   },
+  getAllFinance: ({ query, enabled }: { query: string; enabled: boolean }) => {
+    return useQuery({
+      queryKey: ["finance-all", query],
+      queryFn: () => financeService.getAllFinance(query),
+      enabled,
+    });
+  },
 };

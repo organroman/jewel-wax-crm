@@ -53,7 +53,9 @@
     "paid": "Оплачено",
     "changes_history": "Історія змін",
     "create_order": "Замовлення створено",
-    "update_order": "Замовлення оновлено"
+    "update_order": "Замовлення оновлено",
+    "unpaid": "Не оплачено",
+    "partly_paid": "Частково оплачено"
   },
   "labels": {
     "main": "$t(dictionary.main)",
@@ -108,7 +110,7 @@
       "modeller": "$t(dictionary.modeller)",
       "miller": "$t(dictionary.miller)",
       "client": "$t(dictionary.customer)",
-      "print": "3D друк"
+      "print": "$t(dictionary.printing)"
     },
     "table_headers": {
       "avatar_url": "$t(dictionary.photo)",
@@ -275,8 +277,8 @@
         "label": "$t(dictionary.payment_status)",
         "options": {
           "paid": "$t(dictionary.paid)",
-          "unpaid": "Не оплачено",
-          "partly_paid": "Частково оплачено"
+          "unpaid": "$t(dictionary.unpaid)",
+          "partly_paid": "$t(dictionary.partly_paid)"
         }
       },
       "is_favorite": {
@@ -447,7 +449,13 @@
     "payment_method": {
       "cash": "Готівка",
       "card_transfer": "Переказ на карту",
-      "payment_system": "Платіжна система"
+      "payment_system": "Платіжна система",
+      "bank_transfer": "Переказ на р/р"
+    },
+    "payment_status": {
+      "paid": "$t(dictionary.paid)",
+      "unpaid": "$t(dictionary.unpaid)",
+      "partly_paid": "$t(dictionary.partly_paid)"
     },
     "types": {
       "all": "Всі фінанси",
@@ -466,14 +474,29 @@
       "pending": "Не оплачено"
     },
     "table_headers": {
-      "created_at": "$t(dictionary.created_at)",
-      "invoice_url": "Посилання",
-      "amount": "Сума, ₴",
-      "payment_status": "$t(dictionary.payment_status)",
-      "paid_at": "Дата оплати",
-      "payment_method": "Метод оплати",
-      "description": "Опис",
-      "actions": "$t(dictionary.actions)"
+      "order_payments": {
+        "created_at": "$t(dictionary.created_at)",
+        "invoice_url": "Посилання",
+        "amount": "Сума, ₴",
+        "payment_status": "$t(dictionary.payment_status)",
+        "paid_at": "Дата оплати",
+        "payment_method": "Метод оплати",
+        "description": "Опис",
+        "actions": "$t(dictionary.actions)"
+      },
+      "all_finance": {
+        "number": "$t(dictionary.order)",
+        "customer": "$t(dictionary.customer)",
+        "order_amount": "Сума замовлення",
+        "order_payment_status": "Статус оплати замовлення",
+        "modeller": "$t(dictionary.modeller)",
+        "modelling_cost": "Сума моделювання",
+        "modelling_payment_status": "Статус оплати моделювання",
+        "print": "$t(dictionary.printing)",
+        "printing_cost": "Сума 3D друк",
+        "printing_payment_status": "Статус оплати 3D друк",
+        "actions": "$t(dictionary.actions)"
+      }
     },
     "placeholders": {
       "search": "Пошук"

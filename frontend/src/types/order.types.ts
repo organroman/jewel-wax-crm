@@ -1,16 +1,13 @@
 import { z } from "zod";
 import { Dispatch, SetStateAction } from "react";
 
-import {
-  ORDER_STAGE,
-  ORDER_STAGE_STATUS,
-  PAYMENT_STATUS,
-} from "@/constants/enums.constants";
+import { ORDER_STAGE, ORDER_STAGE_STATUS } from "@/constants/enums.constants";
 import { PaginatedResult } from "./shared.types";
 import { updateOrderSchema } from "@/validators/order.validator";
 import { DeliveryType, Phone } from "./person.types";
 import { ChatParticipant } from "./order-chat.types";
 import { Action } from "./permission.types";
+import { PaymentStatus } from "./finance.types";
 
 export interface OrderMediaFilesProps {
   previews: OrderMedia[];
@@ -57,9 +54,6 @@ export interface OrderMedia {
 }
 
 export type Stage = (typeof ORDER_STAGE)[number];
-
-export type PaymentStatus = (typeof PAYMENT_STATUS)[number];
-
 export type StageStatus = (typeof ORDER_STAGE_STATUS)[number];
 
 export interface OrderStage {
