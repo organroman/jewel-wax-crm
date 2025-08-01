@@ -13,11 +13,26 @@ router.post(
   FinanceController.createInvoice
 );
 
+router.post(
+  "/expenses",
+  verifyToken,
+  checkPermission("EXPENSES", "CREATE"),
+  FinanceController.createExpense
+);
+
 router.get(
   "/invoices/:orderId",
   verifyToken,
   checkPermission("INVOICES", "VIEW"),
   FinanceController.getInvoicesByOrderId
+);
+
+router.get(
+  "/all-finance",
+  verifyToken,
+  checkPermission("EXPENSES", "VIEW"),
+  checkPermission("INVOICES", "VIEW"),
+  FinanceController.getAllFinance
 );
 
 export default router;

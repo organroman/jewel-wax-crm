@@ -22,3 +22,4 @@ export const REQUEST_SORT_FIELDS = [
 ];
 
 export const ORDERS_SORT_FIELDS = ["created_at"];
+export const FINANCE_SORT_FIELDS = ["created_at"];

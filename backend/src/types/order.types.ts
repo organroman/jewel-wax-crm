@@ -1,13 +1,8 @@
-import {
-  ORDER_STAGE,
-  ORDER_STAGE_STATUS,
-  PAYMENT_STATUS,
-} from "../constants/enums";
+import { ORDER_STAGE, ORDER_STAGE_STATUS } from "../constants/enums";
+import { PaymentStatus } from "./finance.type";
 import { ChatParticipantFull } from "./order-chat.types";
 import { DeliveryType, PersonRole, Phone } from "./person.types";
 import { GetAllOptions, PaginatedResult } from "./shared.types";
-
-export type PaymentStatus = (typeof PAYMENT_STATUS)[number];
 
 export type Stage = (typeof ORDER_STAGE)[number];
 
@@ -126,6 +121,7 @@ export interface OrderBase {
   printer_first_name?: string;
   printer_last_name?: string;
   printer_patronymic?: string;
+  printing_cost?: number;
   created_by: number;
 }
 

@@ -16,6 +16,7 @@ export const LOG_ACTIONS = {
   DELETE_ORDER: "delete_order",
   DELETE_ORDER_CHAT: "delete_order_chat",
   CREATE_INVOICE: "create_invoice",
+  CREATE_EXPENSE: "create_expense",
   CREATE_CONTACT: "create_contact",
   UPDATE_CONTACT: "update_contact",
   DELETE_CONTACT: "delete_contact",

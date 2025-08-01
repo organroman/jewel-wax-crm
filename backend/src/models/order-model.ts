@@ -8,6 +8,7 @@ import {
   OrderFavorite,
   OrderMedia,
   OrderStage,
+  PaymentStatus,
   Stage,
   StageStatus,
 } from "../types/order.types";
@@ -16,7 +17,10 @@ import { PersonRole } from "../types/person.types";
 import db from "../db/db";
 
 import { paginateQuery } from "../utils/pagination";
-import { getVisibleFieldsForRoleAndContext } from "../utils/helpers";
+import {
+  definePaymentStatus,
+  getVisibleFieldsForRoleAndContext,
+} from "../utils/helpers";
 
 export const OrderModel = {
   async getAll({
@@ -325,11 +329,7 @@ export const OrderModel = {
     );
     const orderAmount = Number(order.amount || 0);
 
-    let status: "unpaid" | "partly_paid" | "paid" = "unpaid";
-
-    if (totalPaid === 0) status = "unpaid";
-    else if (totalPaid >= orderAmount) status = "paid";
-    else status = "partly_paid";
+    let status: PaymentStatus = definePaymentStatus(totalPaid, orderAmount);
 
     await db("orders").update({ payment_status: status }).where("id", orderId);
   },

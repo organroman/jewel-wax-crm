@@ -38,7 +38,16 @@ export const PAYMENT_METHOD = [
   "cash",
   "card_transfer",
   "payment_system",
+  "bank_transfer",
 ] as const;
+
+export const EXPENSE_CATEGORY = [
+  "modelling",
+  "printing",
+  "milling",
+  "materials",
+  "other",
+];
 
 export const ORDER_STAGE = [
   "new",

@@ -1,7 +1,16 @@
-import { INVOICE_STATUS, PAYMENT_METHOD } from "../constants/enums";
+import {
+  EXPENSE_CATEGORY,
+  INVOICE_STATUS,
+  PAYMENT_METHOD,
+  PAYMENT_STATUS,
+} from "../constants/enums";
+import { OrderPerson } from "./order.types";
+import { GetAllOptions } from "./shared.types";
 
 export type InvoiceStatus = (typeof INVOICE_STATUS)[number];
+export type PaymentStatus = (typeof PAYMENT_STATUS)[number];
 export type PaymentMethod = (typeof PAYMENT_METHOD)[number];
+export type ExpenseCategory = (typeof EXPENSE_CATEGORY)[number];
 
 export interface InvoiceInput {
   order_id: number;
@@ -31,3 +40,46 @@ export interface Invoice {
   created_at: Date;
   updated_at: Date;
 }
+
+export interface ExpenseInput {
+  order_id?: number;
+  related_person_id?: number;
+  category: ExpenseCategory;
+  payment_method: PaymentMethod;
+  amount: number;
+  description?: string;
+  created_by: number;
+}
+
+export interface Expense {
+  id: number;
+  order_id: number | null;
+  related_person_id: number | null;
+  category: ExpenseCategory;
+  payment_method: PaymentMethod;
+  amount: number;
+  description: string | null;
+  created_by: number;
+  created_at: Date;
+  updated_at: Date;
+}
+
+export interface FinanceOrderItem {
+  order_id: number;
+  order_important: boolean;
+  order_number: number;
+  customer: OrderPerson | null;
+  order_amount: number;
+  order_payment_status: PaymentStatus;
+  modeller: OrderPerson | null;
+  modeling_cost?: number;
+  modeling_payment_status: PaymentStatus | null;
+  printer: OrderPerson | null;
+  printing_cost?: number;
+  printing_payment_status: PaymentStatus | null;
+}
+
+export interface GetAlFinanceOptions
+  extends GetAllOptions<{
+    //TODO: add options
+  }> {}

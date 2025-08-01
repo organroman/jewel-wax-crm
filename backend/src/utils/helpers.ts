@@ -1,3 +1,4 @@
+import { PaymentStatus } from "../types/finance.type";
 import { AdminOrder, UserOrder } from "../types/order.types";
 import { PersonRole } from "../types/person.types";
 
@@ -119,4 +120,17 @@ export function stripPrivateFields(
 export function parseDate(input: string): Date {
   const [day, month, year] = input.split(".");
   return new Date(Number(year), Number(month) - 1, Number(day));
+}
+
+export function definePaymentStatus(
+  totalPaid: number,
+  totalAmount: number
+): PaymentStatus {
+  let status: PaymentStatus;
+
+  if (totalPaid === 0) status = "unpaid";
+  else if (totalPaid >= totalAmount) status = "paid";
+  else status = "partly_paid";
+
+  return status;
 }
