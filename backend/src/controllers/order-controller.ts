@@ -1,6 +1,7 @@
 import { SortOrder } from "../types/shared.types";
 import { PersonRole } from "../types/person.types";
-import { PaymentStatus, Stage, StageStatus } from "../types/order.types";
+import { Stage, StageStatus } from "../types/order.types";
+import { PaymentStatus } from "../types/finance.type";
 
 import { Request, Response, NextFunction } from "express";
 

@@ -8,11 +8,11 @@ import {
   OrderFavorite,
   OrderMedia,
   OrderStage,
-  PaymentStatus,
   Stage,
   StageStatus,
 } from "../types/order.types";
 import { PersonRole } from "../types/person.types";
+import { PaymentStatus } from "../types/finance.type";
 
 import db from "../db/db";
 
