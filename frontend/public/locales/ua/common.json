@@ -449,6 +449,7 @@
     "debt": "$t(dictionary.debt)",
     "add_expenses": "Витрати",
     "expenses_type": "Тип витрат",
+    "transaction_type": "Тип транзакції",
 
     "payment_method": {
       "cash": "$t(dictionary.cash)",
@@ -483,6 +484,11 @@
     "invoice_status": {
       "paid": "$t(dictionary.paid)",
       "pending": "Не оплачено"
+    },
+    "transactions_type": {
+      "expense": "Витрати внесено",
+      "invoice_issued": "Рахунок створено",
+      "invoice_paid": "Рахунок оплачено"
     },
     "table_headers": {
       "order_payments": {
@@ -526,7 +532,8 @@
         "order_number": "Замовлення №",
         "amount": "Сума, ₴",
         "description": "Опис"
-      }
+      },
+      "transactions": {}
     },
     "placeholders": {
       "search": "Пошук"

@@ -2,6 +2,7 @@ import { OrderBase } from "../types/order.types";
 import {
   Expense,
   ExpenseInput,
+  FinanceTransactionRaw,
   GetAlFinanceOptions,
   Invoice,
   InvoiceInput,
@@ -114,5 +115,70 @@ export const FinanceModel = {
       sortBy,
       order,
     });
+  },
+  async getTransactions({
+    page = 1,
+    limit = 10,
+    filters,
+    search,
+    sortBy = "created_at",
+    order = "desc",
+  }: GetAlFinanceOptions): Promise<PaginatedResult<FinanceTransactionRaw>> {
+    const baseQueryExpenses = db<FinanceTransactionRaw>("expenses").select(
+      "id",
+      db.raw("'expense' as type"),
+      "amount",
+      "created_at",
+      "payment_method",
+      "description",
+      "order_id",
+      "related_person_id"
+    );
+    const baseQueryInvoices = db<FinanceTransactionRaw>("invoices").select(
+      "id",
+      db.raw("'invoice_issued' as type"),
+      "amount",
+      "created_at",
+      "payment_method",
+      "description",
+      "order_id",
+      db.raw("null as related_person_id")
+    );
+
+    const baseQueryPaidInvoices = db<FinanceTransactionRaw>("invoices")
+      .whereNotNull("paid_at")
+      .select(
+        "id",
+        db.raw("'invoice_paid' as type"),
+        "amount",
+        "paid_at as created_at",
+        "payment_method",
+        "description",
+        "order_id",
+        db.raw("null as related_person_id")
+      );
+
+    const baseQuery = baseQueryExpenses
+      .unionAll([baseQueryInvoices, baseQueryPaidInvoices], true)
+      .as("transactions");
+
+    const data = await baseQuery
+      .clone()
+      .orderBy(sortBy, order)
+      .limit(limit)
+      .offset((page - 1) * limit);
+
+    const [{ total }] = await db
+      .from(baseQuery.clone().as("t"))
+      .count({ total: "*" });
+
+    //todo filters, search
+
+    return {
+      data,
+      total: parseInt(String(total), 10),
+      page,
+      limit,
+    };
   },
 };

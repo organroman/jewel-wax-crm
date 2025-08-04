@@ -6,12 +6,14 @@ import {
   FinanceModellerPaymentItem,
   FinanceOrderItem,
   FinancePrinterPaymentItem,
+  FinanceTransaction,
   GetAlFinanceOptions,
   Invoice,
   InvoiceInput,
   PaymentStatus,
 } from "../types/finance.type";
 import { PaginatedResult } from "../types/shared.types";
+import { OrderPerson } from "../types/order.types";
 
 import { FinanceModel } from "../models/finance-model";
 import { OrderModel } from "../models/order-model";
@@ -524,6 +526,78 @@ export const FinanceService = {
 
     return {
       ...expenses,
+      data: enriched,
+    };
+  },
+  async getTransactions({
+    page,
+    limit,
+    filters,
+    search,
+    sortBy = "orders.created_at",
+    order = "desc",
+  }: GetAlFinanceOptions): Promise<PaginatedResult<FinanceTransaction>> {
+    const transactions = await FinanceModel.getTransactions({
+      page,
+      limit,
+      filters,
+      search,
+      sortBy,
+      order,
+    });
+
+    const enriched = await Promise.all(
+      transactions.data.map(async (transaction) => {
+        const { order_id, related_person_id, ...rest } = transaction;
+
+        const order = order_id
+          ? await OrderModel.getOrderBaseById(order_id)
+          : null;
+
+        let transactionPerson: OrderPerson | null = null;
+
+        if (
+          order_id &&
+          (rest.type === "invoice_issued" || rest.type === "invoice_paid")
+        ) {
+          const fullPerson = order?.customer_id
+            ? await PersonModel.findById(order?.customer_id)
+            : null;
+
+          if (fullPerson) {
+            transactionPerson = {
+              id: fullPerson.id,
+              fullname: getFullName(
+                fullPerson.first_name,
+                fullPerson.last_name,
+                fullPerson.patronymic
+              ),
+            };
+          }
+        } else if (related_person_id) {
+          const fullPerson = await PersonModel.findById(related_person_id);
+
+          if (fullPerson) {
+            transactionPerson = {
+              id: fullPerson.id,
+              fullname: getFullName(
+                fullPerson.first_name,
+                fullPerson.last_name,
+                fullPerson.patronymic
+              ),
+            };
+          }
+        }
+        return {
+          ...rest,
+          order: order ? { id: order.id, number: order.number } : null,
+          person: transactionPerson,
+        };
+      })
+    );
+
+    return {
+      ...transactions,
       data: enriched,
     };
   },

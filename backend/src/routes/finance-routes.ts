@@ -63,4 +63,12 @@ router.get(
   FinanceController.getAllExpenses
 );
 
+router.get(
+  "/transactions",
+  verifyToken,
+  checkPermission("EXPENSES", "VIEW"),
+  checkPermission("INVOICES", "VIEW"),
+  FinanceController.getTransactions
+);
+
 export default router;

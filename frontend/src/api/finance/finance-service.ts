@@ -7,6 +7,7 @@ import {
   FinanceModellerPaymentItem,
   FinanceOrderItem,
   FinancePrinterPaymentItem,
+  FinanceTransaction,
   Invoice,
 } from "@/types/finance.types";
 import { PaginatedResult } from "@/types/shared.types";
@@ -57,6 +58,11 @@ export const financeService = {
   getAllExpenses: async (query: string) => {
     return await apiService.get<PaginatedResult<ExpenseFull>>(
       `finance/expenses?${query}`
+    );
+  },
+  getTransactions: async (query: string) => {
+    return await apiService.get<PaginatedResult<FinanceTransaction>>(
+      `finance/transactions?${query}`
     );
   },
 };

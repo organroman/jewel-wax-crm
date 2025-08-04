@@ -49,6 +49,12 @@ export const EXPENSE_CATEGORY = [
   "other",
 ];
 
+export const TRANSACTION_TYPE = [
+  "expense",
+  "invoice_issued",
+  "invoice_paid",
+] as const;
+
 export const ORDER_STAGE = [
   "new",
   "modeling",

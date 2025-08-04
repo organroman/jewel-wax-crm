@@ -3,6 +3,7 @@ import {
   INVOICE_STATUS,
   PAYMENT_METHOD,
   PAYMENT_STATUS,
+  TRANSACTION_TYPE,
 } from "@/constants/enums.constants";
 import {
   createExpenseSchema,
@@ -15,6 +16,7 @@ export type InvoiceStatus = (typeof INVOICE_STATUS)[number];
 export type PaymentMethod = (typeof PAYMENT_METHOD)[number];
 export type ExpenseCategory = (typeof EXPENSE_CATEGORY)[number];
 export type PaymentStatus = (typeof PAYMENT_STATUS)[number];
+export type TransactionType = (typeof TRANSACTION_TYPE)[number];
 export type CreateInvoiceSchema = z.infer<typeof createInvoiceSchema>;
 export type CreateExpenseSchema = z.infer<typeof createExpenseSchema>;
 
@@ -125,4 +127,15 @@ export interface ExpenseFull {
   created_by: number;
   created_at: Date;
   updated_at: Date;
+}
+
+export interface FinanceTransaction {
+  id: number;
+  type: TransactionType;
+  created_at: Date;
+  amount: number;
+  order: ExpenseOrder | null;
+  person: OrderPerson | null;
+  description: string | null;
+  payment_method: PaymentMethod;
 }

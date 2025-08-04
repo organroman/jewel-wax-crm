@@ -3,6 +3,7 @@ import {
   INVOICE_STATUS,
   PAYMENT_METHOD,
   PAYMENT_STATUS,
+  TRANSACTION_TYPE,
 } from "../constants/enums";
 import { OrderPerson } from "./order.types";
 import { PersonRole } from "./person.types";
@@ -12,6 +13,7 @@ export type InvoiceStatus = (typeof INVOICE_STATUS)[number];
 export type PaymentStatus = (typeof PAYMENT_STATUS)[number];
 export type PaymentMethod = (typeof PAYMENT_METHOD)[number];
 export type ExpenseCategory = (typeof EXPENSE_CATEGORY)[number];
+export type TransactionType = (typeof TRANSACTION_TYPE)[number];
 
 export interface InvoiceInput {
   order_id: number;
@@ -68,6 +70,7 @@ export interface Expense {
 type ExpenseOrder = {
   id: number;
   number: number;
+  customer_id?: number;
 };
 
 export interface ExpenseFull {
@@ -144,6 +147,28 @@ export interface FinancePrinterPaymentItem {
   printing_payment_status: PaymentStatus;
   last_payment_date: Date | null;
   last_payment_comment: string | null;
+}
+
+export interface FinanceTransactionRaw {
+  id: number;
+  type?: TransactionType;
+  created_at: Date;
+  amount: number;
+  payment_method: PaymentMethod;
+  description: string | null;
+  related_person_id: number | null;
+  order_id: number | null;
+}
+
+export interface FinanceTransaction {
+  id: number;
+  type?: TransactionType;
+  created_at: Date;
+  amount: number;
+  order: ExpenseOrder | null;
+  person: OrderPerson | null;
+  description: string | null;
+  payment_method: PaymentMethod;
 }
 
 export interface GetAlFinanceOptions

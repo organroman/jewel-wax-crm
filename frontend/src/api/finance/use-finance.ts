@@ -126,4 +126,17 @@ export const useFinance = {
       enabled,
     });
   },
+  getTransactions: ({
+    query,
+    enabled,
+  }: {
+    query: string;
+    enabled: boolean;
+  }) => {
+    return useQuery({
+      queryKey: ["transactions", query],
+      queryFn: () => financeService.getTransactions(query),
+      enabled,
+    });
+  },
 };
