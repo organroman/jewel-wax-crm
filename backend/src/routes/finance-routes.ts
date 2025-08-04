@@ -49,4 +49,11 @@ router.get(
   FinanceController.getAllModellerPayments
 );
 
+router.get(
+  "/printer-payments",
+  verifyToken,
+  checkPermission("EXPENSES", "VIEW"),
+  FinanceController.getAllPrinterPayments
+);
+
 export default router;

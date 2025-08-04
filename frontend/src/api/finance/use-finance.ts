@@ -106,4 +106,17 @@ export const useFinance = {
       enabled,
     });
   },
+  getAllPrinterPayments: ({
+    query,
+    enabled,
+  }: {
+    query: string;
+    enabled: boolean;
+  }) => {
+    return useQuery({
+      queryKey: ["printer-payments", query],
+      queryFn: () => financeService.getAllPrinterPayments(query),
+      enabled,
+    });
+  },
 };

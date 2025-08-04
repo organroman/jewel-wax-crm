@@ -5,6 +5,7 @@ import {
   PAYMENT_STATUS,
 } from "../constants/enums";
 import { OrderPerson } from "./order.types";
+import { PersonRole } from "./person.types";
 import { GetAllOptions } from "./shared.types";
 
 export type InvoiceStatus = (typeof INVOICE_STATUS)[number];
@@ -113,7 +114,23 @@ export interface FinanceModellerPaymentItem {
   last_payment_comment: string | null;
 }
 
+export interface FinancePrinterPaymentItem {
+  order_id: number;
+  order_important: boolean;
+  order_number: number;
+  customer: OrderPerson | null;
+  order_amount: number;
+  order_payment_status: PaymentStatus;
+  printer: OrderPerson | null;
+  printing_cost: number | null;
+  printing_payment_status: PaymentStatus;
+  last_payment_date: Date | null;
+  last_payment_comment: string | null;
+}
+
 export interface GetAlFinanceOptions
   extends GetAllOptions<{
     //TODO: add options
-  }> {}
+  }> {
+  role?: PersonRole;
+}

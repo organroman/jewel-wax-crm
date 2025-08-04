@@ -64,18 +64,20 @@ export const FinanceModel = {
     //todo filters, search
     return paginateQuery(baseQuery, { page, limit, sortBy, order });
   },
-  async getAllOrdersWithModellers({
+  async getAllOrdersWithPerformerByRole({
     page,
     limit,
     filters,
     search,
     sortBy = "created_at",
     order = "desc",
+    role,
   }: GetAlFinanceOptions): Promise<PaginatedResult<OrderBase>> {
+    const roleInOrder = role === "print" ? "printer" : role;
     const baseQuery = db<OrderBase>("orders")
-      .whereNotNull("modeller_id")
+      .whereNotNull(`${roleInOrder}_id`)
       .modify((qb) => {
-        const joins = ["customer", "modeller"];
+        const joins = ["customer", roleInOrder];
         joins.forEach((role) => {
           qb.leftJoin(
             `persons as ${role}s`,

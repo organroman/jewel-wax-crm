@@ -4,6 +4,7 @@ import {
   FinanceClientPaymentItem,
   FinanceModellerPaymentItem,
   FinanceOrderItem,
+  FinancePrinterPaymentItem,
   GetAlFinanceOptions,
   Invoice,
   InvoiceInput,
@@ -302,13 +303,14 @@ export const FinanceService = {
   }: GetAlFinanceOptions): Promise<
     PaginatedResult<FinanceModellerPaymentItem>
   > {
-    const orders = await FinanceModel.getAllOrdersWithModellers({
+    const orders = await FinanceModel.getAllOrdersWithPerformerByRole({
       page,
       limit,
       filters,
       search,
       sortBy,
       order,
+      role: "modeller",
     });
 
     const enriched = await Promise.all(
@@ -367,6 +369,92 @@ export const FinanceService = {
           modeller: formatPerson(order, "modeller"),
           modelling_cost: order.modeling_cost ?? null,
           modelling_payment_status: modelingPaymentStatus,
+          last_payment_date: lastPaymentDate,
+          last_payment_comment: lastPaymentComment,
+        };
+
+        return base;
+      })
+    );
+    return {
+      ...orders,
+      data: enriched,
+    };
+  },
+  async getAllPaymentToPrinter({
+    page,
+    limit,
+    filters,
+    search,
+    sortBy = "orders.created_at",
+    order = "desc",
+  }: GetAlFinanceOptions): Promise<PaginatedResult<FinancePrinterPaymentItem>> {
+    const orders = await FinanceModel.getAllOrdersWithPerformerByRole({
+      page,
+      limit,
+      filters,
+      search,
+      sortBy,
+      order,
+      role: "print",
+    });
+
+    const enriched = await Promise.all(
+      orders.data.map(async (order) => {
+        const invoices = await FinanceModel.getInvoicesByOrder(order.id);
+        const expenses = await FinanceModel.getExpensesByOrder(order.id);
+
+        const totalPaidByCustomer = invoices.reduce(
+          (sum, invoice) => sum + Number(invoice.amount_paid || 0),
+          0
+        );
+        let orderPaymentStatus: PaymentStatus = definePaymentStatus(
+          totalPaidByCustomer,
+          order.amount
+        );
+
+        let printingPaymentStatus: PaymentStatus = "unpaid";
+
+        if (
+          order.printer_id &&
+          order.printing_cost &&
+          order.printing_cost > 0
+        ) {
+          const totalPaidForModeling = expenses.reduce(
+            (sum, expense) => sum + Number(expense.amount || 0),
+            0
+          );
+
+          printingPaymentStatus = definePaymentStatus(
+            totalPaidForModeling,
+            order.printing_cost
+          );
+        }
+
+        const lastPaymentDate =
+          expenses.length > 0
+            ? expenses.sort((a, b) =>
+                a.created_at! > b.created_at! ? -1 : 1
+              )[0]?.created_at
+            : null;
+
+        const lastPaymentComment =
+          expenses.length > 0
+            ? expenses.sort((a, b) =>
+                a.created_at! > b.created_at! ? -1 : 1
+              )[0]?.description
+            : null;
+
+        const base = {
+          order_id: order.id,
+          order_important: order.is_important,
+          order_number: order.number,
+          customer: formatPerson(order, "customer"),
+          order_amount: order.amount,
+          order_payment_status: orderPaymentStatus,
+          printer: formatPerson(order, "printer"),
+          printing_cost: order.printing_cost ?? null,
+          printing_payment_status: printingPaymentStatus,
           last_payment_date: lastPaymentDate,
           last_payment_comment: lastPaymentComment,
         };

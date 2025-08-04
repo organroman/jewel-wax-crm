@@ -155,4 +155,32 @@ export const FinanceController = {
       next(error);
     }
   },
+  async getAllPrinterPayments(req: Request, res: Response, next: NextFunction) {
+    try {
+      const userId = req.user?.id;
+
+      if (!userId) throw new AppError(ERROR_MESSAGES.UNAUTHORIZED, 401);
+
+      const { page, limit, search } = req.query;
+
+      const { sortBy, order } = parseSortParams(
+        req.query.sortBy as string,
+        req.query.order as string,
+        FINANCE_SORT_FIELDS,
+        "created_at"
+      );
+
+      const finance = await FinanceService.getAllPaymentToPrinter({
+        page: Number(page),
+        limit: Number(limit),
+        filters: {}, //todo: add filters
+        search: search as string,
+        sortBy: sortBy as string,
+        order: (order as SortOrder) || "desc",
+      });
+      res.status(200).json(finance);
+    } catch (error) {
+      next(error);
+    }
+  },
 };
