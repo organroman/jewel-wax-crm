@@ -3,6 +3,7 @@ import {
   CreateInvoiceSchema,
   Expense,
   FinanceClientPaymentItem,
+  FinanceModellerPaymentItem,
   FinanceOrderItem,
   Invoice,
 } from "@/types/finance.types";
@@ -39,6 +40,11 @@ export const financeService = {
   getAllClientPayments: async (query: string) => {
     return await apiService.get<PaginatedResult<FinanceClientPaymentItem>>(
       `finance/client-payments?${query}`
+    );
+  },
+  getAllModellerPayments: async (query: string) => {
+    return await apiService.get<PaginatedResult<FinanceModellerPaymentItem>>(
+      `finance/modeller-payments?${query}`
     );
   },
 };

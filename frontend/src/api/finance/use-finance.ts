@@ -93,4 +93,17 @@ export const useFinance = {
       enabled,
     });
   },
+  getAllModellerPayments: ({
+    query,
+    enabled,
+  }: {
+    query: string;
+    enabled: boolean;
+  }) => {
+    return useQuery({
+      queryKey: ["modeller-payments", query],
+      queryFn: () => financeService.getAllModellerPayments(query),
+      enabled,
+    });
+  },
 };

@@ -2,6 +2,7 @@ import {
   Expense,
   ExpenseInput,
   FinanceClientPaymentItem,
+  FinanceModellerPaymentItem,
   FinanceOrderItem,
   GetAlFinanceOptions,
   Invoice,
@@ -280,6 +281,93 @@ export const FinanceService = {
           bank_payments_amount: bankPaymentsAmount,
           bank_payment_date: bankLastPaymentDate,
           debt,
+          last_payment_comment: lastPaymentComment,
+        };
+
+        return base;
+      })
+    );
+    return {
+      ...orders,
+      data: enriched,
+    };
+  },
+  async getAllPaymentToModeller({
+    page,
+    limit,
+    filters,
+    search,
+    sortBy = "orders.created_at",
+    order = "desc",
+  }: GetAlFinanceOptions): Promise<
+    PaginatedResult<FinanceModellerPaymentItem>
+  > {
+    const orders = await FinanceModel.getAllOrdersWithModellers({
+      page,
+      limit,
+      filters,
+      search,
+      sortBy,
+      order,
+    });
+
+    const enriched = await Promise.all(
+      orders.data.map(async (order) => {
+        const invoices = await FinanceModel.getInvoicesByOrder(order.id);
+        const expenses = await FinanceModel.getExpensesByOrder(order.id);
+
+        const totalPaidByCustomer = invoices.reduce(
+          (sum, invoice) => sum + Number(invoice.amount_paid || 0),
+          0
+        );
+        let orderPaymentStatus: PaymentStatus = definePaymentStatus(
+          totalPaidByCustomer,
+          order.amount
+        );
+
+        let modelingPaymentStatus: PaymentStatus = "unpaid";
+
+        if (
+          order.modeller_id &&
+          order.modeling_cost &&
+          order.modeling_cost > 0
+        ) {
+          const totalPaidForModeling = expenses.reduce(
+            (sum, expense) => sum + Number(expense.amount || 0),
+            0
+          );
+
+          modelingPaymentStatus = definePaymentStatus(
+            totalPaidForModeling,
+            order.modeling_cost
+          );
+        }
+
+        const lastPaymentDate =
+          expenses.length > 0
+            ? expenses.sort((a, b) =>
+                a.created_at! > b.created_at! ? -1 : 1
+              )[0]?.created_at
+            : null;
+
+        const lastPaymentComment =
+          expenses.length > 0
+            ? expenses.sort((a, b) =>
+                a.created_at! > b.created_at! ? -1 : 1
+              )[0]?.description
+            : null;
+
+        const base = {
+          order_id: order.id,
+          order_important: order.is_important,
+          order_number: order.number,
+          customer: formatPerson(order, "customer"),
+          order_amount: order.amount,
+          order_payment_status: orderPaymentStatus,
+          modeller: formatPerson(order, "modeller"),
+          modelling_cost: order.modeling_cost ?? null,
+          modelling_payment_status: modelingPaymentStatus,
+          last_payment_date: lastPaymentDate,
           last_payment_comment: lastPaymentComment,
         };
 

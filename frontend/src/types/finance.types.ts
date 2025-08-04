@@ -68,6 +68,20 @@ export interface FinanceClientPaymentItem {
   last_payment_comment: string | null;
 }
 
+export interface FinanceModellerPaymentItem {
+  order_id: number;
+  order_important: boolean;
+  order_number: number;
+  customer: OrderPerson | null;
+  order_amount: number;
+  order_payment_status: PaymentStatus;
+  modeller: OrderPerson | null;
+  modelling_cost: number | null;
+  modelling_payment_status: PaymentStatus;
+  last_payment_date: Date | null;
+  last_payment_comment: string | null;
+}
+
 export interface Expense {
   id: number;
   order_id: number | null;

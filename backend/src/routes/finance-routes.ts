@@ -42,4 +42,11 @@ router.get(
   FinanceController.getAllClientPayments
 );
 
+router.get(
+  "/modeller-payments",
+  verifyToken,
+  checkPermission("EXPENSES", "VIEW"),
+  FinanceController.getAllModellerPayments
+);
+
 export default router;

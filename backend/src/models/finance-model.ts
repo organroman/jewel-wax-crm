@@ -64,4 +64,34 @@ export const FinanceModel = {
     //todo filters, search
     return paginateQuery(baseQuery, { page, limit, sortBy, order });
   },
+  async getAllOrdersWithModellers({
+    page,
+    limit,
+    filters,
+    search,
+    sortBy = "created_at",
+    order = "desc",
+  }: GetAlFinanceOptions): Promise<PaginatedResult<OrderBase>> {
+    const baseQuery = db<OrderBase>("orders")
+      .whereNotNull("modeller_id")
+      .modify((qb) => {
+        const joins = ["customer", "modeller"];
+        joins.forEach((role) => {
+          qb.leftJoin(
+            `persons as ${role}s`,
+            `${role}s.id`,
+            `orders.${role}_id`
+          ).select(
+            `${role}s.id as ${role}_id`,
+            `${role}s.last_name as ${role}_last_name`,
+            `${role}s.first_name as ${role}_first_name`,
+            `${role}s.patronymic as ${role}_patronymic`
+          );
+        });
+        qb.select("orders.*");
+      });
+
+    //todo filters, search
+    return paginateQuery(baseQuery, { page, limit, sortBy, order });
+  },
 };

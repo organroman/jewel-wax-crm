@@ -16,6 +16,7 @@ import CustomTabs from "@/components/shared/custom-tabs";
 import AllFinance from "@/components/finance/all-finance/all-finance";
 import CreateExpenseForm from "@/components/finance/create-expense-form";
 import ClientPayments from "@/components/finance/client-payments/client-payments";
+import ModellerPayments from "@/components/finance/modeller-payments/modeller-payments";
 
 import { FINANCE_TYPE } from "@/constants/finance.constants";
 import { FINANCE_SORT_FIELDS } from "@/constants/sortable-fields";
@@ -82,6 +83,7 @@ const FinanceClient = () => {
       />
       {selectedTab.value === "all" && <AllFinance />}
       {selectedTab.value === "client_payment" && <ClientPayments />}
+      {selectedTab.value === "modeller_payment" && <ModellerPayments />}
       <Dialog open={expensesDialogOpen} onOpenChange={expensesSetDialogOpen}>
         <CreateExpenseForm
           setDialogOpen={expensesSetDialogOpen}
