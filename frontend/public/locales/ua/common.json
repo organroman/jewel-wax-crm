@@ -517,6 +517,10 @@
         "bank_transfer_paid_at": "Дата оплати на р/р",
         "debt": "$t(dictionary.debt)",
         "comment": "Коментар останньоі оплати"
+      },
+      "modeller_payments": {
+        "payment_date": "Дата оплати",
+        "comment": "Коментар останньоі оплати"
       }
     },
     "placeholders": {
