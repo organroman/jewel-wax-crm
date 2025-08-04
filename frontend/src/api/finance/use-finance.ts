@@ -119,4 +119,11 @@ export const useFinance = {
       enabled,
     });
   },
+  getAllExpenses: ({ query, enabled }: { query: string; enabled: boolean }) => {
+    return useQuery({
+      queryKey: ["expenses", query],
+      queryFn: () => financeService.getAllExpenses(query),
+      enabled,
+    });
+  },
 };

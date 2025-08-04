@@ -18,6 +18,7 @@ import CreateExpenseForm from "@/components/finance/create-expense-form";
 import ClientPayments from "@/components/finance/client-payments/client-payments";
 import ModellerPayments from "@/components/finance/modeller-payments/modeller-payments";
 import PrinterPayments from "@/components/finance/printer-payments/printer-payments";
+import Expenses from "@/components/finance/expenses/expenses";
 
 import { FINANCE_TYPE } from "@/constants/finance.constants";
 import { FINANCE_SORT_FIELDS } from "@/constants/sortable-fields";
@@ -86,6 +87,7 @@ const FinanceClient = () => {
       {selectedTab.value === "client_payment" && <ClientPayments />}
       {selectedTab.value === "modeller_payment" && <ModellerPayments />}
       {selectedTab.value === "print_payment" && <PrinterPayments />}
+      {selectedTab.value === "expenses" && <Expenses />}
       <Dialog open={expensesDialogOpen} onOpenChange={expensesSetDialogOpen}>
         <CreateExpenseForm
           setDialogOpen={expensesSetDialogOpen}

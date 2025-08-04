@@ -1,5 +1,6 @@
 import {
   Expense,
+  ExpenseFull,
   ExpenseInput,
   FinanceClientPaymentItem,
   FinanceModellerPaymentItem,
@@ -15,8 +16,13 @@ import { PaginatedResult } from "../types/shared.types";
 import { FinanceModel } from "../models/finance-model";
 import { OrderModel } from "../models/order-model";
 import { ActivityLogModel } from "../models/activity-log-model";
+import { PersonModel } from "../models/person-model";
 
-import { definePaymentStatus, formatPerson } from "../utils/helpers";
+import {
+  definePaymentStatus,
+  formatPerson,
+  getFullName,
+} from "../utils/helpers";
 import { LOG_ACTIONS, LOG_TARGETS } from "../constants/activity-log";
 
 export const FinanceService = {
@@ -464,6 +470,60 @@ export const FinanceService = {
     );
     return {
       ...orders,
+      data: enriched,
+    };
+  },
+  async getAllExpenses({
+    page,
+    limit,
+    filters,
+    search,
+    sortBy = "orders.created_at",
+    order = "desc",
+  }: GetAlFinanceOptions): Promise<PaginatedResult<ExpenseFull>> {
+    const expenses = await FinanceModel.getAllExpenses({
+      page,
+      limit,
+      filters,
+      search,
+      sortBy,
+      order,
+    });
+    const enriched = await Promise.all(
+      expenses.data.map(async (expense) => {
+        const { order_id, related_person_id, ...rest } = expense;
+        const order = order_id
+          ? await OrderModel.getOrderBaseById(order_id)
+          : null;
+
+        const person = related_person_id
+          ? await PersonModel.findById(related_person_id)
+          : null;
+
+        return {
+          ...rest,
+          order: order
+            ? {
+                id: order.id,
+                number: order.number,
+              }
+            : null,
+          person: person
+            ? {
+                id: person.id,
+                fullname: getFullName(
+                  person.first_name,
+                  person.last_name,
+                  person.patronymic
+                ),
+              }
+            : null,
+        };
+      })
+    );
+
+    return {
+      ...expenses,
       data: enriched,
     };
   },

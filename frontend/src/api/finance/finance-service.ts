@@ -2,6 +2,7 @@ import {
   CreateExpenseSchema,
   CreateInvoiceSchema,
   Expense,
+  ExpenseFull,
   FinanceClientPaymentItem,
   FinanceModellerPaymentItem,
   FinanceOrderItem,
@@ -51,6 +52,11 @@ export const financeService = {
   getAllPrinterPayments: async (query: string) => {
     return await apiService.get<PaginatedResult<FinancePrinterPaymentItem>>(
       `finance/printer-payments?${query}`
+    );
+  },
+  getAllExpenses: async (query: string) => {
+    return await apiService.get<PaginatedResult<ExpenseFull>>(
+      `finance/expenses?${query}`
     );
   },
 };

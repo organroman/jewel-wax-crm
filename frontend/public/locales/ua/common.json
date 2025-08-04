@@ -521,6 +521,11 @@
       "modeller_payments": {
         "payment_date": "Дата оплати",
         "comment": "Коментар останньоі оплати"
+      },
+      "expenses": {
+        "order_number": "Замовлення №",
+        "amount": "Сума, ₴",
+        "description": "Опис"
       }
     },
     "placeholders": {

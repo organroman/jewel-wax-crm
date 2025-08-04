@@ -9,6 +9,7 @@ import {
 import { PaginatedResult } from "../types/shared.types";
 
 import db from "../db/db";
+
 import { paginateQuery } from "../utils/pagination";
 
 export const FinanceModel = {
@@ -95,5 +96,23 @@ export const FinanceModel = {
 
     //todo filters, search
     return paginateQuery(baseQuery, { page, limit, sortBy, order });
+  },
+  async getAllExpenses({
+    page,
+    limit,
+    filters,
+    search,
+    sortBy = "created_at",
+    order = "desc",
+  }: GetAlFinanceOptions): Promise<PaginatedResult<Expense>> {
+    const baseQuery = db<Expense>("expenses").select("*");
+
+    //todo filters, search
+    return await paginateQuery<Expense>(baseQuery, {
+      page,
+      limit,
+      sortBy,
+      order,
+    });
   },
 };

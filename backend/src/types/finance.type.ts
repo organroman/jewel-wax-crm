@@ -65,6 +65,24 @@ export interface Expense {
   updated_at: Date;
 }
 
+type ExpenseOrder = {
+  id: number;
+  number: number;
+};
+
+export interface ExpenseFull {
+  id: number;
+  order: ExpenseOrder | null;
+  person: OrderPerson | null;
+  category: ExpenseCategory;
+  payment_method: PaymentMethod;
+  amount: number;
+  description: string | null;
+  created_by: number;
+  created_at: Date;
+  updated_at: Date;
+}
+
 export interface FinanceOrderItem {
   order_id: number;
   order_important: boolean;
