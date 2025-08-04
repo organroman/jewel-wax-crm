@@ -80,4 +80,17 @@ export const useFinance = {
       enabled,
     });
   },
+  getAllClientPayments: ({
+    query,
+    enabled,
+  }: {
+    query: string;
+    enabled: boolean;
+  }) => {
+    return useQuery({
+      queryKey: ["client-payments", query],
+      queryFn: () => financeService.getAllClientPayments(query),
+      enabled,
+    });
+  },
 };

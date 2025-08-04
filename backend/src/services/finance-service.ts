@@ -1,6 +1,7 @@
 import {
   Expense,
   ExpenseInput,
+  FinanceClientPaymentItem,
   FinanceOrderItem,
   GetAlFinanceOptions,
   Invoice,
@@ -167,6 +168,119 @@ export const FinanceService = {
           printer: formatPerson(order, "printer"),
           printing_cost: order.printing_cost,
           printing_payment_status: printingPaymentStatus,
+        };
+
+        return base;
+      })
+    );
+    return {
+      ...orders,
+      data: enriched,
+    };
+  },
+  async getAllClientPayments({
+    page,
+    limit,
+    filters,
+    search,
+    sortBy = "orders.created_at",
+    order = "desc",
+  }: GetAlFinanceOptions): Promise<PaginatedResult<FinanceClientPaymentItem>> {
+    const orders = await FinanceModel.getAllFinance({
+      page,
+      limit,
+      filters,
+      search,
+      sortBy,
+      order,
+    });
+
+    const enriched = await Promise.all(
+      orders.data.map(async (order) => {
+        const invoices = await FinanceModel.getInvoicesByOrder(order.id);
+
+        const totalPaidByCustomer = invoices.reduce(
+          (sum, invoice) => sum + Number(invoice.amount_paid || 0),
+          0
+        );
+        let orderPaymentStatus: PaymentStatus = definePaymentStatus(
+          totalPaidByCustomer,
+          order.amount
+        );
+
+        const debt = order.amount - totalPaidByCustomer;
+
+        const cash = invoices.filter((i) => i.payment_method === "cash");
+        const cashInvoicesAmount = cash.length;
+        const cashPaymentsAmount = cash.reduce(
+          (sum, invoice) => sum + Number(invoice.amount_paid || 0),
+          0
+        );
+        const cashLastPaymentDate =
+          cash.length > 0
+            ? cash
+                .filter((a) => a.paid_at !== null)
+                .sort((a, b) => (a.paid_at! > b.paid_at! ? -1 : 1))[0]?.paid_at
+            : null;
+
+        const card = invoices.filter(
+          (i) => i.payment_method === "card_transfer"
+        );
+        const cardInvoicesAmount = card.length;
+        const cardPaymentsAmount = card.reduce(
+          (sum, invoice) => sum + Number(invoice.amount_paid || 0),
+          0
+        );
+        const cardLastPaymentDate =
+          card.length > 0
+            ? card
+                .filter((a) => a.paid_at !== null)
+                .sort((a, b) => (a.paid_at! > b.paid_at! ? -1 : 1))[0]?.paid_at
+            : null;
+
+        const bank = invoices.filter(
+          (i) =>
+            i.payment_method === "payment_system" ||
+            i.payment_method === "bank_transfer"
+        );
+        const bankInvoicesAmount = bank.length;
+        const bankPaymentsAmount = bank.reduce(
+          (sum, invoice) => sum + Number(invoice.amount_paid || 0),
+          0
+        );
+        const bankLastPaymentDate =
+          bank.length > 0
+            ? bank
+                .filter((a) => a.paid_at !== null)
+                .sort((a, b) => (a.paid_at! > b.paid_at! ? -1 : 1))[0]?.paid_at
+            : null;
+
+        const lastPaymentComment =
+          invoices.length > 0
+            ? invoices
+                .filter((a) => a.paid_at !== null)
+                .sort((a, b) => (a.paid_at! > b.paid_at! ? -1 : 1))[0]
+                ?.description
+            : null;
+
+        const base = {
+          order_id: order.id,
+          order_important: order.is_important,
+          order_number: order.number,
+          customer: formatPerson(order, "customer"),
+          order_amount: order.amount,
+          order_payment_status: orderPaymentStatus,
+          cash_amount: cashInvoicesAmount,
+          cash_payments_amount: cashPaymentsAmount,
+          cash_payment_date: cashLastPaymentDate,
+          card_amount: cardInvoicesAmount,
+          card_payments_amount: cardPaymentsAmount,
+          card_payment_date: cardLastPaymentDate,
+          bank_amount: bankInvoicesAmount,
+          bank_payments_amount: bankPaymentsAmount,
+          bank_payment_date: bankLastPaymentDate,
+          debt,
+          last_payment_comment: lastPaymentComment,
         };
 
         return base;

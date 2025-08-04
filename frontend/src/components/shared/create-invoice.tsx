@@ -105,7 +105,7 @@ const CreateInvoice = ({ order }: CreateInvoiceProps) => {
           watchedOrder?.customer?.patronymic
         )
       : "-";
-  console.log(form.getValues());
+
   return (
     <div className="w-full h-full">
       <Button

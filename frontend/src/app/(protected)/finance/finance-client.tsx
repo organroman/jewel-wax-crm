@@ -15,6 +15,7 @@ import CreateInvoice from "@/components/shared/create-invoice";
 import CustomTabs from "@/components/shared/custom-tabs";
 import AllFinance from "@/components/finance/all-finance/all-finance";
 import CreateExpenseForm from "@/components/finance/create-expense-form";
+import ClientPayments from "@/components/finance/client-payments/client-payments";
 
 import { FINANCE_TYPE } from "@/constants/finance.constants";
 import { FINANCE_SORT_FIELDS } from "@/constants/sortable-fields";
@@ -49,7 +50,7 @@ const FinanceClient = () => {
     if (!selected) {
       return;
     }
-    params.set("tab", value);
+    params.set("type", value);
     router.replace(`?${params.toString()}`);
     setSelectedTab(selected);
   };
@@ -80,6 +81,7 @@ const FinanceClient = () => {
         extraAction={<CreateInvoice />}
       />
       {selectedTab.value === "all" && <AllFinance />}
+      {selectedTab.value === "client_payment" && <ClientPayments />}
       <Dialog open={expensesDialogOpen} onOpenChange={expensesSetDialogOpen}>
         <CreateExpenseForm
           setDialogOpen={expensesSetDialogOpen}

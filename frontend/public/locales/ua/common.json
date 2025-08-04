@@ -55,7 +55,9 @@
     "create_order": "Замовлення створено",
     "update_order": "Замовлення оновлено",
     "unpaid": "Не оплачено",
-    "partly_paid": "Частково оплачено"
+    "partly_paid": "Частково оплачено",
+    "cash": "Готівка",
+    "debt": "Борг"
   },
   "labels": {
     "main": "$t(dictionary.main)",
@@ -378,7 +380,7 @@
           "recipient": "Отримувач"
         },
         "payment_method": {
-          "cash": "Готівка",
+          "cash": "$t(dictionary.cash)",
           "nonCash": "Безготівковий розрахунок"
         },
         "cargo_type": {
@@ -444,12 +446,12 @@
     },
     "payment": "Оплата",
     "paid": "$t(dictionary.paid)",
-    "debt": "Борг",
+    "debt": "$t(dictionary.debt)",
     "add_expenses": "Витрати",
     "expenses_type": "Тип витрат",
 
     "payment_method": {
-      "cash": "Готівка",
+      "cash": "$t(dictionary.cash)",
       "card_transfer": "Переказ на карту",
       "payment_system": "Платіжна система",
       "bank_transfer": "Переказ на р/р"
@@ -505,6 +507,16 @@
         "printing_cost": "Сума 3D друк",
         "printing_payment_status": "Статус оплати 3D друк",
         "actions": "$t(dictionary.actions)"
+      },
+      "client_payments": {
+        "cash": "$t(dictionary.cash)",
+        "cash_paid_at": "Дата оплати готівка",
+        "card_transfer": "Оплата на картку",
+        "card_transfer_paid_at": "Дата оплати на картку",
+        "bank_transfer": "Оплата на р/р",
+        "bank_transfer_paid_at": "Дата оплати на р/р",
+        "debt": "$t(dictionary.debt)",
+        "comment": "Коментар останньоі оплати"
       }
     },
     "placeholders": {

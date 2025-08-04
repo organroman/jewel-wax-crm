@@ -35,4 +35,11 @@ router.get(
   FinanceController.getAllFinance
 );
 
+router.get(
+  "/client-payments",
+  verifyToken,
+  checkPermission("INVOICES", "VIEW"),
+  FinanceController.getAllClientPayments
+);
+
 export default router;
