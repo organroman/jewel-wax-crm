@@ -33,6 +33,7 @@ const ModellerPayments = () => {
         currentLimit={limit}
         currentPage={page}
         onPageChange={(newPage) => setParam("page", newPage)}
+        headerBg="bg-accent-lavender"
       />
     </div>
   );

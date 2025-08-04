@@ -22,6 +22,7 @@ import {
 } from "../ui/table";
 
 import { PaginationControls } from "./pagination-controls";
+import { cn } from "@/lib/utils";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -36,6 +37,7 @@ interface DataTableProps<TData, TValue> {
   currentLimit?: number;
   totalItems?: number;
   onPageChange?: (page: number) => void;
+  headerBg?: string;
   //   onLimitChange: (limit: number) => void;
 }
 
@@ -50,6 +52,7 @@ export function DataTable<TData, TValue>({
   onPageChange,
   columnVisibility,
   onColumnVisibilityChange,
+  headerBg = "bg-ui-column",
 }: //   onLimitChange,
 DataTableProps<TData, TValue> & {}) {
   const { t } = useTranslation();
@@ -90,7 +93,7 @@ DataTableProps<TData, TValue> & {}) {
     <div className="flex flex-col h-full justify-between">
       <div className="flex-1 overflow-auto border border-ui-border rounded-sm">
         <Table className="text-xs w-full ">
-          <TableHeader className="w-full bg-ui-column">
+          <TableHeader className={cn("w-full", headerBg)}>
             {table.getHeaderGroups().map((hg) => (
               <TableRow key={hg.id} className="w-full">
                 {hg.headers.map((header) => {
