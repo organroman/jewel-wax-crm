@@ -45,9 +45,9 @@ function Calendar({
           "size-8 p-0 font-normal aria-selected:opacity-100"
         ),
         day_range_start:
-          "day-range-start aria-selected:bg-primary aria-selected:text-primary-foreground",
+          "day-range-start aria-selected:bg-brand-default aria-selected:text-primary-foreground",
         day_range_end:
-          "day-range-end aria-selected:bg-primary aria-selected:text-primary-foreground",
+          "day-range-end aria-selected:bg-brand-default aria-selected:text-primary-foreground",
         day_selected:
           "bg-brand-default text-white hover:bg-brand-menu hover:text-primary-foreground focus:bg-accent-lightgreen focus:text-text-regular",
         day_today: "bg-accent text-accent-foreground",
@@ -69,7 +69,7 @@ function Calendar({
       }}
       {...props}
     />
-  )
+  );
 }
 
 export { Calendar }

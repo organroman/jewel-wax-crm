@@ -96,10 +96,10 @@ export const getPersonsColumns = (
         <Badge
           className={cn(
             "text-[10px] rounded-2xl font-medium",
-            PERSON_ROLE_COLORS[role.value]
+            PERSON_ROLE_COLORS[role]
           )}
         >
-          {role.label}
+          {t(`person.roles.${role}`)}
         </Badge>
       );
     },

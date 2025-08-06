@@ -14,7 +14,7 @@ const buttonVariants = cva(
         destructive:
           "bg-action-alert text-white shadow-xs hover:bg-action-alert/80 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 ",
         outline:
-          "border bg-ui-sidebar text-xs text-text-muted rounded-xs shadow-xs hover:opacity-90 hover:text-text-regular  dark:border-ui-border",
+          "border bg-ui-sidebar text-xs text-text-muted rounded-xs shadow-xs hover:border-brand-default hover:text-text-regular border-ui-border",
         secondary:
           "bg-ui-sidebar disabled:border-accent-lightgreen disabled:text-text-muted border rounded-xs border-brand-default text-text-regular shadow-xs hover:bg-ui-sidebar/30 hover:border-accent-lightgreen ",
         ghost:

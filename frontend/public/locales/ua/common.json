@@ -89,7 +89,8 @@
     "please_wait": "Зачекайте",
     "clear": "Очистити",
     "send": "Відправити",
-    "send_continuous": "Відправляю"
+    "send_continuous": "Відправляю",
+    "generate": "Сформувати"
   },
   "auth": {
     "forget_password": "Забули пароль",
@@ -541,6 +542,31 @@
     "sorting": {
       "created_at-asc": "$t(dictionary.created_at-asc)",
       "created_at-desc": "$t(dictionary.created_at-desc)"
+    }
+  },
+  "report": {
+    "period": "Період",
+    "clear_period": "Скинути період",
+    "types": {
+      "clients": "Звіт по клієнтах",
+      "modeling": "Зведення моделювання",
+      "orders": "Звіт по замовленнях",
+      "expenses": "Звіт по витратах",
+      "financial": "Фінансовий звіт"
+    },
+    "clients": {
+      "total": "Всього замовників",
+      "active": "Активних",
+      "new": "Нових",
+      "debtors": "Боржників",
+      "table_headers": {
+        "orders_amount": "Кількість замовлень",
+        "orders_in_progress": "Замовлень в роботі",
+        "total_amount_paid": "Оплачено",
+        "total_debt": "$t(dictionary.debt)",
+        "last_order_date": "Останнє замовлення",
+        "email": "Електронна пошта"
+      }
     }
   },
 
