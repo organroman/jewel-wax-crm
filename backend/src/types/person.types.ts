@@ -127,13 +127,11 @@ export interface UpdatePersonInput extends Partial<CreatePersonInput> {}
 
 export interface SafePerson extends Omit<Person, "password" | "role"> {}
 export interface SafePerson extends Omit<Person, "password"> {}
-// export interface SafePersonWithRole extends SafePerson {
-//   role: EnrichedRole;
-// }
 
 export type GetAllPersonsOptions = GetAllOptions<{
   role?: string;
   city?: number[];
   country?: number[];
   is_active?: boolean[];
+  person_id?: number;
 }>;

@@ -20,8 +20,8 @@ import { NovaPoshtaModel } from "../models/novaposhta-model";
 import AppError from "../utils/AppError";
 import ERROR_MESSAGES from "../constants/error-messages";
 import { LOG_ACTIONS, LOG_TARGETS } from "../constants/activity-log";
-import { CustomerDeliveryAddress, OrderDelivery } from "../types/order.types";
-import { getDoorAddress, getFullName } from "../utils/helpers";
+
+import { getDoorAddress, stripPassword } from "../utils/helpers";
 
 export const PersonService = {
   async getAll({
@@ -32,7 +32,7 @@ export const PersonService = {
     sortBy,
     order,
   }: GetAllPersonsOptions): Promise<PaginatedResult<SafePerson>> {
-    return await PersonModel.getAll({
+    const persons = await PersonModel.getAll({
       page,
       limit,
       filters,
@@ -40,6 +40,33 @@ export const PersonService = {
       sortBy,
       order,
     });
+
+    const enriched = await Promise.all(
+      persons.data.map(async (person) => {
+        const phones = await PersonModel.getPhonesByPersonId(person.id);
+        const emails = await PersonModel.getEmailsByPersonId(person.id);
+        const messengers = await PersonModel.getPersonMessengers(person.id);
+
+        const delivery_addresses =
+          await PersonModel.getDeliveryAddressesByPersonId(person.id);
+
+        const locations = await PersonModel.getLocationsByPersonId(person.id);
+
+        return {
+          ...(stripPassword(person) as SafePerson),
+          delivery_addresses: delivery_addresses,
+          phones,
+          emails,
+          messengers,
+          locations,
+        };
+      })
+    );
+
+    return {
+      ...persons,
+      data: enriched,
+    };
   },
 
   async getById(userId: number): Promise<SafePerson | null> {

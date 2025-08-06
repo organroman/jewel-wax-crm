@@ -28,6 +28,7 @@ import uploadRoutes from "./routes/upload-routes";
 import novaPoshtaRoutes from "./routes/novaposhta-routes";
 import chatRoutes from "./routes/order-chat-routes";
 import financeRoutes from "./routes/finance-routes";
+import reportRoutes from "./routes/report-routes";
 
 import { registerSocketHandlers } from "./sockets";
 
@@ -86,6 +87,7 @@ app.use("/upload", uploadRoutes);
 app.use("/np", novaPoshtaRoutes);
 app.use("/chats", chatRoutes);
 app.use("/finance", financeRoutes);
+app.use("/reports", reportRoutes);
 
 app.use(errorHandler);
 

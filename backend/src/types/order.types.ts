@@ -123,6 +123,7 @@ export interface OrderBase {
   printer_patronymic?: string;
   printing_cost?: number;
   created_by: number;
+  payment_status?: PaymentStatus;
 }
 
 export interface UserOrder {

@@ -43,4 +43,28 @@ export const PERMISSIONS: PermissionMap = {
     UPDATE: ["super_admin"],
     DELETE: ["super_admin"],
   },
+  CLIENT_REPORT: {
+    VIEW: ["super_admin"],
+    CREATE: ["super_admin"],
+    UPDATE: ["super_admin"],
+    DELETE: ["super_admin"],
+  },
+  MODELLING_REPORT: {
+    VIEW: ["super_admin", "modeller"],
+    CREATE: ["super_admin"],
+    UPDATE: ["super_admin"],
+    DELETE: ["super_admin"],
+  },
+  ORDERS_REPORT: {
+    VIEW: ["super_admin"],
+    CREATE: ["super_admin"],
+    UPDATE: ["super_admin"],
+    DELETE: ["super_admin"],
+  },
+  EXPENSES_REPORT: {
+    VIEW: ["super_admin"],
+    CREATE: ["super_admin"],
+    UPDATE: ["super_admin"],
+    DELETE: ["super_admin"],
+  },
 } as const;

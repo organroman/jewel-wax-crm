@@ -11,6 +11,7 @@ import {
   PersonContact,
   BankDetails,
   PersonRole,
+  PersonMessenger,
 } from "../types/person.types";
 import { PaginatedResult } from "../types/shared.types";
 
@@ -27,10 +28,11 @@ export const PersonModel = {
     search,
     sortBy = "created_at",
     order = "desc",
-  }: GetAllPersonsOptions): Promise<PaginatedResult<SafePerson>> {
+  }: GetAllPersonsOptions): Promise<PaginatedResult<PersonBase>> {
     const baseQuery = db<Person>("persons").select("*");
 
     if (filters?.role) baseQuery.where("role", filters.role);
+    if (filters?.person_id) baseQuery.where("id", filters.person_id);
     if (filters?.is_active?.length)
       baseQuery.whereIn("is_active", filters.is_active);
 
@@ -69,58 +71,13 @@ export const PersonModel = {
       });
     }
 
-    const paginated = await paginateQuery<Person>(baseQuery, {
+    return await paginateQuery<Person>(baseQuery, {
       page,
       limit,
       order,
       sortBy,
     });
 
-    const enriched = await Promise.all(
-      paginated.data.map(async (person) => {
-        const role = await db("enums")
-          .where("value", person.role)
-          .first()
-          .select("value", "label");
-        const phones = await db("phones").where("person_id", person.id);
-        const emails = await db("person_emails").where("person_id", person.id);
-        const messengers = await db("person_messengers").where(
-          "person_id",
-          person.id
-        );
-        const delivery_addresses = await db("delivery_addresses").where(
-          "person_id",
-          person.id
-        );
-        const locations = await db("person_locations")
-          .leftJoin("cities", "person_locations.city_id", "cities.id")
-          .leftJoin("countries", "person_locations.country_id", "countries.id")
-          .where("person_locations.person_id", person.id)
-          .select(
-            "person_locations.id",
-            "person_locations.is_main",
-            "cities.id as city_id",
-            "cities.name as city_name",
-            "countries.id as country_id",
-            "countries.name as country_name"
-          );
-
-        return {
-          ...(stripPassword(person) as SafePerson),
-          role,
-          delivery_addresses: delivery_addresses,
-          phones,
-          emails,
-          messengers,
-          locations,
-        };
-      })
-    );
-
-    return {
-      ...paginated,
-      data: enriched,
-    };
   },
 
   async getCustomers(
@@ -244,6 +201,13 @@ export const PersonModel = {
       .where("id", personId)
       .update({ ...fields, updated_at: new Date() })
       .returning("*");
+  },
+
+  async getPersonMessengers(personId: number): Promise<PersonMessenger[]> {
+    return await db<PersonMessenger>("person_messengers").where(
+      "person_id",
+      personId
+    );
   },
 
   async getPhonesByPersonId(personId: number): Promise<Phone[]> {
@@ -377,7 +341,18 @@ export const PersonModel = {
   },
 
   async getLocationsByPersonId(personId: number): Promise<Location[]> {
-    return await db<Location>("person_locations").where("person_id", personId);
+    return await db("person_locations")
+      .leftJoin("cities", "person_locations.city_id", "cities.id")
+      .leftJoin("countries", "person_locations.country_id", "countries.id")
+      .where("person_locations.person_id", personId)
+      .select(
+        "person_locations.id",
+        "person_locations.is_main",
+        "cities.id as city_id",
+        "cities.name as city_name",
+        "countries.id as country_id",
+        "countries.name as country_name"
+      );
   },
   async createLocations(personId: number, location: Location[]) {
     await db("person_locations").insert(
@@ -486,16 +461,16 @@ export const PersonModel = {
   async getOrderPerformersByRole(
     role: PersonRole
   ): Promise<{ id: number; fullname: string }[]> {
-    const printersFull = await db<Person>("persons")
+    const personsFull = await db<Person>("persons")
       .whereIn("role", ["super_admin", role])
       .select("id", "first_name", "last_name", "patronymic");
 
-    const printers = printersFull.map((item) => ({
+    const persons = personsFull.map((item) => ({
       id: item.id,
       fullname: getFullName(item.first_name, item.last_name, item.patronymic),
     }));
 
-    return printers;
+    return persons;
   },
 
   async getRoleById(id: number): Promise<{ role: PersonRole }> {

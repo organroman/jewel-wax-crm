@@ -492,4 +492,26 @@ export const OrderModel = {
       await OrderModel.updateOrderPaymentStatus(order.id);
     }
   },
+  async getOrdersByCustomerId({
+    customerId,
+    from,
+    to,
+  }: {
+    customerId: number;
+    from: Date;
+    to: Date;
+  }): Promise<OrderBase[]> {
+    return await db<OrderBase>("orders")
+      .where("customer_id", customerId)
+      .andWhereBetween("created_at", [from, to]);
+  },
+
+  async getLastCustomerOrder(customerId: number): Promise<OrderBase | null> {
+    const order = await db<OrderBase>("orders")
+      .where("customer_id", customerId)
+      .orderBy("created_at", "desc")
+      .first();
+
+    return order ?? null;
+  },
 };
