@@ -282,7 +282,7 @@ const FormArrayDeliveryAddress = <T extends FieldValues>({
                     }
                   : null
               }
-              onChange={(opt) => onCityChange(opt.data ?? null)}
+              onChange={(opt) => onCityChange(opt?.data ?? null)}
               displayKey="name"
               valueKey="id"
               search={searchQuery}

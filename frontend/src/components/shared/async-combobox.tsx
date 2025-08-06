@@ -1,7 +1,7 @@
 "use client";
 
 import { Dispatch, SetStateAction, useState } from "react";
-import { ChevronDown, ChevronUp, Loader } from "lucide-react";
+import { ChevronDown, ChevronUp, Loader, XIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 import * as RadixPopover from "@radix-ui/react-popover";
@@ -26,7 +26,7 @@ type AsyncComboboxProps<T> = {
   placeholder?: string;
   options: Option<T>[];
   value?: Option<T> | null;
-  onChange: (selected: Option<T>) => void;
+  onChange: (selected: Option<T> | null) => void;
   isLoading?: boolean;
   disabled?: boolean;
   className?: string;
@@ -34,8 +34,10 @@ type AsyncComboboxProps<T> = {
   displayKey?: keyof T;
   valueKey?: keyof T;
   search: string;
+  displayFn?: (item: T) => string;
   setSearch?: Dispatch<SetStateAction<string>> | ((value: string) => void);
   labelPosition?: "left" | "top";
+  triggerHeight?: string;
 };
 
 const AsyncCombobox = <T,>({
@@ -53,6 +55,8 @@ const AsyncCombobox = <T,>({
   setSearch,
   popoverContentClassName,
   labelPosition = "left",
+  triggerHeight,
+  displayFn,
 }: AsyncComboboxProps<T>) => {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
@@ -64,13 +68,17 @@ const AsyncCombobox = <T,>({
       return value.data[displayKey] as string;
     }
 
+    if (value.data && displayFn) {
+      return displayFn(value.data);
+    }
+
     return value.label;
   })();
 
   return (
     <div className={cn("flex flex-col gap-1", className)}>
       {label && (
-        <span className="text-xs text-text-muted lg:text-sm font-medium">
+        <span className="text-xs text-text-muted lg:text-sm/3.5 font-medium">
           {label}
         </span>
       )}
@@ -83,16 +91,15 @@ const AsyncCombobox = <T,>({
             variant="outline"
             className={cn(
               "min-w-[240px] max-w-[240px] justify-between h-8 rounded-xs text-sm font-semibold relative",
-              className
+              className,
+              triggerHeight
             )}
             disabled={disabled}
           >
             <span className="truncate overflow-hidden whitespace-nowrap w-full text-left">
               {selectedLabel}
             </span>
-            <div className="absolute top-1.5 right-2">
-              {open ? <ChevronUp /> : <ChevronDown />}
-            </div>
+            {open ? <ChevronUp /> : <ChevronDown />}
           </Button>
         </RadixPopover.Trigger>
         <RadixPopover.Content
@@ -101,7 +108,6 @@ const AsyncCombobox = <T,>({
             popoverContentClassName
           )}
           align="start"
-
         >
           <Command
             filter={(value, search) => {
@@ -124,6 +130,16 @@ const AsyncCombobox = <T,>({
 
             {!isLoading && (
               <CommandEmpty>{t("messages.info.no_results")}</CommandEmpty>
+            )}
+            {selectedLabel && (
+              <CommandItem
+                onSelect={() => {
+                  onChange(null);
+                  setOpen(false);
+                }}
+              >
+                <XIcon className="size-4" /> {t("buttons.delete")}
+              </CommandItem>
             )}
 
             <CommandGroup className="z-100 overflow-y-scroll ">

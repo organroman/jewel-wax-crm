@@ -7,7 +7,7 @@ import { useState } from "react";
 import { toggleParam } from "@/lib/utils";
 
 import StaticCombobox from "./filter-static-combobox";
-import AsyncComboBox from "./filter-async-combobox";
+import FilterAsyncCombobox from "./filter-async-combobox";
 
 interface FilterDropdownProps {
   filters: FilterGroup[];
@@ -39,7 +39,7 @@ const FilterDropdown = ({ filters }: FilterDropdownProps) => {
       {filters.map((group) => (
         <div className="flex" key={group.param}>
           {group.async ? (
-            <AsyncComboBox
+            <FilterAsyncCombobox
               open={openStates[group.param]}
               handleOpenChange={(value) => handleOpenChange(group.param, value)}
               label={group.label}

@@ -73,7 +73,7 @@ const FormArrayLinkedOrders = <T extends FieldValues>({
     };
   }, [searchQuery, debouncedSearchQuery]);
 
-  const onSelect = (data: Option<{ id: number; number: number }>) => {
+  const onSelect = (data: Option<{ id: number; number: number }> | null) => {
     setSelected(data);
   };
 

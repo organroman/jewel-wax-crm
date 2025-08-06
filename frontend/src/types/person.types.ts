@@ -89,7 +89,7 @@ export interface Email {
 }
 export interface Person {
   id: number;
-  role: PersonRole;
+  role: PersonRoleValue;
   first_name: string;
   last_name: string;
   patronymic: string;
