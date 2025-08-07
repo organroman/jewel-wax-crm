@@ -1,95 +1,79 @@
-import { DeliveryAddress, Phone } from "@/types/person.types";
 import { Option } from "@/types/form.types";
 
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { DateRange } from "react-day-picker";
 import { BookText } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import debounce from "lodash.debounce";
-
-import { usePerson } from "@/api/person/use-person";
 
 import { Button } from "@/components/ui/button";
 
 import InfoLabel from "@/components/shared/typography/info-label";
 import InfoValue from "@/components/shared/typography/info-value";
 import AsyncCombobox from "@/components/shared/async-combobox";
-
-import { cn, getFullName } from "@/lib/utils";
 import DateRangePicker from "./date-range-picker";
+
+import { cn, defineFromToDates } from "@/lib/utils";
 
 interface ReportIndicator {
   label: string;
   value: string | number | null;
   color: string;
 }
-
-interface TopBarProps {
-  enabled: boolean;
-  indicators: ReportIndicator[];
-}
-
-type Customer = {
+type Person = {
   id: number;
-  first_name: string;
-  last_name: string;
-  patronymic?: string;
-  phones: Phone[];
-  delivery_addresses: DeliveryAddress[];
+  fullname: string;
 };
 
-const TopBar = ({ indicators, enabled }: TopBarProps) => {
+interface TopBarProps {
+  setPersonSearchQuery: Dispatch<SetStateAction<string>>;
+  indicators: ReportIndicator[];
+  persons: Person[];
+  isLoading: boolean;
+  debouncedSetSearch: (val: string) => void;
+}
+
+const TopBar = ({
+  indicators,
+  setPersonSearchQuery,
+  persons,
+  isLoading,
+  debouncedSetSearch,
+}: TopBarProps) => {
   const { t } = useTranslation();
 
   const searchParams = useSearchParams();
   const router = useRouter();
 
-  const [searchQuery, setSearchQuery] = useState<string>("");
   const [inputValue, setInputValue] = useState<string>("");
-  const [selectedPerson, setSelectedPerson] = useState<Option<Customer> | null>(
+  const [selectedPerson, setSelectedPerson] = useState<Option<Person> | null>(
     null
   );
 
-  const debouncedSetSearch = useMemo(
-    () => debounce((val: string) => setSearchQuery(val), 500),
-    []
+  const { startFrom, finishTo } = defineFromToDates(
+    searchParams.get("from"),
+    searchParams.get("to")
   );
-
-  useEffect(() => () => debouncedSetSearch.cancel(), [debouncedSetSearch]);
-
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  const toParam = searchParams.get("to");
-
-  const startOfMonth = new Date(today);
-  startOfMonth.setDate(1);
-  const fromParam = searchParams.get("from");
 
   const [date, setDate] = useState<DateRange>({
-    from: fromParam ? new Date(fromParam) : startOfMonth,
-    to: toParam ? new Date(toParam) : today,
+    from: startFrom,
+    to: finishTo,
   });
-
-  const { data: customers, isLoading } = usePerson.getCustomers(
-    `search=${searchQuery}`,
-    enabled
-  );
 
   const handleInputChange = (val: string) => {
     setInputValue(val);
     debouncedSetSearch(val);
   };
 
-  const onPersonChange = (opt: Option<Customer> | null) => {
+  const onPersonChange = (opt: Option<Person> | null) => {
     setSelectedPerson(opt);
-    setSearchQuery("");
+    setPersonSearchQuery("");
   };
 
   const handleGenerateReport = () => {
     const current = new URLSearchParams(searchParams);
     if (date?.from && date.to) {
-      if (date.from === startOfMonth && date.to === today) {
+      if (date.from === startFrom && date.to === finishTo) {
         return;
       }
       current.set("from", date.from.toISOString().split("T")[0]);
@@ -108,23 +92,17 @@ const TopBar = ({ indicators, enabled }: TopBarProps) => {
         <DateRangePicker
           date={date}
           setDate={setDate}
-          today={today}
-          startOfMonth={startOfMonth}
+          today={finishTo}
+          startOfMonth={startFrom}
         />
 
         <AsyncCombobox
-          options={
-            customers?.data
-              ? customers.data.map((p) => ({
-                  data: p,
-                  value: p.id,
-                  label: getFullName(p.first_name, p.last_name, p.patronymic),
-                }))
-              : []
-          }
-          displayFn={(c) =>
-            getFullName(c.first_name, c.last_name, c.patronymic)
-          }
+          options={persons.map((p) => ({
+            data: p,
+            label: p.fullname,
+            value: p.id,
+          }))}
+          displayKey="fullname"
           value={selectedPerson}
           valueKey="id"
           label={t("person.person")}
@@ -140,7 +118,7 @@ const TopBar = ({ indicators, enabled }: TopBarProps) => {
           {t("buttons.generate")}
         </Button>
       </div>
-      <div className="flex flex-row justify-between border-b-2 border-brand-default w-1/2">
+      <div className="flex flex-row justify-between border-b-2 border-brand-default w-3/4 ">
         {indicators.map((indicator) => {
           return (
             <div

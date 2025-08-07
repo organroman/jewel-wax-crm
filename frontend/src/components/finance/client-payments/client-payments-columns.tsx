@@ -121,7 +121,7 @@ export const getClientPaymentsColumns = (
       return (
         <div className={cn("text-center")}>
           <span>{dayjs(paymentDate).format("DD.MM.YYYY")}</span>
-          {payments && payments > 0 && (
+          {payments && payments > 1 && (
             <Badge className="pr-1 px-1 justify-start rounded-full text-[10px] gap-0">
               +{payments - 1}
             </Badge>
