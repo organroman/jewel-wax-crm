@@ -131,7 +131,7 @@ const AsyncCombobox = <T,>({
             {!isLoading && (
               <CommandEmpty>{t("messages.info.no_results")}</CommandEmpty>
             )}
-            {selectedLabel && (
+            {value && (
               <CommandItem
                 onSelect={() => {
                   onChange(null);

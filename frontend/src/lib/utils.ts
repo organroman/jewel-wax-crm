@@ -175,3 +175,20 @@ export const formatFileSize = (bytes: number, decimals = 1): string => {
 
   return `${parseFloat(size.toFixed(decimals))} ${sizes[i]}`;
 };
+
+export function defineFromToDates(from?: string | null, to?: string | null) {
+  const today = new Date();
+
+  const startOfMonth = today;
+  startOfMonth.setDate(1);
+  startOfMonth.setHours(0, 0, 0, 0);
+
+  const startFrom = from ? new Date(from) : startOfMonth;
+
+  const finishTo = to ? new Date(to) : today;
+
+  startFrom.setHours(0, 0, 0, 0);
+  finishTo.setHours(23, 59, 59, 999);
+
+  return { startFrom, finishTo };
+}

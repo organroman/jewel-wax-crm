@@ -9,6 +9,7 @@ import { useState } from "react";
 import CustomTabs from "@/components/shared/custom-tabs";
 import { Separator } from "@/components/ui/separator";
 import ClientsReport from "@/components/report/clients/clients-report";
+import ModelingReport from "@/components/report/modeling/modeling-report";
 
 import { REPORT_TYPE } from "@/constants/report.constants";
 
@@ -36,7 +37,6 @@ const ReportsClient = ({ role }: ReportsClientProps) => {
   const [selectedTab, setSelectedTab] = useState<TabOption>(currentTab);
 
   const handleChange = (value: string) => {
-    console.log(value);
     const params = new URLSearchParams(searchParams);
     if (!selectedTab || selectedTab.value === value) return;
 
@@ -46,6 +46,8 @@ const ReportsClient = ({ role }: ReportsClientProps) => {
       return;
     }
     params.set("type", value);
+    params.delete("from");
+    params.delete("to");
     router.replace(`?${params.toString()}`);
     setSelectedTab(selected);
   };
@@ -59,6 +61,7 @@ const ReportsClient = ({ role }: ReportsClientProps) => {
       />
       <Separator className="bg-ui-border h-0.5 data-[orientation=horizontal]:h-0.5" />
       {selectedTab.value === "clients" && <ClientsReport />}
+      {selectedTab.value === "modeling" && <ModelingReport />}
     </div>
   );
 };

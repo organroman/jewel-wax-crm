@@ -15,4 +15,17 @@ export const useReport = {
       enabled,
     });
   },
+  getModelingReport: ({
+    query,
+    enabled,
+  }: {
+    query: string;
+    enabled: boolean;
+  }) => {
+    return useQuery({
+      queryKey: ["modeling-report", query],
+      queryFn: () => reportService.getModelingReport(query),
+      enabled,
+    });
+  },
 };

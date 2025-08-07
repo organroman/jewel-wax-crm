@@ -1,3 +1,5 @@
+import { PaymentStatus } from "./finance.types";
+import { OrderPerson, Stage, StageStatus } from "./order.types";
 import { PaginatedResult } from "./shared.types";
 
 type ClientReportPerson = {
@@ -18,9 +20,47 @@ export interface ClientsReportRaw {
   last_order_date: Date;
 }
 
-export interface PaginatedReportResult<T> extends PaginatedResult<T> {
+export interface PaginatedClientsReportResult<T> extends PaginatedResult<T> {
   total_clients: number;
   active_clients: number;
   new_clients: number;
-  clients_debt: number;
+  total_debtors: number;
+}
+export interface ModelingReportOrder {
+  id: number;
+  number: number;
+  active_stage: Stage;
+  created_at: Date;
+  modeller_id: number;
+  modeller_first_name: string;
+  modeller_last_name: string;
+  modeller_patronymic: string;
+  modeling_cost: number;
+}
+export interface ModellingReportRaw {
+  id: number;
+  number: number;
+  modeller: OrderPerson;
+  modeling_payment_status: PaymentStatus;
+  modelling_cost: number;
+  order_stage: Stage;
+  stage_status: StageStatus;
+  cash_amount: number | null;
+  cash_payments_amount: number | null;
+  cash_payment_date: Date | null;
+  bank_amount: number | null;
+  bank_payments_amount: number | null;
+  bank_payment_date: Date | null;
+  card_amount: number | null;
+  card_payments_amount: number | null;
+  card_payment_date: Date | null;
+  debt: number;
+  last_payment_comment: string | null;
+}
+
+export interface PaginatedModellingReportResult<T> extends PaginatedResult<T> {
+  total_orders: number | null;
+  total_modelling_cost: number | null;
+  total_modelling_paid: number;
+  total_modelling_debt: number;
 }

@@ -57,7 +57,8 @@
     "unpaid": "Не оплачено",
     "partly_paid": "Частково оплачено",
     "cash": "Готівка",
-    "debt": "Борг"
+    "debt": "Борг",
+    "person": "Контрагент"
   },
   "labels": {
     "main": "$t(dictionary.main)",
@@ -98,14 +99,14 @@
   },
 
   "person": {
-    "person": "Контрагент",
+    "person": "$t(dictionary.person)",
     "person_plural": "Контрагенти",
     "add_person": "Додати контрагента",
     "connected_contacts": "Прив'язані контакти",
     "delivery_address": "Адреса доставки",
     "email_address": "Електронна адреса",
     "bank_details": "Банківські реквізити",
-    "person_type": "Тип контрагента",
+    "person_type": "$t(dictionary.person_type)",
     "person_changes": "Історія змін по контрагенту",
     "roles": {
       "all": "Всі контрагенти",
@@ -567,6 +568,20 @@
         "last_order_date": "Останнє замовлення",
         "email": "Електронна пошта"
       }
+    },
+    "modeling": {
+      "total": "Всього замовлень",
+      "amount": "Замовлень на суму,₴",
+      "paid": "$t(dictionary.paid)",
+      "unpaid": "$t(dictionary.unpaid)",
+      "table_headers": {
+        "number": "$t(dictionary.order)",
+        "person": "$t(dictionary.person)",
+        "modeling_cost": "Сума",
+        "payment_status": "$t(dictionary.payment_status)",
+        "order_stage": "Етап замовлення",
+        "stage_status": "$t(dictionary.stage_status)"
+      }
     }
   },
 
@@ -577,7 +592,7 @@
     "finance": "Фінанси",
     "reports": "Звіти",
     "statistic": "Статистика",
-    "persons": "Контрагенти"
+    "persons": "$t(person.person_plural)"
   },
 
   "messages": {
