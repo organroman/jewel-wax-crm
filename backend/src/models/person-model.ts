@@ -77,13 +77,13 @@ export const PersonModel = {
       order,
       sortBy,
     });
-
   },
 
-  async getCustomers(
+  async getPaginatedPersonsByRoleWithSearch(
+    role: PersonRole,
     search?: string
   ): Promise<PaginatedResult<Partial<SafePerson>>> {
-    const baseQuery = db<Person>("persons").where("role", "client").select("*");
+    const baseQuery = db<Person>("persons").where("role", role).select("*");
 
     if (search) {
       baseQuery.where((qb) => {
@@ -134,6 +134,7 @@ export const PersonModel = {
       .select("value", "label");
     const phones = await this.getPhonesByPersonId(person.id);
     const emails = await this.getEmailsByPersonId(person.id);
+
     const locations = await db("person_locations")
       .leftJoin("cities", "person_locations.city_id", "cities.id")
       .leftJoin("countries", "person_locations.country_id", "countries.id")
@@ -213,6 +214,9 @@ export const PersonModel = {
   async getPhonesByPersonId(personId: number): Promise<Phone[]> {
     return await db<Phone>("phones").where("person_id", personId);
   },
+  async getPhonesByPersonIds(personIds: number[]): Promise<Phone[]> {
+    return await db<Phone>("phones").whereIn("person_id", personIds);
+  },
 
   async createPhones(personId: number, phones: Phone[]) {
     await db("phones").insert(
@@ -241,6 +245,9 @@ export const PersonModel = {
 
   async getEmailsByPersonId(personId: number): Promise<Email[]> {
     return await db<Email>("person_emails").where("person_id", personId);
+  },
+  async getEmailsByPersonIds(personIds: number[]): Promise<Email[]> {
+    return await db<Email>("person_emails").whereIn("person_id", personIds);
   },
 
   async createEmails(personId: number, emails: Email[]) {
@@ -345,6 +352,20 @@ export const PersonModel = {
       .leftJoin("cities", "person_locations.city_id", "cities.id")
       .leftJoin("countries", "person_locations.country_id", "countries.id")
       .where("person_locations.person_id", personId)
+      .select(
+        "person_locations.id",
+        "person_locations.is_main",
+        "cities.id as city_id",
+        "cities.name as city_name",
+        "countries.id as country_id",
+        "countries.name as country_name"
+      );
+  },
+  async getLocationsByPersonIds(personIds: number[]): Promise<Location[]> {
+    return await db("person_locations")
+      .leftJoin("cities", "person_locations.city_id", "cities.id")
+      .leftJoin("countries", "person_locations.country_id", "countries.id")
+      .whereIn("person_locations.person_id", personIds)
       .select(
         "person_locations.id",
         "person_locations.is_main",

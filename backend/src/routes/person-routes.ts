@@ -25,10 +25,9 @@ router.get(
 );
 
 router.get(
-  "/customers",
+  "/byRole",
   verifyToken,
-  checkPermission("ORDERS", "VIEW"),
-  PersonController.getCustomers
+  PersonController.getPaginatedPersonsByRoleWithSearch
 );
 
 router.get(

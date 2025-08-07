@@ -21,7 +21,7 @@ import AppError from "../utils/AppError";
 import ERROR_MESSAGES from "../constants/error-messages";
 import { LOG_ACTIONS, LOG_TARGETS } from "../constants/activity-log";
 
-import { getDoorAddress, stripPassword } from "../utils/helpers";
+import { getDoorAddress, getFullName, stripPassword } from "../utils/helpers";
 
 export const PersonService = {
   async getAll({
@@ -85,7 +85,10 @@ export const PersonService = {
       delivery_addresses?: Partial<DeliveryAddress>[];
     }>
   > {
-    const customers = await PersonModel.getCustomers(search);
+    const customers = await PersonModel.getPaginatedPersonsByRoleWithSearch(
+      "client",
+      search
+    );
 
     const { data, page, total, limit } = customers;
 
@@ -106,6 +109,32 @@ export const PersonService = {
               : a.np_warehouse || "",
         };
       }),
+    }));
+    return { page, total, limit, data: enriched };
+  },
+  async getPaginatedPersonsByRoleWithSearch(
+    role: PersonRole,
+    search?: string
+  ): Promise<
+    PaginatedResult<{
+      id?: number;
+      fullname: string;
+    }>
+  > {
+    const persons = await PersonModel.getPaginatedPersonsByRoleWithSearch(
+      role,
+      search
+    );
+
+    const { data, page, total, limit } = persons;
+
+    const enriched = data.map((person) => ({
+      id: person.id,
+      fullname: getFullName(
+        person.first_name,
+        person.last_name,
+        person.patronymic
+      ),
     }));
     return { page, total, limit, data: enriched };
   },

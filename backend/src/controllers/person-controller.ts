@@ -122,12 +122,22 @@ export const PersonController = {
       next(error);
     }
   },
-  async getCustomers(req: Request, res: Response, next: NextFunction) {
+  async getPaginatedPersonsByRoleWithSearch(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
     try {
-      const { search } = req.query;
+      const { search, role } = req.query;
 
-      const customers = await PersonService.getCustomers(search as string);
-      res.status(200).json(customers);
+      const persons =
+        role === "client"
+          ? await PersonService.getCustomers(search as string)
+          : await PersonService.getPaginatedPersonsByRoleWithSearch(
+              role as PersonRole,
+              search as string
+            );
+      res.status(200).json(persons);
     } catch (error) {
       next(error);
     }
