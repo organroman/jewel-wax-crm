@@ -1,4 +1,4 @@
-import { PaymentStatus } from "../types/finance.type";
+import { PaymentMethod, PaymentStatus } from "../types/finance.type";
 import { AdminOrder, UserOrder } from "../types/order.types";
 import { PersonRole } from "../types/person.types";
 
@@ -133,4 +133,80 @@ export function definePaymentStatus(
   else status = "partly_paid";
 
   return status;
+}
+
+type BaseTransaction = {
+  payment_method: PaymentMethod;
+  created_at?: Date | string | null;
+  paid_at?: Date | string | null;
+  amount?: number | string | null;
+  amount_paid?: number | string | null;
+  description?: string | null;
+};
+
+interface PaymentCalcOptions {
+  amountField: "amount" | "amount_paid";
+  dateField: "created_at" | "paid_at";
+}
+
+export function definePaymentAmountByPaymentMethod<T extends BaseTransaction>(
+  transactions: T[],
+  paymentMethod: PaymentMethod,
+  options: PaymentCalcOptions
+) {
+  const filteredTransactions = transactions.filter(
+    (t) => t.payment_method === paymentMethod
+  );
+  const transactionsAmount = filteredTransactions.length;
+
+  const transactionsPaymentsAmount = filteredTransactions.reduce(
+    (sum, transaction) => sum + Number(transaction[options.amountField] || 0),
+    0
+  );
+
+  const transactionLastPaymentDate =
+    filteredTransactions.length > 0
+      ? (filteredTransactions
+          .filter((a) => a[options.dateField] !== null)
+          .sort((a, b) =>
+            (a[options.dateField] as Date) > (b[options.dateField] as Date)
+              ? -1
+              : 1
+          )[0]?.[options.dateField] as Date) || null
+      : null;
+
+  return {
+    transactionsAmount,
+    transactionsPaymentsAmount,
+    transactionLastPaymentDate,
+  };
+}
+
+export function defineFromToDates(from?: string, to?: string) {
+  const today = new Date();
+
+  const startOfMonth = today;
+  startOfMonth.setDate(1);
+  startOfMonth.setHours(0, 0, 0, 0);
+
+  const startFrom = from ? new Date(from) : startOfMonth;
+
+  const finishTo = to ? new Date(to) : today;
+
+  startFrom.setHours(0, 0, 0, 0);
+  finishTo.setHours(23, 59, 59, 999);
+
+  return { startFrom, finishTo };
+}
+
+export function groupBy<T, K extends keyof T>(
+  list: T[],
+  key: K
+): Record<string, T[]> {
+  return list.reduce((acc, item) => {
+    const groupKey = String(item[key]);
+    acc[groupKey] ||= [];
+    acc[groupKey].push(item);
+    return acc;
+  }, {} as Record<string, T[]>);
 }

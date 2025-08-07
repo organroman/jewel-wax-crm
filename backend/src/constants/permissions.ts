@@ -49,7 +49,7 @@ export const PERMISSIONS: PermissionMap = {
     UPDATE: ["super_admin"],
     DELETE: ["super_admin"],
   },
-  MODELLING_REPORT: {
+  MODELING_REPORT: {
     VIEW: ["super_admin", "modeller"],
     CREATE: ["super_admin"],
     UPDATE: ["super_admin"],

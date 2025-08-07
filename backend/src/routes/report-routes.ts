@@ -11,4 +11,11 @@ router.get(
   checkPermission("CLIENT_REPORT", "VIEW"),
   ReportController.getClientsReport
 );
+
+router.get(
+  "/modeling",
+  verifyToken,
+  checkPermission("MODELING_REPORT", "VIEW"),
+  ReportController.getModelingReport
+);
 export default router;

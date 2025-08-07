@@ -9,7 +9,7 @@ export type Module =
   | "INVOICES"
   | "EXPENSES"
   | "CLIENT_REPORT"
-  | "MODELLING_REPORT"
+  | "MODELING_REPORT"
   | "ORDERS_REPORT"
   | "EXPENSES_REPORT";
 export type Action = "VIEW" | "CREATE" | "UPDATE" | "DELETE";
