@@ -28,6 +28,9 @@ export const useFinance = {
         queryClient.invalidateQueries({
           queryKey: ["finance-all"],
         });
+        queryClient.invalidateQueries({
+          queryKey: ["client-payments"],
+        });
         handleOnSuccess && data && handleOnSuccess(data);
       },
       onError: (error) => {
@@ -53,6 +56,9 @@ export const useFinance = {
           queryKey: ["finance-all"],
         });
         handleOnSuccess && data && handleOnSuccess(data);
+        queryClient.invalidateQueries({
+          queryKey: ["modeller-payments"],
+        });
       },
       onError: (error) => {
         toast.error(error.message);
