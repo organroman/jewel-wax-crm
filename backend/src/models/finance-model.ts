@@ -1,6 +1,7 @@
 import { OrderBase } from "../types/order.types";
 import {
   Expense,
+  ExpenseCategory,
   ExpenseInput,
   FinanceTransactionRaw,
   GetAlFinanceOptions,
@@ -26,16 +27,44 @@ export const FinanceModel = {
     return invoices;
   },
 
+  async getInvoicesByOrderIds(orderIds: number[]): Promise<Invoice[]> {
+    const invoices = await db<Invoice>("invoices")
+      .whereIn("order_id", orderIds)
+      .select("*");
+    return invoices;
+  },
+
   async createExpense(data: ExpenseInput): Promise<Expense> {
     const [expense] = await db<Expense>("expenses").insert(data).returning("*");
     return expense;
   },
 
-  async getExpensesByOrder(orderId: number): Promise<Expense[]> {
-    const expenses = await db<Expense>("expenses")
+  async getExpensesByOrder(
+    orderId: number,
+    expenseType?: ExpenseCategory
+  ): Promise<Expense[]> {
+    const baseQuery = db<Expense>("expenses")
       .where("order_id", orderId)
       .select("*");
-    return expenses;
+
+    if (expenseType) {
+      baseQuery.where("category", expenseType);
+    }
+    return await baseQuery;
+  },
+
+  async getExpensesByOrderIds(
+    orderIds: number[],
+    expenseType?: ExpenseCategory
+  ): Promise<Expense[]> {
+    const baseQuery = db<Expense>("expenses")
+      .whereIn("order_id", orderIds)
+      .select("*");
+
+    if (expenseType) {
+      baseQuery.where("category", expenseType);
+    }
+    return await baseQuery;
   },
 
   async getAllFinance({

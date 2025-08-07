@@ -210,6 +210,12 @@ export const OrderModel = {
       orderId
     );
   },
+  async getOrderStagesByOrderIds(orderIds: number[]) {
+    return await db<OrderStage>("order_stage_statuses").whereIn(
+      "order_id",
+      orderIds
+    );
+  },
 
   async getOrderStagesForOrders(orderIds: number[], role: string) {
     const query = db("order_stage_statuses").whereIn("order_id", orderIds);
@@ -503,6 +509,20 @@ export const OrderModel = {
   }): Promise<OrderBase[]> {
     return await db<OrderBase>("orders")
       .where("customer_id", customerId)
+      .andWhereBetween("created_at", [from, to]);
+  },
+
+  async getOrdersByCustomerIds({
+    customerIds,
+    from,
+    to,
+  }: {
+    customerIds: number[];
+    from: Date;
+    to: Date;
+  }): Promise<OrderBase[]> {
+    return await db<OrderBase>("orders")
+      .whereIn("customer_id", customerIds)
       .andWhereBetween("created_at", [from, to]);
   },
 
