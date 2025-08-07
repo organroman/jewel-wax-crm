@@ -42,6 +42,14 @@ export const personService = {
         phones: Phone[];
         delivery_addresses: DeliveryAddress[];
       }>
-    >(`persons/customers?${query}`);
+    >(`persons/byRole?${query}`);
+  },
+  getPaginatedPersonsByRole: async (query: string) => {
+    return await apiService.get<
+      PaginatedResult<{
+        id: number;
+        fullname: string;
+      }>
+    >(`persons/byRole?${query}`);
   },
 };

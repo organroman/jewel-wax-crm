@@ -102,10 +102,11 @@ export const usePerson = {
     return { deletePersonMutation: mutation };
   },
 
-  getModellers: (query: string) => {
+  getModellers: (query: string, enabled?: boolean) => {
     return useQuery({
       queryKey: ["modellers"],
       queryFn: () => personService.getOrderPerformers(query),
+      enabled,
     });
   },
   getMillers: (query: string) => {
@@ -124,6 +125,13 @@ export const usePerson = {
     return useQuery({
       queryKey: ["customers", query],
       queryFn: () => personService.getCustomers(query),
+      enabled,
+    });
+  },
+  getPaginatedPersonsByRole: (query: string, enabled: boolean) => {
+    return useQuery({
+      queryKey: ["personsByRole", query],
+      queryFn: () => personService.getPaginatedPersonsByRole(query),
       enabled,
     });
   },

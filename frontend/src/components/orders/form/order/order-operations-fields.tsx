@@ -54,7 +54,7 @@ const OrderOperationsFields = ({
   const { data: printers = [] } = usePerson.getPrinters("role=print");
 
   const { data: customers, isLoading } = usePerson.getCustomers(
-    `search=${searchQuery}`,
+    `role=client&search=${searchQuery}`,
     canViewCustomer ?? true
   );
 
