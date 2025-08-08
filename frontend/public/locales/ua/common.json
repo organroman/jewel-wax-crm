@@ -582,6 +582,24 @@
         "order_stage": "Етап замовлення",
         "stage_status": "$t(dictionary.stage_status)"
       }
+    },
+    "expenses": {
+      "total": "Сума витрат",
+      "modeling": "$t(dictionary.modeling)",
+      "printing": "$t(dictionary.printing)",
+      "materials": "Матеріали",
+      "other": "Інші витрати",
+      "all_expenses": "Всі витрати",
+      "table_headers": {
+        "date": "$t(dictionary.date)",
+        "number": "$t(dictionary.order)",
+        "person": "$t(dictionary.person)",
+        "role": "$t(dictionary.person_type)",
+        "amount": "Сума",
+        "payment_method": "Метод оплати",
+        "category": "Тип витрат",
+        "description": "Коментар"
+      }
     }
   },
 

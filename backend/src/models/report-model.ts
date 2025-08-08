@@ -1,10 +1,13 @@
 import { PaginatedResult } from "../types/shared.types";
-import { ModelingReportOrder } from "../types/report.types";
+import {
+  GetAllReportOptions,
+  ModelingReportOrder,
+} from "../types/report.types";
 import { OrderBase } from "../types/order.types";
 import db from "../db/db";
 import { paginateQuery } from "../utils/pagination";
 import { Expense } from "../types/finance.type";
-import { Person, PersonRole } from "../types/person.types";
+import { PersonRole } from "../types/person.types";
 
 export const ReportModel = {
   async getClientsIndicators({ from, to }: { from: Date; to: Date }): Promise<{
@@ -139,5 +142,28 @@ export const ReportModel = {
       sumOfExpenses,
       debt,
     };
+  },
+  async getAllExpenses({
+    page,
+    limit,
+    filters,
+    sortBy = "created_at",
+    order = "desc",
+  }: GetAllReportOptions): Promise<PaginatedResult<Expense>> {
+    const baseQuery = db<Expense>("expenses").select("*");
+
+    if (filters?.from && filters.to) {
+      baseQuery.whereBetween("created_at", [filters.from, filters.to]);
+    }
+
+    if (filters?.expense_category) {
+      baseQuery.where("category", filters.expense_category);
+    }
+    return await paginateQuery<Expense>(baseQuery, {
+      page,
+      limit,
+      sortBy,
+      order,
+    });
   },
 };

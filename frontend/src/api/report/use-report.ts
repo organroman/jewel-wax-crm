@@ -28,4 +28,17 @@ export const useReport = {
       enabled,
     });
   },
+  getExpensesReport: ({
+    query,
+    enabled,
+  }: {
+    query: string;
+    enabled: boolean;
+  }) => {
+    return useQuery({
+      queryKey: ["expenses-report", query],
+      queryFn: () => reportService.getExpensesReport(query),
+      enabled,
+    });
+  },
 };

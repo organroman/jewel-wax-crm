@@ -179,7 +179,7 @@ export const formatFileSize = (bytes: number, decimals = 1): string => {
 export function defineFromToDates(from?: string | null, to?: string | null) {
   const today = new Date();
 
-  const startOfMonth = today;
+  const startOfMonth = new Date(today);
   startOfMonth.setDate(1);
   startOfMonth.setHours(0, 0, 0, 0);
 

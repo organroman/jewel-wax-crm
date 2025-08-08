@@ -1,7 +1,9 @@
 import {
   ClientsReportRaw,
+  ExpensesReportRaw,
   ModellingReportRaw,
   PaginatedClientsReportResult,
+  PaginatedExpensesReportResult,
   PaginatedModellingReportResult,
 } from "@/types/report.types";
 
@@ -14,6 +16,13 @@ export const reportService = {
     );
   },
   getModelingReport: async (query: string) => {
-    return await apiService.get<PaginatedModellingReportResult<ModellingReportRaw>>(`reports/modeling?${query}`);
+    return await apiService.get<
+      PaginatedModellingReportResult<ModellingReportRaw>
+    >(`reports/modeling?${query}`);
+  },
+  getExpensesReport: async (query: string) => {
+    return await apiService.get<
+      PaginatedExpensesReportResult<ExpensesReportRaw>
+    >(`reports/expenses?${query}`);
   },
 };

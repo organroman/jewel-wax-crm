@@ -1,4 +1,9 @@
-import { PaymentMethod, PaymentStatus } from "../types/finance.type";
+import {
+  Expense,
+  ExpenseCategory,
+  PaymentMethod,
+  PaymentStatus,
+} from "../types/finance.type";
 import { AdminOrder, UserOrder } from "../types/order.types";
 import { PersonRole } from "../types/person.types";
 
@@ -193,8 +198,8 @@ export function definePaymentAmountByPaymentMethod<T extends BaseTransaction>(
 
 export function defineFromToDates(from?: string, to?: string) {
   const today = new Date();
+  const startOfMonth = new Date(today);
 
-  const startOfMonth = today;
   startOfMonth.setDate(1);
   startOfMonth.setHours(0, 0, 0, 0);
 
@@ -218,4 +223,13 @@ export function groupBy<T, K extends keyof T>(
     acc[groupKey].push(item);
     return acc;
   }, {} as Record<string, T[]>);
+}
+
+export function defineTotalExpensesAmountByCategory(
+  expenses: Expense[],
+  category: ExpenseCategory
+) {
+  return expenses
+    .filter((exp) => exp.category === category)
+    .reduce((sum, exp) => sum + Number(exp.amount || 0), 0);
 }

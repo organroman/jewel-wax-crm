@@ -18,4 +18,11 @@ router.get(
   checkPermission("MODELING_REPORT", "VIEW"),
   ReportController.getModelingReport
 );
+
+router.get(
+  "/expenses",
+  verifyToken,
+  checkPermission("EXPENSES_REPORT", "VIEW"),
+  ReportController.getExpensesReport
+);
 export default router;

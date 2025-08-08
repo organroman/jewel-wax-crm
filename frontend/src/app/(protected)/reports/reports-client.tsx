@@ -10,6 +10,7 @@ import CustomTabs from "@/components/shared/custom-tabs";
 import { Separator } from "@/components/ui/separator";
 import ClientsReport from "@/components/report/clients/clients-report";
 import ModelingReport from "@/components/report/modeling/modeling-report";
+import ExpensesReport from "@/components/report/expenses/expenses-report";
 
 import { REPORT_TYPE } from "@/constants/report.constants";
 
@@ -62,6 +63,7 @@ const ReportsClient = ({ role }: ReportsClientProps) => {
       <Separator className="bg-ui-border h-0.5 data-[orientation=horizontal]:h-0.5" />
       {selectedTab.value === "clients" && <ClientsReport />}
       {selectedTab.value === "modeling" && <ModelingReport />}
+      {selectedTab.value === "expenses" && <ExpensesReport />}
     </div>
   );
 };

@@ -31,6 +31,8 @@ interface FilterStaticComboboxProps {
   param: string;
   handleSelect: (param: string, value: string) => void;
   isChecked: (value: string) => boolean;
+  triggerClassName?: string;
+  popoverClassName?: string;
 }
 
 const FilterStaticCombobox = ({
@@ -42,6 +44,8 @@ const FilterStaticCombobox = ({
   param,
   handleSelect,
   isChecked,
+  triggerClassName,
+  popoverClassName,
 }: FilterStaticComboboxProps) => {
   const { t } = useTranslation();
   return (
@@ -55,7 +59,8 @@ const FilterStaticCombobox = ({
           role="combobox"
           variant="outline"
           className={cn(
-            "min-w-[180px] justify-between bg-ui-sidebar h-8 rounded-md text-sm font-semibold relative hover:border-text-light"
+            "min-w-[180px] justify-between bg-ui-sidebar h-8 rounded-md text-sm font-semibold relative hover:border-text-light",
+            triggerClassName
           )}
         >
           {label}
@@ -68,7 +73,12 @@ const FilterStaticCombobox = ({
         </Button>
       </PopoverTrigger>
 
-      <PopoverContent className="w-[180px] p-0 max-h-64 overflow-y-auto">
+      <PopoverContent
+        className={cn(
+          "w-[180px] p-0 max-h-64 overflow-y-auto",
+          popoverClassName
+        )}
+      >
         <Command
           filter={(value, search) => {
             const item = options.find((opt) =>

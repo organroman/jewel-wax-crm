@@ -1,4 +1,4 @@
-import { PaymentStatus } from "./finance.type";
+import { ExpenseCategory, PaymentMethod, PaymentStatus } from "./finance.type";
 import { OrderPerson, Stage, StageStatus } from "./order.types";
 import { PersonRole } from "./person.types";
 import { GetAllOptions, PaginatedResult } from "./shared.types";
@@ -8,6 +8,7 @@ export interface GetAllReportOptions
     from: string;
     to: string;
     person_id?: number;
+    expense_category?: ExpenseCategory;
   }> {}
 
 export interface PaginatedClientsReportResult<T> extends PaginatedResult<T> {
@@ -77,4 +78,31 @@ export interface ModellingReportRaw {
   card_payment_date: Date | null;
   debt: number;
   last_payment_comment: string | null;
+}
+
+export interface PaginatedExpensesReportResult<T> extends PaginatedResult<T> {
+  total_expenses_amount: number | null;
+  total_modelling_exp_amount: number | null;
+  total_printing_exp_amount: number;
+  total_materials_exp_amount: number;
+  total_other_exp_amount: number;
+}
+
+type ExpenseOrder = {
+  id: number;
+  number: number;
+};
+
+interface ExpensePerson extends OrderPerson {
+  role: PersonRole;
+}
+export interface ExpensesReportRaw {
+  id: number;
+  created_at: Date;
+  order: ExpenseOrder | null;
+  person: ExpensePerson | null;
+  amount: number;
+  payment_method: PaymentMethod;
+  category: ExpenseCategory;
+  description: string | null;
 }

@@ -1,0 +1,101 @@
+import { useSearchParams } from "next/navigation";
+import { useTranslation } from "react-i18next";
+
+import { useQueryParams } from "@/hooks/use-query-params";
+import { useReport } from "@/api/report/use-report";
+
+import TopBar from "../top-bar";
+
+import { DataTable } from "@/components/shared/data-table";
+import { getExpensesReportColumns } from "./expenses-report.columns";
+
+import { translateKeyValueList } from "@/lib/translate-constant-labels";
+
+import { EXPENSE_CATEGORY } from "@/constants/enums.constants";
+
+const ExpensesReport = () => {
+  const { t } = useTranslation();
+  const searchParams = useSearchParams();
+  const currentTabParam = searchParams.get("type");
+
+  const { page, limit, query, setParam, ready } = useQueryParams();
+  const columns = getExpensesReportColumns(t);
+
+  const { data, isLoading } = useReport.getExpensesReport({
+    query: query,
+    enabled: ready && currentTabParam === "expenses",
+  });
+
+  const expenses = EXPENSE_CATEGORY.map((c) => ({ key: c, value: c }));
+
+  const options = translateKeyValueList(
+    expenses,
+    t,
+    "finance.expenses_category"
+  );
+
+  const {
+    data: orders = [],
+    total = 0,
+    total_expenses_amount = 0,
+    total_modelling_exp_amount = 0,
+    total_printing_exp_amount = 0,
+    total_materials_exp_amount = 0,
+    total_other_exp_amount = 0,
+  } = data ?? {};
+
+  const reportIndicators = [
+    {
+      label: t("report.expenses.total"),
+      value: total_expenses_amount?.toFixed(2) ?? null,
+      color: "text-action-minus",
+    },
+    {
+      label: t("report.expenses.modeling"),
+      value: total_modelling_exp_amount?.toFixed(2) ?? null,
+      color: "text-action-plus",
+    },
+    {
+      label: `${t("report.expenses.printing")}`,
+      value: total_printing_exp_amount.toFixed(2) ?? null,
+      color: "text-accent-peach",
+    },
+    {
+      label: `${t("report.expenses.materials")}`,
+      value: total_materials_exp_amount.toFixed(2) ?? null,
+      color: "text-brand-dark",
+    },
+    {
+      label: `${t("report.expenses.other")}`,
+      value: total_other_exp_amount.toFixed(2) ?? null,
+      color: "text-brand-dark",
+    },
+  ];
+
+  console.log(orders);
+
+  return (
+    <div className="flex flex-col mt-8">
+      <TopBar
+        indicators={reportIndicators}
+        selectOptions={options}
+        selectPlaceholder={t("report.expenses.all_expenses")}
+        filterLabel={t("finance.expenses_type")}
+        paramOfSelect={"expenses_category"}
+      />
+      <div className="flex-1 overflow-hidden flex flex-col mt-8">
+        <DataTable
+          columns={columns}
+          data={orders}
+          isLoading={isLoading}
+          totalItems={total}
+          currentLimit={limit}
+          currentPage={page}
+          onPageChange={(newPage) => setParam("page", newPage)}
+        />
+      </div>
+    </div>
+  );
+};
+
+export default ExpensesReport;

@@ -1,9 +1,11 @@
 import {
   ClientsReportRaw,
+  ExpensesReportRaw,
   GetAllModellingReportOptions,
   GetAllReportOptions,
   ModellingReportRaw,
   PaginatedClientsReportResult,
+  PaginatedExpensesReportResult,
   PaginatedModellingReportResult,
 } from "../types/report.types";
 import { PaymentStatus } from "../types/finance.type";
@@ -17,6 +19,7 @@ import {
   defineFromToDates,
   definePaymentAmountByPaymentMethod,
   definePaymentStatus,
+  defineTotalExpensesAmountByCategory,
   getFullName,
   groupBy,
 } from "../utils/helpers";
@@ -279,6 +282,88 @@ export const ReportService = {
       total_modelling_cost: totalModelingCost,
       total_modelling_paid: sumOfExpenses,
       total_modelling_debt: debt,
+    };
+  },
+  async getExpensesReport({
+    page,
+    limit,
+    filters,
+  }: GetAllReportOptions): Promise<
+    PaginatedExpensesReportResult<ExpensesReportRaw>
+  > {
+    const expenses = await ReportModel.getAllExpenses({
+      page,
+      limit,
+      filters,
+    });
+
+    const totalExpensesAmount = expenses.data.reduce(
+      (sum, expense) => sum + Number(expense.amount || 0),
+      0
+    );
+
+    const totalModelingExpAmount = defineTotalExpensesAmountByCategory(
+      expenses.data,
+      "modelling"
+    );
+
+    const totalPrintingExpAmount = defineTotalExpensesAmountByCategory(
+      expenses.data,
+      "printing"
+    );
+
+    const totalMaterialsExpAmount = defineTotalExpensesAmountByCategory(
+      expenses.data,
+      "materials"
+    );
+
+    const totalOtherExpAmount = defineTotalExpensesAmountByCategory(
+      expenses.data,
+      "other"
+    );
+
+    const allOrdersIds = expenses.data
+      .map((exp) => exp.order_id)
+      .filter((exp) => exp !== null);
+
+    const allPersonsIds = expenses.data
+      .map((exp) => exp.related_person_id)
+      .filter((exp) => exp !== null);
+
+    const allOrders = await OrderModel.getOrdersBaseByIds(allOrdersIds);
+    const allPersons = await PersonModel.getPersonsBaseByIds(allPersonsIds);
+
+    const enriched = expenses.data.map((exp) => {
+      const { order_id, related_person_id, ...rest } = exp;
+
+      const order = allOrders.find((o) => o.id === order_id) ?? null;
+      const person = allPersons.find((o) => o.id === related_person_id) ?? null;
+
+      return {
+        ...rest,
+        order: order ? { id: order.id, number: order.number } : null,
+        person: person
+          ? {
+              id: person.id,
+              fullname: getFullName(
+                person.first_name,
+                person.last_name,
+                person?.patronymic
+              ),
+              role: person.role,
+            }
+          : null,
+      };
+    });
+
+    return {
+      ...expenses,
+      data: enriched,
+      total_expenses_amount: totalExpensesAmount,
+      total_modelling_exp_amount: totalModelingExpAmount,
+      total_printing_exp_amount: totalPrintingExpAmount,
+      total_materials_exp_amount: totalMaterialsExpAmount,
+      total_other_exp_amount: totalOtherExpAmount,
     };
   },
 };
