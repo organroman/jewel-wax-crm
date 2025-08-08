@@ -174,24 +174,6 @@ export const OrderModel = {
     return paginateQuery(baseQuery, { page, limit, sortBy, order });
   },
 
-  async getOrderStageStatus({
-    orderId,
-    stage,
-  }: {
-    orderId: number;
-    stage: Stage;
-  }): Promise<StageStatus | null> {
-    const [orderStage] = await db<OrderStage>("order_stage_statuses")
-      .where("order_id", orderId)
-      .andWhere("stage", stage)
-      .orderBy("created_at", "desc")
-      .limit(1)
-      .select("status");
-
-    if (!orderStage) return null;
-
-    return orderStage.status;
-  },
   async getFavoriteOrderByIdAndUserId(personId: number, orderId: number) {
     return await db<OrderFavorite>("order_favorites")
       .where("person_id", personId)
@@ -202,6 +184,11 @@ export const OrderModel = {
   async getOrderBaseById(orderId: number): Promise<OrderBase> {
     const [order] = await db<OrderBase>("orders").where("id", orderId);
     return order;
+  },
+
+  async getOrdersBaseByIds(orderIds: number[]): Promise<OrderBase[]> {
+    const orders = await db<OrderBase>("orders").whereIn("id", orderIds);
+    return orders;
   },
 
   async getOrderStagesByOrderId(orderId: number) {
@@ -233,27 +220,6 @@ export const OrderModel = {
     }, {} as Record<number, any[]>);
   },
 
-  async getOrderStageStatuses({
-    orderId,
-    role,
-  }: {
-    orderId: number;
-    role: PersonRole;
-  }) {
-    const baseQuery = db<OrderStage>("order_stage_statuses")
-      .select("*")
-      .where("order_id", orderId);
-
-    if (role === "modeller") {
-      baseQuery.where("stage", "modeling");
-    }
-
-    if (role === "miller") {
-      baseQuery.where("stage", "milling");
-    }
-
-    return await baseQuery;
-  },
   async getOrderMedia({ orderId }: { orderId: number }): Promise<OrderMedia[]> {
     const media = await db<OrderMedia>("order_media").where(
       "order_id",
@@ -498,19 +464,6 @@ export const OrderModel = {
       await OrderModel.updateOrderPaymentStatus(order.id);
     }
   },
-  async getOrdersByCustomerId({
-    customerId,
-    from,
-    to,
-  }: {
-    customerId: number;
-    from: Date;
-    to: Date;
-  }): Promise<OrderBase[]> {
-    return await db<OrderBase>("orders")
-      .where("customer_id", customerId)
-      .andWhereBetween("created_at", [from, to]);
-  },
 
   async getOrdersByCustomerIds({
     customerIds,
@@ -525,13 +478,65 @@ export const OrderModel = {
       .whereIn("customer_id", customerIds)
       .andWhereBetween("created_at", [from, to]);
   },
+  // async getOrdersByCustomerId({
+  //   customerId,
+  //   from,
+  //   to,
+  // }: {
+  //   customerId: number;
+  //   from: Date;
+  //   to: Date;
+  // }): Promise<OrderBase[]> {
+  //   return await db<OrderBase>("orders")
+  //     .where("customer_id", customerId)
+  //     .andWhereBetween("created_at", [from, to]);
+  // },
 
-  async getLastCustomerOrder(customerId: number): Promise<OrderBase | null> {
-    const order = await db<OrderBase>("orders")
-      .where("customer_id", customerId)
-      .orderBy("created_at", "desc")
-      .first();
+  // async getLastCustomerOrder(customerId: number): Promise<OrderBase | null> {
+  //   const order = await db<OrderBase>("orders")
+  //     .where("customer_id", customerId)
+  //     .orderBy("created_at", "desc")
+  //     .first();
 
-    return order ?? null;
-  },
+  //   return order ?? null;
+  // },
+  // async getOrderStageStatus({
+  //   orderId,
+  //   stage,
+  // }: {
+  //   orderId: number;
+  //   stage: Stage;
+  // }): Promise<StageStatus | null> {
+  //   const [orderStage] = await db<OrderStage>("order_stage_statuses")
+  //     .where("order_id", orderId)
+  //     .andWhere("stage", stage)
+  //     .orderBy("created_at", "desc")
+  //     .limit(1)
+  //     .select("status");
+
+  //   if (!orderStage) return null;
+
+  //   return orderStage.status;
+  // },
+  // async getOrderStageStatuses({
+  //   orderId,
+  //   role,
+  // }: {
+  //   orderId: number;
+  //   role: PersonRole;
+  // }) {
+  //   const baseQuery = db<OrderStage>("order_stage_statuses")
+  //     .select("*")
+  //     .where("order_id", orderId);
+
+  //   if (role === "modeller") {
+  //     baseQuery.where("stage", "modeling");
+  //   }
+
+  //   if (role === "miller") {
+  //     baseQuery.where("stage", "milling");
+  //   }
+
+  //   return await baseQuery;
+  // },
 };

@@ -151,11 +151,14 @@ interface PaymentCalcOptions {
 
 export function definePaymentAmountByPaymentMethod<T extends BaseTransaction>(
   transactions: T[],
-  paymentMethod: PaymentMethod,
+  paymentMethod: PaymentMethod | PaymentMethod[],
   options: PaymentCalcOptions
 ) {
-  const filteredTransactions = transactions.filter(
-    (t) => t.payment_method === paymentMethod
+  const methods = Array.isArray(paymentMethod)
+    ? paymentMethod
+    : [paymentMethod];
+  const filteredTransactions = transactions.filter((t) =>
+    methods.includes(t.payment_method)
   );
   const transactionsAmount = filteredTransactions.length;
 
@@ -164,21 +167,27 @@ export function definePaymentAmountByPaymentMethod<T extends BaseTransaction>(
     0
   );
 
-  const transactionLastPaymentDate =
+  const lastTransaction =
     filteredTransactions.length > 0
-      ? (filteredTransactions
+      ? filteredTransactions
           .filter((a) => a[options.dateField] !== null)
           .sort((a, b) =>
             (a[options.dateField] as Date) > (b[options.dateField] as Date)
               ? -1
               : 1
-          )[0]?.[options.dateField] as Date) || null
+          )[0] || null
       : null;
+
+  const transactionLastPaymentDate =
+    (lastTransaction?.[options.dateField] as Date) || null;
+  const transactionLastComment =
+    (lastTransaction?.description as string) || null;
 
   return {
     transactionsAmount,
     transactionsPaymentsAmount,
     transactionLastPaymentDate,
+    transactionLastComment,
   };
 }
 

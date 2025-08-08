@@ -79,6 +79,10 @@ export const PersonModel = {
     });
   },
 
+  async getPersonsBaseByIds(ids: number[]): Promise<PersonBase[]> {
+    return await db<Person>("persons").whereIn("id", ids).select("*");
+  },
+
   async getPaginatedPersonsByRoleWithSearch(
     role: PersonRole,
     search?: string

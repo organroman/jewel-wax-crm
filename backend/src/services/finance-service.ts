@@ -21,9 +21,11 @@ import { ActivityLogModel } from "../models/activity-log-model";
 import { PersonModel } from "../models/person-model";
 
 import {
+  definePaymentAmountByPaymentMethod,
   definePaymentStatus,
   formatPerson,
   getFullName,
+  groupBy,
 } from "../utils/helpers";
 import { LOG_ACTIONS, LOG_TARGETS } from "../constants/activity-log";
 
@@ -115,74 +117,77 @@ export const FinanceService = {
       order,
     });
 
-    const enriched = await Promise.all(
-      orders.data.map(async (order) => {
-        const invoices = await FinanceModel.getInvoicesByOrder(order.id);
-        const expenses = await FinanceModel.getExpensesByOrder(order.id);
+    const allOrderIds = orders.data.map((o) => o.id);
+    const allInvoices = await FinanceModel.getInvoicesByOrderIds(allOrderIds);
+    const allExpenses = await FinanceModel.getExpensesByOrderIds(allOrderIds);
+    const invoicesByOrder = groupBy(allInvoices, "order_id");
+    const expensesByOrderId = groupBy(allExpenses, "order_id");
 
-        const totalPaidByCustomer = invoices.reduce(
-          (sum, invoice) => sum + Number(invoice.amount_paid || 0),
+    const enriched = orders.data.map((order) => {
+      const invoices = invoicesByOrder[order.id] ?? [];
+      const modelingExpenses =
+        expensesByOrderId[order.id]?.filter(
+          (o) => o.category === "modelling"
+        ) ?? [];
+      const printingExpenses =
+        expensesByOrderId[order.id]?.filter((o) => o.category === "printing") ??
+        [];
+
+      const totalPaidByCustomer = invoices.reduce(
+        (sum, invoice) => sum + Number(invoice.amount_paid || 0),
+        0
+      );
+      let orderPaymentStatus: PaymentStatus = definePaymentStatus(
+        totalPaidByCustomer,
+        order.amount
+      );
+
+      let modelingPaymentStatus: PaymentStatus | null = null;
+
+      if (order.modeller_id && order.modeling_cost && order.modeling_cost > 0) {
+        const totalPaidForModeling = modelingExpenses.reduce(
+          (sum, expense) => sum + Number(expense.amount || 0),
           0
         );
-        let orderPaymentStatus: PaymentStatus = definePaymentStatus(
-          totalPaidByCustomer,
-          order.amount
+
+        modelingPaymentStatus = definePaymentStatus(
+          totalPaidForModeling,
+          order.modeling_cost
+        );
+      }
+
+      let printingPaymentStatus: PaymentStatus | null = null;
+
+      if (order.printer_id && order.printing_cost && order.printing_cost > 0) {
+        const totalPaidForPrinting = printingExpenses.reduce(
+          (sum, expense) => sum + Number(expense.amount || 0),
+          0
         );
 
-        let modelingPaymentStatus: PaymentStatus | null = null;
+        printingPaymentStatus = definePaymentStatus(
+          totalPaidForPrinting,
+          order.printing_cost
+        );
+      }
 
-        if (
-          order.modeller_id &&
-          order.modeling_cost &&
-          order.modeling_cost > 0
-        ) {
-          const totalPaidForModeling = expenses.reduce(
-            (sum, expense) => sum + Number(expense.amount || 0),
-            0
-          );
+      const base = {
+        order_id: order.id,
+        order_important: order.is_important,
+        order_number: order.number,
+        customer: formatPerson(order, "customer"),
+        order_amount: order.amount,
+        order_payment_status: orderPaymentStatus,
+        modeller: formatPerson(order, "modeller"),
+        modeling_cost: order.modeling_cost,
+        modeling_payment_status: modelingPaymentStatus,
+        printer: formatPerson(order, "printer"),
+        printing_cost: order.printing_cost,
+        printing_payment_status: printingPaymentStatus,
+      };
 
-          modelingPaymentStatus = definePaymentStatus(
-            totalPaidForModeling,
-            order.modeling_cost
-          );
-        }
+      return base;
+    });
 
-        let printingPaymentStatus: PaymentStatus | null = null;
-
-        if (
-          order.printer_id &&
-          order.printing_cost &&
-          order.printing_cost > 0
-        ) {
-          const totalPaidForPrinting = expenses.reduce(
-            (sum, expense) => sum + Number(expense.amount || 0),
-            0
-          );
-
-          printingPaymentStatus = definePaymentStatus(
-            totalPaidForPrinting,
-            order.printing_cost
-          );
-        }
-
-        const base = {
-          order_id: order.id,
-          order_important: order.is_important,
-          order_number: order.number,
-          customer: formatPerson(order, "customer"),
-          order_amount: order.amount,
-          order_payment_status: orderPaymentStatus,
-          modeller: formatPerson(order, "modeller"),
-          modeling_cost: order.modeling_cost,
-          modeling_payment_status: modelingPaymentStatus,
-          printer: formatPerson(order, "printer"),
-          printing_cost: order.printing_cost,
-          printing_payment_status: printingPaymentStatus,
-        };
-
-        return base;
-      })
-    );
     return {
       ...orders,
       data: enriched,
@@ -205,97 +210,87 @@ export const FinanceService = {
       order,
     });
 
-    const enriched = await Promise.all(
-      orders.data.map(async (order) => {
-        const invoices = await FinanceModel.getInvoicesByOrder(order.id);
+    const allOrderIds = orders.data.map((o) => o.id);
+    const allInvoices = await FinanceModel.getInvoicesByOrderIds(allOrderIds);
+    const invoicesByOrder = groupBy(allInvoices, "order_id");
 
-        const totalPaidByCustomer = invoices.reduce(
-          (sum, invoice) => sum + Number(invoice.amount_paid || 0),
-          0
-        );
-        let orderPaymentStatus: PaymentStatus = definePaymentStatus(
-          totalPaidByCustomer,
-          order.amount
-        );
+    const enriched = orders.data.map((order) => {
+      const invoices = invoicesByOrder[order.id] ?? [];
 
-        const debt = order.amount - totalPaidByCustomer;
+      const totalPaidByCustomer = invoices.reduce(
+        (sum, invoice) => sum + Number(invoice.amount_paid || 0),
+        0
+      );
+      let orderPaymentStatus: PaymentStatus = definePaymentStatus(
+        totalPaidByCustomer,
+        order.amount
+      );
 
-        const cash = invoices.filter((i) => i.payment_method === "cash");
-        const cashInvoicesAmount = cash.length;
-        const cashPaymentsAmount = cash.reduce(
-          (sum, invoice) => sum + Number(invoice.amount_paid || 0),
-          0
-        );
-        const cashLastPaymentDate =
-          cash.length > 0
-            ? cash
-                .filter((a) => a.paid_at !== null)
-                .sort((a, b) => (a.paid_at! > b.paid_at! ? -1 : 1))[0]?.paid_at
-            : null;
+      const debt = order.amount - totalPaidByCustomer;
 
-        const card = invoices.filter(
-          (i) => i.payment_method === "card_transfer"
-        );
-        const cardInvoicesAmount = card.length;
-        const cardPaymentsAmount = card.reduce(
-          (sum, invoice) => sum + Number(invoice.amount_paid || 0),
-          0
-        );
-        const cardLastPaymentDate =
-          card.length > 0
-            ? card
-                .filter((a) => a.paid_at !== null)
-                .sort((a, b) => (a.paid_at! > b.paid_at! ? -1 : 1))[0]?.paid_at
-            : null;
+      const {
+        transactionsAmount: cashAmount,
+        transactionsPaymentsAmount: cashPaymentsAmount,
+        transactionLastPaymentDate: cashLastPaymentDate,
+      } = definePaymentAmountByPaymentMethod(invoices, "cash", {
+        amountField: "amount_paid",
+        dateField: "paid_at",
+      });
 
-        const bank = invoices.filter(
-          (i) =>
-            i.payment_method === "payment_system" ||
-            i.payment_method === "bank_transfer"
-        );
-        const bankInvoicesAmount = bank.length;
-        const bankPaymentsAmount = bank.reduce(
-          (sum, invoice) => sum + Number(invoice.amount_paid || 0),
-          0
-        );
-        const bankLastPaymentDate =
-          bank.length > 0
-            ? bank
-                .filter((a) => a.paid_at !== null)
-                .sort((a, b) => (a.paid_at! > b.paid_at! ? -1 : 1))[0]?.paid_at
-            : null;
+      const {
+        transactionsAmount: cardInvoicesAmount,
+        transactionsPaymentsAmount: cardPaymentsAmount,
+        transactionLastPaymentDate: cardLastPaymentDate,
+      } = definePaymentAmountByPaymentMethod(invoices, "card_transfer", {
+        amountField: "amount_paid",
+        dateField: "paid_at",
+      });
 
-        const lastPaymentComment =
-          invoices.length > 0
-            ? invoices
-                .filter((a) => a.paid_at !== null)
-                .sort((a, b) => (a.paid_at! > b.paid_at! ? -1 : 1))[0]
-                ?.description
-            : null;
+      const {
+        transactionsAmount: bankInvoicesAmount,
+        transactionsPaymentsAmount: bankPaymentsAmount,
+        transactionLastPaymentDate: bankLastPaymentDate,
+      } = definePaymentAmountByPaymentMethod(
+        invoices,
+        ["payment_system", "bank_transfer"],
+        {
+          amountField: "amount_paid",
+          dateField: "paid_at",
+        }
+      );
 
-        const base = {
-          order_id: order.id,
-          order_important: order.is_important,
-          order_number: order.number,
-          customer: formatPerson(order, "customer"),
-          order_amount: order.amount,
-          order_payment_status: orderPaymentStatus,
-          cash_amount: cashInvoicesAmount,
-          cash_payments_amount: cashPaymentsAmount,
-          cash_payment_date: cashLastPaymentDate,
-          card_amount: cardInvoicesAmount,
-          card_payments_amount: cardPaymentsAmount,
-          card_payment_date: cardLastPaymentDate,
-          bank_amount: bankInvoicesAmount,
-          bank_payments_amount: bankPaymentsAmount,
-          bank_payment_date: bankLastPaymentDate,
-          debt,
-          last_payment_comment: lastPaymentComment,
-        };
+      const { transactionLastComment } = definePaymentAmountByPaymentMethod(
+        invoices,
+        ["bank_transfer", "card_transfer", "cash", "payment_system"],
+        {
+          amountField: "amount_paid",
+          dateField: "paid_at",
+        }
+      );
 
-        return base;
-      })
-    );
+      const base = {
+        order_id: order.id,
+        order_important: order.is_important,
+        order_number: order.number,
+        customer: formatPerson(order, "customer"),
+        order_amount: order.amount,
+        order_payment_status: orderPaymentStatus,
+        cash_amount: cashAmount,
+        cash_payments_amount: cashPaymentsAmount,
+        cash_payment_date: cashLastPaymentDate,
+        card_amount: cardInvoicesAmount,
+        card_payments_amount: cardPaymentsAmount,
+        card_payment_date: cardLastPaymentDate,
+        bank_amount: bankInvoicesAmount,
+        bank_payments_amount: bankPaymentsAmount,
+        bank_payment_date: bankLastPaymentDate,
+        debt,
+        last_payment_comment: transactionLastComment,
+      };
+
+      return base;
+    });
+
     return {
       ...orders,
       data: enriched,
@@ -321,69 +316,69 @@ export const FinanceService = {
       role: "modeller",
     });
 
-    const enriched = await Promise.all(
-      orders.data.map(async (order) => {
-        const invoices = await FinanceModel.getInvoicesByOrder(order.id);
-        const expenses = await FinanceModel.getExpensesByOrder(order.id);
+    const allOrderIds = orders.data.map((o) => o.id);
+    const allInvoices = await FinanceModel.getInvoicesByOrderIds(allOrderIds);
+    const allExpenses = await FinanceModel.getExpensesByOrderIds(allOrderIds);
+    const invoicesByOrder = groupBy(allInvoices, "order_id");
+    const expensesByOrderId = groupBy(allExpenses, "order_id");
 
-        const totalPaidByCustomer = invoices.reduce(
-          (sum, invoice) => sum + Number(invoice.amount_paid || 0),
+    const enriched = orders.data.map((order) => {
+      const invoices = invoicesByOrder[order.id] ?? [];
+      const expenses =
+        expensesByOrderId[order.id]?.filter(
+          (exp) => exp.category === "modelling"
+        ) ?? [];
+
+      const totalPaidByCustomer = invoices.reduce(
+        (sum, invoice) => sum + Number(invoice.amount_paid || 0),
+        0
+      );
+      let orderPaymentStatus: PaymentStatus = definePaymentStatus(
+        totalPaidByCustomer,
+        order.amount
+      );
+
+      let modelingPaymentStatus: PaymentStatus = "unpaid";
+
+      if (order.modeller_id && order.modeling_cost && order.modeling_cost > 0) {
+        const totalPaidForModeling = expenses.reduce(
+          (sum, expense) => sum + Number(expense.amount || 0),
           0
         );
-        let orderPaymentStatus: PaymentStatus = definePaymentStatus(
-          totalPaidByCustomer,
-          order.amount
+
+        modelingPaymentStatus = definePaymentStatus(
+          totalPaidForModeling,
+          order.modeling_cost
+        );
+      }
+
+      const { transactionLastComment, transactionLastPaymentDate } =
+        definePaymentAmountByPaymentMethod(
+          expenses,
+          ["bank_transfer", "card_transfer", "cash", "payment_system"],
+          {
+            amountField: "amount",
+            dateField: "created_at",
+          }
         );
 
-        let modelingPaymentStatus: PaymentStatus = "unpaid";
+      const base = {
+        order_id: order.id,
+        order_important: order.is_important,
+        order_number: order.number,
+        customer: formatPerson(order, "customer"),
+        order_amount: order.amount,
+        order_payment_status: orderPaymentStatus,
+        modeller: formatPerson(order, "modeller"),
+        modelling_cost: order.modeling_cost ?? null,
+        modelling_payment_status: modelingPaymentStatus,
+        last_payment_date: transactionLastPaymentDate,
+        last_payment_comment: transactionLastComment,
+      };
 
-        if (
-          order.modeller_id &&
-          order.modeling_cost &&
-          order.modeling_cost > 0
-        ) {
-          const totalPaidForModeling = expenses.reduce(
-            (sum, expense) => sum + Number(expense.amount || 0),
-            0
-          );
+      return base;
+    });
 
-          modelingPaymentStatus = definePaymentStatus(
-            totalPaidForModeling,
-            order.modeling_cost
-          );
-        }
-
-        const lastPaymentDate =
-          expenses.length > 0
-            ? expenses.sort((a, b) =>
-                a.created_at! > b.created_at! ? -1 : 1
-              )[0]?.created_at
-            : null;
-
-        const lastPaymentComment =
-          expenses.length > 0
-            ? expenses.sort((a, b) =>
-                a.created_at! > b.created_at! ? -1 : 1
-              )[0]?.description
-            : null;
-
-        const base = {
-          order_id: order.id,
-          order_important: order.is_important,
-          order_number: order.number,
-          customer: formatPerson(order, "customer"),
-          order_amount: order.amount,
-          order_payment_status: orderPaymentStatus,
-          modeller: formatPerson(order, "modeller"),
-          modelling_cost: order.modeling_cost ?? null,
-          modelling_payment_status: modelingPaymentStatus,
-          last_payment_date: lastPaymentDate,
-          last_payment_comment: lastPaymentComment,
-        };
-
-        return base;
-      })
-    );
     return {
       ...orders,
       data: enriched,
@@ -407,69 +402,69 @@ export const FinanceService = {
       role: "print",
     });
 
-    const enriched = await Promise.all(
-      orders.data.map(async (order) => {
-        const invoices = await FinanceModel.getInvoicesByOrder(order.id);
-        const expenses = await FinanceModel.getExpensesByOrder(order.id);
+    const allOrderIds = orders.data.map((o) => o.id);
+    const allInvoices = await FinanceModel.getInvoicesByOrderIds(allOrderIds);
+    const allExpenses = await FinanceModel.getExpensesByOrderIds(allOrderIds);
+    const invoicesByOrder = groupBy(allInvoices, "order_id");
+    const expensesByOrderId = groupBy(allExpenses, "order_id");
 
-        const totalPaidByCustomer = invoices.reduce(
-          (sum, invoice) => sum + Number(invoice.amount_paid || 0),
+    const enriched = orders.data.map((order) => {
+      const invoices = invoicesByOrder[order.id] ?? [];
+      const expenses =
+        expensesByOrderId[order.id]?.filter(
+          (exp) => exp.category === "printing"
+        ) ?? [];
+
+      const totalPaidByCustomer = invoices.reduce(
+        (sum, invoice) => sum + Number(invoice.amount_paid || 0),
+        0
+      );
+      let orderPaymentStatus: PaymentStatus = definePaymentStatus(
+        totalPaidByCustomer,
+        order.amount
+      );
+
+      let printingPaymentStatus: PaymentStatus = "unpaid";
+
+      if (order.printer_id && order.printing_cost && order.printing_cost > 0) {
+        const totalPaidForModeling = expenses.reduce(
+          (sum, expense) => sum + Number(expense.amount || 0),
           0
         );
-        let orderPaymentStatus: PaymentStatus = definePaymentStatus(
-          totalPaidByCustomer,
-          order.amount
+
+        printingPaymentStatus = definePaymentStatus(
+          totalPaidForModeling,
+          order.printing_cost
+        );
+      }
+
+      const { transactionLastComment, transactionLastPaymentDate } =
+        definePaymentAmountByPaymentMethod(
+          expenses,
+          ["bank_transfer", "card_transfer", "cash", "payment_system"],
+          {
+            amountField: "amount",
+            dateField: "created_at",
+          }
         );
 
-        let printingPaymentStatus: PaymentStatus = "unpaid";
+      const base = {
+        order_id: order.id,
+        order_important: order.is_important,
+        order_number: order.number,
+        customer: formatPerson(order, "customer"),
+        order_amount: order.amount,
+        order_payment_status: orderPaymentStatus,
+        printer: formatPerson(order, "printer"),
+        printing_cost: order.printing_cost ?? null,
+        printing_payment_status: printingPaymentStatus,
+        last_payment_date: transactionLastPaymentDate,
+        last_payment_comment: transactionLastComment,
+      };
 
-        if (
-          order.printer_id &&
-          order.printing_cost &&
-          order.printing_cost > 0
-        ) {
-          const totalPaidForModeling = expenses.reduce(
-            (sum, expense) => sum + Number(expense.amount || 0),
-            0
-          );
+      return base;
+    });
 
-          printingPaymentStatus = definePaymentStatus(
-            totalPaidForModeling,
-            order.printing_cost
-          );
-        }
-
-        const lastPaymentDate =
-          expenses.length > 0
-            ? expenses.sort((a, b) =>
-                a.created_at! > b.created_at! ? -1 : 1
-              )[0]?.created_at
-            : null;
-
-        const lastPaymentComment =
-          expenses.length > 0
-            ? expenses.sort((a, b) =>
-                a.created_at! > b.created_at! ? -1 : 1
-              )[0]?.description
-            : null;
-
-        const base = {
-          order_id: order.id,
-          order_important: order.is_important,
-          order_number: order.number,
-          customer: formatPerson(order, "customer"),
-          order_amount: order.amount,
-          order_payment_status: orderPaymentStatus,
-          printer: formatPerson(order, "printer"),
-          printing_cost: order.printing_cost ?? null,
-          printing_payment_status: printingPaymentStatus,
-          last_payment_date: lastPaymentDate,
-          last_payment_comment: lastPaymentComment,
-        };
-
-        return base;
-      })
-    );
     return {
       ...orders,
       data: enriched,
@@ -491,38 +486,47 @@ export const FinanceService = {
       sortBy,
       order,
     });
-    const enriched = await Promise.all(
-      expenses.data.map(async (expense) => {
-        const { order_id, related_person_id, ...rest } = expense;
-        const order = order_id
-          ? await OrderModel.getOrderBaseById(order_id)
-          : null;
 
-        const person = related_person_id
-          ? await PersonModel.findById(related_person_id)
-          : null;
+    const allExpensesOrderIds = expenses.data
+      .map((t) => t.order_id)
+      .filter((t) => t !== null);
 
-        return {
-          ...rest,
-          order: order
-            ? {
-                id: order.id,
-                number: order.number,
-              }
-            : null,
-          person: person
-            ? {
-                id: person.id,
-                fullname: getFullName(
-                  person.first_name,
-                  person.last_name,
-                  person.patronymic
-                ),
-              }
-            : null,
-        };
-      })
+    const allExpensesRelatedPersonIds = expenses.data
+      .map((t) => t.related_person_id)
+      .filter((t) => t !== null);
+
+    const allOrders = await OrderModel.getOrdersBaseByIds(allExpensesOrderIds);
+    const allPersons = await PersonModel.getPersonsBaseByIds(
+      allExpensesRelatedPersonIds
     );
+
+    const enriched = expenses.data.map((expense) => {
+      const { order_id, related_person_id, ...rest } = expense;
+
+      const order = allOrders.find((o) => o.id === order_id);
+
+      const person = allPersons.find((p) => p.id === related_person_id);
+
+      return {
+        ...rest,
+        order: order
+          ? {
+              id: order.id,
+              number: order.number,
+            }
+          : null,
+        person: person
+          ? {
+              id: person.id,
+              fullname: getFullName(
+                person.first_name,
+                person.last_name,
+                person.patronymic
+              ),
+            }
+          : null,
+      };
+    });
 
     return {
       ...expenses,
@@ -546,55 +550,72 @@ export const FinanceService = {
       order,
     });
 
-    const enriched = await Promise.all(
-      transactions.data.map(async (transaction) => {
-        const { order_id, related_person_id, ...rest } = transaction;
+    const allTransactionsOrderIds = transactions.data
+      .map((t) => t.order_id)
+      .filter((t) => t !== null);
 
-        const order = order_id
-          ? await OrderModel.getOrderBaseById(order_id)
-          : null;
+    const allTransactionsRelatedPersonIds = transactions.data
+      .map((t) => t.related_person_id)
+      .filter((t) => t !== null);
 
-        let transactionPerson: OrderPerson | null = null;
-
-        if (
-          order_id &&
-          (rest.type === "invoice_issued" || rest.type === "invoice_paid")
-        ) {
-          const fullPerson = order?.customer_id
-            ? await PersonModel.findById(order?.customer_id)
-            : null;
-
-          if (fullPerson) {
-            transactionPerson = {
-              id: fullPerson.id,
-              fullname: getFullName(
-                fullPerson.first_name,
-                fullPerson.last_name,
-                fullPerson.patronymic
-              ),
-            };
-          }
-        } else if (related_person_id) {
-          const fullPerson = await PersonModel.findById(related_person_id);
-
-          if (fullPerson) {
-            transactionPerson = {
-              id: fullPerson.id,
-              fullname: getFullName(
-                fullPerson.first_name,
-                fullPerson.last_name,
-                fullPerson.patronymic
-              ),
-            };
-          }
-        }
-        return {
-          ...rest,
-          order: order ? { id: order.id, number: order.number } : null,
-          person: transactionPerson,
-        };
-      })
+    const allOrders = await OrderModel.getOrdersBaseByIds(
+      allTransactionsOrderIds
     );
+
+    const allCustomerIds = allOrders.map((order) => order.customer_id);
+
+    const allPersonsIds = [
+      ...allCustomerIds,
+      ...allTransactionsRelatedPersonIds,
+    ];
+
+    const allPersons = await PersonModel.getPersonsBaseByIds(allPersonsIds);
+
+    const enriched = transactions.data.map((transaction) => {
+      const { order_id, related_person_id, ...rest } = transaction;
+
+      const order = allOrders.find((o) => o.id === order_id);
+
+      let transactionPerson: OrderPerson | null = null;
+
+      if (
+        order &&
+        (rest.type === "invoice_issued" || rest.type === "invoice_paid")
+      ) {
+        const fullPerson = allPersons.find(
+          (person) => person.id === order.customer_id
+        );
+
+        if (fullPerson) {
+          transactionPerson = {
+            id: fullPerson.id,
+            fullname: getFullName(
+              fullPerson.first_name,
+              fullPerson.last_name,
+              fullPerson.patronymic
+            ),
+          };
+        }
+      } else if (related_person_id) {
+        const fullPerson = allPersons.find((p) => p.id === related_person_id);
+
+        if (fullPerson) {
+          transactionPerson = {
+            id: fullPerson.id,
+            fullname: getFullName(
+              fullPerson.first_name,
+              fullPerson.last_name,
+              fullPerson.patronymic
+            ),
+          };
+        }
+      }
+      return {
+        ...rest,
+        order: order ? { id: order.id, number: order.number } : null,
+        person: transactionPerson,
+      };
+    });
 
     return {
       ...transactions,
