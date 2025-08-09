@@ -58,7 +58,8 @@ const ExpensesReport = () => {
     {
       label: `${t("report.expenses.printing")}`,
       value: total_printing_exp_amount.toFixed(2) ?? null,
-      color: "text-accent-peach",
+      // color: "text-accent-peach",
+      color: "text-accent-violet",
     },
     {
       label: `${t("report.expenses.materials")}`,

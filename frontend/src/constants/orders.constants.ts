@@ -42,14 +42,17 @@ export const STATIC_ORDER_FILTERS = [
 export const PAYMENT_STATUS_COLORS = {
   paid: "text-brand-default",
   unpaid: "text-accent-red",
-  partly_paid: "text-accent-peach",
+  // partly_paid: "text-accent-peach",
+  partly_paid: "text-action-plus",
 };
 
 export const STAGE_COLORS = {
-  new: "text-accent-olive bg-accent-lime",
+  // new: "text-accent-olive bg-accent-lime",
+  new: "text-accent-orange bg-accent-beige",
   modeling: "text-accent-blue bg-accent-lavender",
   milling: "bg-accent-grey text-black",
-  printing: "text-accent-peach bg-accent-yellow",
+  // printing: "text-accent-peach bg-accent-yellow",
+  printing: "text-accent-violet bg-accent-purple",
   delivery: "bg-accent-pink text-accent-red",
   done: "bg-accent-lightgreen text-accent-green",
 };
@@ -59,7 +62,8 @@ export const STAGE_STATUS_COLORS = {
   processed: "text-brand-default",
   in_process: "text-accent-blue",
   negotiation: "text-accent-red",
-  clarification: "text-accent-peach",
+  // clarification: "text-accent-peach",
+  clarification: "text-action-plus",
   done: "text-brand-default",
 };
 

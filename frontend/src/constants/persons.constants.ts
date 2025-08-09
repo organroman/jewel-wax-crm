@@ -20,7 +20,8 @@ export const PERSON_ROLE_COLORS = {
   modeller: "bg-accent-lavender text-accent-blue",
   miller: "bg-accent-grey text-black",
   client: "bg-accent-lightgreen text-accent-green",
-  print: "text-accent-peach bg-accent-yellow",
+  // print: "text-accent-peach bg-accent-yellow",
+  print: "text-accent-violet bg-accent-purple",
 };
 
 export const PERSON_CARD_TABS_LIST = [

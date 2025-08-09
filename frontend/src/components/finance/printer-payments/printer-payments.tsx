@@ -33,7 +33,8 @@ const PrinterPayments = () => {
         currentLimit={limit}
         currentPage={page}
         onPageChange={(newPage) => setParam("page", newPage)}
-        headerBg="bg-accent-yellow"
+        // headerBg="bg-accent-yellow"
+        headerBg="bg-accent-purple"
       />
     </div>
   );
