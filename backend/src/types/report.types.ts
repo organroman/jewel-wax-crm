@@ -3,12 +3,14 @@ import { OrderPerson, Stage, StageStatus } from "./order.types";
 import { PersonRole } from "./person.types";
 import { GetAllOptions, PaginatedResult } from "./shared.types";
 
+export type FinanceReportDataType = "actual" | "planed";
 export interface GetAllReportOptions
   extends GetAllOptions<{
     from: string;
     to: string;
     person_id?: number;
     expense_category?: ExpenseCategory;
+    data_type?: FinanceReportDataType;
   }> {}
 
 export interface PaginatedClientsReportResult<T> extends PaginatedResult<T> {
@@ -105,4 +107,41 @@ export interface ExpensesReportRaw {
   payment_method: PaymentMethod;
   category: ExpenseCategory;
   description: string | null;
+}
+
+export interface FinanceReportOrder {
+  id: number;
+  number: number;
+  created_at: Date;
+  amount: number;
+  modeling_cost: number;
+  printing_cost: number;
+  customer_id: number;
+  customer_first_name: string;
+  customer_last_name: string;
+  customer_patronymic: string;
+}
+
+export interface FinanceReportRaw {
+  id: number;
+  number: number;
+  created_at: Date;
+  customer: OrderPerson;
+  amount: number;
+  paid: number;
+  debt: number;
+  actual_expenses: number;
+  actual_profit: number;
+  actual_profitability: number;
+  planed_expenses: number;
+  planed_profit: number;
+  planed_profitability: number;
+}
+
+export interface PaginatedFinanceReportResult<T> extends PaginatedResult<T> {
+  total_actual_income: number;
+  total_debt: number | null;
+  total_expenses: number;
+  total_profit: number;
+  total_profitability: number;
 }

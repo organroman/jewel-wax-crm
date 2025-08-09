@@ -25,4 +25,11 @@ router.get(
   checkPermission("EXPENSES_REPORT", "VIEW"),
   ReportController.getExpensesReport
 );
+
+router.get(
+  "/finance",
+  verifyToken,
+  checkPermission("FINANCE_REPORT", "VIEW"),
+  ReportController.getFinanceReport
+);
 export default router;

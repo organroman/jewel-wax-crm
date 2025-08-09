@@ -41,4 +41,17 @@ export const useReport = {
       enabled,
     });
   },
+  getFinanceReport: ({
+    query,
+    enabled,
+  }: {
+    query: string;
+    enabled: boolean;
+  }) => {
+    return useQuery({
+      queryKey: ["finance-report", query],
+      queryFn: () => reportService.getFinanceReport(query),
+      enabled,
+    });
+  },
 };

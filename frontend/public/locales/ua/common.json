@@ -600,6 +600,33 @@
         "category": "Тип витрат",
         "description": "Коментар"
       }
+    },
+    "finance": {
+      "income": "Дохід",
+      "debt": "$t(dictionary.debt)",
+      "expenses": "Витрати",
+      "profit": "Прибуток",
+      "profitability": "Рентабельність",
+      "all_data_types": "Всі типи даних",
+      "data_types": {
+        "actual": "Фактичні",
+        "planed": "Прогнозовані"
+      },
+      "data_type": "Тип даних",
+      "table_headers": {
+        "date": "$t(dictionary.date)",
+        "number": "$t(dictionary.order)",
+        "customer": "$t(dictionary.customer)",
+        "amount": "Сума замовлення",
+        "paid": "$t(dictionary.paid)",
+        "debt": "$t(dictionary.debt)",
+        "actual_expenses": "Фактичні витрати",
+        "actual_profit": "Фактичний прибуток",
+        "actual_profitability": "Фактична рентабельність",
+        "planed_expenses": "Заплановані витрати",
+        "planed_profit": "Запланований прибуток",
+        "planed_profitability": "Запланована рентабельність"
+      }
     }
   },
 

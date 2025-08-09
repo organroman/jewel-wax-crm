@@ -1,5 +1,6 @@
 import { PersonRole } from "../types/person.types";
 import { ExpenseCategory } from "../types/finance.type";
+import { FinanceReportDataType } from "../types/report.types";
 
 import { Request, Response, NextFunction } from "express";
 
@@ -69,6 +70,28 @@ export const ReportController = {
         limit: Number(limit),
         filters: {
           expense_category: expenses_category as ExpenseCategory,
+          from: from as string,
+          to: to as string,
+        },
+      });
+      res.status(200).json(expenses);
+    } catch (error) {
+      next(error);
+    }
+  },
+  async getFinanceReport(req: Request, res: Response, next: NextFunction) {
+    try {
+      const userId = req.user?.id;
+
+      if (!userId) throw new AppError(ERROR_MESSAGES.UNAUTHORIZED, 401);
+
+      const { page, limit, data_type, from, to } = req.query;
+
+      const expenses = await ReportService.getFinanceReport({
+        page: Number(page),
+        limit: Number(limit),
+        filters: {
+          data_type: data_type as FinanceReportDataType,
           from: from as string,
           to: to as string,
         },

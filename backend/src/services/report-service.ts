@@ -1,11 +1,13 @@
 import {
   ClientsReportRaw,
   ExpensesReportRaw,
+  FinanceReportRaw,
   GetAllModellingReportOptions,
   GetAllReportOptions,
   ModellingReportRaw,
   PaginatedClientsReportResult,
   PaginatedExpensesReportResult,
+  PaginatedFinanceReportResult,
   PaginatedModellingReportResult,
 } from "../types/report.types";
 import { PaymentStatus } from "../types/finance.type";
@@ -364,6 +366,112 @@ export const ReportService = {
       total_printing_exp_amount: totalPrintingExpAmount,
       total_materials_exp_amount: totalMaterialsExpAmount,
       total_other_exp_amount: totalOtherExpAmount,
+    };
+  },
+  async getFinanceReport({
+    page = 1,
+    limit = 10,
+    filters,
+  }: GetAllReportOptions): Promise<
+    PaginatedFinanceReportResult<FinanceReportRaw>
+  > {
+    const { startFrom, finishTo } = defineFromToDates(
+      filters?.from,
+      filters?.to
+    );
+    const orders = await ReportModel.getOrdersBase({
+      page,
+      limit,
+      from: startFrom,
+      to: finishTo,
+    });
+
+    const indicators = await ReportModel.getFinanceReportIndicators({
+      from: startFrom,
+      to: finishTo,
+      dataType: filters?.data_type,
+    });
+
+    const allOrderIds = orders.data.map((o) => o.id);
+
+    const allInvoices = await FinanceModel.getInvoicesByOrderIds(allOrderIds);
+
+    const allExpenses = await FinanceModel.getExpensesByOrderIds(allOrderIds);
+
+    const allDeliveries = await OrderModel.getOrderDeliveriesByOrderIds(
+      allOrderIds
+    );
+    const deliveriesByOrderId = groupBy(allDeliveries, "order_id");
+    const expensesByOrderId = groupBy(allExpenses, "order_id");
+    const invoicesByOrderId = groupBy(allInvoices, "order_id");
+
+    const enriched = orders.data.map((order) => {
+      const {
+        modeling_cost,
+        printing_cost,
+        customer_first_name,
+        customer_id,
+        customer_last_name,
+        customer_patronymic,
+        ...rest
+      } = order;
+      const invoices = invoicesByOrderId[order.id] ?? [];
+      const expenses = expensesByOrderId[order.id] ?? [];
+      const deliveriesExpenses = deliveriesByOrderId[order.id] ?? [];
+
+      const totalPaid = invoices.reduce(
+        (sum, invoice) => sum + (Number(invoice.amount_paid) || 0),
+        0
+      );
+
+      const totalActualExpenses = expenses.reduce(
+        (sum, expense) => sum + Number(expense.amount || 0),
+        0
+      );
+
+      const deliveryCost = deliveriesExpenses.reduce(
+        (sum, delivery) => sum + (Number(delivery.cost) || 0),
+        0
+      );
+
+      const totalOrderExpenses =
+        Number(modeling_cost) + Number(printing_cost) + Number(deliveryCost);
+
+      const totalPlanedIncome = order.amount - totalPaid;
+
+      const totalPlanedExpenses = totalOrderExpenses - totalActualExpenses;
+
+      return {
+        ...rest,
+        customer: {
+          id: customer_id,
+          fullname: getFullName(
+            customer_first_name,
+            customer_last_name,
+            customer_patronymic
+          ),
+        },
+        paid: totalPaid,
+        debt: totalPlanedIncome,
+        actual_expenses: totalActualExpenses,
+        actual_profit: totalPaid - totalActualExpenses,
+        actual_profitability:
+          ((totalPaid - totalActualExpenses) / totalPaid) * 100,
+        planed_expenses: totalPlanedExpenses,
+        planed_profit: totalPlanedIncome - totalPlanedExpenses,
+        planed_profitability:
+          ((totalPlanedIncome - totalPlanedExpenses) / totalPlanedIncome) * 100,
+      };
+    });
+
+    return {
+      ...orders,
+      data: enriched,
+      total_actual_income: indicators.total_actual_income,
+      total_debt: indicators.total_debt,
+      total_expenses: indicators.total_expenses,
+      total_profit: indicators.total_profit,
+      total_profitability: indicators.total_profitability,
     };
   },
 };

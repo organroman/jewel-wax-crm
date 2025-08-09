@@ -11,7 +11,8 @@ export type Module =
   | "CLIENT_REPORT"
   | "MODELING_REPORT"
   | "ORDERS_REPORT"
-  | "EXPENSES_REPORT";
+  | "EXPENSES_REPORT"
+  | "FINANCE_REPORT";
 export type Action = "VIEW" | "CREATE" | "UPDATE" | "DELETE";
 
 export type PermissionMap = Record<Module, Record<Action, PersonRole[]>>;

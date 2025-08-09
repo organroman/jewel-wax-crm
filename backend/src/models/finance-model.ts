@@ -34,6 +34,13 @@ export const FinanceModel = {
     return invoices;
   },
 
+  async getInvoicesPaidInPeriod(from: Date, to: Date): Promise<Invoice[]> {
+    const invoices = await db<Invoice>("invoices")
+      .whereBetween("paid_at", [from, to])
+      .select("*");
+    return invoices;
+  },
+
   async createExpense(data: ExpenseInput): Promise<Expense> {
     const [expense] = await db<Expense>("expenses").insert(data).returning("*");
     return expense;

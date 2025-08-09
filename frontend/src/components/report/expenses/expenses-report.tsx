@@ -73,8 +73,6 @@ const ExpensesReport = () => {
     },
   ];
 
-  console.log(orders);
-
   return (
     <div className="flex flex-col mt-8">
       <TopBar

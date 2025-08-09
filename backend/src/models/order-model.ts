@@ -478,6 +478,13 @@ export const OrderModel = {
       .whereIn("customer_id", customerIds)
       .andWhereBetween("created_at", [from, to]);
   },
+  async getOrderDeliveriesByOrderIds(
+    orderIds: number[]
+  ): Promise<OrderDelivery[]> {
+    return await db<OrderDelivery>("order_deliveries")
+      .whereIn("order_id", orderIds)
+      .select("id", "cost", "order_id");
+  },
   // async getOrdersByCustomerId({
   //   customerId,
   //   from,

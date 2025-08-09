@@ -66,7 +66,11 @@ const TopBar = ({
     null
   );
 
-  const [selectedValue, setSelectedValue] = useState<string>("");
+  const currentParamOfSelect = paramOfSelect && searchParams.get(paramOfSelect);
+
+  const [selectedValue, setSelectedValue] = useState<string>(
+    currentParamOfSelect ?? ""
+  );
 
   const { startFrom, finishTo } = defineFromToDates(
     searchParams.get("from"),
@@ -94,9 +98,9 @@ const TopBar = ({
       if (date.from === startFrom && date.to === finishTo) {
         return;
       }
-      
+
       current.set("from", dayjs(date.from).format("YYYY-MM-DD"));
-      current.set("to", dayjs(date.from).format("YYYY-MM-DD"));
+      current.set("to", dayjs(date.to).format("YYYY-MM-DD"));
     }
 
     if (selectedPerson?.data) {

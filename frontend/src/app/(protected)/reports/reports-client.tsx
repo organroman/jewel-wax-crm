@@ -11,6 +11,7 @@ import { Separator } from "@/components/ui/separator";
 import ClientsReport from "@/components/report/clients/clients-report";
 import ModelingReport from "@/components/report/modeling/modeling-report";
 import ExpensesReport from "@/components/report/expenses/expenses-report";
+import FinanceReport from "@/components/report/finance/finance-report";
 
 import { REPORT_TYPE } from "@/constants/report.constants";
 
@@ -42,7 +43,6 @@ const ReportsClient = ({ role }: ReportsClientProps) => {
     if (!selectedTab || selectedTab.value === value) return;
 
     const selected = tabsOptions.find((t) => t.value === value);
-    console.log(selected);
     if (!selected) {
       return;
     }
@@ -64,6 +64,7 @@ const ReportsClient = ({ role }: ReportsClientProps) => {
       {selectedTab.value === "clients" && <ClientsReport />}
       {selectedTab.value === "modeling" && <ModelingReport />}
       {selectedTab.value === "expenses" && <ExpensesReport />}
+      {selectedTab.value === "financial" && <FinanceReport />}
     </div>
   );
 };

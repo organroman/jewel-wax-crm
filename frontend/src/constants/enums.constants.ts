@@ -71,3 +71,5 @@ export const ORDER_STAGE_STATUS = [
 ] as const;
 
 export const DELIVERY_TYPE = ["warehouse", "door"] as const;
+
+export const FINANCE_REPORT_DATA_TYPE = ["actual", "planed" as const];
