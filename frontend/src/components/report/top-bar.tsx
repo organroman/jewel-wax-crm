@@ -116,84 +116,95 @@ const TopBar = ({
   };
 
   return (
-    <div className="flex flex-row items-center justify-between">
-      <div className="flex flex-row gap-5 items-center w-full">
+    <div className="flex flex-col-reverse lg:flex-row items-center justify-between">
+      <div className="flex flex-col gap-2.5 lg:flex-row lg:gap-5 lg:items-center w-full">
         <DateRangePicker
           date={date}
           setDate={setDate}
           today={finishTo}
           startOfMonth={startFrom}
         />
-
-        {persons && (
-          <AsyncCombobox
-            options={persons.map((p) => ({
-              data: p,
-              label: p.fullname,
-              value: p.id,
-            }))}
-            displayKey="fullname"
-            placeholder={t("person.roles.all")}
-            value={selectedPerson}
-            valueKey="id"
-            label={t("person.person")}
-            search={inputValue}
-            setSearch={(val: string) => handleInputChange(val)}
-            onChange={(data) => onPersonChange(data ?? null)}
-            isLoading={isLoading}
-            triggerHeight="h-9"
-            popoverContentClassName="min-w-[240px] max-w-[240px] !border mt-1 !border-ui-border !shadow-md !rounded-sm"
-          />
-        )}
-        {selectOptions && (
-          <div className="flex flex-col gap-1">
-            <InfoLabel className="text-sm/3.5">{filterLabel}</InfoLabel>
-            <Select
-              value={selectedValue}
-              onValueChange={(value) => {
-                if (value === "__clear__") {
-                  setSelectedValue("");
-                } else {
-                  setSelectedValue(value);
-                }
-              }}
-            >
-              <SelectTrigger
-                className="w-[240px] h-9 bg-ui-sidebar"
-                id="selectedValue"
+        <div className="flex flex-row gap-2.5">
+          {persons && (
+            <AsyncCombobox
+              options={persons.map((p) => ({
+                data: p,
+                label: p.fullname,
+                value: p.id,
+              }))}
+              displayKey="fullname"
+              placeholder={t("person.roles.all")}
+              value={selectedPerson}
+              valueKey="id"
+              label={t("person.person")}
+              search={inputValue}
+              setSearch={(val: string) => handleInputChange(val)}
+              onChange={(data) => onPersonChange(data ?? null)}
+              isLoading={isLoading}
+              triggerHeight="h-9"
+              popoverContentClassName="min-w-[240px] max-w-[240px] !border mt-1 !border-ui-border !shadow-md !rounded-sm"
+            />
+          )}
+          {selectOptions && (
+            <div className="flex flex-col gap-1">
+              <InfoLabel className="text-sm/3.5">{filterLabel}</InfoLabel>
+              <Select
+                value={selectedValue}
+                onValueChange={(value) => {
+                  if (value === "__clear__") {
+                    setSelectedValue("");
+                  } else {
+                    setSelectedValue(value);
+                  }
+                }}
               >
-                <SelectValue placeholder={selectPlaceholder} />
-              </SelectTrigger>
-              <SelectContent>
-                {selectedValue && (
-                  <SelectItem
-                    value="__clear__"
-                    className={cn(
-                      "text-action-minus focus:text-action-minus focus:bg-accent-pink"
-                    )}
-                  >
-                    <XIcon className="text-action-minus group-hover:text-action-alert" />
-                    {t("buttons.clear")}
-                  </SelectItem>
-                )}
-                {selectOptions.map((option) => {
-                  return (
-                    <SelectItem key={option.value} value={option.value}>
-                      {option.label}
+                <SelectTrigger
+                  className="w-[240px] h-9 bg-ui-sidebar"
+                  id="selectedValue"
+                >
+                  <SelectValue placeholder={selectPlaceholder} />
+                </SelectTrigger>
+                <SelectContent>
+                  {selectedValue && (
+                    <SelectItem
+                      value="__clear__"
+                      className={cn(
+                        "text-action-minus focus:text-action-minus focus:bg-accent-pink"
+                      )}
+                    >
+                      <XIcon className="text-action-minus group-hover:text-action-alert" />
+                      {t("buttons.clear")}
                     </SelectItem>
-                  );
-                })}
-              </SelectContent>
-            </Select>
-          </div>
-        )}
+                  )}
+                  {selectOptions.map((option) => {
+                    return (
+                      <SelectItem key={option.value} value={option.value}>
+                        {option.label}
+                      </SelectItem>
+                    );
+                  })}
+                </SelectContent>
+              </Select>
+            </div>
+          )}
+          <Button
+            className="self-end flex lg:hidden rounded-xs"
+            onClick={handleGenerateReport}
+          >
+            <BookText className=" rotate-180" />
+            {t("buttons.generate")}
+          </Button>
+        </div>
 
-        <Button className="self-end rounded-xs" onClick={handleGenerateReport}>
+        <Button
+          className="self-end hidden lg:flex rounded-xs"
+          onClick={handleGenerateReport}
+        >
           <BookText className=" rotate-180" />
           {t("buttons.generate")}
         </Button>
       </div>
-      <div className="flex flex-row justify-between border-b-2 border-brand-default w-3/4 ">
+      <div className="flex flex-row justify-between border-b-2 border-brand-default w-full lg:w-3/4 ">
         {indicators.map((indicator) => {
           return (
             <div

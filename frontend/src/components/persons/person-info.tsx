@@ -134,7 +134,10 @@ const PersonInfo = ({ person }: PersonInfoProps) => {
                   items={locations}
                 />
               )}
-              <PersonType value={person.role.value} label={person.role.label} />
+              <PersonType
+                value={person.role}
+                label={t(`person.roles.${person.role}`)}
+              />
               {emails && emails?.length > 0 && (
                 <PersonLabeledList
                   mainLabel={`${t("person.labels.main_email")}:`}

@@ -34,7 +34,7 @@ const DateRangePicker = ({
   const [open, setOpen] = useState(false);
   const [month, setMonth] = useState(date?.from ?? today);
   return (
-    <div className="flex flex-col gap-1">
+    <div className="flex flex-col gap-1 mt-2 lg:mt-0">
       <Label htmlFor="date" className="px-1">
         {t("report.period")}
       </Label>
@@ -44,7 +44,7 @@ const DateRangePicker = ({
             variant="outline"
             id="date"
             className={cn(
-              "w-fit justify-between font-normal text-sm rounded-xs",
+              "w-full lg:w-fit justify-between font-normal text-sm rounded-xs",
               date && "text-text-regular font-medium"
             )}
           >

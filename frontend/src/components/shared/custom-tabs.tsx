@@ -21,7 +21,7 @@ const CustomTabs = ({
       defaultValue={selectedTab?.value as string}
       value={selectedTab?.value as string}
       onValueChange={handleChange}
-      className="mt-5"
+      className="mt-2.5 lg:mt-5 overflow-x-scroll"
     >
       <TabsList className="w-full justify-start gap-5 md:gap-6 border-none bg-transparent p-0">
         {isModal && (

@@ -72,7 +72,7 @@ const ClientsReport = () => {
     },
   ];
   return (
-    <div className="flex flex-col mt-8">
+    <div className="flex flex-col mt-2 lg:mt-8">
       <TopBar
         indicators={reportIndicators}
         setPersonSearchQuery={setSearchQuery}
@@ -87,7 +87,7 @@ const ClientsReport = () => {
         }
         isLoading={customersIsLoading}
       />
-      <div className="flex-1 overflow-hidden flex flex-col mt-8">
+      <div className="flex-1 overflow-hidden flex flex-col mt-4 lg:mt-8">
         <DataTable
           columns={columns}
           data={clients}

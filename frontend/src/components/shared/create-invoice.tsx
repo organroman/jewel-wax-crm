@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import { useForm } from "react-hook-form";
 import { useEffect, useMemo, useState } from "react";
 import debounce from "lodash.debounce";
+import { Plus } from "lucide-react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -110,10 +111,16 @@ const CreateInvoice = ({ order }: CreateInvoiceProps) => {
     <div className="w-full h-full">
       <Button
         variant="secondary"
-        className="bg-transparent rounded-sm"
+        className="bg-transparent rounded-sm ml-2 lg:mr-0 px-1 lg:px-4"
         onClick={() => setDialogOpen(true)}
       >
-        {t("order.buttons.create_invoice")}
+        <span className="hidden lg:flex">
+          {t("order.buttons.create_invoice")}
+        </span>
+        <span className="flex items-center lg:hidden">
+          <Plus className="size-4" />
+          {t("order.buttons.create_invoice_short")}
+        </span>
       </Button>
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <Modal
