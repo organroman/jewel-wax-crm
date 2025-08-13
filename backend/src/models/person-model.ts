@@ -132,10 +132,6 @@ export const PersonModel = {
     if (!person) {
       return null;
     }
-    const role = await db("enums")
-      .where("value", person.role)
-      .first()
-      .select("value", "label");
     const phones = await this.getPhonesByPersonId(person.id);
     const emails = await this.getEmailsByPersonId(person.id);
 
@@ -174,7 +170,7 @@ export const PersonModel = {
 
     const safePerson: SafePerson = {
       ...base,
-      role,
+      // role,
       delivery_addresses: addresses,
       phones,
       emails,

@@ -355,6 +355,7 @@
     },
     "buttons": {
       "create_invoice": "Сформувати рахунок",
+      "create_invoice_short": "Р",
       "change_stage": "Змінити етап",
       "delete": "Видалити замовлення",
       "view": "Переглянути замовлення",
@@ -450,6 +451,7 @@
     "paid": "$t(dictionary.paid)",
     "debt": "$t(dictionary.debt)",
     "add_expenses": "Витрати",
+    "add_expenses_short": "В",
     "expenses_type": "Тип витрат",
     "transaction_type": "Тип транзакції",
 

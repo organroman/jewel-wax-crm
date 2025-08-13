@@ -2,6 +2,7 @@ import {
   AllowedRolesForCrmUser,
   CreatePersonSchema,
   Person,
+  PersonRoleValue,
   UpdatePersonSchema,
 } from "@/types/person.types";
 import { Country } from "@/types/location.types";
@@ -97,14 +98,16 @@ const PersonForm = ({
     }
   );
 
-  const customerRole = PERSON_ROLE_VALUES.find((r) => r === "client");
+  const [customerRole] =
+    PERSON_ROLE_VALUES.filter((r) => r === "client") ??
+    ("client" as PersonRoleValue);
 
   const form = useForm<UpdatePersonSchema | CreatePersonSchema>({
     resolver: zodResolver(schema),
     defaultValues: {
       id: person?.id,
       role: person
-        ? person?.role
+        ? { value: person.role, label: t(`person.roles.${person.role}`) }
         : {
             value: customerRole,
             label: t(`person.roles.${customerRole}`),

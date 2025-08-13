@@ -83,6 +83,7 @@ const FinanceClient = () => {
         showFilterButton={filters.length > 0}
         onAdd={() => expensesSetDialogOpen(true)}
         extraAction={<CreateInvoice />}
+        addLabelShort={t("finance.add_expenses_short")}
       />
       {selectedTab.value === "all" && <AllFinance />}
       {selectedTab.value === "client_payment" && <ClientPayments />}
