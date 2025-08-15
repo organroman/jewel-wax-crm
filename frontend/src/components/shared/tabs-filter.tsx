@@ -50,10 +50,12 @@ const TabsFilter = ({ param, options, counts }: TabsFilterProps) => {
               <Badge
                 className={cn(
                   "bg-transparent block p-0 text-sm font-medium text-brand-default",
-                  value !== "all" && "w-[12px]"
+                  counts?.[value] && counts[value] > 10
+                    ? "w-[16px]"
+                    : value !== "all" && "w-[12px]"
                 )}
               >
-                {counts && counts?.[value] && counts?.[value]}
+                {counts && counts?.[value] && counts[value]}
                 {/* counts?.[value]} */}
               </Badge>
             </TabsTrigger>
