@@ -22,7 +22,7 @@ import InfoValue from "./typography/info-value";
 
 import FormInput from "../form/form-input";
 import FormSelect from "../form/form-select";
-import FormAsyncCombobox from "../form/form-async-combobox ";
+import FormAsyncCombobox from "../form/form-async-combobox";
 
 import { createInvoiceSchema } from "@/validators/finance.validator";
 import { getFullName } from "@/lib/utils";

@@ -36,7 +36,7 @@ const FormInput = <T extends FieldValues>({
     render={({ field }) => (
       <FormItem
         className={cn(
-          "flex flex-col gap-0.5 lg:gap-2.5",
+          "flex flex-col gap-0.5 lg:gap-2.5 relative",
           labelPosition === "top"
             ? "lg:flex-col lg:gap-0.5"
             : "lg:flex-row lg:0.5",
@@ -81,7 +81,7 @@ const FormInput = <T extends FieldValues>({
               />
             )}
           </FormControl>
-          <FormMessage />
+          <FormMessage className="absolute -bottom-4" />
         </div>
       </FormItem>
     )}
