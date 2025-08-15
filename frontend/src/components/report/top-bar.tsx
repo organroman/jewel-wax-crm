@@ -124,7 +124,7 @@ const TopBar = ({
           today={finishTo}
           startOfMonth={startFrom}
         />
-        <div className="flex flex-row gap-2.5">
+        <div className="flex flex-row gap-2.5 items-center">
           {persons && (
             <AsyncCombobox
               options={persons.map((p) => ({
@@ -142,6 +142,7 @@ const TopBar = ({
               onChange={(data) => onPersonChange(data ?? null)}
               isLoading={isLoading}
               triggerHeight="h-9"
+              labelPosition="top"
               popoverContentClassName="min-w-[240px] max-w-[240px] !border mt-1 !border-ui-border !shadow-md !rounded-sm"
             />
           )}

@@ -16,12 +16,15 @@ const CustomAvatar = ({
 }: CustomAvatarProps) => {
   return (
     <Avatar className={className}>
-      <AvatarImage src={avatarUrl} />
-      <AvatarFallback
-        className={cn("bg-accent-blue text-white", fallbackClassName)}
-      >
-        {fallback}
-      </AvatarFallback>
+      {avatarUrl && <AvatarImage src={avatarUrl} />}
+
+      {!avatarUrl && (
+        <AvatarFallback
+          className={cn("bg-accent-blue text-white", fallbackClassName)}
+        >
+          {fallback}
+        </AvatarFallback>
+      )}
     </Avatar>
   );
 };
