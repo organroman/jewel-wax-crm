@@ -82,7 +82,7 @@ export interface PersonBase {
   first_name: string;
   last_name: string;
   patronymic?: string;
-  avatar_url?: string;
+  avatar_url: string | null;
   password?: string;
   is_active: boolean;
   created_at: Date;
@@ -95,7 +95,7 @@ export interface Person {
   first_name: string;
   last_name: string;
   patronymic?: string;
-  avatar_url?: string;
+  avatar_url: string | null;
   password?: string;
   is_active: boolean;
   created_at: Date;
@@ -135,3 +135,16 @@ export type GetAllPersonsOptions = GetAllOptions<{
   is_active?: boolean[];
   person_id?: number;
 }>;
+
+export interface User {
+  id: number;
+  first_name: string;
+  last_name: string;
+  patronymic?: string;
+  location?: Location | null;
+  phone?: Phone | null;
+  email?: Email | null;
+  avatar_url: string | null;
+  created_at: Date;
+  updated_at: Date;
+}

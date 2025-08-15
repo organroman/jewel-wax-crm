@@ -6,6 +6,7 @@ import {
   SafePerson,
   UpdatePersonInput,
   Phone,
+  User,
 } from "../types/person.types";
 import { Location } from "../types/person.types";
 import { PaginatedResult } from "../types/shared.types";
@@ -385,6 +386,72 @@ export const PersonService = {
 
     if (newBank.length) {
       await PersonModel.createBankDetails(personId, newBank);
+    }
+
+    await ActivityLogModel.logAction({
+      actor_id: actorId || null,
+      action: LOG_ACTIONS.UPDATE_PERSON,
+      target_type: LOG_TARGETS.PERSON,
+      target_id: personId,
+      details: {
+        data,
+      },
+    });
+
+    return await PersonService.getById(personId);
+  },
+
+  async updateUser(
+    personId: number,
+    data: User,
+    actorId?: number
+  ): Promise<SafePerson | null> {
+    const { location, phone, email, ...rest } = data;
+    const updatedPerson = await PersonModel.updateBasePerson(personId, rest);
+
+    console.log(data);
+
+    if (!updatedPerson) return null;
+
+    if (location) {
+      const existingLocations = await PersonModel.getLocationsByPersonId(
+        personId
+      );
+
+      const toUpdateLocations = existingLocations.filter((dbItem) => {
+        const incomingMatch = location.id === dbItem.id;
+        return incomingMatch;
+      });
+
+      await PersonModel.updateLocations(toUpdateLocations, [location]);
+    }
+
+    if (phone) {
+      const isNewPhone = Boolean(phone.id);
+      const existingPhones = await PersonModel.getPhonesByPersonId(personId);
+
+      const toUpdatePhones = existingPhones.filter((dbItem) => {
+        const incomingMatch = phone.id === dbItem.id;
+        return incomingMatch;
+      });
+
+      !isNewPhone
+        ? await PersonModel.createPhones(personId, [phone])
+        : await PersonModel.updatePhones(toUpdatePhones, [phone]);
+    }
+
+    if (email) {
+      const isNewEmail = Boolean(email.id);
+      const existingEmails = await PersonModel.getEmailsByPersonId(personId);
+
+      const toUpdateEmails = existingEmails.filter((dbItem) => {
+        const incomingMatch = email.id === dbItem.id;
+        return incomingMatch;
+      });
+
+      !isNewEmail
+        ? await PersonModel.createEmails(personId, [email])
+        : await PersonModel.updateEmails(toUpdateEmails, [email]);
     }
 
     await ActivityLogModel.logAction({

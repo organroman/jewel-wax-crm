@@ -53,6 +53,13 @@ router.patch(
   PersonController.updatePerson
 );
 
+router.patch(
+  "/user/:id",
+  verifyToken,
+  checkPermission("PERSONS", "UPDATE"),
+  PersonController.updateUser
+);
+
 router.delete(
   "/:id",
   verifyToken,

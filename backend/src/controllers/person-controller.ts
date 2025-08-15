@@ -90,6 +90,24 @@ export const PersonController = {
     }
   },
 
+  async updateUser(req: Request, res: Response, next: NextFunction) {
+    try {
+      const currentUser = req.user?.id;
+      const updatedUser = await PersonService.updateUser(
+        Number(req.params.id),
+        req.body,
+        currentUser
+      );
+
+      if (!updatedUser) {
+        throw new AppError(ERROR_MESSAGES.ITEM_NOT_FOUND, 404);
+      }
+      res.status(200).json(updatedUser);
+    } catch (error) {
+      next(error);
+    }
+  },
+
   async deletePerson(req: Request, res: Response, next: NextFunction) {
     try {
       const currentUser = req.user?.id;
