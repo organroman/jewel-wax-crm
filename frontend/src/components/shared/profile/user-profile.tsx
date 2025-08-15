@@ -35,13 +35,6 @@ const UserProfile = ({ userId }: { userId: number }) => {
 
   const { dialogOpen, setDialogOpen } = useDialog();
 
-  const token = Cookies.get("token");
-
-  if (!token) {
-    router.replace("/login");
-    return;
-  }
-
   const logoutMutation = UseAuth.logout();
 
   const handleLogout = () => {
