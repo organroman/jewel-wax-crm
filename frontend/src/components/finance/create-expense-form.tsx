@@ -16,7 +16,7 @@ import Modal from "../shared/modal/modal";
 import InfoLabel from "../shared/typography/info-label";
 import FormSelect from "../form/form-select";
 import FormInput from "../form/form-input";
-import FormAsyncCombobox from "../form/form-async-combobox ";
+import FormAsyncCombobox from "../form/form-async-combobox";
 import { Form } from "../ui/form";
 
 import { getFullName } from "@/lib/utils";

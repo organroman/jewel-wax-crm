@@ -10,7 +10,7 @@ import InfoLabel from "@/components/shared/typography/info-label";
 import InfoValue from "@/components/shared/typography/info-value";
 
 import FormInput from "@/components/form/form-input";
-import FormAsyncCombobox from "@/components/form/form-async-combobox ";
+import FormAsyncCombobox from "@/components/form/form-async-combobox";
 import OrderDeliveryFields from "./order-delivery-fields";
 import OrderStagePerformerFields from "./order-stage-performer-fields";
 

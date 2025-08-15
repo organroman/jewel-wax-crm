@@ -21,7 +21,7 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 
 import FormCombobox from "./form-combobox";
-import FormAsyncCombobox from "./form-async-combobox ";
+import FormAsyncCombobox from "./form-async-combobox";
 
 import { cn } from "@/lib/utils";
 
@@ -116,7 +116,7 @@ const FormArrayLocation = <T extends FieldValues>({
   const handleToggleMain = (index: number) => {
     fields.forEach((_, i) => {
       setValue(
-        `${name}.${i}.is_main` as Path<T>,
+        `${name}.${i}.is_main` as any,
         (i === index) as PathValue<T, any>
       );
     });
@@ -219,7 +219,7 @@ const FormArrayLocation = <T extends FieldValues>({
                 disabled={!selectedCountryId}
                 onChange={(selected) => {
                   setValue(
-                    `${name}.${index}.city_name` as Path<T>,
+                    `${name}.${index}.city_name` as any,
                     selected?.data?.city_name as PathValue<T, any>
                   );
                 }}

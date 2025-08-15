@@ -7,7 +7,7 @@ import { Trash2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 import { Button } from "@/components/ui/button";
-import FormAsyncCombobox from "./form-async-combobox ";
+import FormAsyncCombobox from "./form-async-combobox";
 import { cn } from "@/lib/utils";
 
 const FormArrayAsyncCombobox = <T extends FieldValues, O>({

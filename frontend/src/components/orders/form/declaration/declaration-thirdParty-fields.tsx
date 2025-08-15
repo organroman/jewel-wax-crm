@@ -13,7 +13,7 @@ import { useTranslation } from "react-i18next";
 
 import { useLocation } from "@/api/locations/use-location";
 
-import FormAsyncCombobox from "@/components/form/form-async-combobox ";
+import FormAsyncCombobox from "@/components/form/form-async-combobox";
 import FormInput from "@/components/form/form-input";
 import {
   Select,

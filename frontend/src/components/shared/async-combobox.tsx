@@ -76,7 +76,13 @@ const AsyncCombobox = <T,>({
   })();
 
   return (
-    <div className={cn("flex flex-col gap-1", className)}>
+    <div
+      className={cn(
+        "flex flex-col gap-1",
+        labelPosition === "left" && "flex-row items-center",
+        className
+      )}
+    >
       {label && (
         <span className="text-xs text-text-muted lg:text-sm/3.5 font-medium">
           {label}
