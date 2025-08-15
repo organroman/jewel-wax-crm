@@ -4,6 +4,7 @@ import {
   Person,
   Phone,
   UpdatePersonSchema,
+  User,
 } from "@/types/person.types";
 import apiService from "../api-service";
 import { PaginatedResult } from "@/types/shared.types";
@@ -23,6 +24,10 @@ export const personService = {
   update: (data: UpdatePersonSchema) => {
     const payload = { ...data, role: data.role.value };
     return apiService.patch<Person>(`persons/${data.id}`, payload);
+  },
+
+  updateUser: (data: User) => {
+    return apiService.patch<Person>(`persons/user/${data.id}`, data);
   },
 
   delete: (id: number) => apiService.delete(`persons/${id}`),

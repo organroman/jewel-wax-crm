@@ -130,3 +130,14 @@ export type GetAllPersonsOptions = GetAllOptions<{
   city?: string;
   is_active?: boolean;
 }>;
+
+export interface User {
+  id: number;
+  first_name: string;
+  last_name: string;
+  patronymic?: string;
+  location?: Location | null;
+  phone?: Phone | null;
+  email?: Email | null;
+  avatar_url: string | null;
+}

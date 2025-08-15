@@ -113,7 +113,9 @@ const deliveryAddressSchema = z.object({
   id: z.number().optional(),
   is_main: z.boolean(),
   type: deliveryTypeSchema,
-  city_id: z.number({ required_error: "messages.validation.city_required" }).min(1),
+  city_id: z
+    .number({ required_error: "messages.validation.city_required" })
+    .min(1),
   np_warehouse_ref: z.string().optional().nullable(),
   np_warehouse: z.string().optional().nullable(),
   np_warehouse_siteKey: z.string().optional().nullable(),
@@ -225,6 +227,7 @@ export const updatePersonSchema = z.object({
   last_name: z.string().min(2, "messages.validation.min_two_characters"),
   patronymic: z.string().optional(),
   role: roleSchema,
+  avatar_url: z.string().nullable().optional(),
   is_active: z.boolean(),
   phones: z
     .array(phoneSchema)

@@ -7,4 +7,14 @@ export const UseAuth = {
       mutationFn: AuthService.login,
     });
   },
+  changePassword() {
+    return useMutation({
+      mutationFn: AuthService.changePassword,
+    });
+  },
+  logout () {
+    return useMutation({
+      mutationFn: AuthService.logout
+    })
+  }
 };

@@ -4,6 +4,7 @@ import {
   CreatePersonSchema,
   Person,
   UpdatePersonSchema,
+  User,
 } from "@/types/person.types";
 import { toast } from "sonner";
 
@@ -78,6 +79,33 @@ export const usePerson = {
       },
     });
     return { updateMutation: mutation };
+  },
+  updateUser: ({
+    queryClient,
+    handleOnSuccess,
+    t,
+  }: {
+    queryClient: QueryClient;
+    handleOnSuccess?: (data: Person) => void;
+    t: (key: string) => string;
+  }) => {
+    const mutation = useMutation<Person, Error, User>({
+      mutationFn: async (data) => personService.updateUser(data),
+      onSuccess: (data) => {
+        toast.success(t("messages.success.person_updated"));
+        queryClient.invalidateQueries({
+          queryKey: ["persons"],
+        });
+        queryClient.invalidateQueries({
+          queryKey: ["person", data.id],
+        });
+        handleOnSuccess && handleOnSuccess(data);
+      },
+      onError: (error) => {
+        toast.error(error.message);
+      },
+    });
+    return { updateUserMutation: mutation };
   },
   deletePerson: ({
     queryClient,

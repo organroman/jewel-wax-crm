@@ -23,7 +23,7 @@ const refreshAccessToken = async (): Promise<string | null> => {
   try {
     const response = await fetch(`${API_URL}/auth/refresh-token`, {
       method: "POST",
-      credentials: "include", // ensures cookies are sent
+      credentials: "include",
     });
 
     if (!response.ok) return null;
