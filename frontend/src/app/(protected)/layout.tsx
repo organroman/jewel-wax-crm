@@ -19,12 +19,12 @@ const ProtectedLayout = async ({ children }: { children: React.ReactNode }) => {
   if (!token) {
     redirect("/login");
   }
-  const {role} = getRoleAndUserFromToken(token as PersonRoleValue);
+  const { role, id } = getRoleAndUserFromToken(token as PersonRoleValue);
 
   return (
     <div className="flex flex-col h-screen w-full overflow-y-hidden">
       <div className="w-full shrink-0">
-        <TopBar />
+        <TopBar userId={id} />
       </div>
       <div className="flex h-full flex-1 w-full overflow-y-hidden">
         <aside className="hidden bg-ui-sidebar lg:block lg:w-[84px] h-full overflow-y-hidden">

@@ -94,8 +94,15 @@
     "generate": "Сформувати"
   },
   "auth": {
+    "login": "Логін",
+    "account_details": "Дані акаунта",
     "forget_password": "Забули пароль",
-    "reset_password": "Відновити пароль"
+    "reset_password": "Відновити пароль",
+    "password": "$t(dictionary.password)",
+    "new_password": "Новий пароль",
+    "confirm_new_password": "Підтвердіть пароль",
+    "change_password": "Змінити пароль",
+    "logout": "Вийти"
   },
 
   "person": {
@@ -192,7 +199,16 @@
       "bank_code": "МФО",
       "tax_id": "ЄДРПОУ/ІПН",
       "contact": "$t(dictionary.contact)",
-      "delivery_type": "Тип доставки"
+      "delivery_type": "Тип доставки",
+      "main_theme": "Основна тема",
+      "main_lang": "Основна мова",
+      "general_info": "Основна інформація",
+      "contacts": "Контакти",
+      "phone": "$t(dictionary.phone)",
+      "email": "Email",
+      "address": "$t(dictionary.address)",
+      "account_settings": "Налаштування аккаунта",
+      "administrating": "Адміністрування"
     },
     "placeholders": {
       "search_person": "Пошук контрагента",
@@ -211,7 +227,9 @@
     },
     "buttons": {
       "delete": "Видалити контрагента",
-      "print_label": "Друк етикетки"
+      "print_label": "Друк етикетки",
+      "add_avatar": "Додати аватарку",
+      "change_avatar": "Змінити аватарку"
     }
   },
   "location": {
@@ -672,7 +690,9 @@
       "city_required": "Місто обовʼязкове",
       "width_required": "Ширина обовʼязкова",
       "length_required": "Довжина обовʼязкова",
-      "height_required": "Ширина обовʼязкова"
+      "height_required": "Ширина обовʼязкова",
+      "passwords_must_match": "Паролі мають співпадати",
+      "password_same_as_current": "Паролі збігаються"
     },
     "info": {
       "no_results": "Дані відсутні",
@@ -701,7 +721,9 @@
       "order_chat_deleted": "Чат видалено",
       "invoice_created": "Рахунок сформовано",
       "expense_created": "Витрати додано",
-      "ttn_created": "ТТН створена"
+      "ttn_created": "ТТН створена",
+      "password_changed": "Пароль змінено",
+      "logged_out": "До зустрічі"
     }
   }
 }
