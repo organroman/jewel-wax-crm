@@ -52,21 +52,25 @@ const ClientsReport = () => {
   const reportIndicators = [
     {
       label: t("report.clients.total"),
+      labelShort: t("report.clients.total_short"),
       value: total_clients,
       color: "text-brand-dark",
     },
     {
       label: t("report.clients.active"),
+      labelShort: t("report.clients.active"),
       value: active_clients,
       color: "text-brand-dark",
     },
     {
       label: t("report.clients.new"),
+      labelShort: t("report.clients.new"),
       value: new_clients,
       color: "text-brand-default",
     },
     {
       label: t("report.clients.debtors"),
+      labelShort: t("report.clients.debtors"),
       value: total_debtors,
       color: "text-action-minus",
     },

@@ -47,27 +47,32 @@ const ExpensesReport = () => {
   const reportIndicators = [
     {
       label: t("report.expenses.total"),
+      labelShort: t("report.expenses.total_short"),
       value: total_expenses_amount?.toFixed(2) ?? null,
       color: "text-action-minus",
     },
     {
       label: t("report.expenses.modeling"),
+      labelShort: t("report.expenses.modeling"),
       value: total_modelling_exp_amount?.toFixed(2) ?? null,
       color: "text-action-plus",
     },
     {
       label: `${t("report.expenses.printing")}`,
+      labelShort: t("report.expenses.printing"),
       value: total_printing_exp_amount.toFixed(2) ?? null,
       // color: "text-accent-peach",
       color: "text-accent-violet",
     },
     {
       label: `${t("report.expenses.materials")}`,
+      labelShort: `${t("report.expenses.materials")}`,
       value: total_materials_exp_amount.toFixed(2) ?? null,
       color: "text-brand-dark",
     },
     {
       label: `${t("report.expenses.other")}`,
+      labelShort: `${t("report.expenses.other_short")}`,
       value: total_other_exp_amount.toFixed(2) ?? null,
       color: "text-brand-dark",
     },

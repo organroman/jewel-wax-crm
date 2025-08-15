@@ -37,10 +37,17 @@ const MobileNavBar = ({ role }: { role: PersonRoleValue }) => {
                 className={cn(
                   "flex min-w-[78px] flex-col gap-0.5 items-center rounded-xs px-2.5 py-4.5 w-full text-xs transition hover:bg-brand-default",
                   isActive &&
-                    "bg-brand-menu shadow-sm hover:bg-brand-default text-stone-900"
+                    "bg-brand-menu shadow-sm hover:bg-brand-default text-brand-dark"
                 )}
               >
-                {<Icon className="text-text-regular" />}
+                {
+                  <Icon
+                    className={cn(
+                      "text-text-regular",
+                      isActive && "text-brand-dark"
+                    )}
+                  />
+                }
                 {t(`main_menu.${route.key}`)}
               </div>
             </Link>

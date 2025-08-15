@@ -51,27 +51,32 @@ const FinanceReport = () => {
   const reportIndicators = [
     {
       label: t("report.finance.income"),
+      labelShort: t("report.finance.income"),
       value: total_actual_income?.toFixed(2) ?? 0.0,
       color: "text-brand-default",
     },
     {
       label: t("report.finance.debt"),
+      labelShort: t("report.finance.debt"),
       value: total_debt?.toFixed(2) ?? 0.0,
       color: "text-action-minus",
     },
     {
       label: `${t("report.finance.expenses")}`,
+      labelShort: `${t("report.finance.expenses")}`,
       value: total_expenses.toFixed(2) ?? 0.0,
       // color: "text-accent-peach",
       color: "text-default-dark",
     },
     {
       label: `${t("report.finance.profit")}`,
+      labelShort: `${t("report.finance.profit")}`,
       value: total_profit.toFixed(2) ?? null,
       color: "text-action-plus",
     },
     {
       label: `${t("report.finance.profitability")}`,
+      labelShort: `${t("report.finance.profitability")}`,
       value: `${total_profitability?.toFixed(2)}%`,
       color: "text-brand-dark",
     },

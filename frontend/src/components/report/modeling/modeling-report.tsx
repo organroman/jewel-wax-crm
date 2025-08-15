@@ -50,21 +50,25 @@ const ModelingReport = () => {
   const reportIndicators = [
     {
       label: t("report.modeling.total"),
+      labelShort: t("report.modeling.total_short"),
       value: total_orders,
       color: "text-brand-default",
     },
     {
       label: t("report.modeling.amount"),
+      labelShort: t("report.modeling.amount_short"),
       value: total_modelling_cost?.toFixed(2) ?? 0.0,
       color: "text-brand-dark",
     },
     {
       label: `${t("report.modeling.paid")},₴`,
+      labelShort: t("report.modeling.paid"),
       value: total_modelling_paid.toFixed(2),
       color: "text-action-plus",
     },
     {
       label: `${t("report.modeling.unpaid")},₴`,
+      labelShort: `${t("report.modeling.unpaid")}`,
       value: total_modelling_debt.toFixed(2),
       color: "text-action-minus",
     },

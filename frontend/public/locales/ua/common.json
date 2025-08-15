@@ -577,6 +577,7 @@
     },
     "clients": {
       "total": "Всього замовників",
+      "total_short": "Замовників",
       "active": "Активних",
       "new": "Нових",
       "debtors": "Боржників",
@@ -591,7 +592,9 @@
     },
     "modeling": {
       "total": "Всього замовлень",
+      "total_short": "Замовлень",
       "amount": "Замовлень на суму,₴",
+      "amount_short": "Сума,₴",
       "paid": "$t(dictionary.paid)",
       "unpaid": "$t(dictionary.unpaid)",
       "table_headers": {
@@ -605,10 +608,12 @@
     },
     "expenses": {
       "total": "Сума витрат",
+      "total_short": "Витрати",
       "modeling": "$t(dictionary.modeling)",
       "printing": "$t(dictionary.printing)",
       "materials": "Матеріали",
       "other": "Інші витрати",
+      "other_short": "Інші",
       "all_expenses": "Всі витрати",
       "table_headers": {
         "date": "$t(dictionary.date)",

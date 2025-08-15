@@ -25,6 +25,7 @@ import { cn, defineFromToDates } from "@/lib/utils";
 
 interface ReportIndicator {
   label: string;
+  labelShort: string;
   value: string | number | null;
   color: string;
 }
@@ -212,7 +213,12 @@ const TopBar = ({
               key={`${indicator.value}-${indicator.label}`}
               className="flex flex-col gap-1.5 items-center"
             >
-              <InfoLabel className="text-sm">{indicator.label}</InfoLabel>
+              <InfoLabel className="text-sm hidden lg:flex">
+                {indicator.label}
+              </InfoLabel>
+              <InfoLabel className="text-sm flex lg:hidden">
+                {indicator.labelShort}
+              </InfoLabel>
               <InfoValue
                 className={cn("text-lg font-semibold", indicator.color)}
               >
