@@ -40,6 +40,9 @@ const ERROR_MESSAGES = {
   NO_TOKEN: "No token provided",
   FAILED_TO_SEND_MESSAGE: "Failed to create message",
   MISSING_ORDER_ID: "Order id is required",
+  INVALID_CURRENT_PASSWORD: "Invalid current password",
+  MISSING_JWT_SECRET: "JWT secret not configured",
+  NEW_PASSWORD_SAME_AS_OLD: "New password is the same as old",
 } as const;
 
 export default ERROR_MESSAGES;

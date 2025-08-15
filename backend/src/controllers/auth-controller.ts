@@ -6,6 +6,7 @@ import { PersonService } from "../services/person-service";
 import AppError from "../utils/AppError";
 import ERROR_MESSAGES from "../constants/error-messages";
 import INFO_MESSAGES from "../constants/info-messages";
+import { clearRefreshCookie, setRefreshCookie } from "../utils/cookies";
 
 export const AuthController = {
   async login(req: Request, res: Response, next: NextFunction) {
@@ -15,8 +16,15 @@ export const AuthController = {
       if (!email || !password) {
         throw new AppError(ERROR_MESSAGES.PASSWORD_EMAIL_REQUIRED, 400);
       }
-      const result = await AuthService.login(email, password);
-      res.status(200).json(result);
+      const { token, refresh_token, person } = await AuthService.login(
+        email,
+        password
+      );
+      if (refresh_token) {
+        setRefreshCookie(res, refresh_token);
+      }
+
+      res.status(200).json({ token, person });
     } catch (error) {
       next(error);
     }
@@ -24,28 +32,36 @@ export const AuthController = {
 
   async logout(req: Request, res: Response, next: NextFunction) {
     try {
-      const refreshToken = req.body;
+      const rt = req.cookies?.rt;
 
-      if (!refreshToken) {
-        throw new AppError(ERROR_MESSAGES.MISSING_REFRESH_TOKEN, 400);
+      if (!rt) {
+        clearRefreshCookie(res);
+        res.status(204).end();
       }
 
-      await AuthService.logout(refreshToken);
-      res.status(200).json({ message: INFO_MESSAGES.SUCCESS_LOGOUT });
+      await AuthService.logout(rt);
+      clearRefreshCookie(res);
+      return res.status(204).end();
     } catch (error) {
       next(error);
     }
   },
   async refreshToken(req: Request, res: Response, next: NextFunction) {
     try {
-      const { refresh_token } = req.body;
+      const rt = req.cookies?.rt;
 
-      if (!refresh_token) {
+      if (!rt) {
         throw new AppError(ERROR_MESSAGES.MISSING_REFRESH_TOKEN, 400);
       }
 
-      const result = await AuthService.refreshAccessToken(refresh_token);
-      res.status(200).json(result);
+      const { token, person, refresh_token } =
+        await AuthService.refreshAccessToken(rt);
+
+      if (refresh_token) {
+        setRefreshCookie(res, refresh_token);
+      }
+
+      res.status(200).json({ token, person });
     } catch (error) {
       next(error);
     }
@@ -91,6 +107,30 @@ export const AuthController = {
       }
 
       res.status(200).json(person);
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  async changePassword(req: Request, res: Response, next: NextFunction) {
+    try {
+      const userId = req.user?.id;
+
+      if (!userId) {
+        throw new AppError(ERROR_MESSAGES.UNAUTHORIZED, 401);
+      }
+      const { currentPassword, newPassword } = req.body;
+
+      const { token, refresh_token, person } = await AuthService.changePassword(
+        Number(userId),
+        currentPassword,
+        newPassword
+      );
+
+      if (refresh_token) {
+        setRefreshCookie(res, refresh_token);
+      }
+      res.status(200).json({ token, person });
     } catch (error) {
       next(error);
     }

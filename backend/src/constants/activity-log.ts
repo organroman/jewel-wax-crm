@@ -11,6 +11,8 @@ export const LOG_ACTIONS = {
   CREATE_PERSON: "create_person",
   UPDATE_PERSON: "update_person",
   DELETE_PERSON: "delete_person",
+  PASSWORD_CHANGE: "password_change",
+  PASSWORD_RESET: "password_reset",
   CREATE_ORDER: "create_order",
   UPDATE_ORDER: "update_order",
   DELETE_ORDER: "delete_order",

@@ -16,7 +16,7 @@ import errorHandler from "./middlewares/error-handler-middleware";
 import { verifyToken } from "./middlewares/auth-middleware";
 import { socketAuthMiddleware } from "./middlewares/socket-auth-middleware";
 
-import authRoutes from "./routes/auth-rotes";
+import authRoutes from "./routes/auth-routes";
 import enumRoutes from "./routes/enum-routes";
 import personRoutes from "./routes/person-routes";
 import orderRoutes from "./routes/order-routes";
