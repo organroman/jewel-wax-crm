@@ -18,7 +18,7 @@ const OrderFilesPreview = ({
   currentIdx,
 }: OrderFilesPreviewProps) => {
   return (
-    <div className="mt-5 flex flex-row w-full gap-2.5 overflow-x-scroll scroll-on-hover scrollbar-thin">
+    <div className="mt-5 flex flex-row w-full gap-2.5 overflow-x-scroll">
       {previews?.map((file, index) => (
         <div
           key={file.url}

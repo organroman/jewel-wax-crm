@@ -110,7 +110,7 @@ const AsyncCombobox = <T,>({
         </RadixPopover.Trigger>
         <RadixPopover.Content
           className={cn(
-            "w-full p-0 max-h-64 overflow-y-auto fixed z-[9999] overflow-auto ",
+            "w-full p-0 max-h-64 overflow-y-auto fixed z-[9999] overflow-auto",
             popoverContentClassName
           )}
           align="start"

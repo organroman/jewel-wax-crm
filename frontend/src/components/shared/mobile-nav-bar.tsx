@@ -25,7 +25,7 @@ const MobileNavBar = ({ role }: { role: PersonRoleValue }) => {
   }, [pathName]);
 
   return (
-    <ul className="flex w-full overflow-x-auto pb-4 px-2">
+    <ul className="flex w-full  overflow-y-hidden overflow-x-auto pb-2 px-2">
       {MENU_LIST.map((route) => {
         const isActive = pathName.includes(route.href);
         const Icon = route.icon;
@@ -36,7 +36,7 @@ const MobileNavBar = ({ role }: { role: PersonRoleValue }) => {
                 ref={isActive ? activeItemRef : null}
                 className={cn(
                   "flex min-w-[78px] flex-col gap-0.5 items-center rounded-xs px-2.5 py-4.5 w-full text-xs transition hover:bg-brand-default",
-                  isActive &&
+                  isActive && 
                     "bg-brand-menu shadow-sm hover:bg-brand-default text-brand-dark"
                 )}
               >

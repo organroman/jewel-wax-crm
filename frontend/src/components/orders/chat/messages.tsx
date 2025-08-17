@@ -90,7 +90,7 @@ const Messages = ({
   return (
     <div
       className={cn(
-        "w-full h-full flex flex-col gap-5 overflow-y-scroll scroll-thin scroll-on-hover bg-ui-row-even py-2.5 px-5",
+        "w-full h-full flex flex-col gap-5 overflow-y-scroll bg-ui-row-even py-2.5 px-5",
         isDragging
           ? "bg-ui-sidebar border-2 rounded-sm border-dashed border-text-regular"
           : ""

@@ -159,7 +159,7 @@ const FormArrayDeliveryAddress = <T extends FieldValues>({
   const handleToggleMain = (index: number) => {
     fields.forEach((_, i) => {
       setValue(
-        `${name}.${i}.is_main` as Path<T>,
+        `${name}.${i}.is_main` as any,
         (i === index) as PathValue<T, any>,
         { shouldDirty: true }
       );
@@ -290,6 +290,7 @@ const FormArrayDeliveryAddress = <T extends FieldValues>({
               className="min-w-full"
               popoverContentClassName="min-w-[470px] max-w-[470px]"
               isLoading={isLoadingCities}
+              labelPosition="top"
             />
 
             {deliveryType === "warehouse" && (
@@ -314,6 +315,7 @@ const FormArrayDeliveryAddress = <T extends FieldValues>({
                 className="min-w-full"
                 popoverContentClassName="min-w-[470px] max-w-[470px]"
                 isLoading={isLoadingWarehouses}
+                labelPosition="top"
               />
             )}
 

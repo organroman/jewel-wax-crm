@@ -40,7 +40,7 @@ const OrderInfo = ({ order }: OrderInfoProps) => {
             )}
           </div>
           {!!otherImages.length && (
-            <div className="mt-5 pb-4 flex flex-row w-full gap-2.5 overflow-x-auto scroll-on-hover scrollbar-thin">
+            <div className="mt-5 pb-4 flex flex-row w-full gap-2.5 overflow-x-auto">
               {otherImages.map((i) => (
                 <div
                   key={i.id}

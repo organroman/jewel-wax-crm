@@ -39,7 +39,7 @@ const ProtectedLayout = async ({ children }: { children: React.ReactNode }) => {
           </main>
         </div>
       </div>
-      <div className="w-full overflow-x-auto flex lg:hidden">
+      <div className="w-full flex lg:hidden">
         <ClientOnly>
           <MobileNavBar role={role} />
         </ClientOnly>

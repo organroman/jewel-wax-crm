@@ -46,17 +46,14 @@ const TabsFilter = ({ param, options, counts }: TabsFilterProps) => {
               value={value}
               className="p-0 grow-0 flex items-center font-semibold pb-5 cursor-pointer data-[state=active]:border-b-2 data-[state=active]:border-brand-default   data-[state=active]:text-primary data-[state=active]:shadow-none data-[state=active]:bg-transparent border-t-0 border-l-0 border-r-0 data-[state=active]:rounded-none"
             >
-              {label} {/* {counts && counts?.[value] && ( */}
+              {label}
               <Badge
                 className={cn(
-                  "bg-transparent block p-0 text-sm font-medium text-brand-default",
-                  counts?.[value] && counts[value] > 10
-                    ? "w-[16px]"
-                    : value !== "all" && "w-[12px]"
+                  "bg-transparent block p-0 text-sm font-medium text-brand-default w-[22px]",
+                  value == "all" && "w-[0px]"
                 )}
               >
                 {counts && counts?.[value] && counts[value]}
-                {/* counts?.[value]} */}
               </Badge>
             </TabsTrigger>
           );

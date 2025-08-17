@@ -18,7 +18,7 @@ const ChatImages = ({ images }: ChatImagesProps) => {
     );
   }
   return (
-    <div className="w-full h-full overflow-y-scroll scroll-on-hover scroll-thin px-5 pt-4">
+    <div className="w-full h-full overflow-y-scroll px-5 pt-4">
       <div className="grid grid-cols-2 gap-x-2.5 gap-y-5">
         {images.map((i) => (
           <div

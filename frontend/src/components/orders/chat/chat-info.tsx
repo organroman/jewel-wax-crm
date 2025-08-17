@@ -83,7 +83,7 @@ const ChatInfo = ({
               <InfoLabel className="text-sm">{opponent.phone}</InfoLabel>
               <div className="flex items-center gap-5">
                 <InfoLabel className="text-text-regular">
-                  {t(`person.roles.${opponent.role.value}`)}
+                  {t(`person.roles.${opponent.role}`)}
                 </InfoLabel>
                 <InfoLabel className="text-action-alert">
                   № ID {opponent.person_id}
