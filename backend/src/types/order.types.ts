@@ -124,6 +124,7 @@ export interface OrderBase {
   printing_cost?: number;
   created_by: number;
   payment_status?: PaymentStatus;
+  active_stage_status_started_at?: Date;
 }
 
 export interface UserOrder {

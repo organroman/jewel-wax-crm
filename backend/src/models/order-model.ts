@@ -197,7 +197,7 @@ export const OrderModel = {
       orderId
     );
   },
-  async getOrderStagesByOrderIds(orderIds: number[]) {
+  async getOrderStagesByOrderIds(orderIds: number[]): Promise<OrderStage[]> {
     return await db<OrderStage>("order_stage_statuses").whereIn(
       "order_id",
       orderIds
