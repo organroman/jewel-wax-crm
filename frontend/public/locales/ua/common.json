@@ -58,7 +58,8 @@
     "partly_paid": "Частково оплачено",
     "cash": "Готівка",
     "debt": "Борг",
-    "person": "Контрагент"
+    "person": "Контрагент",
+    "dashboard": "Дашборд"
   },
   "labels": {
     "main": "$t(dictionary.main)",
@@ -103,6 +104,37 @@
     "confirm_new_password": "Підтвердіть пароль",
     "change_password": "Змінити пароль",
     "logout": "Вийти"
+  },
+  "dashboard": {
+    "dashboard": "$t(dictionary.dashboard)",
+    "total_orders": "Всього замовлень",
+    "today_orders": "Сьогодні замовлень",
+    "modeling": "$t(dictionary.modeling)",
+    "print": "$t(dictionary.printing)",
+    "milling": "$t(dictionary.milling)",
+    "delivery": "$t(dictionary.delivery)",
+    "new_requests": "Необроблених заявок",
+    "new_notifications": "Внутіршніх повідомлень",
+    "modellers": "Модельєри",
+    "order_readiness": "Готовність замовлення",
+    "problem_orders": "Проблемні замовлення",
+    "favorite": "В обраних",
+    "important": "Термінові замовлення",
+    "finance": "Фінанси",
+    "order_payments": "Оплата замовлень",
+    "unpaid": "$t(dictionary.unpaid)",
+    "partly_paid": "$t(dictionary.partly_paid)",
+    "paid": "$t(dictionary.paid)",
+    "actual_income": "Фактичний дохід",
+    "planed_income": "Запланований",
+    "actual_expenses": "Фактичні витрати",
+    "planed_expenses": "Заплановані",
+    "actual_profit": "Фактичний прибуток",
+    "planed_profit": "Запланований прибуток",
+    "payment_status": "$t(dictionary.payment_status)",
+    "total_amount": "Загальна сума",
+    "planed": "Запланована",
+    "profitability": "рентабельність"
   },
 
   "person": {
@@ -656,7 +688,7 @@
   },
 
   "main_menu": {
-    "dashboard": "Дашборд",
+    "dashboard": "$t(dictionary.dashboard)",
     "requests": "Заявки",
     "orders": "Замовлення",
     "finance": "Фінанси",

@@ -9,7 +9,6 @@
 }
 
 ::-webkit-scrollbar-track {
-
   background: var(--color-ui-screen);
 }
 
@@ -17,7 +16,6 @@
   background: var(--color-text-light);
   border-radius: 8px;
 }
-
 
 @theme {
   --color-brand-default: oklch(
@@ -237,4 +235,3 @@
     font-family: var(--font-inter-sans);
   }
 }
-
