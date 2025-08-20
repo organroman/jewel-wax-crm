@@ -4,7 +4,7 @@ import { TabOption } from "@/types/shared.types";
 import { PersonRoleValue } from "@/types/person.types";
 
 import { useRouter, useSearchParams } from "next/navigation";
-import { ChevronLeftIcon, Loader } from "lucide-react";
+import { Loader } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { useEffect, useState } from "react";
@@ -13,9 +13,9 @@ import { useOrder } from "@/api/order/use-order";
 import { useUpload } from "@/api/upload/use-upload";
 import { useOrderPermissions } from "@/hooks/use-order-permissions";
 
-import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 
+import BackButton from "@/components/shared/back-button";
 import CustomTabs from "@/components/shared/custom-tabs";
 import OrderCardHeader from "@/components/orders/order-card-header";
 import OrderForm from "@/components/orders/form/order/order-form";
@@ -98,13 +98,7 @@ const OrderClient = ({
 
   return (
     <div className="h-full flex flex-col overflow-hidden">
-      <Button
-        onClick={() => router.back()}
-        variant="link"
-        className="w-fit has-[>svg]:p-0 text-text-light h-4"
-      >
-        <ChevronLeftIcon /> {t("buttons.back_to_table")}
-      </Button>
+      <BackButton />
       <CustomTabs
         selectedTab={selectedTab}
         handleChange={handleChange}

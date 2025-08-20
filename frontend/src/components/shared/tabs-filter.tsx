@@ -36,7 +36,7 @@ const TabsFilter = ({ param, options, counts }: TabsFilterProps) => {
       defaultValue={current}
       value={current}
       onValueChange={handleChange}
-      className="mt-2 lg:mt-7.5"
+      // className="mt-2 lg:mt-7.5"
     >
       <TabsList className="w-full overflow-x-auto justify-start gap-4 border-none  bg-transparent px-1 ">
         {options.map(({ value, label }) => {

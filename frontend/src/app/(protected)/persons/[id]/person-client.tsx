@@ -2,7 +2,7 @@
 import { TabOption } from "@/types/shared.types";
 import { Country } from "@/types/location.types";
 
-import { ChevronLeftIcon, Loader } from "lucide-react";
+import { Loader } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
@@ -14,17 +14,17 @@ import { useLocation } from "@/api/locations/use-location";
 import { useDialog } from "@/hooks/use-dialog";
 
 import CustomTabs from "@/components/shared/custom-tabs";
+import BackButton from "@/components/shared/back-button";
 import PersonForm from "@/components/persons/person-form";
 import CountryForm from "@/components/persons/location/country-form";
 import CityForm from "@/components/persons/location/city-form";
+import PersonChangesHistory from "@/components/persons/person-changes-history";
 
-import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Dialog } from "@/components/ui/dialog";
 
 import { PERSON_CARD_TABS_LIST } from "@/constants/persons.constants";
 import { translateKeyValueList } from "@/lib/translate-constant-labels";
-import PersonChangesHistory from "@/components/persons/person-changes-history";
 
 const PersonClient = ({ id }: { id: number }) => {
   const router = useRouter();
@@ -126,13 +126,7 @@ const PersonClient = ({ id }: { id: number }) => {
 
   return (
     <div className="h-full flex flex-col overflow-hidden">
-      <Button
-        onClick={() => router.back()}
-        variant="link"
-        className=" w-fit has-[>svg]:p-0 text-text-light h-4"
-      >
-        <ChevronLeftIcon /> {t("buttons.back_to_table")}
-      </Button>
+      <BackButton />
       <CustomTabs
         selectedTab={selectedTab}
         handleChange={handleChange}

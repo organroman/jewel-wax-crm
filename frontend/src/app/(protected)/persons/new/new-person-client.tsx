@@ -2,7 +2,6 @@
 import { Country } from "@/types/location.types";
 
 import { useQueryClient } from "@tanstack/react-query";
-import { ChevronLeftIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTranslation } from "react-i18next";
 import { useState } from "react";
@@ -13,7 +12,8 @@ import { useDialog } from "@/hooks/use-dialog";
 
 import PersonForm from "@/components/persons/person-form";
 import CustomTabs from "@/components/shared/custom-tabs";
-import { Button } from "@/components/ui/button";
+import BackButton from "@/components/shared/back-button";
+
 import { Separator } from "@/components/ui/separator";
 import { Dialog } from "@/components/ui/dialog";
 
@@ -77,13 +77,7 @@ const NewPersonClient = () => {
 
   return (
     <div className="h-full flex flex-1 flex-col overflow-y-hidden">
-      <Button
-        onClick={() => router.back()}
-        variant="link"
-        className="w-fit has-[>svg]:p-0 text-text-light h-4"
-      >
-        <ChevronLeftIcon /> {t("buttons.back_to_table")}
-      </Button>
+      <BackButton />
       <CustomTabs selectedTab={tabs[0]} tabsOptions={tabs} />
       <Separator className="bg-ui-border h-0.5 data-[orientation=horizontal]:h-0.5" />
       <div className="mt-4 flex-1 overflow-y-hidden">

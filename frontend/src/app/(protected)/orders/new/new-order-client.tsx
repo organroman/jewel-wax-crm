@@ -1,21 +1,20 @@
 "use client";
 
 import { useQueryClient } from "@tanstack/react-query";
-import { ChevronLeftIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTranslation } from "react-i18next";
 
 import { useOrder } from "@/api/order/use-order";
+import { useUpload } from "@/api/upload/use-upload";
 
-import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import CustomTabs from "@/components/shared/custom-tabs";
-
-import { ORDER_CARD_TABS_LIST } from "@/constants/orders.constants";
-import { translateKeyValueList } from "@/lib/translate-constant-labels";
-import OrderForm from "@/components/orders/form/order/order-form";
-import { useUpload } from "@/api/upload/use-upload";
+import BackButton from "@/components/shared/back-button";
 import OrderCardHeader from "@/components/orders/order-card-header";
+import OrderForm from "@/components/orders/form/order/order-form";
+
+import { translateKeyValueList } from "@/lib/translate-constant-labels";
+import { ORDER_CARD_TABS_LIST } from "@/constants/orders.constants";
 
 const NewOrderClient = ({ userId }: { userId: number }) => {
   const { t } = useTranslation();
@@ -39,13 +38,7 @@ const NewOrderClient = ({ userId }: { userId: number }) => {
 
   return (
     <div className="h-full flex flex-col overflow-hidden">
-      <Button
-        onClick={() => router.back()}
-        variant="link"
-        className="w-fit has-[>svg]:p-0 text-text-light h-4"
-      >
-        <ChevronLeftIcon /> {t("buttons.back_to_table")}
-      </Button>
+      <BackButton />
       <CustomTabs selectedTab={tabs[0]} tabsOptions={tabs} />
       <Separator className="bg-ui-border h-0.5 data-[orientation=horizontal]:h-0.5" />
       <div className="mt-4 h-full flex flex-1 flex-col overflow-hidden">
