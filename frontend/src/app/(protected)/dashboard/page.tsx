@@ -1,9 +1,7 @@
-import React from 'react'
+import DashboardClient from "./dashboard-client";
 
 const DashboardPage = () => {
-  return (
-    <div>DashboardPage</div>
-  )
-}
+  return <DashboardClient />;
+};
 
-export default DashboardPage
+export default DashboardPage;
