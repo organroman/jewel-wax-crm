@@ -78,10 +78,10 @@ const PaymentsAmountChart = ({
         </InfoLabel>
       </div>
       <div className="flex flex-1 items-center justify-center">
-        <div className="w-[370px] h-[280px]">
+        <div className="w-[370px] h-[220px]">
           <ChartContainer
             config={chartConfig}
-            className="m-auto aspect-square max-h-[280px] self-center p-0"
+            className="m-auto aspect-square max-h-[220px] self-center p-0"
           >
             <PieChart>
               {/* <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} /> */}
@@ -90,7 +90,7 @@ const PaymentsAmountChart = ({
                 dataKey="count"
                 nameKey="status"
                 innerRadius={40}
-                outerRadius={140}
+                outerRadius={110}
                 labelLine={false}
                 label={renderCustomizedLabel}
               >

@@ -43,7 +43,9 @@ const ReadinessChart = ({
     innerRadius,
     outerRadius,
     percent,
+    value,
   }: any) => {
+    if (value === 0) return null;
     const radius = innerRadius + (outerRadius - innerRadius) / 2;
     const x = cx + radius * Math.cos(-midAngle * (Math.PI / 180));
     const y = cy + radius * Math.sin(-midAngle * (Math.PI / 180));

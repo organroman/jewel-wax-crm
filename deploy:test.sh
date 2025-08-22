@@ -98,7 +98,7 @@ ssh $SERVER << EOF
   echo "🚀 Starting frontend..."
   cd ../frontend
   npm install --legacy-peer-deps
-  NODE_ENV=production npm run build 
+  NODE_OPTIONS="--max-old-space-size=4096" NODE_ENV=production npm run build
   pm2 delete frontend || true
   pm2 start npm --name frontend -- run start
 

@@ -61,10 +61,10 @@ const ActualPlanIndicators = ({
         planedValue={planedProfit}
       />
       <div className="flex flex-col items-center justify-center">
-        <div className="w-full h-[200px]">
+        <div className="w-full h-[160px]">
           <ChartContainer
             config={chartConfig}
-            className="mx-auto aspect-square max-h-[200px]"
+            className="mx-auto aspect-square max-h-[160px]"
           >
             <PieChart>
               <Pie
@@ -72,7 +72,7 @@ const ActualPlanIndicators = ({
                 dataKey="count"
                 nameKey="status"
                 innerRadius={60}
-                outerRadius={90}
+                outerRadius={80}
                 strokeWidth={5}
               >
                 <Label
