@@ -45,17 +45,16 @@ export const ContactService = {
 
     const contact = await ContactModel.create(data);
 
-    if (data.source === "manually") {
-      await ActivityLogModel.logAction({
-        actor_id: authorId || null,
-        action: LOG_ACTIONS.CREATE_CONTACT,
-        target_type: LOG_TARGETS.CONTACT,
-        target_id: contact.id,
-        details: {
-          contact,
-        },
-      });
-    }
+    await ActivityLogModel.logAction({
+      actor_id: authorId || null,
+      action: LOG_ACTIONS.CREATE_CONTACT,
+      target_type: LOG_TARGETS.CONTACT,
+      target_id: contact.id,
+      details: {
+        contact,
+      },
+    });
+
     return contact;
   },
 

@@ -25,7 +25,7 @@ export const UploadService = {
       height: item.height,
       size: item.bytes,
       name: item.name,
-      uploaded_by: userId,
+      uploaded_by: userId ?? null,
     }));
 
     const fileResults = await UploadModel.uploadFiles(otherFiles);
@@ -39,6 +39,5 @@ export const UploadService = {
     }));
 
     return [...images, ...filesMeta];
-
   },
 };

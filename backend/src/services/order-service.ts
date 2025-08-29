@@ -54,15 +54,20 @@ export const OrderService = {
       OrderModel.countByStage("done"),
     ]);
 
+    const orderIds = orders.data.map((o) => o.id);
     const stageMap = await OrderModel.getOrderStagesForOrders(
-      orders.data.map((o) => o.id),
+      orderIds,
       user_role
     );
 
+    const chats = await OrderChatModel.getChatIdsByOrderIds(orderIds);
+
     const enriched = orders.data.map((order) => {
+      const chat = chats.find((chat) => chat.order_id === order.id);
       const base = {
         ...order,
         stages: stageMap[order.id] ?? [],
+        chat_id: chat ? chat.chat_id : null,
         processing_days:
           order.processing_days ??
           Math.ceil(

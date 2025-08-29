@@ -50,6 +50,9 @@ export const ContactModel = {
       order,
     });
   },
+  async getContactsByIds(ids: number[]): Promise<Contact[]> {
+    return await db<Contact>("contacts").whereIn("id", ids).select("*");
+  },
   async findById(contactId: number): Promise<Contact | null> {
     const [contact] = await db<Contact>("contacts")
       .where("id", contactId)

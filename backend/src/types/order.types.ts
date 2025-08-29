@@ -168,6 +168,7 @@ export interface AdminOrder {
   milling_cost?: number;
   modeling_cost?: number;
   printing_cost?: number;
+  chat_id?: number | null;
   chat?: { chat_id: number; participants: ChatParticipantFull[] } | null;
 }
 

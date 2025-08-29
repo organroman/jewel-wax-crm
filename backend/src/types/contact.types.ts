@@ -1,16 +1,18 @@
 import { CONTACT_SOURCE } from "../constants/enums";
+import { Provider } from "./chat.types";
 import { GetAllOptions } from "./shared.types";
 
 export type ContactSource = (typeof CONTACT_SOURCE)[number];
 
 export interface Contact {
   id: number;
-  source: ContactSource;
+  source: Provider | string;
   external_id: string;
-  username?: string;
-  full_name?: string;
-  phone?: string;
-  person_id?: number;
+  username?: string | null;
+  full_name?: string | null;
+  phone?: string | null;
+  person_id?: number | null;
+  avatar_url?: string | null;
   created_at: Date;
   updated_at: Date;
 }
@@ -18,10 +20,10 @@ export interface Contact {
 export interface CreateContactInput {
   source: ContactSource;
   external_id: string;
-  username?: string;
-  full_name?: string;
-  phone?: string;
-  person_id?: number;
+  username?: string | null;
+  full_name?: string | null;
+  phone?: string | null;
+  person_id?: number | null;
 }
 
 export type GetAllContactsOptions = GetAllOptions<{

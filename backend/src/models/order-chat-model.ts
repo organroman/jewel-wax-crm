@@ -27,6 +27,15 @@ export const OrderChatModel = {
     return chat;
   },
 
+  async getChatIdsByOrderIds(
+    orderIds: number[]
+  ): Promise<{ order_id: number; chat_id: number }[]> {
+    const chats = await db<OrderChat>("order_chats")
+      .whereIn("order_id", orderIds)
+      .select("*");
+    return chats.map((chat) => ({ chat_id: chat.id, order_id: chat.order_id }));
+  },
+
   async createChat(data: OrderChatInput): Promise<OrderChat> {
     const [newChat] = await db<OrderChat>("order_chats")
       .insert(data)
@@ -177,19 +186,138 @@ export const OrderChatModel = {
 
   /*** MESSAGE READS------  */
   async markAsRead(messageId: number, readerId: number) {
-    db("order_chat_message_reads")
-      .insert({
-        id: crypto.randomUUID(),
-        message_id: messageId,
-        reader_id: readerId,
-      })
-      .onConflict(["message_id", "reader_id"])
-      .ignore();
+    await db.raw(
+      `
+    INSERT INTO order_chat_message_reads (message_id, reader_id, read_at, chat_id)
+    SELECT m.id, ?, NOW(), m.chat_id
+    FROM order_chat_messages m
+    WHERE m.id = ?
+      AND m.sender_id <> ?       -- don't mark your own msgs
+    ON CONFLICT (message_id, reader_id) DO NOTHING
+    `,
+      [readerId, messageId, readerId]
+    );
   },
 
   async getReadsByMessage(messageId: number) {
-    db("order_chat_message_reads").where({ message_id: messageId });
+    return await db("order_chat_message_reads").where({
+      message_id: messageId,
+    });
   },
+
+  async getLatestMessageId(chatId: number): Promise<number | null> {
+    const row = await db<OrderChatMessage>("order_chat_messages")
+      .where("chat_id", chatId)
+      .max<{ max: string }>("id as max")
+      .first();
+    return row?.max ? Number(row.max) : null;
+  },
+  async markPointerRead(
+    chatId: number,
+    personId: number,
+    lastMessageId: number
+  ) {
+    await db.raw(
+      `
+    INSERT INTO order_chat_reads (chat_id, person_id, last_read_message_id, last_read_at)
+    VALUES (?, ?, ?, NOW())
+    ON CONFLICT (chat_id, person_id)
+    DO UPDATE SET
+      last_read_message_id = GREATEST(
+        COALESCE(order_chat_reads.last_read_message_id, 0),
+        EXCLUDED.last_read_message_id
+      ),
+      last_read_at = NOW()
+  `,
+      [chatId, personId, lastMessageId]
+    );
+  },
+
+  async markAsReadUpTo(
+    chatId: number,
+    personId: number,
+    lastMessageId: number
+  ) {
+    await db.transaction(async (trx) => {
+      // 1) pointer
+      await trx.raw(
+        `
+      INSERT INTO order_chat_reads (chat_id, person_id, last_read_message_id, last_read_at)
+      VALUES (?, ?, ?, NOW())
+      ON CONFLICT (chat_id, person_id)
+      DO UPDATE SET
+        last_read_message_id = GREATEST(
+          COALESCE(order_chat_reads.last_read_message_id, 0),
+          EXCLUDED.last_read_message_id
+        ),
+        last_read_at = NOW()
+      `,
+        [chatId, personId, lastMessageId]
+      );
+
+      // 2) per-message receipts (exclude author's msgs) — NOW WITH chat_id
+      await trx.raw(
+        `
+      INSERT INTO order_chat_message_reads (message_id, reader_id, read_at, chat_id)
+      SELECT m.id, ?, NOW(), m.chat_id
+      FROM order_chat_messages m
+      LEFT JOIN order_chat_message_reads r
+        ON r.message_id = m.id AND r.reader_id = ?
+      WHERE m.chat_id = ?
+        AND m.id <= ?
+        AND m.sender_id <> ?
+        AND r.message_id IS NULL
+      ON CONFLICT (message_id, reader_id) DO NOTHING
+      `,
+        [personId, personId, chatId, lastMessageId, personId]
+      );
+    });
+  },
+
+  async getUnreadCountForChat(
+    chatId: number,
+    personId: number
+  ): Promise<number> {
+    const row = await db("order_chat_messages as m")
+      .leftJoin("order_chat_reads as cr", function () {
+        this.on("cr.chat_id", "=", "m.chat_id").andOn(
+          "cr.person_id",
+          "=",
+          db.raw("?", [personId])
+        );
+      })
+      .where("m.chat_id", chatId)
+      .andWhere("m.sender_id", "<>", personId)
+      .andWhereRaw(
+        "(cr.last_read_message_id IS NULL OR m.id > cr.last_read_message_id)"
+      )
+      .count<{ cnt: string }>("m.id as cnt")
+      .first();
+
+    return Number(row?.cnt || 0);
+  },
+
+  async unreadByChat(
+    personId: number
+  ): Promise<{ chat_id: number; unread: string }[]> {
+    // returns [{ chat_id, unread }]
+    return await db("order_chat_messages as m")
+      .leftJoin("order_chat_reads as cr", function () {
+        this.on("cr.chat_id", "=", "m.chat_id").andOn(
+          "cr.person_id",
+          "=",
+          db.raw("?", [personId])
+        );
+      })
+      .select("m.chat_id")
+      .where("m.sender_id", "<>", personId)
+      .andWhereRaw(
+        "(cr.last_read_message_id IS NULL OR m.id > cr.last_read_message_id)"
+      )
+      .groupBy("m.chat_id")
+      .count<{ chat_id: number; unread: string }[]>("m.id as unread");
+  },
+
   /*** MESSAGE REACTIONS------  */
   async react(messageId: number, personId: number, reaction = "like") {
     return await db("order_chat_message_reactions")

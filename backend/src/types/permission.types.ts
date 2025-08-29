@@ -2,6 +2,7 @@ import { PersonRole } from "./person.types";
 
 export type Module =
   | "PERSONS"
+  | "PERSON"
   | "CONTACTS"
   | "REQUESTS"
   | "ORDERS"

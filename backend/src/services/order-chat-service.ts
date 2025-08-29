@@ -185,9 +185,34 @@ export const OrderChatService = {
     });
     return result;
   },
+  async markThreadAsRead({
+    chatId,
+    personId,
+    lastMessageId,
+  }: {
+    chatId: number;
+    personId: number;
+    lastMessageId: number;
+  }) {
+    const latestId =
+      lastMessageId ?? (await OrderChatModel.getLatestMessageId(chatId));
+    if (!latestId) return;
+    await OrderChatModel.markAsReadUpTo(chatId, personId, latestId);
+  },
+
+  async getUnreadCount(chatId: number, personId: number) {
+    return await OrderChatModel.getUnreadCountForChat(chatId, personId);
+  },
 
   async markMessageAsRead(messageId: number, readerId: number) {
     return await OrderChatModel.markAsRead(messageId, readerId);
+  },
+
+  async getUnreadMapForUser(personId: number) {
+    const rows = await OrderChatModel.unreadByChat(personId);
+    const map: Record<number, number> = {};
+    for (const r of rows) map[r.chat_id] = Number(r.unread);
+    return map;
   },
 
   async toggleReaction({
