@@ -43,6 +43,10 @@ const ERROR_MESSAGES = {
   INVALID_CURRENT_PASSWORD: "Invalid current password",
   MISSING_JWT_SECRET: "JWT secret not configured",
   NEW_PASSWORD_SAME_AS_OLD: "New password is the same as old",
+  CONVERSATION_NOT_FOUND: "Conversation not found",
+  CHANNEL_NOT_FOUND: "Channel not found",
+  ADAPTER_NOT_CONFIGURED: "Provider adapter not configured",
+  UNKNOWN_PROVIDER: "Unknown provider",
 } as const;
 
 export default ERROR_MESSAGES;
