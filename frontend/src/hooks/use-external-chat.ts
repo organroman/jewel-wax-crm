@@ -1,76 +1,77 @@
-import { ChatMedia } from "@/types/order-chat.types";
-import { BadgePayload } from "@/types/unread.types";
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { getSocket } from "@/socket/socket";
+import { BadgePayload } from "@/types/unread.types";
 
-export const useOrderChat = ({
-  chatId,
+export function useExternalChat({
+  conversationId,
   onNewMessage,
   getLastMessageId,
 }: {
-  chatId: number;
-  onNewMessage: (msg: any) => void;
+  conversationId: number;
+  onNewMessage: (payload: any) => void;
   getLastMessageId: () => number | undefined;
-}) => {
+}) {
   const socket = getSocket();
   const [badges, setBadges] = useState<BadgePayload | null>(null);
-  const prevChatIdRef = useRef<number | null>(null);
+  const prevConversationIdRef = useRef<number | null>(null);
   const debounceRef = useRef<number | null>(null);
 
   useEffect(() => {
-    if (!socket || !chatId) return;
+    if (!socket || !conversationId) return;
 
-    if (prevChatIdRef.current && prevChatIdRef.current !== chatId) {
-      socket.emit("chat:leave", { chatId: prevChatIdRef.current });
+    if (
+      prevConversationIdRef.current &&
+      prevConversationIdRef.current !== conversationId
+    ) {
+      socket.emit("conversation:leave", {
+        conversationId: prevConversationIdRef.current,
+      });
     }
+    prevConversationIdRef.current = conversationId;
 
-    prevChatIdRef.current = chatId;
+    socket.emit("conversation:join", { conversationId });
 
-    socket.emit("chat:join", { chatId });
-
-    const handleNew = (msg: any) => {
-      onNewMessage(msg);
-      if (!document.hidden) markReadDebounced(); // auto-read when focused
+    const handleNew = (p: any) => {
+      onNewMessage(p);
+      if (!document.hidden) markReadDebounced();
     };
-
     const handleBadges = (p: BadgePayload) => setBadges(p);
     const handleVisibility = () => {
       if (!document.hidden) markReadDebounced();
     };
-
     socket.on("chat:newMessage", handleNew);
     socket.on("notif:badge", handleBadges);
     document.addEventListener("visibilitychange", handleVisibility);
 
-
     return () => {
-      socket.emit("chat:leave", { chatId });
+      socket.emit("conversation:leave", { conversationId });
       socket.off("chat:newMessage", handleNew);
       socket.off("notif:badge", handleBadges);
       document.removeEventListener("visibilitychange", handleVisibility);
       if (debounceRef.current) window.clearTimeout(debounceRef.current);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [socket, chatId, onNewMessage]);
+  }, [socket, conversationId, onNewMessage]);
 
   const markReadDebounced = () => {
     if (debounceRef.current) window.clearTimeout(debounceRef.current);
     debounceRef.current = window.setTimeout(() => {
       const lastId = getLastMessageId();
       if (!lastId) return;
-      socket.emit("chat:read", { chatId, lastMessageId: lastId });
+      socket.emit("conversation:read", {
+        conversationId,
+        lastMessageId: lastId,
+      });
     }, 200);
   };
 
-  const sendMessage = (message: string, media?: ChatMedia[]) => {
-    socket.emit("chat:send", { chatId, message, media });
+  const send = (text: string, attachments?: any[]) => {
+    socket.emit("conversation:send", { conversationId, text, attachments });
   };
-
   const unreadForThisChat = useMemo(
-    () => badges?.byConversation?.[`internal:${chatId}`] ?? 0,
-    [badges, chatId]
+    () => badges?.byConversation?.[`external:${conversationId}`] ?? 0,
+    [badges, conversationId]
   );
 
-  return { sendMessage, markRead: markReadDebounced, unreadForThisChat };
-};
+  return { send, markRead: markReadDebounced, unreadForThisChat };
+}
