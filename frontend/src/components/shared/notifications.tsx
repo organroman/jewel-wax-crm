@@ -1,5 +1,6 @@
 "use client";
 
+import { PersonRoleValue } from "@/types/person.types";
 import React from "react";
 import { Bell } from "lucide-react";
 import { useTranslation } from "react-i18next";
@@ -11,10 +12,17 @@ import { Tooltip, TooltipTrigger, TooltipContent } from "../ui/tooltip";
 
 import { splitUnread } from "@/lib/split-unread";
 
-const Notifications = () => {
+interface NotificationsProps {
+  role: PersonRoleValue;
+}
+const Notifications = ({ role }: NotificationsProps) => {
   const { t } = useTranslation();
-  const { total, byConversation } = useUnreadStore((s) => s);
+  const { byConversation } = useUnreadStore((s) => s);
   const { internalTotal, externalTotal } = splitUnread(byConversation);
+
+  const canViewExternal = role === "super_admin";
+
+  const total = internalTotal + (canViewExternal ? externalTotal : 0);
 
   return (
     <div className="relative">
@@ -28,16 +36,21 @@ const Notifications = () => {
               {t("topbar.chat")}: {internalTotal}
             </span>
           )}
-          {externalTotal > 0 && (
+          {externalTotal > 0 && canViewExternal && (
             <span>
               {t("topbar.requests")}: {externalTotal}
             </span>
           )}
+          {!externalTotal && !internalTotal && (
+            <span>{t("messages.info.no_new_messages")}</span>
+          )}
         </TooltipContent>
       </Tooltip>
-      <Badge className="absolute -top-1.5 -right-1.5 bg-action-alert rounded-full w-5 h-5 text-[10px] font-semibold text-white">
-        {total}
-      </Badge>
+      {total > 0 && (
+        <Badge className="absolute -top-1.5 -right-1.5 bg-action-alert rounded-full w-5 h-5 text-[10px] font-semibold text-white">
+          {total}
+        </Badge>
+      )}
     </div>
   );
 };
