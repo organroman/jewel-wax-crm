@@ -1,6 +1,6 @@
 import { Server } from "socket.io";
-import { registerOrderChatHandlers } from "./order-chat.socket";
+import { registerChatsHandlers } from "./chats.socket";
 
 export function registerSocketHandlers(io: Server) {
-  registerOrderChatHandlers(io);
+  registerChatsHandlers(io);
 }
