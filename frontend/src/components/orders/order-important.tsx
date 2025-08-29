@@ -34,7 +34,7 @@ const OrderImportant = ({
       <CircleAlertIcon
         className={cn(
           "size-5 text-text-light",
-          is_important && "text-action-alert"
+          is_important && "fill-action-alert stroke-white"
         )}
       />
     </Button>
