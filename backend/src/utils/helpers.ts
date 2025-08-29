@@ -233,3 +233,30 @@ export function defineTotalExpensesAmountByCategory(
     .filter((exp) => exp.category === category)
     .reduce((sum, exp) => sum + Number(exp.amount || 0), 0);
 }
+export async function getSecret(ref?: string) {
+  if (!ref) return undefined;
+  return process.env[`SECRET__${ref}`];
+}
+
+import { Readable } from "stream";
+
+export function makeMulterFile(args: {
+  buffer: Buffer;
+  mimetype: string;
+  originalname: string;
+}): Express.Multer.File {
+  const { buffer, mimetype, originalname } = args;
+
+  return {
+    fieldname: "file",
+    originalname,
+    encoding: "7bit",
+    mimetype,
+    size: buffer.length,
+    buffer, // MemoryStorage-style
+    stream: Readable.from(buffer), // some libs read from stream
+    destination: "", // DiskStorage fields (unused)
+    filename: originalname,
+    path: "",
+  } as unknown as Express.Multer.File;
+}
