@@ -3,6 +3,7 @@
 import { useTranslation } from "react-i18next";
 import { Loader } from "lucide-react";
 
+import { useUnreadStore } from "@/stores/use-unread-store";
 import { useDashboard } from "@/api/dashboard/use-dashboard";
 
 import CustomTabs from "@/components/shared/custom-tabs";
@@ -17,9 +18,14 @@ import MarkedOrderIndicators from "@/components/dashboard/marked-order-indicator
 import FinanceIndicators from "@/components/dashboard/finance-indicators";
 import ModellerPaymentIndicators from "@/components/dashboard/modeller-payment-indicators";
 
+import { splitUnread } from "@/lib/split-unread";
+
 const DashboardClient = () => {
   const { t } = useTranslation();
   const { data, isLoading } = useDashboard.getAll({ enabled: true });
+  const { byConversation } = useUnreadStore((s) => s);
+
+  const badges = splitUnread(byConversation);
 
   const tabsOptions = [
     {
@@ -53,8 +59,8 @@ const DashboardClient = () => {
             totalModeling={data.totalModeling}
             totalPrinting={data.totalPrinting}
           />
-          <NewRequestIndicators />
-          <NewNotificationIndicators />
+          <NewRequestIndicators total={badges.externalChannels} />
+          <NewNotificationIndicators total={badges.internalTotal} />
           <ModellerIndicators
             modellersCounts={data.modellersCounts}
             totalModeling={data.totalModeling}

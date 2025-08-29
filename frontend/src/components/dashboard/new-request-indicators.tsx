@@ -1,7 +1,9 @@
 import { useTranslation } from "react-i18next";
 import PersonCardIcon from "../../assets/icons/personalcard.svg";
-
-const NewRequestIndicators = () => {
+interface NewRequestIndicatorsProps {
+  total: number;
+}
+const NewRequestIndicators = ({ total }: NewRequestIndicatorsProps) => {
   const { t } = useTranslation();
   return (
     <div className="flex flex-col p-7 items-center justify-center border border-ui-border bg-accent-grey rounded-sm">
@@ -12,7 +14,7 @@ const NewRequestIndicators = () => {
             {t("dashboard.new_requests")}
           </p>
         </div>
-        <h3 className="text-4xl text-accent-red">//</h3>
+        <h3 className="text-4xl text-accent-red">{total}</h3>
       </div>
     </div>
   );

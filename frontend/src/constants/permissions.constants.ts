@@ -157,7 +157,7 @@ export const ORDER_EXTRA_PERMISSIONS: ExtraPermissionsMap = {
     UPDATE: ["super_admin"],
   },
   chat: {
-    VIEW: ["super_admin"],
+    VIEW: ["super_admin", "modeller"],
     DELETE: ["super_admin"],
   },
   changes_history: {

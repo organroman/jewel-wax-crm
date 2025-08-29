@@ -18,8 +18,6 @@ export const CHANEL_SOURCE = [
   "facebook",
   "instagram",
   "whatsapp",
-  "form",
-  "manually",
 ] as const;
 
 export const REQUEST_STATUS = [

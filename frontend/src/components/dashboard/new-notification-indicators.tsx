@@ -1,7 +1,11 @@
 import { useTranslation } from "react-i18next";
 import MessageIcon from "../../assets/icons/message.svg";
 
-const NewNotificationIndicators = () => {
+interface NewNotificationIndicators {
+  total: number;
+}
+
+const NewNotificationIndicators = ({ total }: NewNotificationIndicators) => {
   const { t } = useTranslation();
   return (
     <div className="flex flex-col p-7 items-center justify-center border border-ui-border bg-brand-menu rounded-sm">
@@ -12,7 +16,7 @@ const NewNotificationIndicators = () => {
             {t("dashboard.new_notifications")}
           </p>
         </div>
-        <h3 className="text-4xl text-brand-default">//</h3>
+        <h3 className="text-4xl text-brand-default">{total}</h3>
       </div>
     </div>
   );
