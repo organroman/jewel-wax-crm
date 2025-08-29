@@ -1,6 +1,6 @@
 import { ChatMedia, ChatMessage } from "@/types/order-chat.types";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Loader } from "lucide-react";
 
 import { useChat } from "@/api/order-chat/use-order-chat";
@@ -29,16 +29,28 @@ const ChatRoom = ({ chatId, orderName, currentUserId }: ChatRoomProps) => {
     enabled: Boolean(chatId),
   });
 
-  const { sendMessage } = useOrderChat({
+  const getLastMessageId = () => messages[messages.length - 1]?.id;
+
+  const { sendMessage, markRead, unreadForThisChat } = useOrderChat({
     chatId,
     onNewMessage: (msg) => {
       setMessages((prev) => [...prev, msg]);
     },
+    getLastMessageId,
   });
 
   useEffect(() => {
     if (data && !isLoading) setMessages(data);
   }, [data]);
+
+  const firstUnreadId = useMemo(() => {
+    const start = Math.max(0, messages.length - unreadForThisChat);
+    for (let i = start; i < messages.length; i++) {
+      const m = messages[i];
+      if (m.sender_id !== currentUserId) return m.id;
+    }
+    return messages[start]?.id;
+  }, [messages, unreadForThisChat, currentUserId]);
 
   return (
     <div className="w-full h-full overflow-hidden p-2.5 bg-ui-column rounded-sm flex flex-col gap-2.5">
@@ -52,6 +64,8 @@ const ChatRoom = ({ chatId, orderName, currentUserId }: ChatRoomProps) => {
           setFiles={setNewFiles}
           previews={previews}
           setPreviews={setPreviews}
+          unreadFirstId={firstUnreadId}
+          onReachedBottom={markRead}
         />
       )}
       <ChatInput

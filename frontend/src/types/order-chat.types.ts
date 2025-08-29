@@ -27,8 +27,8 @@ export interface ChatDetails {
 }
 
 export interface ChatMedia {
-  id?: number;
-  type: "file" | "image";
+  id?: number | string;
+  type: "file" | "image" | "video" | "audio";
   url: string;
   name: string;
   size: number;
