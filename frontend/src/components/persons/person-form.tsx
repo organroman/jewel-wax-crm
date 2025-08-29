@@ -23,8 +23,6 @@ import {
   updatePersonSchema,
 } from "@/validators/person.validator";
 
-import { useEnumStore } from "@/stores/use-enums-store";
-
 import { Form } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { Dialog } from "@components/ui/dialog";
@@ -84,10 +82,9 @@ const PersonForm = ({
   onCreateCountry,
 }: PersonFormProps) => {
   const { t } = useTranslation();
-  const rolesEnum = useEnumStore((e) => e.getByType("person_role"));
-  const roles = rolesEnum.map((role) => ({
-    ...role,
-    label: t(`person.roles.${role.value}`),
+  const roles = PERSON_ROLE_VALUES.map((role) => ({
+    value: role,
+    label: t(`person.roles.${role}`),
   }));
   const schema = person ? schemaMap.update : schemaMap.create;
 
