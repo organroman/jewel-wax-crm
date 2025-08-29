@@ -33,14 +33,14 @@ router.get(
 router.get(
   "/:id",
   verifyToken,
-  checkPermission("PERSONS", "VIEW"),
+  checkPermission("PERSON", "VIEW"),
   PersonController.getPersonById
 );
 
 router.post(
   "/",
   verifyToken,
-  checkPermission("PERSONS", "CREATE"),
+  checkPermission("PERSON", "CREATE"),
   validateBody(createPersonSchema),
   PersonController.createPerson
 );
@@ -48,7 +48,7 @@ router.post(
 router.patch(
   "/:id",
   verifyToken,
-  checkPermission("PERSONS", "UPDATE"),
+  checkPermission("PERSON", "UPDATE"),
   validateBody(updatePersonSchema),
   PersonController.updatePerson
 );
@@ -56,14 +56,14 @@ router.patch(
 router.patch(
   "/user/:id",
   verifyToken,
-  checkPermission("PERSONS", "UPDATE"),
+  checkPermission("PERSON", "UPDATE"),
   PersonController.updateUser
 );
 
 router.delete(
   "/:id",
   verifyToken,
-  checkPermission("PERSONS", "DELETE"),
+  checkPermission("PERSON", "DELETE"),
   PersonController.deletePerson
 );
 

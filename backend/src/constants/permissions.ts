@@ -7,6 +7,12 @@ export const PERMISSIONS: PermissionMap = {
     UPDATE: ["super_admin"],
     DELETE: ["super_admin"],
   },
+  PERSON: {
+    VIEW: ["super_admin", "modeller", "miller"],
+    CREATE: ["super_admin"],
+    UPDATE: ["super_admin"],
+    DELETE: ["super_admin"],
+  },
   CONTACTS: {
     VIEW: ["super_admin"],
     CREATE: ["super_admin"],
