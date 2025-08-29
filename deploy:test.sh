@@ -92,6 +92,9 @@ ssh $SERVER << EOF
   echo "🧑‍💼 Inserting super admin..."
   npm run seed:admin
 
+  echo "🧑‍💼 Inserting chat channels..."
+  npm run seed:channels
+
   echo "🚀 Restarting backend service..."
   pm2 restart backend || pm2 start dist/index.js --name backend
 
