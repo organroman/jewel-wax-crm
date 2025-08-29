@@ -26,11 +26,16 @@ import { ORDERS_SORT_FIELDS } from "@/constants/sortable-fields";
 
 import { translateFilterGroups } from "@/lib/translate-constant-labels";
 import { hasPermission } from "@/lib/utils";
+import { useUnreadStore } from "@/stores/use-unread-store";
+import { splitUnread } from "@/lib/split-unread";
 
 const OrdersClient = ({ userRole }: { userRole: PersonRoleValue }) => {
   const { t } = useTranslation();
   const router = useRouter();
   const searchParams = useSearchParams();
+
+  const { byConversation } = useUnreadStore((s) => s);
+  const badges = splitUnread(byConversation).internal;
 
   const permission = hasPermission(PERMISSIONS.ORDERS.CREATE, userRole);
 
@@ -69,7 +74,7 @@ const OrdersClient = ({ userRole }: { userRole: PersonRoleValue }) => {
 
   const { data: orders = [], total = 0, stage_counts } = data ?? {};
 
-  const ordersColumns = getOrdersColumns(t, userRole);
+  const ordersColumns = getOrdersColumns(t, userRole, badges);
   const columnVisibility = getColumnVisibilityByRole(
     userRole,
     searchParams.toString()

@@ -22,7 +22,8 @@ import {
 
 export const getOrdersColumns = (
   t: (key: string) => string,
-  userRole: PersonRoleValue
+  userRole: PersonRoleValue,
+  badges: Record<number, number>
 ): ColumnDef<Order>[] => {
   const isAdmin = userRole === "super_admin";
 
@@ -82,8 +83,15 @@ export const getOrdersColumns = (
       header: t("order.table_headers.number"),
       cell: ({ row }) => {
         const orderNumber = row.original.number;
+        const orderChatId = row.original.chat_id;
+        const orderId = row.original.id;
+        const badge = orderChatId ? badges[orderChatId] : undefined;
         return (
-          <ViewOrder orderId={row.original.id} orderNumber={orderNumber} />
+          <ViewOrder
+            orderId={orderId}
+            orderNumber={orderNumber}
+            badge={badge}
+          />
         );
       },
       size: 40,
