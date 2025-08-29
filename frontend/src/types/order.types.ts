@@ -135,6 +135,7 @@ export interface Order {
   delivery: OrderDelivery;
   linked_orders: LinkedOrder[];
   chat: { chat_id: number; participants: ChatParticipant[] } | null;
+  chat_id: number | null;
 }
 
 export interface PaginatedOrdersResult<T> extends PaginatedResult<T> {
