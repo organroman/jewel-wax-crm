@@ -10,8 +10,10 @@
     "seed:dev": "ts-node ./src/seeds/dev-seed.ts",
     "sync:np-cities": "ts-node ./src/scripts/syncNpCities.ts",
     "seed:channels": "NODE_ENV=development ts-node ./src/scripts/insertChannels.ts",
+    "seed:channels-prod": "NODE_ENV=production node ./dist/scripts/insertChannels.js",
     "sync:np-cities-prod": "NODE_ENV=production node dist/scripts/syncNpCities.js",
-    "seed:admin": "NODE_ENV=production node dist/scripts/insertAdmin.js"
+    "seed:admin": "NODE_ENV=production node dist/scripts/insertAdmin.js",
+    "set:tg:webhooks": "NODE_ENV=production node dist/scripts/setTelegramWebhook,js"
   },
   "keywords": [],
   "author": "",

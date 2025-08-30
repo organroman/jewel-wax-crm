@@ -26,13 +26,6 @@ rm -rf dist
 NODE_ENV=production npx tsc
 popd
 
-# === FRONTEND =====================
-# echo "🌐 Building frontend locally..."
-# pushd frontend
-# rm -rf .next node_modules/.cache .turbo
-# NODE_ENV=production npm run build
-# popd
-
 # === COPY FILES ===================
 echo "📁 Copying files to temp dir..."
 cp -r backend/dist $TEMP_DIR/backend/
@@ -93,10 +86,13 @@ ssh $SERVER << EOF
   npm run seed:admin
 
   echo "🧑‍💼 Inserting chat channels..."
-  npm run seed:channels
+  npm run seed:channels-prod
 
   echo "🚀 Restarting backend service..."
   pm2 restart backend || pm2 start dist/index.js --name backend
+
+  echo "🔔 Setting Telegram webhooks..."
+  npm run set:tg:webhooks || echo "⚠️ setWebhook step failed"
 
   echo "🚀 Starting frontend..."
   cd ../frontend
