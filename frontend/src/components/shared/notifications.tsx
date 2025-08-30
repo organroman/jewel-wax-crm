@@ -24,6 +24,8 @@ const Notifications = ({ role }: NotificationsProps) => {
 
   const total = internalTotal + (canViewExternal ? externalTotal : 0);
 
+  const showNoMessage = !internalTotal && (!externalTotal || !canViewExternal);
+
   return (
     <div className="relative">
       <Tooltip>
@@ -41,9 +43,7 @@ const Notifications = ({ role }: NotificationsProps) => {
               {t("topbar.requests")}: {externalTotal}
             </span>
           )}
-          {!externalTotal && !internalTotal && (
-            <span>{t("messages.info.no_new_messages")}</span>
-          )}
+          {showNoMessage && <span>{t("messages.info.no_new_messages")}</span>}
         </TooltipContent>
       </Tooltip>
       {total > 0 && (

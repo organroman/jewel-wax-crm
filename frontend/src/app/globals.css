@@ -30,9 +30,7 @@
   --color-ui-sidebar: oklch(1 0 0); /* #ffffff  Бічна панель*/
   --color-ui-row-even: oklch(96.72% 0 0); /* "#F4F4F4", Фон строка */
   --color-ui-row-odd: oklch(1 0 0); /* #ffffff Фон строка */
-  --color-ui-row-hover: oklch(
-    0.6429 0.0121 243.75 / 5%
-  ); /*# e2e3e6 ховер строки */
+  --color-ui-row-hover: oklch(0.9573 0.0253 134.26); /*# eaf5e4 ховер строки */
   --color-ui-border: oklch(90.67% 0 0); /* "#E0E0E0", Обведення та лінії */
   --color-ui-column: oklch(
     87.7% 0.003 145.55
@@ -167,7 +165,7 @@
   /* --color-accent-yellow: oklch(0.92 0.0878 87.29); "#ffe3a2" */
   /* --color-accent-peach: oklch(0.53 0.0753 87.75); #7f6a36 */
   --color-accent-purple-light: oklch(0.974 0.0108 297.63);
-  
+
   --color-accent-purple: oklch(0.3321 0.0882 278.75);
   --color-accent-violet: oklch(0.5875 0.2445 290.37);
 

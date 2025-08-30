@@ -300,22 +300,37 @@ export const OrderChatModel = {
   async unreadByChat(
     personId: number
   ): Promise<{ chat_id: number; unread: string }[]> {
-    // returns [{ chat_id, unread }]
-    return await db("order_chat_messages as m")
-      .leftJoin("order_chat_reads as cr", function () {
-        this.on("cr.chat_id", "=", "m.chat_id").andOn(
-          "cr.person_id",
-          "=",
-          db.raw("?", [personId])
-        );
-      })
-      .select("m.chat_id")
-      .where("m.sender_id", "<>", personId)
-      .andWhereRaw(
-        "(cr.last_read_message_id IS NULL OR m.id > cr.last_read_message_id)"
-      )
-      .groupBy("m.chat_id")
-      .count<{ chat_id: number; unread: string }[]>("m.id as unread");
+    return (
+      db("order_chat_messages as m")
+        // must be participant
+        .innerJoin("chat_participants as cp", function () {
+          this.on("cp.chat_id", "=", "m.chat_id").andOn(
+            "cp.person_id",
+            "=",
+            db.raw("?", [personId])
+          );
+        })
+        // optional read row
+        .leftJoin("order_chat_reads as cr", function () {
+          this.on("cr.chat_id", "=", "m.chat_id").andOn(
+            "cr.person_id",
+            "=",
+            db.raw("?", [personId])
+          );
+        })
+        .whereNot("m.sender_id", personId)
+        .andWhere(function () {
+          this.whereNull("cr.last_read_message_id").orWhere(
+            "m.id",
+            ">",
+            db.ref("cr.last_read_message_id")
+          );
+        })
+        .groupBy("m.chat_id")
+        // avoid accidental dupes; cast to int if you’re on PG
+        .select("m.chat_id")
+        .countDistinct<{ chat_id: number; unread: string }[]>("m.id as unread")
+    );
   },
 
   /*** MESSAGE REACTIONS------  */

@@ -22,7 +22,7 @@ export const ChatController = {
   async getMessages(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
-      const { limit, before } = req.query;
+      const { limit = 100, before } = req.query;
 
       const data = await ChatService.getMessages(
         Number(id),
