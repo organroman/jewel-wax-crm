@@ -409,8 +409,6 @@ export const PersonService = {
     const { location, phone, email, ...rest } = data;
     const updatedPerson = await PersonModel.updateBasePerson(personId, rest);
 
-    console.log(data);
-
     if (!updatedPerson) return null;
 
     if (location) {
