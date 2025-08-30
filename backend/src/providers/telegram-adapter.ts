@@ -95,37 +95,66 @@ export const telegramAdapter: ProviderAdapter = {
       const mime = a.mime || "";
       const isImage = mime.startsWith("image/");
 
-      // You can pass either a public HTTPS URL OR a Telegram file_id (tg:file_id:xxx)
+      if (!isImage) {
+        try {
+          const res = await fetch(
+            a.url.startsWith("tg:file_id:")
+              ? a.url.replace("tg:file_id:", "")
+              : a.url
+          );
+          const buf = await res.arrayBuffer();
+
+          const file = new File([buf], a.name, {
+            type: mime || "application/octet-stream",
+          });
+          const form = new FormData();
+          form.set("chat_id", chat_id);
+          form.set("document", file);
+
+          const r2 = await fetch(API(token, "sendDocument"), {
+            method: "POST",
+            body: form as any,
+          });
+          const d2 = await r2.json();
+          if (!d2.ok) {
+            console.error("TG multipart sendDocument failed:", d2);
+            parts.push({ externalMessageId: "", kind: "file" });
+          } else {
+            parts.push({
+              externalMessageId: String(d2.result.message_id),
+              kind: "file",
+            });
+          }
+          continue; // done with this attachment
+        } catch (e) {
+          console.error("TG multipart threw:", e);
+          parts.push({ externalMessageId: "", kind: "file" });
+          continue;
+        }
+      }
+
+      // Images: URL or file_id is fine (filename not shown in chat anyway)
       const value = a.url.startsWith("tg:file_id:")
         ? a.url.replace("tg:file_id:", "")
         : a.url;
+      const payload: any = { chat_id, photo: value };
+      if (a.name) payload.caption = a.name.slice(0, 1024);
 
-      const method = isImage ? "sendPhoto" : "sendDocument";
-      const payload: any = { chat_id };
-
-      if (isImage) {
-        payload.photo = value;
-        if (a.file_name) payload.caption = a.file_name.substring(0, 1024);
-      } else {
-        payload.document = value;
-        if (a.file_name) payload.caption = a.file_name.substring(0, 1024);
-      }
-
-      const resp = await fetch(API(token, method), {
+      const r1 = await fetch(API(token, "sendPhoto"), {
         method: "POST",
-        headers: { "Content-Type": "application/json" }, // sending URL/file_id → JSON is fine
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
-      const data = await resp.json();
-      if (!data.ok) {
-        // continue others but record an error part
-        parts.push({ externalMessageId: "", kind: isImage ? "image" : "file" });
-        continue;
+      const d1 = await r1.json();
+      if (!d1.ok) {
+        console.warn("TG sendPhoto failed:", d1);
+        parts.push({ externalMessageId: "", kind: "image" });
+      } else {
+        parts.push({
+          externalMessageId: String(d1.result.message_id),
+          kind: "image",
+        });
       }
-      parts.push({
-        externalMessageId: String(data.result.message_id),
-        kind: isImage ? "image" : "file",
-      });
     }
 
     return {

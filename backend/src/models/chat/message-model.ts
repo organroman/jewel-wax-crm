@@ -50,7 +50,7 @@ export const MessageModel = {
   ) {
     const q = db<Message>("messages")
       .where({ conversation_id })
-      .orderBy("created_at", "asc")
+      .orderBy("created_at", "desc")
       .limit(limit);
     if (before) q.andWhere("created_at", "<", before);
     return await q;

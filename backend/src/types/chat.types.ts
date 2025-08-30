@@ -114,8 +114,9 @@ export interface MessageWithAttachment extends Message {
 export type OutAttachment = {
   url: string; // https URL to file (Cloudinary/DO Spaces)
   mime?: string | null; // e.g. "image/jpeg", "video/mp4", "application/pdf"
-  file_name?: string | null;
-  byte_size?: number | null;
+  name: string;
+  size?: number | null;
+  type?: "file" | "image" | "video" | "audio";
   width?: number | null;
   height?: number | null;
   duration_ms?: number | null;

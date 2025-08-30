@@ -170,7 +170,11 @@ export const ChatService = {
       await ConversationModel.updateLastMessageAt(convo.id);
 
       const room = `conversation:${convo.id}`;
-      const payload = await MessageModel.getMessageById(msg.id);
+      const newMessage = await MessageModel.getMessageById(msg.id);
+      const attachments = await MessageModel.getAttachmentsByMessageIds([
+        msg.id,
+      ]);
+      const payload = { ...newMessage, attachments };
       io.to(room).emit("chat:newMessage", payload);
 
       const participants =
@@ -207,7 +211,7 @@ export const ChatService = {
     conversation_id: number;
     agent_person_id: number;
     text?: string;
-    attachments?: Array<{ url: string; mime?: string; file_name?: string }>;
+    attachments?: Array<{ url: string; mime?: string; name: string }>;
   }) {
     const convo = await ConversationModel.findById(args.conversation_id);
 
@@ -289,7 +293,13 @@ export const ChatService = {
       );
       throw err;
     }
-    return await MessageModel.getMessageById(message.id);
+    const msg = await MessageModel.getMessageById(message.id);
+    if (!msg) return null;
+    const msgAttachments = await MessageModel.getAttachmentsByMessageIds([
+      msg.id,
+    ]);
+
+    return { ...msg, attachments: msgAttachments };
   },
   async listConversations({
     status,
@@ -375,6 +385,8 @@ export const ChatService = {
       };
     });
 
-    return enriched;
+    const sorted = enriched.slice().reverse();
+
+    return sorted;
   },
 };
