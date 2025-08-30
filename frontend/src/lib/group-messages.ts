@@ -8,7 +8,6 @@ export function groupMessagesByDate(
 ) {
   const grouped: Record<string, ChatMessage[]> = {};
 
-
   messages.forEach((msg) => {
     const date = new Date(msg.created_at);
 

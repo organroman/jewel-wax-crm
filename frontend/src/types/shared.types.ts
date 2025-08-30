@@ -58,3 +58,14 @@ export interface TabOption {
   value: string;
   label: string;
 }
+
+export interface MessageAttachment {
+  id?: string;
+  message_id?: string;
+  url: string;
+  name: string;
+  size: number;
+  type: "image" | "file" | "audio" | "video";
+  public_id?: string;
+  extra?: Record<string, unknown>;
+}

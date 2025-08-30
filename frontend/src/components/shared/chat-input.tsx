@@ -1,26 +1,27 @@
-import { ChatMedia } from "@/types/order-chat.types";
+import { MessageAttachment } from "@/types/shared.types";
 
 import { Dispatch, SetStateAction, useEffect, useRef } from "react";
 import { ImagePlusIcon, PaperclipIcon } from "lucide-react";
-import { useSearchParams } from "next/navigation";
 
 import { useUpload } from "@/api/upload/use-upload";
 import { useDialog } from "@/hooks/use-dialog";
 
 import { Input } from "@/components/ui/input";
 import { Dialog } from "@/components/ui/dialog";
-import SendMediaModal from "./send-media-modal";
+import SendMediaModal from "../orders/chat/send-media-modal";
 import SendIcon from "@/assets/icons/send.svg";
 
 interface ChatInputProps {
   text: string;
   setText: Dispatch<SetStateAction<string>>;
-  sendMessage: (text: string, media?: ChatMedia[]) => void;
+  sendMessage: (text: string, media?: MessageAttachment[]) => void;
   isLoading: boolean;
   files: File[];
   setFiles: Dispatch<SetStateAction<File[]>>;
-  previews: ChatMedia[];
-  setPreviews: Dispatch<SetStateAction<ChatMedia[]>>;
+  previews: MessageAttachment[];
+  setPreviews: Dispatch<SetStateAction<MessageAttachment[]>>;
+  canImageSelect: boolean;
+  inputAutoFocusCondition: boolean;
 }
 
 const ChatInput = ({
@@ -32,20 +33,18 @@ const ChatInput = ({
   setFiles,
   previews,
   setPreviews,
+  inputAutoFocusCondition,
 }: ChatInputProps) => {
   const { dialogOpen, setDialogOpen } = useDialog();
   const inputRef = useRef<HTMLInputElement>(null);
-  const searchParams = useSearchParams();
-
-  const tabParam = searchParams.get("tab");
 
   const { uploadImagesMutation } = useUpload.uploadImages();
 
   useEffect(() => {
-    if (tabParam === "chat") {
+    if (inputAutoFocusCondition) {
       inputRef.current?.focus();
     }
-  }, [tabParam]);
+  }, [inputAutoFocusCondition]);
 
   const handleFileChange = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -80,7 +79,7 @@ const ChatInput = ({
     if (hasFiles) {
       uploadImagesMutation.mutate(files, {
         onSuccess: (data) => {
-          const media: ChatMedia[] = data.map((mediaItem) => ({
+          const media: MessageAttachment[] = data.map((mediaItem) => ({
             url: mediaItem.url,
             type: mediaItem.format === "image" ? "image" : "file",
             public_id: mediaItem.public_id,

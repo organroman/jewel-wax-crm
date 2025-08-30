@@ -1,5 +1,4 @@
-import { ChatMedia, ChatMessage } from "@/types/order-chat.types";
-import { MessageAttachment } from "@/types/shared.types";
+import { Message } from "@/types/request.types";
 
 import {
   Dispatch,
@@ -12,37 +11,36 @@ import {
 } from "react";
 import i18n from "i18next";
 import { useTranslation } from "react-i18next";
+import { format, isToday, isYesterday } from "date-fns";
 
-import i18nextConfig from "../../../../next-i18next.config";
-
-import InfoLabel from "@/components/shared/typography/info-label";
-import Message from "./message";
-import ChatItemEmpty from "./chat-item-empty";
-import { Separator } from "@/components/ui/separator";
-import { Badge } from "@/components/ui/badge";
-
-import { groupMessagesByDate } from "@/lib/group-messages";
+import i18nextConfig from "../../../next-i18next.config";
 import { dateFnsLocaleMap } from "@/lib/date-fns-locale-map";
+
 import { cn } from "@/lib/utils";
+import InfoLabel from "../shared/typography/info-label";
+import ConversationMessage from "./conversation-message";
+import { Separator } from "../ui/separator";
+import { Badge } from "../ui/badge";
+import { MessageAttachment } from "@/types/shared.types";
 
 interface MessagesProps {
-  messages: ChatMessage[];
+  messages: Message[];
   currentUserId: number;
   setFiles: Dispatch<SetStateAction<File[]>>;
-  previews: ChatMedia[];
+  previews: MessageAttachment[];
   setPreviews: Dispatch<SetStateAction<MessageAttachment[]>>;
-  unreadFirstId?: number;
+  unreadFirstId?: string;
   onReachedBottom?: () => void;
 }
 
-const Messages = ({
+const ConversationMessages = ({
   messages,
-  currentUserId,
   setFiles,
   previews,
   setPreviews,
   unreadFirstId,
   onReachedBottom,
+  currentUserId,
 }: MessagesProps) => {
   const { t } = useTranslation();
   const [isDragging, setIsDragging] = useState(false);
@@ -115,10 +113,26 @@ const Messages = ({
     if (atBottom) onReachedBottom?.();
   };
 
-  const groupedMessages = groupMessagesByDate(messages, locale, t);
+  const groupedMessages: Record<string, Message[]> = {};
+  messages.forEach((msg) => {
+    const date = new Date(msg.created_at);
+
+    let dateKey = format(date, "d MMMM yyyy", { locale });
+    if (isToday(date)) {
+      dateKey = t("dictionary.today");
+    } else if (isYesterday(date)) {
+      dateKey = t("dictionary.yesterday");
+    }
+
+    if (!groupedMessages[dateKey]) {
+      groupedMessages[dateKey] = [];
+    }
+
+    groupedMessages[dateKey].push(msg);
+  });
 
   const firstUnreadIdSet = useMemo(
-    () => new Set<number>(unreadFirstId ? [unreadFirstId] : []),
+    () => new Set<string>(unreadFirstId ? [unreadFirstId] : []),
     [unreadFirstId]
   );
 
@@ -126,12 +140,11 @@ const Messages = ({
     <div
       ref={scrollRef}
       className={cn(
-        "w-full h-full flex flex-col gap-5 overflow-y-scroll bg-ui-row-even py-2.5 px-5",
+        "w-full h-full flex flex-col gap-5 overflow-y-auto bg-accent-purple-light py-2.5 px-5",
         isDragging
           ? "bg-ui-sidebar border-2 rounded-sm border-dashed border-text-regular"
           : ""
       )}
-      style={{ overflowAnchor: "none" }}
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
@@ -141,19 +154,18 @@ const Messages = ({
         <div className="absolute inset-0 bg-primary/20 z-10 rounded-md pointer-events-none" />
       )}
 
-      {messages.length === 0 && (
-        <ChatItemEmpty info={t("messages.info.no_messages")} />
-      )}
+      {messages.length === 0 && <p>No messages</p>}
 
-      {Object.entries(groupedMessages).map(([date, msgs], groupIdx, groups) => (
+      {Object.entries(groupedMessages).map(([date, msgs]) => (
         <div key={date} className="flex flex-col gap-5">
-          <InfoLabel className="text-sm text-text-muted text-center">
+          <InfoLabel className="text-sm text-text-regular text-center">
             {date}
           </InfoLabel>
           {msgs.map((msg, idx) => {
             const isLast = idx === msgs.length - 1;
-            const isMine = msg.sender_id === currentUserId;
-            const showUnreadDivider = msg.id === unreadFirstId;
+            const isMine = msg.sender_person_id === currentUserId;
+            const showUnreadDivider =
+              !!unreadFirstId && firstUnreadIdSet.has(msg.id) && !isMine;
 
             return (
               <Fragment key={msg.id}>
@@ -177,14 +189,20 @@ const Messages = ({
                   )}
                 >
                   <div className={cn("max-w-[60%]")}>
-                    <Message
-                      isMy={isMine}
-                      text={msg?.message}
-                      media={msg?.media}
-                      created_at={msg.created_at}
+                    <ConversationMessage
+                      key={msg?.id}
+                      isMy={msg.direction === "outbound"}
+                      text={msg?.body}
+                      attachments={msg.attachments}
+                      created_at={
+                        msg.direction === "outbound"
+                          ? msg.created_at
+                          : msg.sent_at
+                      }
                     />
                   </div>
                 </div>
+
                 <div ref={isLast ? bottomRef : undefined} />
               </Fragment>
             );
@@ -195,4 +213,4 @@ const Messages = ({
   );
 };
 
-export default Messages;
+export default ConversationMessages;

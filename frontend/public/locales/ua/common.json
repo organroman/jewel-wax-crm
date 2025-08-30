@@ -59,7 +59,9 @@
     "cash": "Готівка",
     "debt": "Борг",
     "person": "Контрагент",
-    "dashboard": "Дашборд"
+    "dashboard": "Дашборд",
+    "chat": "Чат JW",
+    "requests": "Заявки"
   },
   "labels": {
     "main": "$t(dictionary.main)",
@@ -398,7 +400,7 @@
     "tabs": {
       "order": "$t(dictionary.order)",
       "payments": "Оплати",
-      "chat": "Чат JW",
+      "chat": "$t(dictionary.chat)",
       "new": "Нове замовлення",
       "changes_history": "$t(dictionary.changes_history)",
       "all": "Всі замовлення"
@@ -597,6 +599,10 @@
       "created_at-desc": "$t(dictionary.created_at-desc)"
     }
   },
+  "topbar": {
+    "chat": "$t(dictionary.chat)",
+    "requests": "$t(dictionary.requests)"
+  },
   "report": {
     "period": "Період",
     "clear_period": "Скинути період",
@@ -686,10 +692,23 @@
       }
     }
   },
+  "request": {
+    "channels": {
+      "all": "Всі",
+      "telegram": "Telegram",
+      "viber": "Viber",
+      "facebook": "Facebook",
+      "instagram": "Instagram",
+      "whatsapp": "Whats App"
+    },
+    "buttons": {
+      "create_order": "Створити замовлення"
+    }
+  },
 
   "main_menu": {
     "dashboard": "$t(dictionary.dashboard)",
-    "requests": "Заявки",
+    "requests": "$t(dictionary.requests)",
     "orders": "Замовлення",
     "finance": "Фінанси",
     "reports": "Звіти",
@@ -739,7 +758,10 @@
       "no_chat": "Чат відстутній. Додайте модельєра.",
       "no_messages": "Повідомлень ще немає. Почніть спілкування.",
       "no_images": "Зображень немає.",
-      "no_opponent": "Співрозмовника не знайдено"
+      "no_opponent": "Співрозмовника не знайдено",
+      "new_messages": "Нові повідомлення",
+      "no_new_messages": "Нових повідомлень немає",
+      "no_conversation": "Чат не обрано"
     },
     "success": {
       "person_created": "Контрагента створено",

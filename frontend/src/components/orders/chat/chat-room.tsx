@@ -1,15 +1,17 @@
-import { ChatMedia, ChatMessage } from "@/types/order-chat.types";
+import { ChatMessage } from "@/types/order-chat.types";
+import { MessageAttachment } from "@/types/shared.types";
 
 import { useEffect, useMemo, useState } from "react";
 import { Loader } from "lucide-react";
+import { useSearchParams } from "next/navigation";
 
 import { useChat } from "@/api/order-chat/use-order-chat";
 
 import { useOrderChat } from "@/hooks/use-socket-chat";
 
+import ChatInput from "../../shared/chat-input";
 import OrderName from "./order-name";
 import Messages from "./messages";
-import ChatInput from "./chat-input";
 
 interface ChatRoomProps {
   chatId: number;
@@ -18,10 +20,13 @@ interface ChatRoomProps {
 }
 
 const ChatRoom = ({ chatId, orderName, currentUserId }: ChatRoomProps) => {
+  const searchParams = useSearchParams();
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [text, setText] = useState("");
   const [newFiles, setNewFiles] = useState<File[]>([]);
-  const [previews, setPreviews] = useState<ChatMedia[]>([]);
+  const [previews, setPreviews] = useState<MessageAttachment[]>([]);
+
+  const tabParam = searchParams.get("tab");
 
   const { data, isLoading } = useChat.getLatestMessages({
     chatId,
@@ -77,6 +82,8 @@ const ChatRoom = ({ chatId, orderName, currentUserId }: ChatRoomProps) => {
         setFiles={setNewFiles}
         previews={previews}
         setPreviews={setPreviews}
+        canImageSelect={true}
+        inputAutoFocusCondition={tabParam === "chat"}
       />
     </div>
   );

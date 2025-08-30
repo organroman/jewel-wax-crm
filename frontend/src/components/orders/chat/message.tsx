@@ -20,16 +20,15 @@ const Message = ({ isMy, text, media, created_at }: MessageProps) => {
   return (
     <div
       className={cn(
-        "w-full flex items-center gap-2.5",
-        isMy
-          ? "self-end justify-items-end flex-row"
-          : "self-start flex-row-reverse"
+        "flex items-center gap-2.5",
+
+        isMy ? "flex-row" : "flex-row-reverse"
       )}
     >
       <HeartIcon className="text-text-muted size-6 shrink-0" />
       <div
         className={cn(
-          "w-full h-fit rounded-sm p-2.5 flex flex-col gap-1.5 justify-center",
+          "h-fit rounded-sm p-2.5 flex flex-col gap-1.5 justify-center",
           isMy ? "bg-accent-lightgreen" : "bg-accent-lavender"
         )}
       >
@@ -47,7 +46,7 @@ const Message = ({ isMy, text, media, created_at }: MessageProps) => {
             ) : (
               images.map((i) => (
                 <div key={i.id} className="flex flex-wrap  w-full h-full">
-                  <a href={images[0].url} target="_blank">
+                  <a href={i.url} target="_blank">
                     <img src={i.url} className="max-h-25 aspect-auto" />
                   </a>
                 </div>
