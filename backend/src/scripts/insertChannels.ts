@@ -130,6 +130,7 @@ export async function insertChannels() {
   }
 
   console.log(`[channels seed] Upserted ${rows.length} channel(s).`);
+  process.exit(0);
 }
 
 insertChannels();

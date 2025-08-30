@@ -13,7 +13,7 @@
     "seed:channels-prod": "NODE_ENV=production node ./dist/scripts/insertChannels.js",
     "sync:np-cities-prod": "NODE_ENV=production node dist/scripts/syncNpCities.js",
     "seed:admin": "NODE_ENV=production node dist/scripts/insertAdmin.js",
-    "set:tg:webhooks": "NODE_ENV=production node dist/scripts/setTelegramWebhook,js"
+    "set:tg:webhooks": "NODE_ENV=production node dist/scripts/setTelegramWebhook.js"
   },
   "keywords": [],
   "author": "",

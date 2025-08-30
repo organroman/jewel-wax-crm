@@ -5,7 +5,7 @@ import { getSecret } from "../utils/helpers";
 type ChannelRow = {
   id: number;
   provider: string;
-  external_id: string | null;
+  external_account_id: string | null;
   settings: {
     secret_ref?: string;
     verify_header_secret?: string;
@@ -18,7 +18,7 @@ const TG_API = (t: string, m: string) =>
 async function main() {
   const webhookUrl =
     process.env.TELEGRAM_WEBHOOK_URL ||
-    "https://test-crm.jewel-wax.com.ua/chat/webhooks/telegram";
+    "https://test-crm.jewel-wax.com.ua/api/chat/webhooks/telegram";
 
   const url = webhookUrl;
 
@@ -29,7 +29,7 @@ async function main() {
   }
 
   const rows: ChannelRow[] = await db<ChannelRow>("channels")
-    .select("id", "provider", "external_id", "settings")
+    .select("id", "provider", "external_account_id", "settings")
     .where("provider", "telegram");
 
   if (!rows.length) {
