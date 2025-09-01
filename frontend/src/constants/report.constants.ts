@@ -1,7 +1,7 @@
 export const REPORT_TYPE = [
-  "clients",
-  "modeling",
-  "orders",
-  "expenses",
-  "financial",
+  { key: "clients", permission: ["super_admin"] },
+  { key: "modeling", permission: ["super_admin", "modeller"] },
+  { key: "orders", permission: ["super_admin"] },
+  { key: "expenses", permission: ["super_admin"] },
+  { key: "financial", permission: ["super_admin"] },
 ];

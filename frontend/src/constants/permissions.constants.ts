@@ -1,9 +1,11 @@
 import {
+  DashboardFieldMap,
   ExtraPermissionsMap,
   FieldPermissionsMap,
   PermissionMap,
   StagePermissionMap,
 } from "@/types/permission.types";
+import { PersonRoleValue } from "@/types/person.types";
 
 export const PERMISSIONS: PermissionMap = {
   PERSONS: {
@@ -25,10 +27,10 @@ export const PERMISSIONS: PermissionMap = {
     DELETE: ["super_admin"],
   },
   DASHBOARD: {
-    VIEW: ["super_admin", "miller", "modeller"],
-    CREATE: ["super_admin", "miller", "modeller"],
-    UPDATE: ["super_admin", "miller", "modeller"],
-    DELETE: ["super_admin", "miller", "modeller"],
+    VIEW: ["super_admin", "modeller"],
+    CREATE: ["super_admin", "modeller"],
+    UPDATE: ["super_admin", "modeller"],
+    DELETE: ["super_admin", "modeller"],
   },
   ORDERS: {
     VIEW: ["super_admin", "miller", "modeller"],
@@ -37,22 +39,22 @@ export const PERMISSIONS: PermissionMap = {
     DELETE: ["super_admin"],
   },
   FINANCE: {
-    VIEW: ["super_admin", "miller", "modeller"],
-    CREATE: ["super_admin", "miller", "modeller"],
-    UPDATE: ["super_admin", "miller", "modeller"],
-    DELETE: ["super_admin", "miller", "modeller"],
+    VIEW: ["super_admin"],
+    CREATE: ["super_admin"],
+    UPDATE: ["super_admin"],
+    DELETE: ["super_admin"],
   },
   REPORTS: {
     VIEW: ["super_admin", "miller", "modeller"],
-    CREATE: ["super_admin", "miller", "modeller"],
-    UPDATE: ["super_admin", "miller", "modeller"],
-    DELETE: ["super_admin", "miller", "modeller"],
+    CREATE: ["super_admin"],
+    UPDATE: ["super_admin"],
+    DELETE: ["super_admin"],
   },
   STATISTIC: {
-    VIEW: ["super_admin", "miller", "modeller"],
-    CREATE: ["super_admin", "miller", "modeller"],
-    UPDATE: ["super_admin", "miller", "modeller"],
-    DELETE: ["super_admin", "miller", "modeller"],
+    VIEW: ["super_admin"],
+    CREATE: ["super_admin"],
+    UPDATE: ["super_admin"],
+    DELETE: ["super_admin"],
   },
 } as const;
 
@@ -177,3 +179,57 @@ export const ORDER_EXTRA_PERMISSIONS: ExtraPermissionsMap = {
     CREATE: ["super_admin", "miller", "modeller", "print"],
   },
 };
+
+export const DASHBOARD_PERMISSIONS: DashboardFieldMap = {
+  totalOrders: {
+    VIEW: ["super_admin", "modeller"],
+  },
+  totalModeling: {
+    VIEW: ["super_admin", "modeller"],
+  },
+
+  modellersCounts: {
+    VIEW: ["super_admin", "modeller"],
+  },
+  stagesStatusCount: {
+    VIEW: ["super_admin", "modeller"],
+  },
+  totalProblemOrders: {
+    VIEW: ["super_admin", "modeller"],
+  },
+  totalImportantOrders: {
+    VIEW: ["super_admin", "modeller"],
+  },
+  totalFavoriteOrders: {
+    VIEW: ["super_admin", "modeller"],
+  },
+  totalModelingPaymentsAmountByStatus: {
+    VIEW: ["super_admin", "modeller"],
+  },
+  totalMilling: {
+    VIEW: ["super_admin"],
+  },
+  totalPrinting: {
+    VIEW: ["super_admin"],
+  },
+  totalDelivery: {
+    VIEW: ["super_admin"],
+  },
+  financialIndicators: {
+    VIEW: ["super_admin"],
+  },
+  requests: {
+    VIEW: ["super_admin"],
+  },
+};
+
+export function canViewField({
+  field,
+  role,
+}: {
+  field: string;
+  role: PersonRoleValue;
+}) {
+  const fieldPermission = DASHBOARD_PERMISSIONS[field];
+  return fieldPermission ? fieldPermission.VIEW.includes(role) : true;
+}

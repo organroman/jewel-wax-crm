@@ -19,21 +19,21 @@ export type PaymentsByStatusCount = {
 export interface DashboardIndicators {
   totalOrders: number;
   totalModeling: number;
-  totalMilling: number;
-  totalPrinting: number;
-  totalDelivery: number;
+  totalMilling?: number;
+  totalPrinting?: number;
+  totalDelivery?: number;
   modellersCounts: ModellerCount[];
   stagesStatusCount: ActiveStageCount[];
   totalImportantOrders: number;
   totalFavoriteOrders: number;
   totalProblemOrders: number;
-  planedIncome: number;
-  actualIncome: number;
-  actualExpenses: number;
-  planedExpenses: number;
-  actualProfit: number;
-  planedProfit: number;
-  planedProfitability: number;
-  totalPaymentsAmountByStatus: PaymentsByStatusCount;
+  planedIncome?: number;
+  actualIncome?: number;
+  actualExpenses?: number;
+  planedExpenses?: number;
+  actualProfit?: number;
+  planedProfit?: number;
+  planedProfitability?: number;
+  totalPaymentsAmountByStatus?: PaymentsByStatusCount;
   totalModelingPaymentsAmountByStatus: PaymentsByStatusCount;
 }

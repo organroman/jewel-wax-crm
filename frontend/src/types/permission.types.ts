@@ -38,6 +38,12 @@ export type ExtraPermissionsMap = {
   };
 };
 
+export type DashboardFieldMap = {
+  [entityName: string]: {
+    VIEW: PersonRoleValue[];
+  };
+};
+
 export type TabPermissionMap = Record<
   string,
   keyof ReturnType<typeof useOrderPermissions>

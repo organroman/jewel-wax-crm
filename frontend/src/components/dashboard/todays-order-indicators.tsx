@@ -1,15 +1,18 @@
+import { PersonRoleValue } from "@/types/person.types";
 import { useTranslation } from "react-i18next";
 
 import InfoValue from "../shared/typography/info-value";
 
 import OrderIcon from "../../assets/icons/orders.svg";
+import { canViewField } from "@/constants/permissions.constants";
 
 interface TodaysOrderIndicatorsProps {
+  role: PersonRoleValue;
   totalOrders: number;
   totalModeling: number;
-  totalMilling: number;
-  totalPrinting: number;
-  totalDelivery: number;
+  totalMilling?: number;
+  totalPrinting?: number;
+  totalDelivery?: number;
 }
 
 const TodaysOrderIndicators = ({
@@ -18,8 +21,13 @@ const TodaysOrderIndicators = ({
   totalModeling,
   totalOrders,
   totalPrinting,
+  role,
 }: TodaysOrderIndicatorsProps) => {
   const { t } = useTranslation();
+
+  const canViewTotalMilling = canViewField({ field: "totalMilling", role });
+  const canViewTotalPrinting = canViewField({ field: "totalPrinting", role });
+  const canViewTotalDelivery = canViewField({ field: "totalDelivery", role });
   return (
     <div className="flex flex-col p-7 items-center justify-center border border-ui-border bg-ui-sidebar rounded-sm">
       <div className="flex w-full justify-between items-center">
@@ -44,24 +52,30 @@ const TodaysOrderIndicators = ({
           </p>
           <InfoValue className="font-bold">{totalModeling}</InfoValue>
         </div>
-        <div className="flex flex-row gap-2.5">
-          <p className="text-accent-violet text-xs font-medium">
-            {t("dashboard.print")}:
-          </p>
-          <InfoValue className="font-bold">{totalPrinting}</InfoValue>
-        </div>
-        <div className="flex flex-row gap-2.5">
-          <p className="text-text-regular text-xs font-medium">
-            {t("dashboard.milling")}:
-          </p>
-          <InfoValue className="font-bold">{totalMilling}</InfoValue>
-        </div>
-        <div className="flex flex-row gap-2.5">
-          <p className="text-action-alert text-xs font-medium">
-            {t("dashboard.delivery")}:
-          </p>
-          <InfoValue className="font-bold">{totalDelivery}</InfoValue>
-        </div>
+        {canViewTotalPrinting && (
+          <div className="flex flex-row gap-2.5">
+            <p className="text-accent-violet text-xs font-medium">
+              {t("dashboard.print")}:
+            </p>
+            <InfoValue className="font-bold">{totalPrinting}</InfoValue>
+          </div>
+        )}
+        {canViewTotalMilling && (
+          <div className="flex flex-row gap-2.5">
+            <p className="text-text-regular text-xs font-medium">
+              {t("dashboard.milling")}:
+            </p>
+            <InfoValue className="font-bold">{totalMilling}</InfoValue>
+          </div>
+        )}
+        {canViewTotalDelivery && (
+          <div className="flex flex-row gap-2.5">
+            <p className="text-action-alert text-xs font-medium">
+              {t("dashboard.delivery")}:
+            </p>
+            <InfoValue className="font-bold">{totalDelivery}</InfoValue>
+          </div>
+        )}
       </div>
     </div>
   );

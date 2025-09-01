@@ -1,4 +1,5 @@
 "use client";
+import { PersonRoleValue } from "@/types/person.types";
 
 import { useTranslation } from "react-i18next";
 import { Loader } from "lucide-react";
@@ -19,13 +20,24 @@ import FinanceIndicators from "@/components/dashboard/finance-indicators";
 import ModellerPaymentIndicators from "@/components/dashboard/modeller-payment-indicators";
 
 import { splitUnread } from "@/lib/split-unread";
+import { canViewField } from "@/constants/permissions.constants";
 
-const DashboardClient = () => {
+const DashboardClient = ({ role }: { role: PersonRoleValue }) => {
   const { t } = useTranslation();
   const { data, isLoading } = useDashboard.getAll({ enabled: true });
   const { byConversation } = useUnreadStore((s) => s);
 
   const badges = splitUnread(byConversation);
+
+  const canViewFinancialIndicators = canViewField({
+    field: "financialIndicators",
+    role,
+  });
+
+  const canViewRequestsIndicators = canViewField({
+    field: "requests",
+    role,
+  });
 
   const tabsOptions = [
     {
@@ -58,12 +70,16 @@ const DashboardClient = () => {
             totalMilling={data.totalMilling}
             totalModeling={data.totalModeling}
             totalPrinting={data.totalPrinting}
+            role={role}
           />
-          <NewRequestIndicators total={badges.externalChannels} />
+          {canViewRequestsIndicators && (
+            <NewRequestIndicators total={badges.externalChannels} />
+          )}
           <NewNotificationIndicators total={badges.internalTotal} />
           <ModellerIndicators
             modellersCounts={data.modellersCounts}
             totalModeling={data.totalModeling}
+            role={role}
           />
         </div>
         <div className="h-full flex flex-col gap-2.5 flex-1">
@@ -78,16 +94,18 @@ const DashboardClient = () => {
               totalFavoriteOrders={data.totalFavoriteOrders}
             />
           </div>
-          <FinanceIndicators
-            totalPaymentsAmountByStatus={data.totalPaymentsAmountByStatus}
-            planedExpenses={data.planedExpenses}
-            planedIncome={data.planedIncome}
-            planedProfit={data.planedProfit}
-            planedProfitability={data.planedProfitability}
-            actualExpenses={data.actualExpenses}
-            actualIncome={data.actualIncome}
-            actualProfit={data.actualProfit}
-          />
+          {canViewFinancialIndicators && (
+            <FinanceIndicators
+              totalPaymentsAmountByStatus={data.totalPaymentsAmountByStatus}
+              planedExpenses={data.planedExpenses}
+              planedIncome={data.planedIncome}
+              planedProfit={data.planedProfit}
+              planedProfitability={data.planedProfitability}
+              actualExpenses={data.actualExpenses}
+              actualIncome={data.actualIncome}
+              actualProfit={data.actualProfit}
+            />
+          )}
           <ModellerPaymentIndicators
             totalModelingPaymentsAmountByStatus={
               data.totalModelingPaymentsAmountByStatus

@@ -1,3 +1,4 @@
+import { PersonRoleValue } from "@/types/person.types";
 import { useSearchParams } from "next/navigation";
 import { useTranslation } from "react-i18next";
 
@@ -12,7 +13,7 @@ import { useEffect, useMemo, useState } from "react";
 import debounce from "lodash.debounce";
 import { getFullName } from "@/lib/utils";
 
-const ClientsReport = () => {
+const ClientsReport = ({ role }: { role: PersonRoleValue }) => {
   const { t } = useTranslation();
   const searchParams = useSearchParams();
   const currentTabParam = searchParams.get("type");
@@ -90,6 +91,7 @@ const ClientsReport = () => {
           }) ?? []
         }
         isLoading={customersIsLoading}
+        role={role}
       />
       <div className="flex-1 overflow-hidden flex flex-col mt-4 lg:mt-8">
         <DataTable

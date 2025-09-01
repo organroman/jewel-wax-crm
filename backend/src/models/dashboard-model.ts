@@ -1,9 +1,16 @@
 import { OrderBase } from "../types/order.types";
+import { PersonRole } from "../types/person.types";
 
 import db from "../db/db";
 
 export const DashboardModel = {
-  async getOrders({ user_id }: { user_id: number }): Promise<OrderBase[]> {
+  async getOrders({
+    user_id,
+    user_role,
+  }: {
+    user_id: number;
+    user_role: PersonRole;
+  }): Promise<OrderBase[]> {
     const orders = await db<OrderBase>("orders")
       .whereNot("active_stage", "done")
       .modify((qb) => {
@@ -48,6 +55,9 @@ export const DashboardModel = {
             `${role}s.patronymic as ${role}_patronymic`
           );
         });
+
+        if (user_role === "modeller")
+          qb.where("modeller_id", user_id).andWhere("active_stage", "modeling");
         qb.select("orders.*");
       });
 

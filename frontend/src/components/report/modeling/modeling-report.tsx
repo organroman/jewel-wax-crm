@@ -1,3 +1,4 @@
+import { PersonRoleValue } from "@/types/person.types";
 import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { useTranslation } from "react-i18next";
@@ -11,7 +12,7 @@ import TopBar from "../top-bar";
 import { getModelingReportColumns } from "./modeling-report.columns";
 import { DataTable } from "@/components/shared/data-table";
 
-const ModelingReport = () => {
+const ModelingReport = ({ role }: { role: PersonRoleValue }) => {
   const { t } = useTranslation();
   const searchParams = useSearchParams();
   const currentTabParam = searchParams.get("type");
@@ -82,6 +83,7 @@ const ModelingReport = () => {
         debouncedSetSearch={debouncedSetSearch}
         persons={modellers?.data ?? []}
         isLoading={modellersIsLoading}
+        role={role}
       />
       <div className="flex-1 overflow-hidden flex flex-col mt-8">
         <DataTable

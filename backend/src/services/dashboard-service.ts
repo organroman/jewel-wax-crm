@@ -1,11 +1,12 @@
 import { PersonRole } from "../types/person.types";
+import { DashboardIndicators } from "../types/dashboard.types";
+import { StageStatus } from "../types/order.types";
 
 import { DashboardModel } from "../models/dashboard-model";
 import { FinanceModel } from "../models/finance-model";
 
 import { groupBy } from "../utils/helpers";
-import { DashboardIndicators } from "../types/dashboard.types";
-import { StageStatus } from "../types/order.types";
+import { DASHBOARD_ROLE_FIELDS } from "../utils/permissions";
 
 export const DashboardService = {
   async getDashboardData({
@@ -15,7 +16,7 @@ export const DashboardService = {
     user_id: number;
     user_role: PersonRole;
   }): Promise<DashboardIndicators> {
-    const orders = await DashboardModel.getOrders({ user_id });
+    const orders = await DashboardModel.getOrders({ user_id, user_role });
 
     const stageModeling = orders.filter((o) => o.active_stage === "modeling");
     const stageMilling = orders.filter((o) => o.active_stage === "milling");
@@ -187,7 +188,7 @@ export const DashboardService = {
       { unpaid: 0, partly_paid: 0, paid: 0 }
     );
 
-    return {
+    const dashboardData = {
       totalOrders: orders.length,
       totalModeling: stageModeling.length,
       totalMilling: stageMilling.length,
@@ -208,5 +209,18 @@ export const DashboardService = {
       totalPaymentsAmountByStatus,
       totalModelingPaymentsAmountByStatus,
     };
+    const fields = DASHBOARD_ROLE_FIELDS[user_role] ?? [];
+    const filtered = pick(dashboardData, fields);
+
+    return filtered;
   },
 };
+
+function pick<T, K extends readonly (keyof T)[]>(
+  obj: T,
+  keys: K
+): Pick<T, K[number]> {
+  return Object.fromEntries(
+    (keys as readonly string[]).map((k) => [k, obj[k as keyof T]])
+  ) as Pick<T, K[number]>;
+}

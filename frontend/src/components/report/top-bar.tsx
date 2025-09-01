@@ -1,4 +1,5 @@
 import { Option } from "@/types/form.types";
+import { PersonRoleValue } from "@/types/person.types";
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { Dispatch, SetStateAction, useState } from "react";
@@ -44,6 +45,7 @@ interface TopBarProps {
   selectPlaceholder?: string;
   paramOfSelect?: string;
   filterLabel?: string;
+  role: PersonRoleValue;
 }
 
 const TopBar = ({
@@ -56,6 +58,7 @@ const TopBar = ({
   selectPlaceholder,
   paramOfSelect,
   filterLabel,
+  role,
 }: TopBarProps) => {
   const { t } = useTranslation();
 
@@ -66,6 +69,8 @@ const TopBar = ({
   const [selectedPerson, setSelectedPerson] = useState<Option<Person> | null>(
     null
   );
+
+  const canViewPersonsFilter = role === "super_admin";
 
   const currentParamOfSelect = paramOfSelect && searchParams.get(paramOfSelect);
 
@@ -126,7 +131,7 @@ const TopBar = ({
           startOfMonth={startFrom}
         />
         <div className="flex flex-row gap-2.5 items-center">
-          {persons && (
+          {persons && canViewPersonsFilter && (
             <AsyncCombobox
               options={persons.map((p) => ({
                 data: p,

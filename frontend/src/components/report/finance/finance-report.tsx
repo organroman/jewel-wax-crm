@@ -1,3 +1,4 @@
+import { PersonRoleValue } from "@/types/person.types";
 import { useSearchParams } from "next/navigation";
 import { useTranslation } from "react-i18next";
 
@@ -13,7 +14,7 @@ import { translateKeyValueList } from "@/lib/translate-constant-labels";
 
 import { FINANCE_REPORT_DATA_TYPE } from "@/constants/enums.constants";
 
-const FinanceReport = () => {
+const FinanceReport = ({ role }: { role: PersonRoleValue }) => {
   const { t } = useTranslation();
   const searchParams = useSearchParams();
   const currentTabParam = searchParams.get("type");
@@ -90,6 +91,7 @@ const FinanceReport = () => {
         selectPlaceholder={t("report.finance.all_data_types")}
         filterLabel={t("report.finance.data_type")}
         paramOfSelect={"data_type"}
+        role={role}
       />
       <div className="flex-1 overflow-hidden flex flex-col mt-8">
         <DataTable

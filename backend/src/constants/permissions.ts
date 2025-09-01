@@ -80,7 +80,7 @@ export const PERMISSIONS: PermissionMap = {
     DELETE: ["super_admin"],
   },
   DASHBOARD: {
-    VIEW: ["super_admin"],
+    VIEW: ["super_admin", "modeller"],
     CREATE: ["super_admin"],
     UPDATE: ["super_admin"],
     DELETE: ["super_admin"],

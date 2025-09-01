@@ -4,9 +4,9 @@ const ImportantIcon = ({ active }: { active: boolean }) => (
     viewBox="0 0 24 24"
     className="size-5"
     fill={active ? "currentColor" : "none"}
-    stroke-width="2"
-    stroke-linecap="round"
-    stroke-linejoin="round"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
   >
     <circle
       cx="12"

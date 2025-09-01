@@ -24,17 +24,17 @@ const ReportsClient = ({ role }: ReportsClientProps) => {
   const searchParams = useSearchParams();
   const router = useRouter();
 
-  //todo: role based permission
-
-  const tabsOptions = REPORT_TYPE.map((type) => ({
-    value: type,
-    label: t(`report.types.${type}`),
+  const tabsOptions = REPORT_TYPE.filter((t) =>
+    t.permission.includes(role)
+  ).map((type) => ({
+    value: type.key,
+    label: t(`report.types.${type.key}`),
   }));
 
   const tabParam = searchParams.get("type");
   const currentTab = tabsOptions?.find((t) => t.value === tabParam) ?? {
-    value: "clients",
-    label: t("report.types.clients"),
+    value: tabsOptions[0].value,
+    label: t(`report.types.${tabsOptions[0].value}`),
   };
   const [selectedTab, setSelectedTab] = useState<TabOption>(currentTab);
 
@@ -61,10 +61,10 @@ const ReportsClient = ({ role }: ReportsClientProps) => {
         selectedTab={selectedTab}
       />
       <Separator className="bg-ui-border h-0.5 data-[orientation=horizontal]:h-0.5" />
-      {selectedTab.value === "clients" && <ClientsReport />}
-      {selectedTab.value === "modeling" && <ModelingReport />}
-      {selectedTab.value === "expenses" && <ExpensesReport />}
-      {selectedTab.value === "financial" && <FinanceReport />}
+      {selectedTab.value === "clients" && <ClientsReport role={role} />}
+      {selectedTab.value === "modeling" && <ModelingReport role={role} />}
+      {selectedTab.value === "expenses" && <ExpensesReport role={role} />}
+      {selectedTab.value === "financial" && <FinanceReport role={role} />}
     </div>
   );
 };

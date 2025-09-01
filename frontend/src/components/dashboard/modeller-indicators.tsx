@@ -5,20 +5,31 @@ import { Separator } from "../ui/separator";
 import InfoValue from "../shared/typography/info-value";
 
 import CubeIcon from "../../assets/icons/cube.svg";
+import { PersonRoleValue } from "@/types/person.types";
+import { cn } from "@/lib/utils";
 
 interface ModellerIndicatorsProps {
   modellersCounts: ModellerCount[];
   totalModeling: number;
+  role: PersonRoleValue;
 }
 
 const ModellerIndicators = ({
   modellersCounts,
   totalModeling,
+  role,
 }: ModellerIndicatorsProps) => {
   const { t } = useTranslation();
 
+  const isAdmin = role === "super_admin";
+
   return (
-    <div className="flex flex-col flex-1 overflow-y-auto p-7 border border-ui-border bg-accent-lavender rounded-sm">
+    <div
+      className={cn(
+        "flex flex-col overflow-y-auto p-7 border border-ui-border bg-accent-lavender rounded-sm",
+        isAdmin && "flex-1"
+      )}
+    >
       <div className="flex justify-between items-center">
         <div className="flex gap-2.5 items-center justify-start">
           <CubeIcon className="text-text-muted !w-9 !h-9 shrink-0" />
