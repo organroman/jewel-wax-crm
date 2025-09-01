@@ -1,11 +1,10 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
-import { CircleAlertIcon } from "lucide-react";
 
 import { useOrder } from "@/api/order/use-order";
 
 import { Button } from "../ui/button";
-import { cn } from "@/lib/utils";
+import ImportantIcon from "../shared/important-icon";
 
 const OrderImportant = ({
   orderId,
@@ -31,12 +30,7 @@ const OrderImportant = ({
       onClick={() => toggleImportantMutation.mutate(!is_important)}
       disabled={disabled}
     >
-      <CircleAlertIcon
-        className={cn(
-          "size-5 text-text-light",
-          is_important && "fill-action-alert stroke-white"
-        )}
-      />
+      <ImportantIcon active={is_important} />
     </Button>
   );
 };
