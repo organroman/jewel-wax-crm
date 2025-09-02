@@ -138,6 +138,7 @@ export interface Order {
   chat: { chat_id: number; participants: ChatParticipant[] } | null;
   chat_id: number | null;
   channel: ChanelSource | null;
+  conversation_id: number | null;
 }
 
 export interface PaginatedOrdersResult<T> extends PaginatedResult<T> {

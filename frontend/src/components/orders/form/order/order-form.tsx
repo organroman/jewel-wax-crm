@@ -148,7 +148,11 @@ const OrderForm = ({
       linked_orders: order?.linked_orders || [],
       media: order?.media || [],
       created_at: order?.created_at ?? null,
-      conversation_id: dataFromRequest?.conversation_id ?? null,
+      conversation_id: order?.conversation_id
+        ? order.conversation_id
+        : dataFromRequest?.conversation_id
+        ? dataFromRequest?.conversation_id
+        : null,
     },
   });
 
@@ -179,6 +183,7 @@ const OrderForm = ({
         linked_orders: order.linked_orders || [],
         media: order.media || [],
         created_at: order?.created_at ?? null,
+        conversation_id: order?.conversation_id ?? null,
       });
     }
   }, [order]);
