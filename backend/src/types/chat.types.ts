@@ -39,6 +39,7 @@ export interface Conversation {
   last_message_at?: string | null;
   created_at?: Date;
   updated_at?: Date;
+  provider: Provider;
 }
 
 export interface Message {

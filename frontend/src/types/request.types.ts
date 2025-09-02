@@ -1,4 +1,4 @@
-import { MessageAttachment } from "./shared.types";
+import { ChanelSource, MessageAttachment } from "./shared.types";
 import { Contact } from "./contact.types";
 import { Person } from "./person.types";
 
@@ -29,6 +29,7 @@ export interface Conversation {
   created_at?: Date;
   updated_at?: Date;
   participants: Participant[];
+  provider: ChanelSource;
 }
 
 export interface Message {

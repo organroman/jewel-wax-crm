@@ -134,6 +134,7 @@ export const updateOrderSchema = z.object({
   linked_orders: z.array(linkedOrderSchema).optional(),
   media: z.array(orderMediaSchema),
   created_at: z.string().nullable().optional(),
+  conversation_id: z.number().nullable(),
 });
 
 const payerTypeSchema = z.enum(PAYER_TYPE);

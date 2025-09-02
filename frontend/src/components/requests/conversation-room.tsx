@@ -83,9 +83,15 @@ const ConversationRoom = ({ conversation, userId }: ConversationRoomProps) => {
   }, [messages, unreadForThisChat]);
 
   const handleCreatePerson = () => {
-    const query = `contactId=${contact?.id}&conversationId=${conversation.id}`;
+    const query = `personId=${person?.id}&conversationId=${conversation.id}`;
 
     router.push(`persons/new?${query}`);
+  };
+
+  const handleCreateOrder = () => {
+    const query = `personId=${person?.id}&channel=${conversation.provider}&conversationId=${conversation.id}`;
+
+    router.push(`orders/new?${query}`);
   };
 
   return (
@@ -123,7 +129,9 @@ const ConversationRoom = ({ conversation, userId }: ConversationRoomProps) => {
               {t("person.add_person")}
             </Button>
           )}
-          <Button>{t("request.buttons.create_order")}</Button>
+          <Button onClick={handleCreateOrder}>
+            {t("request.buttons.create_order")}
+          </Button>
         </div>
       </div>
       {isLoading ? (

@@ -61,7 +61,8 @@
     "person": "Контрагент",
     "dashboard": "Дашборд",
     "chat": "Чат JW",
-    "requests": "Заявки"
+    "requests": "Заявки",
+    "channel": "Джерело"
   },
   "labels": {
     "main": "$t(dictionary.main)",

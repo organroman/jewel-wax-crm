@@ -1,5 +1,7 @@
 import {
+  DataFromRequest,
   Order,
+  OrderCustomer,
   OrderMedia,
   Stage,
   UpdateOrderSchema,
@@ -28,6 +30,7 @@ import OrderOperationsFields from "./order-operations-fields";
 import { updateOrderSchema } from "@/validators/order.validator";
 
 import { ORDER_STAGE, ORDER_STAGE_STATUS } from "@/constants/enums.constants";
+import { getDoorAddress } from "@/lib/utils";
 
 interface OrderFormProps {
   order?: Order;
@@ -40,6 +43,7 @@ interface OrderFormProps {
   canDeleteField?: (field: string) => boolean;
   canViewStage?: (stage: Stage) => boolean;
   canEditStage?: (stage: Stage) => boolean;
+  dataFromRequest?: DataFromRequest;
 }
 
 const OrderForm = ({
@@ -53,6 +57,7 @@ const OrderForm = ({
   canViewField = () => true,
   canEditField = () => true,
   canDeleteField = () => true,
+  dataFromRequest,
 }: OrderFormProps) => {
   const { t } = useTranslation();
 
@@ -89,6 +94,25 @@ const OrderForm = ({
     };
   });
 
+  const requestCustomer =
+    dataFromRequest?.person &&
+    ({
+      id: dataFromRequest.person.id,
+      first_name: dataFromRequest.person.first_name,
+      last_name: dataFromRequest.person.last_name,
+      patronymic: dataFromRequest.person.patronymic,
+      phones: dataFromRequest.person.phones,
+      delivery_addresses: dataFromRequest.person.delivery_addresses?.map(
+        (d) => ({
+          delivery_address_id: d.id,
+          address_line:
+            d.type === "door"
+              ? getDoorAddress(d.street, d.house_number, d.flat_number)
+              : d.np_warehouse,
+        })
+      ),
+    } as OrderCustomer);
+
   const form = useForm<z.infer<typeof updateOrderSchema>>({
     resolver: zodResolver(updateOrderSchema) as any,
     defaultValues: {
@@ -113,12 +137,18 @@ const OrderForm = ({
           : false,
       }) || { declaration_number: "", cost: 0.0, is_third_party: false },
       notes: order?.notes || "",
-      customer: order?.customer || null,
+      customer: order?.customer
+        ? order.customer
+        : requestCustomer
+        ? requestCustomer
+        : null,
+
       stages: defaultOrderStages,
       active_stage: order?.active_stage || "new",
       linked_orders: order?.linked_orders || [],
       media: order?.media || [],
       created_at: order?.created_at ?? null,
+      conversation_id: dataFromRequest?.conversation_id ?? null,
     },
   });
 
@@ -253,6 +283,7 @@ const OrderForm = ({
                     canViewField={canViewField}
                     canEditField={canEditField}
                     canViewCustomer={canViewCustomer}
+                    isRequestCustomer={Boolean(requestCustomer)}
                   />
 
                   <OrderStagesFields

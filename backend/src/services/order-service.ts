@@ -8,6 +8,7 @@ import {
 } from "../types/order.types";
 import { ChatParticipantFull } from "../types/order-chat.types";
 import { PersonRole } from "../types/person.types";
+import { Provider } from "../types/chat.types";
 
 import cloudinary from "../cloudinary/config";
 import { s3 } from "../digital-ocean/spaces-client";
@@ -16,6 +17,7 @@ import { OrderModel } from "../models/order-model";
 import { OrderChatModel } from "../models/order-chat-model";
 import { ActivityLogModel } from "../models/activity-log-model";
 import { PersonModel } from "../models/person-model";
+import { ConversationModel } from "../models/chat/conversation-model";
 
 import { OrderChatService } from "./order-chat-service";
 
@@ -258,6 +260,13 @@ export const OrderService = {
       );
     }
 
+    let channel: Provider | null = null;
+
+    if (order.conversation_id) {
+      const convo = await ConversationModel.findById(order.conversation_id);
+      channel = convo?.provider || null;
+    }
+
     const {
       customer_id,
       miller_id,
@@ -291,6 +300,7 @@ export const OrderService = {
         chat_id: order_chat?.id ?? null,
         participants: chatParticipants,
       },
+      channel,
     };
 
     return enrichedOrder;

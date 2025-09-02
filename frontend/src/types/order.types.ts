@@ -1,6 +1,7 @@
+import { Person } from "@/types/person.types";
 import { z } from "zod";
 import { Dispatch, SetStateAction } from "react";
-
+import { ChanelSource } from "./shared.types";
 import { ORDER_STAGE, ORDER_STAGE_STATUS } from "@/constants/enums.constants";
 import { PaginatedResult } from "./shared.types";
 import { updateOrderSchema } from "@/validators/order.validator";
@@ -136,6 +137,7 @@ export interface Order {
   linked_orders: LinkedOrder[];
   chat: { chat_id: number; participants: ChatParticipant[] } | null;
   chat_id: number | null;
+  channel: ChanelSource | null;
 }
 
 export interface PaginatedOrdersResult<T> extends PaginatedResult<T> {
@@ -143,3 +145,9 @@ export interface PaginatedOrdersResult<T> extends PaginatedResult<T> {
 }
 
 export type UpdateOrderSchema = z.infer<typeof updateOrderSchema>;
+
+export interface DataFromRequest {
+  person: Person | null;
+  channel: ChanelSource;
+  conversation_id: number;
+}

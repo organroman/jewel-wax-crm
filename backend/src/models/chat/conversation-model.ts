@@ -16,7 +16,11 @@ export const ConversationModel = {
   },
 
   async findById(id: number): Promise<Conversation | undefined> {
-    return db<Conversation>("conversations").where({ id }).first();
+    return db<Conversation>("conversations as c")
+      .where("c.id", id)
+      .first()
+      .leftJoin("channels as ch", "ch.id", "c.channel_id")
+      .select("c.*", "ch.id as channel_id", "ch.provider");
   },
 
   async create(input: Partial<Conversation>): Promise<Conversation> {
@@ -46,7 +50,8 @@ export const ConversationModel = {
       .select(
         "c.*",
         db.raw(`COALESCE(ct.full_name, ct.username) as contact_name`),
-        "ch.account_label"
+        "ch.account_label",
+        "ch.provider"
       )
       .leftJoin("conversation_participants as cp", function () {
         this.on("cp.conversation_id", "=", "c.id").andOnNotNull(
@@ -55,7 +60,13 @@ export const ConversationModel = {
       })
       .leftJoin("contacts as ct", "ct.id", "cp.contact_id")
       .leftJoin("channels as ch", "ch.id", "c.channel_id")
-      .groupBy("c.id", "ct.full_name", "ct.username", "ch.account_label")
+      .groupBy(
+        "c.id",
+        "ct.full_name",
+        "ct.username",
+        "ch.account_label",
+        "ch.provider"
+      )
       .orderBy([{ column: "c.last_message_at", order: "desc", nulls: "last" }]);
 
     if (params.status) q.where("c.status", params.status);

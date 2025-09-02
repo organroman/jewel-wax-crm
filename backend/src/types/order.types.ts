@@ -1,4 +1,5 @@
 import { ORDER_STAGE, ORDER_STAGE_STATUS } from "../constants/enums";
+import { Provider } from "./chat.types";
 import { PaymentStatus } from "./finance.type";
 import { ChatParticipantFull } from "./order-chat.types";
 import { DeliveryType, PersonRole, Phone } from "./person.types";
@@ -125,6 +126,7 @@ export interface OrderBase {
   created_by: number;
   payment_status?: PaymentStatus;
   active_stage_status_started_at?: Date;
+  conversation_id: number | null;
 }
 
 export interface UserOrder {
@@ -170,6 +172,7 @@ export interface AdminOrder {
   printing_cost?: number;
   chat_id?: number | null;
   chat?: { chat_id: number; participants: ChatParticipantFull[] } | null;
+  channel?: Provider | null;
 }
 
 export interface LinkedOrder {

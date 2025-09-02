@@ -14,7 +14,7 @@ import FormAsyncCombobox from "@/components/form/form-async-combobox";
 import OrderDeliveryFields from "./order-delivery-fields";
 import OrderStagePerformerFields from "./order-stage-performer-fields";
 
-import { getFullName } from "@/lib/utils";
+import { cn, getFullName } from "@/lib/utils";
 
 interface OrderOperationsFieldsProps {
   order?: Order;
@@ -24,6 +24,7 @@ interface OrderOperationsFieldsProps {
   canEditField?: (field: string) => boolean;
   canViewCustomer?: boolean;
   canViewOrderAmount?: boolean;
+  isRequestCustomer: boolean;
 }
 
 const OrderOperationsFields = ({
@@ -33,6 +34,7 @@ const OrderOperationsFields = ({
   canViewField = () => true,
   canEditField = () => true,
   canViewCustomer,
+  isRequestCustomer,
 }: OrderOperationsFieldsProps) => {
   const { t } = useTranslation();
   const [searchQuery, setSearchQuery] = useState<string>("");
@@ -55,7 +57,7 @@ const OrderOperationsFields = ({
 
   const { data: customers, isLoading } = usePerson.getCustomers(
     `role=client&search=${searchQuery}`,
-    canViewCustomer ?? true
+    (canViewCustomer && !isRequestCustomer) ?? true
   );
 
   return (
@@ -71,7 +73,12 @@ const OrderOperationsFields = ({
           {t("order.labels.amount")}, ₴
         </InfoLabel>
       </div>
-      <div className="flex lg:items-center flex-col lg:flex-row gap-2.5 justify-between">
+      <div
+        className={cn(
+          "flex lg:items-center flex-col lg:flex-row gap-2.5 justify-between",
+          !order && isRequestCustomer && "justify-end"
+        )}
+      >
         {order ? (
           <div className="w-full flex items-center gap-2.5">
             <InfoLabel className="text-sm">
@@ -80,7 +87,8 @@ const OrderOperationsFields = ({
             <InfoValue className="text-sm">{order?.createdBy}</InfoValue>
           </div>
         ) : (
-          canViewCustomer && (
+          canViewCustomer &&
+          !isRequestCustomer && (
             <div className="flex w-full flex-col lg:flex-row lg:items-center gap-1 lg:gap-2.5">
               <InfoLabel className="text-sm w-[100px] shrink-0">
                 {t("order.labels.customer")}
@@ -114,7 +122,7 @@ const OrderOperationsFields = ({
             </div>
           )
         )}
-        <div className="flex items-center justify-between">
+        <div className={cn("flex items-center justify-between")}>
           <InfoLabel className="text-sm flex lg:hidden">
             {t("order.labels.amount")}, ₴
           </InfoLabel>
