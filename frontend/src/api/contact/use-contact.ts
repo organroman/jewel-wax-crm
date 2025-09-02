@@ -8,4 +8,11 @@ export const useContact = {
       queryFn: () => contactService.getAll(query),
     });
   },
+  getContactById: ({ id, enabled }: { id: number; enabled: boolean }) => {
+    return useQuery({
+      queryKey: ["contact", id],
+      queryFn: () => contactService.getById(Number(id)),
+      enabled,
+    });
+  },
 };

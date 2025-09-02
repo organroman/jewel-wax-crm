@@ -17,6 +17,7 @@ import { PersonModel } from "../models/person-model";
 import { ActivityLogModel } from "../models/activity-log-model";
 import { LocationModel } from "../models/location-model";
 import { NovaPoshtaModel } from "../models/novaposhta-model";
+import { ConversationModel } from "../models/chat/conversation-model";
 
 import AppError from "../utils/AppError";
 import ERROR_MESSAGES from "../constants/error-messages";
@@ -192,6 +193,19 @@ export const PersonService = {
 
     if (data.contacts?.length) {
       await PersonModel.createContacts(person.id, data.contacts);
+    }
+
+    if (data.contact_id && data.conversation_id) {
+      await ConversationModel.updateParticipant({
+        conversation_id: data.conversation_id,
+        person_id: person.id,
+        contact_id: data.contact_id,
+      });
+    }
+
+    const newMessengers = data.messengers?.filter((m) => !m.id) ?? [];
+    if (newMessengers.length) {
+      await PersonModel.createMessengers(person.id, newMessengers);
     }
 
     const result = await PersonModel.findById(person.id);

@@ -55,10 +55,11 @@ const locationsSchema = z
   .optional();
 
 const messengerSchema = z.object({
-  id: z.number(),
-  phone_id: z.number(),
-  person_id: z.number(),
+  id: z.number().optional(),
+  phone_id: z.number().optional(),
+  person_id: z.number().optional(),
   platform: chanelSchema,
+  username: z.string(),
 });
 
 const phoneSchema = z.object({
@@ -241,6 +242,8 @@ export const updatePersonSchema = z.object({
   contacts: personContactsSchema,
   bank_details: z.array(bankDetailsSchema).optional(),
   messengers: z.array(messengerSchema).optional(),
+  conversation_id: z.number().nullable(),
+  contact_id: z.number().nullable(),
 });
 
 export const createPersonSchema = updatePersonSchema

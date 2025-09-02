@@ -34,6 +34,7 @@ export interface PersonMessenger {
   phone_id: number;
   person_id: number;
   platform: ChanelSource;
+  username: string | null;
 }
 export interface BankDetails {
   id?: number;

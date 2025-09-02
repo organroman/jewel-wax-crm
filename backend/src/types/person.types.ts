@@ -16,6 +16,8 @@ export interface PersonMessenger {
   id: number;
   person_id: number;
   platform: ContactSource;
+  phone_id: string | null;
+  username: string | null;
 }
 export interface BankDetails {
   id: number;
@@ -121,6 +123,10 @@ export interface CreatePersonInput {
   delivery_addresses?: DeliveryAddress[];
   contacts?: Contact[];
   bank_details?: BankDetails[];
+  messengers?: PersonMessenger[];
+  avatar_url: string | null;
+  conversation_id?: number;
+  contact_id?: number;
 }
 
 export interface UpdatePersonInput extends Partial<CreatePersonInput> {}

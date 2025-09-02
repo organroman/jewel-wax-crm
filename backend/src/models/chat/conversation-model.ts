@@ -85,4 +85,14 @@ export const ConversationModel = {
       .onConflict(["conversation_id", "contact_id", "person_id"])
       .ignore();
   },
+  async updateParticipant(data: {
+    conversation_id: number;
+    contact_id: number;
+    person_id: number | null;
+  }) {
+    await db<ConversationParticipant>("conversation_participants")
+      .where("conversation_id", data.conversation_id)
+      .andWhere("contact_id", data.contact_id)
+      .update({ person_id: data.person_id });
+  },
 };

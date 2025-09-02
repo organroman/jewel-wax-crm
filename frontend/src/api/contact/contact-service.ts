@@ -6,4 +6,7 @@ export const contactService = {
   getAll: async (query: string) => {
     return await apiService.get<PaginatedResult<Contact>>(`contacts?${query}`);
   },
+  getById: async (id: number) => {
+    return await apiService.get<Contact>(`contacts/${id}`);
+  },
 };

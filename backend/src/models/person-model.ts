@@ -192,6 +192,7 @@ export const PersonModel = {
         role: data.role,
         password: data.password,
         is_active: true,
+        avatar_url: data.avatar_url,
       })
       .returning<PersonBase[]>("*");
     return newPerson;
@@ -208,6 +209,14 @@ export const PersonModel = {
     return await db<PersonMessenger>("person_messengers").where(
       "person_id",
       personId
+    );
+  },
+  async createMessengers(personId: number, messengers: PersonMessenger[]) {
+    await db("person_messengers").insert(
+      messengers.map((messenger) => ({
+        ...messenger,
+        person_id: personId,
+      }))
     );
   },
 

@@ -6,6 +6,7 @@ import {
   UpdatePersonSchema,
 } from "@/types/person.types";
 import { Country } from "@/types/location.types";
+import { Contact } from "@/types/contact.types";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { UseMutationResult } from "@tanstack/react-query";
@@ -47,7 +48,7 @@ import {
   PERSON_ROLE_VALUES,
 } from "@/constants/enums.constants";
 
-import { getFullName, getInitials } from "@/lib/utils";
+import { getFullName, getInitials, getMessengerIcon } from "@/lib/utils";
 
 import LabelPDF from "./label-pdf";
 
@@ -63,6 +64,8 @@ interface PersonFormProps {
     CreatePersonSchema | UpdatePersonSchema
   >;
   person?: Person;
+  contact?: Contact;
+  conversationId?: number;
   deletePersonMutation?: UseMutationResult<unknown, Error, number>;
   isDialogOpen?: boolean;
   setIsDialogOpen?: (v: SetStateAction<boolean>) => void;
@@ -80,6 +83,8 @@ const PersonForm = ({
   countries = [],
   onCreateCity,
   onCreateCountry,
+  contact,
+  conversationId,
 }: PersonFormProps) => {
   const { t } = useTranslation();
   const roles = PERSON_ROLE_VALUES.map((role) => ({
@@ -109,7 +114,11 @@ const PersonForm = ({
             value: customerRole,
             label: t(`person.roles.${customerRole}`),
           },
-      first_name: person?.first_name || "",
+      first_name: person?.first_name
+        ? person.first_name
+        : contact
+        ? contact?.full_name
+        : "",
       patronymic: person?.patronymic || "",
       last_name: person?.last_name || "",
       is_active:
@@ -123,6 +132,12 @@ const PersonForm = ({
       contacts: person?.contacts || [],
       bank_details: person?.bank_details || [],
       password: "",
+      messengers: contact
+        ? [{ username: contact.username, platform: contact.source }]
+        : [],
+      avatar_url: contact?.avatar_url || null,
+      contact_id: contact?.id || null,
+      conversation_id: conversationId || null,
     },
   });
 
@@ -161,6 +176,11 @@ const PersonForm = ({
     const url = URL.createObjectURL(blob);
     window.open(url, "_blank");
   };
+
+  const icon = contact ? getMessengerIcon(contact.source) : null;
+  const messengersWoPhones =
+    person?.messengers?.filter((m) => !m.phone_id) || [];
+
   return (
     <div className="h-full w-full bg-ui-sidebar overflow-hidden rounded-md p-4 flex flex-col">
       <Form {...form}>
@@ -219,9 +239,13 @@ const PersonForm = ({
                 <div className="w-full lg:w-fit flex justify-center lg:justify-start">
                   <CustomAvatar
                     className="w-37 h-37"
-                    avatarUrl={person?.avatar_url}
+                    avatarUrl={
+                      contact ? contact.avatar_url : person?.avatar_url
+                    }
                     fallback={
-                      person
+                      contact?.full_name
+                        ? contact.full_name.charAt(0)
+                        : person
                         ? getInitials(person?.last_name, person?.first_name)
                         : ""
                     }
@@ -278,7 +302,7 @@ const PersonForm = ({
                   )}
                 </div>
               </div>
-              <div className="flex lg:w-1/2 w-full mt-8 lg:mt-0">
+              <div className="flex lg:w-1/2 w-full mt-8 lg:mt-0 flex-col gap-2.5">
                 <FormArrayPhone
                   name="phones"
                   control={form.control}
@@ -291,6 +315,32 @@ const PersonForm = ({
                   showIsMain
                   errors={form.formState.errors}
                 />
+                {contact && (
+                  <div className="flex flex-row items-center gap-2.5">
+                    <img src={icon ?? ""} alt="" className="size-5" />
+                    <InfoValue className="text-sm">
+                      @{contact.username}
+                    </InfoValue>
+                  </div>
+                )}
+                {messengersWoPhones?.length > 0 && (
+                  <div className="flex flex-row items-center gap-5">
+                    {messengersWoPhones.map((m) => {
+                      const icon = getMessengerIcon(m.platform);
+                      return (
+                        <div
+                          key={m.id}
+                          className="flex flex-row items-center gap-2.5"
+                        >
+                          <img src={icon ?? ""} alt="" className="size-5" />
+                          <InfoValue className="text-sm">
+                            @{m.username}
+                          </InfoValue>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
               </div>
             </div>
 
