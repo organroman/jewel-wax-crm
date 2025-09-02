@@ -53,7 +53,8 @@ const NewOrderClient = ({ userId }: { userId: number }) => {
   const dataFromRequest = {
     person: person ?? null,
     channel: channel as ChanelSource,
-    conversation_id: Number(conversationId),
+    conversation_id:
+      Number(conversationId) === 0 ? null : Number(conversationId),
   };
 
   if (isLoading) {

@@ -148,6 +148,6 @@ export type UpdateOrderSchema = z.infer<typeof updateOrderSchema>;
 
 export interface DataFromRequest {
   person: Person | null;
-  channel: ChanelSource;
-  conversation_id: number;
+  channel: ChanelSource | null;
+  conversation_id: number | null;
 }
