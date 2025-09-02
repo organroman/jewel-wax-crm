@@ -1,5 +1,5 @@
 import { Contact } from "./contact.types";
-import { PersonBase } from "./person.types";
+import { Person } from "./person.types";
 
 export type Provider =
   | "telegram"
@@ -102,9 +102,13 @@ export interface ConversationParticipant {
   role: string;
 }
 
-export interface ConversationWithContact extends Conversation {
+export interface Participant {
   contact: Contact | null;
-  person: PersonBase | null;
+  person: Person | null;
+}
+
+export interface ConversationWithContact extends Conversation {
+  participants: Participant[];
 }
 
 export interface MessageWithAttachment extends Message {

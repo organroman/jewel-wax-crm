@@ -74,7 +74,7 @@ const RequestsClient = ({ userId }: RequestsClientProps) => {
       <Separator className="bg-ui-border h-0.5 data-[orientation=horizontal]:h-0.5" />
       <div className="flex-1 overflow-hidden flex flex-row mt-4 bg-ui-sidebar">
         {isLoading && <Loader className="text-brand-default animate-spin" />}
-        <Conversations conversations={data ?? []} />
+        <Conversations conversations={data ?? []} userId={userId} />
         {currentConversation ? (
           <ConversationRoom
             conversation={currentConversation}

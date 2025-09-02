@@ -6,7 +6,7 @@ import {
   Provider,
 } from "./../types/chat.types";
 import { InboundEvent } from "../types/chat.types";
-import { PersonBase } from "../types/person.types";
+import { Person } from "../types/person.types";
 import { Contact } from "../types/contact.types";
 
 import { Server } from "socket.io";
@@ -23,10 +23,11 @@ import { PersonModel } from "../models/person-model";
 import { ContactModel } from "../models/contact-model";
 
 import { getAdapter } from "../providers";
+import { fetchAndStoreTelegramAvatar } from "../providers/tg-fetch-avatar";
 
 import { resolveAttachmentsForEvent } from "../utils/resolver-telegram-attachments";
 import AppError from "../utils/AppError";
-import { makeMulterFile } from "../utils/helpers";
+import { makeMulterFile, stripPassword } from "../utils/helpers";
 import { emitBadges, getViewerUserIds } from "../utils/real-time";
 
 import ERROR_MESSAGES from "../constants/error-messages";
@@ -86,6 +87,7 @@ export const ChatService = {
         ev.provider,
         ev.channelExternalId
       );
+
       if (!channel) {
         console.warn("Unknown channel", ev.provider, ev.channelExternalId);
         continue;
@@ -97,6 +99,30 @@ export const ChatService = {
         username: ev.contactUsername ?? null,
         full_name: ev.contactFullName ?? null,
       });
+
+      const token = process.env.TG_BOT_TOKEN;
+
+      if (ev.provider === "telegram" && token) {
+        // if you want avatar ASAP the first time: await ONLY when no avatar yet
+        if (!contact.avatar_url) {
+          try {
+            await fetchAndStoreTelegramAvatar({
+              tgUserId: ev.contactExternalId,
+              contactId: contact.id,
+              botToken: token,
+            });
+          } catch (e) {
+            console.warn("avatar first-fetch failed", e);
+          }
+        } else {
+          // background (don’t await)
+          fetchAndStoreTelegramAvatar({
+            tgUserId: ev.contactExternalId,
+            contactId: contact.id,
+            botToken: token,
+          }).catch(() => {});
+        }
+      }
 
       const convo = await ensureConversation(
         channel.id,
@@ -333,11 +359,20 @@ export const ChatService = {
       .map((p) => p.person_id)
       .filter((p) => p !== null);
 
-    let persons: PersonBase[] = [];
+    let persons: Person[] = [];
     let contacts: Contact[] = [];
 
     if (personIds.length) {
-      persons = await PersonModel.getPersonsBaseByIds(personIds);
+      const personsBase = await PersonModel.getPersonsBaseByIds(personIds);
+      const phones = await PersonModel.getPhonesByPersonIds(personIds);
+
+      persons = personsBase.map((p) => {
+        const person_phones = phones.filter(
+          (phone) => phone.person_id === p.id
+        );
+
+        return { ...stripPassword(p), phones: person_phones };
+      });
     }
 
     if (contactIds.length) {
@@ -345,18 +380,26 @@ export const ChatService = {
     }
 
     const enriched = conversations.map((conversation) => {
-      const participant = participants.find(
+      const convoParticipants = participants.filter(
         (p) => p.conversation_id === conversation.id
       );
-      const contact = contacts.find((c) => c.id === participant?.contact_id);
-      const person = persons.find(
-        (person) => person.id === participant?.person_id
-      );
+
+      const enrichedParticipants = convoParticipants.map((cp) => {
+        const contact = contacts.find((c) => c.id === cp?.contact_id);
+        const person = persons.find((person) => person.id === cp?.person_id);
+
+        return {
+          id: cp.id,
+          role: cp.role,
+          conversation_id: cp.conversation_id,
+          contact: contact ?? null,
+          person: person ?? null,
+        };
+      });
 
       return {
         ...conversation,
-        contact: contact ? contact : null,
-        person: person ? person : null,
+        participants: enrichedParticipants,
       };
     });
     return enriched;

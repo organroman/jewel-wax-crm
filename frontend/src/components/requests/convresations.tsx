@@ -9,9 +9,10 @@ import { splitUnread } from "@/lib/split-unread";
 
 interface ConversationsProps {
   conversations: Conversation[];
+  userId: number;
 }
 
-const Conversations = ({ conversations }: ConversationsProps) => {
+const Conversations = ({ conversations, userId }: ConversationsProps) => {
   const { byConversation } = useUnreadStore((s) => s);
   const badges = splitUnread(byConversation).external;
 
@@ -24,7 +25,14 @@ const Conversations = ({ conversations }: ConversationsProps) => {
         {conversations.map((c) => {
           const badge = badges[c.id];
 
-          return <ConversationItem key={c.id} conversation={c} badge={badge} />;
+          return (
+            <ConversationItem
+              key={c.id}
+              conversation={c}
+              badge={badge}
+              userId={userId}
+            />
+          );
         })}
       </div>
     </div>

@@ -14,15 +14,24 @@ import { cn, getFullName, getInitials } from "@/lib/utils";
 interface ConversationItemProps {
   conversation: Conversation;
   badge?: number;
+  userId: number;
 }
 
-const ConversationItem = ({ conversation, badge }: ConversationItemProps) => {
+const ConversationItem = ({
+  conversation,
+  badge,
+  userId,
+}: ConversationItemProps) => {
   const router = useRouter();
   const searchParams = useSearchParams();
 
   const current = searchParams.get("id");
 
-  const { contact, person } = conversation;
+  const { participants } = conversation;
+
+  const opponent = participants.find((p) => p.person?.id !== userId);
+  const person = opponent?.person;
+  const contact = opponent?.contact;
 
   const avatarUrl = person ? person.avatar_url : contact?.avatar_url;
   const contactFirstAndLastName = contact?.full_name
@@ -39,7 +48,7 @@ const ConversationItem = ({ conversation, badge }: ConversationItemProps) => {
     : contact?.full_name;
 
   const userNameOrPhoneLabel = person
-    ? person.phones[0].number
+    ? person.phones?.[0].number
     : contact?.username;
 
   const handleSelect = (id: number) => {

@@ -32,7 +32,6 @@ export const telegramAdapter: ProviderAdapter = {
         file_name: msg.document.file_name,
       });
     }
-    // NOTE: you'll need an extra step to exchange file_id → download URL via getFile if you want to copy media
 
     pulls.push({
       provider: "telegram",

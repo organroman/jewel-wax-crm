@@ -4,6 +4,7 @@ import { MessageAttachment } from "@/types/shared.types";
 import { Loader } from "lucide-react";
 import React, { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useRouter } from "next/navigation";
 
 import { useRequest } from "@/api/request/use-request";
 import { useExternalChat } from "@/hooks/use-external-chat";
@@ -25,6 +26,7 @@ interface ConversationRoomProps {
 
 const ConversationRoom = ({ conversation, userId }: ConversationRoomProps) => {
   const { t } = useTranslation();
+  const router = useRouter();
   const [messages, setMessages] = useState<Message[]>([]);
   const [text, setText] = useState("");
   const [newFiles, setNewFiles] = useState<File[]>([]);
@@ -49,7 +51,12 @@ const ConversationRoom = ({ conversation, userId }: ConversationRoomProps) => {
     if (data && !isLoading) setMessages(data);
   }, [data]);
 
-  const { contact, person } = conversation;
+  const { participants } = conversation;
+
+  const opponent = participants.find((p) => p.person?.id !== userId);
+
+  const person = opponent?.person;
+  const contact = opponent?.contact;
 
   const avatarUrl = person ? person.avatar_url : contact?.avatar_url;
   const contactFirstAndLastName = contact?.full_name
@@ -66,7 +73,7 @@ const ConversationRoom = ({ conversation, userId }: ConversationRoomProps) => {
     : contact?.full_name;
 
   const userNameOrPhoneLabel = person
-    ? person.phones[0].number
+    ? person.phones[0]?.number
     : contact?.username;
 
   const firstUnreadId = useMemo(() => {
@@ -74,6 +81,12 @@ const ConversationRoom = ({ conversation, userId }: ConversationRoomProps) => {
     const idx = Math.max(0, messages.length - unreadForThisChat);
     return messages[idx]?.id;
   }, [messages, unreadForThisChat]);
+
+  const handleCreatePerson = () => {
+    const query = `contactId=${contact?.id}&conversationId=${conversation.id}`;
+
+    router.push(`persons/new?${query}`);
+  };
 
   return (
     <div className="w-full h-full overflow-hidden bg-ui-column  border-r border-ui-border flex flex-col">
@@ -101,13 +114,16 @@ const ConversationRoom = ({ conversation, userId }: ConversationRoomProps) => {
           </div>
         </div>
         <div className="flex flex-row items-center gap-5">
-          <Button
-            variant="secondary"
-            className="rounded-sm hover:border-brand-default/80"
-          >
-            {t("person.add_person")}
-          </Button>
-          {!person?.id && <Button>{t("request.buttons.create_order")}</Button>}
+          {!person?.id && (
+            <Button
+              variant="secondary"
+              className="rounded-sm hover:border-brand-default/80"
+              onClick={handleCreatePerson}
+            >
+              {t("person.add_person")}
+            </Button>
+          )}
+          <Button>{t("request.buttons.create_order")}</Button>
         </div>
       </div>
       {isLoading ? (

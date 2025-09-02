@@ -14,6 +14,11 @@ export type ContentKind =
   | "location"
   | "other";
 
+export interface Participant {
+  contact: Contact | null;
+  person: Person | null;
+}
+
 export interface Conversation {
   id: number;
   channel_id: number;
@@ -23,8 +28,7 @@ export interface Conversation {
   last_message_at?: string | null;
   created_at?: Date;
   updated_at?: Date;
-  contact: Contact | null;
-  person: Person | null;
+  participants: Participant[];
 }
 
 export interface Message {
