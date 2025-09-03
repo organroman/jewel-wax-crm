@@ -22,7 +22,7 @@ const Modal = ({
         ? { "aria-describedby": "modal-description" }
         : { "aria-describedby": undefined })}
       className={cn(
-        "max-w-[95vw] min-h-fit max-h-[80vh] lg:max-h-[90vh] p-2.5 lg:p-5 min-w-fit w-full lg:max-w-lg overflow-auto bg-ui-sidebar",
+        "max-w-[95vw] min-h-fit max-h-[80vh] lg:max-h-[90vh] p-2.5 lg:p-5 min-w-fit w-full lg:max-w-lg  bg-ui-sidebar", //overflow-auto
         dialogContentClassname
       )}
     >
@@ -39,12 +39,7 @@ const Modal = ({
           destructive={destructive}
         />
       )}
-      <div
-        className={cn(
-          "h-full overflow-y-auto pr-5",
-          hideClose && "pr-0"
-        )}
-      >
+      <div className={cn("h-full overflow-y-auto pr-5", hideClose && "pr-0")}>
         {children}
       </div>
       {footer && (
