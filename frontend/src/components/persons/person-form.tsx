@@ -135,7 +135,11 @@ const PersonForm = ({
       messengers: contact
         ? [{ username: contact.username, platform: contact.source }]
         : [],
-      avatar_url: contact?.avatar_url || null,
+      avatar_url: person?.avatar_url
+        ? person.avatar_url
+        : contact?.avatar_url
+        ? contact.avatar_url
+        : null,
       contact_id: contact?.id || null,
       conversation_id: conversationId || null,
     },

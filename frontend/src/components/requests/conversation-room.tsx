@@ -83,7 +83,7 @@ const ConversationRoom = ({ conversation, userId }: ConversationRoomProps) => {
   }, [messages, unreadForThisChat]);
 
   const handleCreatePerson = () => {
-    const query = `personId=${person?.id}&conversationId=${conversation.id}`;
+    const query = `contactId=${contact?.id}&conversationId=${conversation.id}`;
 
     router.push(`persons/new?${query}`);
   };
