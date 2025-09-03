@@ -238,6 +238,9 @@ export const PersonService = {
       contacts,
       bank_details,
       delivery_addresses,
+      messengers,
+      contact_id,
+      conversation_id,
       ...personFields
     } = data;
 
@@ -400,6 +403,19 @@ export const PersonService = {
 
     if (newBank.length) {
       await PersonModel.createBankDetails(personId, newBank);
+    }
+
+    const existingMessengers = await PersonModel.getPersonMessengers(personId);
+    const newMessengers = messengers?.filter((m) => !m.id) ?? [];
+    const incomingMessengers = messengers?.filter((m) => m.id) ?? [];
+
+    const toUpdateMessengers = existingMessengers.filter((dbItem) => {
+      const incomingMatch = existingMessengers?.find((p) => p.id === dbItem.id);
+      return incomingMatch;
+    });
+
+    if (newMessengers.length) {
+      await PersonModel.createMessengers(personId, newMessengers);
     }
 
     await ActivityLogModel.logAction({
