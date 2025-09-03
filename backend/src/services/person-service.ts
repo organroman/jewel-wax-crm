@@ -13,7 +13,12 @@ import { PaginatedResult } from "../types/shared.types";
 
 import bcryptjs from "bcryptjs";
 
-import { PersonModel } from "../models/person-model";
+import { PersonModel } from "../models/person/person-model";
+import { PersonPhoneModel } from "../models/person/phone-model";
+import { PersonEmailModel } from "../models/person/email-model";
+import { PersonMessengerModel } from "../models/person/messenger-model";
+import { PersonDeliveryAddressModel } from "../models/person/delivery-address-model";
+import { PersonLocationModel } from "../models/person/location-model";
 import { ActivityLogModel } from "../models/activity-log-model";
 import { LocationModel } from "../models/location-model";
 import { NovaPoshtaModel } from "../models/novaposhta-model";
@@ -45,14 +50,20 @@ export const PersonService = {
 
     const enriched = await Promise.all(
       persons.data.map(async (person) => {
-        const phones = await PersonModel.getPhonesByPersonId(person.id);
-        const emails = await PersonModel.getEmailsByPersonId(person.id);
-        const messengers = await PersonModel.getPersonMessengers(person.id);
+        const phones = await PersonPhoneModel.getPhonesByPersonId(person.id);
+        const emails = await PersonEmailModel.getEmailsByPersonId(person.id);
+        const messengers = await PersonMessengerModel.getPersonMessengers(
+          person.id
+        );
 
         const delivery_addresses =
-          await PersonModel.getDeliveryAddressesByPersonId(person.id);
+          await PersonDeliveryAddressModel.getDeliveryAddressesByPersonId(
+            person.id
+          );
 
-        const locations = await PersonModel.getLocationsByPersonId(person.id);
+        const locations = await PersonLocationModel.getLocationsByPersonId(
+          person.id
+        );
 
         return {
           ...(stripPassword(person) as SafePerson),
@@ -169,19 +180,19 @@ export const PersonService = {
       password: hashedPassword,
     });
 
-    await PersonModel.createPhones(person.id, data.phones);
+    await PersonPhoneModel.createPhones(person.id, data.phones);
 
     if (data.emails?.length) {
-      await PersonModel.createEmails(person.id, data.emails);
+      await PersonEmailModel.createEmails(person.id, data.emails);
     }
 
     if (data.locations?.length) {
-      await PersonModel.createLocations(person.id, data.locations);
+      await PersonLocationModel.createLocations(person.id, data.locations);
       await this.updateCitiesWithRegion(data.locations);
     }
 
     if (data.delivery_addresses?.length) {
-      await PersonModel.createDeliveryAddresses(
+      await PersonDeliveryAddressModel.createDeliveryAddresses(
         person.id,
         data.delivery_addresses
       );
@@ -205,7 +216,7 @@ export const PersonService = {
 
     const newMessengers = data.messengers?.filter((m) => !m.id) ?? [];
     if (newMessengers.length) {
-      await PersonModel.createMessengers(person.id, newMessengers);
+      await PersonMessengerModel.createMessengers(person.id, newMessengers);
     }
 
     const result = await PersonModel.findById(person.id);
@@ -251,7 +262,7 @@ export const PersonService = {
 
     if (!updatedPerson) return null;
 
-    const existingPhones = await PersonModel.getPhonesByPersonId(personId);
+    const existingPhones = await PersonPhoneModel.getPhonesByPersonId(personId);
 
     const newPhones = phones?.filter((p) => !p.id) ?? [];
     const incomingPhones = phones?.filter((p) => p.id) ?? [];
@@ -266,18 +277,18 @@ export const PersonService = {
     );
 
     if (toDeletePhones.length) {
-      await PersonModel.deletePhones(toDeletePhones.map((m) => m.id));
+      await PersonPhoneModel.deletePhones(toDeletePhones.map((m) => m.id));
     }
 
     if (toUpdatePhones.length) {
-      await PersonModel.updatePhones(toUpdatePhones, incomingPhones);
+      await PersonPhoneModel.updatePhones(toUpdatePhones, incomingPhones);
     }
 
     if (newPhones.length) {
-      await PersonModel.createPhones(personId, newPhones);
+      await PersonPhoneModel.createPhones(personId, newPhones);
     }
 
-    const existingEmails = await PersonModel.getEmailsByPersonId(personId);
+    const existingEmails = await PersonEmailModel.getEmailsByPersonId(personId);
 
     const newEmails = emails?.filter((p) => !p.id) ?? [];
     const incomingEmails = emails?.filter((p) => p.id) ?? [];
@@ -292,19 +303,19 @@ export const PersonService = {
     );
 
     if (toDeleteEmails.length) {
-      await PersonModel.deleteEmails(toDeleteEmails.map((m) => m.id));
+      await PersonEmailModel.deleteEmails(toDeleteEmails.map((m) => m.id));
     }
 
     if (toUpdateEmails.length) {
-      await PersonModel.updateEmails(toUpdateEmails, incomingEmails);
+      await PersonEmailModel.updateEmails(toUpdateEmails, incomingEmails);
     }
 
     if (newEmails.length) {
-      await PersonModel.createEmails(personId, newEmails);
+      await PersonEmailModel.createEmails(personId, newEmails);
     }
 
     const existingDeliveryAddresses =
-      await PersonModel.getDeliveryAddressesByPersonId(personId);
+      await PersonDeliveryAddressModel.getDeliveryAddressesByPersonId(personId);
 
     const newDelAddresses = delivery_addresses?.filter((p) => !p.id) ?? [];
     const incomingDelAddresses = delivery_addresses?.filter((p) => p.id) ?? [];
@@ -321,23 +332,26 @@ export const PersonService = {
     );
 
     if (toDeleteDelAddresses.length) {
-      await PersonModel.deleteDeliveryAddresses(
+      await PersonDeliveryAddressModel.deleteDeliveryAddresses(
         toDeleteDelAddresses.map((m) => m.id)
       );
     }
 
     if (toUpdateDelAddresses.length) {
-      await PersonModel.updateDeliveryAddresses(
+      await PersonDeliveryAddressModel.updateDeliveryAddresses(
         toUpdateDelAddresses,
         incomingDelAddresses
       );
     }
 
     if (newDelAddresses.length) {
-      await PersonModel.createDeliveryAddresses(personId, newDelAddresses);
+      await PersonDeliveryAddressModel.createDeliveryAddresses(
+        personId,
+        newDelAddresses
+      );
     }
 
-    const existingLocations = await PersonModel.getLocationsByPersonId(
+    const existingLocations = await PersonLocationModel.getLocationsByPersonId(
       personId
     );
 
@@ -358,15 +372,20 @@ export const PersonService = {
     );
 
     if (toDeleteLocations.length) {
-      await PersonModel.deleteLocations(toDeleteLocations.map((m) => m.id));
+      await PersonLocationModel.deleteLocations(
+        toDeleteLocations.map((m) => m.id)
+      );
     }
 
     if (toUpdateLocations.length) {
-      await PersonModel.updateLocations(toUpdateLocations, incomingLocations);
+      await PersonLocationModel.updateLocations(
+        toUpdateLocations,
+        incomingLocations
+      );
     }
 
     if (newLocations.length) {
-      await PersonModel.createLocations(personId, newLocations);
+      await PersonLocationModel.createLocations(personId, newLocations);
     }
 
     const existingContacts = await PersonModel.getContactsByPersonId(personId);
@@ -405,7 +424,9 @@ export const PersonService = {
       await PersonModel.createBankDetails(personId, newBank);
     }
 
-    const existingMessengers = await PersonModel.getPersonMessengers(personId);
+    const existingMessengers = await PersonMessengerModel.getPersonMessengers(
+      personId
+    );
     const newMessengers = messengers?.filter((m) => !m.id) ?? [];
     const incomingMessengers = messengers?.filter((m) => m.id) ?? [];
 
@@ -415,7 +436,7 @@ export const PersonService = {
     });
 
     if (newMessengers.length) {
-      await PersonModel.createMessengers(personId, newMessengers);
+      await PersonMessengerModel.createMessengers(personId, newMessengers);
     }
 
     await ActivityLogModel.logAction({
@@ -442,21 +463,22 @@ export const PersonService = {
     if (!updatedPerson) return null;
 
     if (location) {
-      const existingLocations = await PersonModel.getLocationsByPersonId(
-        personId
-      );
+      const existingLocations =
+        await PersonLocationModel.getLocationsByPersonId(personId);
 
       const toUpdateLocations = existingLocations.filter((dbItem) => {
         const incomingMatch = location.id === dbItem.id;
         return incomingMatch;
       });
 
-      await PersonModel.updateLocations(toUpdateLocations, [location]);
+      await PersonLocationModel.updateLocations(toUpdateLocations, [location]);
     }
 
     if (phone) {
       const isNewPhone = Boolean(phone.id);
-      const existingPhones = await PersonModel.getPhonesByPersonId(personId);
+      const existingPhones = await PersonPhoneModel.getPhonesByPersonId(
+        personId
+      );
 
       const toUpdatePhones = existingPhones.filter((dbItem) => {
         const incomingMatch = phone.id === dbItem.id;
@@ -464,13 +486,15 @@ export const PersonService = {
       });
 
       !isNewPhone
-        ? await PersonModel.createPhones(personId, [phone])
-        : await PersonModel.updatePhones(toUpdatePhones, [phone]);
+        ? await PersonPhoneModel.createPhones(personId, [phone])
+        : await PersonPhoneModel.updatePhones(toUpdatePhones, [phone]);
     }
 
     if (email) {
       const isNewEmail = Boolean(email.id);
-      const existingEmails = await PersonModel.getEmailsByPersonId(personId);
+      const existingEmails = await PersonEmailModel.getEmailsByPersonId(
+        personId
+      );
 
       const toUpdateEmails = existingEmails.filter((dbItem) => {
         const incomingMatch = email.id === dbItem.id;
@@ -478,8 +502,8 @@ export const PersonService = {
       });
 
       !isNewEmail
-        ? await PersonModel.createEmails(personId, [email])
-        : await PersonModel.updateEmails(toUpdateEmails, [email]);
+        ? await PersonEmailModel.createEmails(personId, [email])
+        : await PersonEmailModel.updateEmails(toUpdateEmails, [email]);
     }
 
     await ActivityLogModel.logAction({

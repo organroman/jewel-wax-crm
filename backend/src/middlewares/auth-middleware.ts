@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 
-import { PersonModel } from "../models/person-model";
+import { PersonModel } from "../models/person/person-model";
 
 import AppError from "../utils/AppError";
 import ERROR_MESSAGES from "../constants/error-messages";

@@ -12,7 +12,10 @@ import {
 } from "../types/report.types";
 import { PaymentStatus } from "../types/finance.type";
 
-import { PersonModel } from "../models/person-model";
+import { PersonModel } from "../models/person/person-model";
+import { PersonPhoneModel } from "../models/person/phone-model";
+import { PersonEmailModel } from "../models/person/email-model";
+import { PersonLocationModel } from "../models/person/location-model";
 import { OrderModel } from "../models/order-model";
 import { FinanceModel } from "../models/finance-model";
 import { ReportModel } from "../models/report-model";
@@ -59,9 +62,9 @@ export const ReportService = {
 
     const personIds = persons.data.map((p) => p.id);
 
-    const allPhones = await PersonModel.getPhonesByPersonIds(personIds);
-    const allEmails = await PersonModel.getEmailsByPersonIds(personIds);
-    const allLocations = await PersonModel.getLocationsByPersonIds(personIds);
+    const allPhones = await PersonPhoneModel.getPhonesByPersonIds(personIds);
+    const allEmails = await PersonEmailModel.getEmailsByPersonIds(personIds);
+    const allLocations = await PersonLocationModel.getLocationsByPersonIds(personIds);
     const allOrders = await OrderModel.getOrdersByCustomerIds({
       customerIds: personIds,
       from: startFrom,

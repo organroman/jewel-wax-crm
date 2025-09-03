@@ -18,7 +18,7 @@ import { OrderPerson } from "../types/order.types";
 import { FinanceModel } from "../models/finance-model";
 import { OrderModel } from "../models/order-model";
 import { ActivityLogModel } from "../models/activity-log-model";
-import { PersonModel } from "../models/person-model";
+import { PersonModel } from "../models/person/person-model";
 
 import {
   definePaymentAmountByPaymentMethod,

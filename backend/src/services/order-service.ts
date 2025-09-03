@@ -16,7 +16,7 @@ import { s3 } from "../digital-ocean/spaces-client";
 import { OrderModel } from "../models/order-model";
 import { OrderChatModel } from "../models/order-chat-model";
 import { ActivityLogModel } from "../models/activity-log-model";
-import { PersonModel } from "../models/person-model";
+import { PersonModel } from "../models/person/person-model";
 import { ConversationModel } from "../models/chat/conversation-model";
 
 import { OrderChatService } from "./order-chat-service";

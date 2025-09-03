@@ -19,7 +19,8 @@ import { UploadService } from "./upload-service";
 import { ChannelModel } from "../models/chat/channel-model";
 import { ConversationModel } from "../models/chat/conversation-model";
 import { MessageModel } from "../models/chat/message-model";
-import { PersonModel } from "../models/person-model";
+import { PersonModel } from "../models/person/person-model";
+import { PersonPhoneModel } from "../models/person/phone-model";
 import { ContactModel } from "../models/contact-model";
 
 import { getAdapter } from "../providers";
@@ -364,7 +365,7 @@ export const ChatService = {
 
     if (personIds.length) {
       const personsBase = await PersonModel.getPersonsBaseByIds(personIds);
-      const phones = await PersonModel.getPhonesByPersonIds(personIds);
+      const phones = await PersonPhoneModel.getPhonesByPersonIds(personIds);
 
       persons = personsBase.map((p) => {
         const person_phones = phones.filter(

@@ -1,4 +1,4 @@
-import { PersonModel } from "../models/person-model";
+import { PersonModel } from "../models/person/person-model";
 import { OrderChatModel } from "../models/order-chat-model";
 import {
   ChatParticipantFull,

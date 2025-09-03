@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import { PersonModel } from "../models/person-model";
+import { PersonModel } from "../models/person/person-model";
 import { JwtPayload } from "../types/jwt.types";
 import { ExtendedError, Socket } from "socket.io";
 import ERROR_MESSAGES from "../constants/error-messages";

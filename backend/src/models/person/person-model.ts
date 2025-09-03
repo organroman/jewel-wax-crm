@@ -4,21 +4,20 @@ import {
   SafePerson,
   GetAllPersonsOptions,
   PersonBase,
-  Phone,
-  Email,
-  DeliveryAddress,
   Location,
   PersonContact,
   BankDetails,
   PersonRole,
-  PersonMessenger,
-} from "../types/person.types";
-import { PaginatedResult } from "../types/shared.types";
+} from "../../types/person.types";
+import { PaginatedResult } from "../../types/shared.types";
 
-import db from "../db/db";
+import db from "../../db/db";
 
-import { getFullName, stripPassword } from "../utils/helpers";
-import { paginateQuery } from "../utils/pagination";
+import { getFullName, stripPassword } from "../../utils/helpers";
+import { paginateQuery } from "../../utils/pagination";
+import { PersonPhoneModel } from "./phone-model";
+import { PersonEmailModel } from "./email-model";
+import { PersonDeliveryAddressModel } from "./delivery-address-model";
 
 export const PersonModel = {
   async getAll({
@@ -132,8 +131,8 @@ export const PersonModel = {
     if (!person) {
       return null;
     }
-    const phones = await this.getPhonesByPersonId(person.id);
-    const emails = await this.getEmailsByPersonId(person.id);
+    const phones = await PersonPhoneModel.getPhonesByPersonId(person.id);
+    const emails = await PersonEmailModel.getEmailsByPersonId(person.id);
 
     const locations = await db("person_locations")
       .leftJoin("cities", "person_locations.city_id", "cities.id")
@@ -148,7 +147,10 @@ export const PersonModel = {
         "countries.name as country_name"
       );
 
-    const addresses = await this.getDeliveryAddressesByPersonId(person.id);
+    const addresses =
+      await PersonDeliveryAddressModel.getDeliveryAddressesByPersonId(
+        person.id
+      );
     const contacts = await db("person_contacts")
       .join("contacts", "person_contacts.contact_id", "contacts.id")
       .where("person_contacts.person_id", person.id)
@@ -205,213 +207,6 @@ export const PersonModel = {
       .returning("*");
   },
 
-  async getPersonMessengers(personId: number): Promise<PersonMessenger[]> {
-    return await db<PersonMessenger>("person_messengers").where(
-      "person_id",
-      personId
-    );
-  },
-  async createMessengers(personId: number, messengers: PersonMessenger[]) {
-    await db("person_messengers").insert(
-      messengers.map((messenger) => ({
-        ...messenger,
-        person_id: personId,
-      }))
-    );
-  },
-
-  async getPhonesByPersonId(personId: number): Promise<Phone[]> {
-    return await db<Phone>("phones").where("person_id", personId);
-  },
-  async getPhonesByPersonIds(personIds: number[]): Promise<Phone[]> {
-    return await db<Phone>("phones").whereIn("person_id", personIds);
-  },
-
-  async createPhones(personId: number, phones: Phone[]) {
-    await db("phones").insert(
-      phones.map((phone) => ({
-        ...phone,
-        person_id: personId,
-      }))
-    );
-  },
-  async deletePhones(phoneIds: number[]) {
-    await db<Phone>("phones").whereIn("id", phoneIds).del();
-  },
-  async updatePhones(toUpdate: Phone[], updatedPhones: Phone[]) {
-    await Promise.all(
-      toUpdate.map((p) => {
-        const updated = updatedPhones.find((u) => u.id === p.id);
-        return db<Phone>("phones")
-          .where("id", p.id)
-          .update({
-            ...updated,
-            updated_at: new Date(),
-          });
-      })
-    );
-  },
-
-  async getEmailsByPersonId(personId: number): Promise<Email[]> {
-    return await db<Email>("person_emails").where("person_id", personId);
-  },
-  async getEmailsByPersonIds(personIds: number[]): Promise<Email[]> {
-    return await db<Email>("person_emails").whereIn("person_id", personIds);
-  },
-
-  async createEmails(personId: number, emails: Email[]) {
-    await db("person_emails").insert(
-      emails.map((email) => ({
-        ...email,
-        person_id: personId,
-      }))
-    );
-  },
-
-  async deleteEmails(emailIds: number[]) {
-    await db<Email>("person_emails").whereIn("id", emailIds).del();
-  },
-
-  async updateEmails(toUpdate: Email[], updatedEmails: Email[]) {
-    await Promise.all(
-      toUpdate.map((p) => {
-        const updated = updatedEmails.find((u) => u.id === p.id);
-        return db<Email>("person_emails")
-          .where("id", p.id)
-          .update({
-            ...updated,
-            updated_at: new Date(),
-          });
-      })
-    );
-  },
-
-  async getDeliveryAddressesByPersonId(
-    personId: number
-  ): Promise<DeliveryAddress[]> {
-    return await db<DeliveryAddress>("delivery_addresses")
-      .where("person_id", personId)
-      .leftJoin("cities", "delivery_addresses.city_id", "cities.id")
-      .select(
-        "delivery_addresses.id",
-        "delivery_addresses.person_id",
-        "delivery_addresses.type",
-        "delivery_addresses.np_warehouse_ref",
-        "delivery_addresses.np_warehouse",
-        "delivery_addresses.np_warehouse_siteKey",
-        "delivery_addresses.street",
-        "delivery_addresses.street_ref",
-        "delivery_addresses.house_number",
-        "delivery_addresses.flat_number",
-        "delivery_addresses.np_recipient_ref",
-        "delivery_addresses.np_contact_recipient_ref",
-        "delivery_addresses.is_main",
-        "delivery_addresses.city_id",
-        "cities.name as city_name",
-        "cities.ref as city_ref",
-        "cities.region",
-        "cities.area"
-      );
-  },
-
-  async createDeliveryAddresses(
-    personId: number,
-    deliveryAddress: DeliveryAddress[]
-  ) {
-    await db("delivery_addresses").insert(
-      deliveryAddress.map((deliveryAddress) => ({
-        ...deliveryAddress,
-        person_id: personId,
-      }))
-    );
-  },
-
-  async deleteDeliveryAddresses(deliveryAddressIds: number[]) {
-    await Promise.all(
-      deliveryAddressIds.map((id) => {
-        return db<DeliveryAddress>("delivery_addresses")
-          .where("id", id)
-          .update({
-            person_id: null,
-          });
-      })
-    );
-  },
-
-  async updateDeliveryAddresses(
-    toUpdate: DeliveryAddress[],
-    updatedDeliveryAddress: DeliveryAddress[]
-  ) {
-    await Promise.all(
-      toUpdate.map((p) => {
-        const updated = updatedDeliveryAddress.find((u) => u.id === p.id);
-        if (!updated) return;
-        return db<DeliveryAddress>("delivery_addresses")
-          .where("id", p.id)
-          .update({
-            ...updated,
-            updated_at: new Date(),
-          });
-      })
-    );
-  },
-
-  async getLocationsByPersonId(personId: number): Promise<Location[]> {
-    return await db("person_locations")
-      .leftJoin("cities", "person_locations.city_id", "cities.id")
-      .leftJoin("countries", "person_locations.country_id", "countries.id")
-      .where("person_locations.person_id", personId)
-      .select(
-        "person_locations.id",
-        "person_locations.is_main",
-        "cities.id as city_id",
-        "cities.name as city_name",
-        "countries.id as country_id",
-        "countries.name as country_name"
-      );
-  },
-  async getLocationsByPersonIds(personIds: number[]): Promise<Location[]> {
-    return await db("person_locations")
-      .leftJoin("cities", "person_locations.city_id", "cities.id")
-      .leftJoin("countries", "person_locations.country_id", "countries.id")
-      .whereIn("person_locations.person_id", personIds)
-      .select(
-        "person_locations.id",
-        "person_locations.is_main",
-        "cities.id as city_id",
-        "cities.name as city_name",
-        "countries.id as country_id",
-        "countries.name as country_name"
-      );
-  },
-  async createLocations(personId: number, location: Location[]) {
-    await db("person_locations").insert(
-      location.map((location) => ({
-        is_main: location.is_main,
-        city_id: location.city_id,
-        country_id: location.country_id,
-        person_id: personId,
-      }))
-    );
-  },
-  async deleteLocations(locationIds: number[]) {
-    await db<Location>("person_locations").whereIn("id", locationIds).del();
-  },
-  async updateLocations(toUpdate: Location[], updatedLocation: Location[]) {
-    await Promise.all(
-      toUpdate.map((p) => {
-        const updated = updatedLocation.find((u) => u.id === p.id);
-        if (!updated) return;
-        return db<Location>("person_locations").where("id", p.id).update({
-          id: updated.id,
-          is_main: updated.is_main,
-          city_id: updated.city_id,
-          country_id: updated.country_id,
-          person_id: updated.person_id,
-        });
-      })
-    );
-  },
 
   async getContactsByPersonId(personId: number): Promise<PersonContact[]> {
     return await db<PersonContact>("person_contacts").where(

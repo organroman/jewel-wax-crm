@@ -4,7 +4,7 @@ import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { randomBytes } from "crypto";
 
-import { PersonModel } from "../models/person-model";
+import { PersonModel } from "../models/person/person-model";
 import { AuthModel } from "../models/auth-model";
 import { ActivityLogModel } from "../models/activity-log-model";
 
