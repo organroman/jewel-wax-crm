@@ -2,13 +2,14 @@
 
 import { PersonRoleValue } from "@/types/person.types";
 import React from "react";
-import { Bell } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 import { useUnreadStore } from "@/stores/use-unread-store";
 
 import { Badge } from "../ui/badge";
 import { Tooltip, TooltipTrigger, TooltipContent } from "../ui/tooltip";
+
+import BingIcon from "../../assets/icons/notification-bing.svg";
 
 import { splitUnread } from "@/lib/split-unread";
 
@@ -30,7 +31,7 @@ const Notifications = ({ role }: NotificationsProps) => {
     <div className="relative">
       <Tooltip>
         <TooltipTrigger>
-          <Bell className="text-white size-7 stroke-1" />
+          <BingIcon className="text-white size-7 stroke-1" />
         </TooltipTrigger>
         <TooltipContent className="flex flex-col gap-1">
           {internalTotal > 0 && (
