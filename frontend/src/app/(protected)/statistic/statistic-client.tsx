@@ -10,6 +10,7 @@ import CustomTabs from "@/components/shared/custom-tabs";
 import IndicatorsList from "@/components/statistic/indicator-list";
 import { Separator } from "@/components/ui/separator";
 import Header from "@/components/statistic/header";
+import OrdersChart from "@/components/statistic/orders-chart";
 
 import OrderIcon from "../../../assets/icons/orders.svg";
 import PeopleIcon from "../../../assets/icons/people.svg";
@@ -25,6 +26,7 @@ const StatisticClient = () => {
     query: `${params.toString()}`,
     enabled: true,
   });
+  console.log("🚀 ~ data:", data);
 
   const tabsOptions = [
     {
@@ -65,6 +67,10 @@ const StatisticClient = () => {
       <Loader className="size-6 text-brand-default animate-spin" />
     </div>;
   }
+
+  if (!data) {
+    return <div>something went wrong</div>;
+  }
   return (
     <div className="flex flex-col">
       <CustomTabs tabsOptions={tabsOptions} selectedTab={tabsOptions[0]} />
@@ -72,6 +78,7 @@ const StatisticClient = () => {
       <div className="flex gap-6 h-full w-full flex-col">
         <Header />
         <IndicatorsList indicatorsData={indicatorsData} />
+        <OrdersChart series={data.series} totalsByStage={data.totalsByStage} />
       </div>
     </div>
   );
