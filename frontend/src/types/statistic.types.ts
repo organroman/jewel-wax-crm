@@ -26,9 +26,9 @@ export type FinanceRow = {
   actualExpenses: number;
 };
 export type TotalsFinance = {
-  plannedIncome: number;
+  planedIncome: number;
   actualIncome: number;
-  plannedExpenses: number;
+  planedExpenses: number;
   actualExpenses: number;
 };
 

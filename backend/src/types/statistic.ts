@@ -19,9 +19,9 @@ export type DayRow = {
 
 export type FinanceRow = {
   date: string;
-  plannedIncome: number;
+  planedIncome: number;
   actualIncome: number;
-  plannedExpenses: number;
+  planedExpenses: number;
   actualExpenses: number;
 };
 export type TotalsByStage = {

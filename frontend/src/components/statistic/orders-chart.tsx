@@ -16,6 +16,7 @@ import {
 
 import InfoValue from "../shared/typography/info-value";
 import OrdersChartControl from "./orders-chart-control";
+import { defineFromToDates } from "@/lib/utils";
 
 interface OrdersChartProps {
   series: DayRow[];
@@ -33,9 +34,10 @@ const OrdersChart = ({ series, totalsByStage }: OrdersChartProps) => {
     delivery: false,
     done: false,
   });
-
-  const from = searchParams.get("from");
-  const to = searchParams.get("to");
+  const { startFrom, finishTo } = defineFromToDates(
+    searchParams.get("from"),
+    searchParams.get("to")
+  );
 
   const stages: ControlItem[] = [
     {
@@ -109,7 +111,8 @@ const OrdersChart = ({ series, totalsByStage }: OrdersChartProps) => {
           {t("statistic.orders_dynamic")}
         </InfoValue>
         <InfoValue className="text-base/tight  text-text-muted">
-          {dayjs(from).format("DD.MM.YYYY")}-{dayjs(to).format("DD.MM.YYYY")}
+          {dayjs(startFrom).format("DD.MM.YYYY")}-
+          {dayjs(finishTo).format("DD.MM.YYYY")}
         </InfoValue>
       </div>
       <OrdersChartControl

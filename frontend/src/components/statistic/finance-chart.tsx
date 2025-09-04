@@ -19,6 +19,7 @@ import {
 } from "../ui/chart";
 import InfoValue from "../shared/typography/info-value";
 import OrdersChartControl from "./orders-chart-control";
+import { defineFromToDates } from "@/lib/utils";
 
 interface FinanceChartProps {
   series: FinanceRow[];
@@ -38,8 +39,10 @@ const FinanceChart = ({ series, totals }: FinanceChartProps) => {
     planedExpenses: false,
   });
 
-  const from = searchParams.get("from");
-  const to = searchParams.get("to");
+  const { startFrom, finishTo } = defineFromToDates(
+    searchParams.get("from"),
+    searchParams.get("to")
+  );
 
   const dataIndicators: ControlItem[] = [
     {
@@ -51,7 +54,7 @@ const FinanceChart = ({ series, totals }: FinanceChartProps) => {
     {
       key: "planedIncome",
       label: t(`statistic.planed_income`),
-      amount: totals.plannedIncome,
+      amount: totals.planedIncome,
       color: "text-brand-default",
     },
     {
@@ -63,7 +66,7 @@ const FinanceChart = ({ series, totals }: FinanceChartProps) => {
     {
       key: "planedExpenses",
       label: t(`statistic.planed_expenses`),
-      amount: totals.plannedExpenses,
+      amount: totals.planedExpenses,
       color: "text-accent-violet",
     },
   ];
@@ -94,7 +97,8 @@ const FinanceChart = ({ series, totals }: FinanceChartProps) => {
           {t("statistic.finance_dynamic")}
         </InfoValue>
         <InfoValue className="text-base/tight  text-text-muted">
-          {dayjs(from).format("DD.MM.YYYY")}-{dayjs(to).format("DD.MM.YYYY")}
+          {dayjs(startFrom).format("DD.MM.YYYY")} -{" "}
+          {dayjs(finishTo).format("DD.MM.YYYY")}
         </InfoValue>
       </div>
       <OrdersChartControl

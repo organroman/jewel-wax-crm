@@ -101,19 +101,19 @@ export function buildFinanceStats(
   expenses: Expense[]
 ) {
   // 1) Per-stage -> per-date counters (Map for perf)
-  const plannedIncome: Record<string, number> = {};
+  const planedIncome: Record<string, number> = {};
   const actualIncome: Record<string, number> = {};
-  const plannedExpenses: Record<string, number> = {};
+  const planedExpenses: Record<string, number> = {};
   const actualExpenses: Record<string, number> = {};
 
   for (const o of orders) {
     const k = fmt(o.created_at);
-    bump(plannedIncome, k, Number(o.amount));
+    bump(planedIncome, k, Number(o.amount));
     const costSum =
       Number(o.modeling_cost) +
       Number(o.printing_cost) +
       Number(o.milling_cost);
-    bump(plannedExpenses, k, costSum);
+    bump(planedExpenses, k, costSum);
   }
 
   for (const inv of invoices) {
@@ -129,8 +129,8 @@ export function buildFinanceStats(
   }
 
   const dateSet = new Set<string>([
-    ...Object.keys(plannedIncome),
-    ...Object.keys(plannedExpenses),
+    ...Object.keys(planedIncome),
+    ...Object.keys(planedExpenses),
     ...Object.keys(actualIncome),
     ...Object.keys(actualExpenses),
   ]);
@@ -138,9 +138,9 @@ export function buildFinanceStats(
   const dates = Array.from(dateSet).sort();
   const financeSeries: FinanceRow[] = dates.map((d) => ({
     date: d,
-    plannedIncome: plannedIncome[d] ?? 0,
+    planedIncome: planedIncome[d] ?? 0,
     actualIncome: actualIncome[d] ?? 0,
-    plannedExpenses: plannedExpenses[d] ?? 0,
+    planedExpenses: planedExpenses[d] ?? 0,
     actualExpenses: actualExpenses[d] ?? 0,
   }));
 
@@ -153,16 +153,16 @@ export function buildFinanceStats(
   };
 
   const lines = {
-    plannedIncome: toLine(plannedIncome),
+    planedIncome: toLine(planedIncome),
     actualIncome: toLine(actualIncome),
-    plannedExpenses: toLine(plannedExpenses),
+    planedExpenses: toLine(planedExpenses),
     actualExpenses: toLine(actualExpenses),
   };
 
   const totals = {
-    planedIncome: parseFloat(lines.plannedIncome.total.toFixed(2)),
+    planedIncome: parseFloat(lines.planedIncome.total.toFixed(2)),
     actualIncome: parseFloat(lines.actualIncome.total.toFixed(2)),
-    planedExpenses: parseFloat(lines.plannedExpenses.total.toFixed(2)),
+    planedExpenses: parseFloat(lines.planedExpenses.total.toFixed(2)),
     actualExpenses: parseFloat(lines.actualExpenses.total.toFixed(2)),
   };
 
