@@ -1,38 +1,14 @@
-import { ChartItem, DayRow } from "../types/statistic";
+import { ChartItem, DayRow, FinanceRow } from "../types/statistic";
+import { OrderBase, OrderStage, Stage } from "../types/order.types";
+import { Expense, Invoice } from "../types/finance.type";
 import { ORDER_STAGE } from "../constants/enums";
-import { OrderStage, Stage } from "../types/order.types";
 
-type AnyObj = Record<string, any>;
-
-export function countByDate(
-  items: AnyObj[],
-  dateField: string = "created_at",
-  timeZone: string = "Europe/Kyiv"
-): { date: string; quantity: number }[] {
-  const fmt = new Intl.DateTimeFormat("en-CA", {
-    timeZone,
+const fmt = (d: Date) =>
+  new Intl.DateTimeFormat("en-CA", {
     year: "numeric",
     month: "2-digit",
     day: "2-digit",
-  }); // en-CA => YYYY-MM-DD
-
-  const counts = new Map<string, number>();
-
-  for (const it of items) {
-    const raw = it?.[dateField];
-    if (!raw) continue;
-
-    const d = new Date(raw); // supports Date or ISO string
-    if (isNaN(d.getTime())) continue;
-
-    const key = fmt.format(d); // e.g., "2025-06-21" in Europe/Kyiv
-    counts.set(key, (counts.get(key) ?? 0) + 1);
-  }
-
-  return [...counts.entries()]
-    .map(([date, quantity]) => ({ date, quantity }))
-    .sort((a, b) => (a.date < b.date ? -1 : 1));
-}
+  }).format(new Date(d)); // en-CA => YY
 
 const KYIV_TZ = "Europe/Kyiv";
 const dateKey = (d: Date | string, tz = KYIV_TZ) =>
@@ -44,12 +20,6 @@ const dateKey = (d: Date | string, tz = KYIV_TZ) =>
   }).format(new Date(d));
 
 export function buildOrdersStats(orderStages: OrderStage[]) {
-  const fmt = new Intl.DateTimeFormat("en-CA", {
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  }); // en-CA => YY
-
   // 1) Per-stage -> per-date counters (Map for perf)
   const byStage: Record<Stage, Record<string, number>> = {
     new: {},
@@ -118,4 +88,83 @@ export function buildOrdersStats(orderStages: OrderStage[]) {
     // quick totals map
     totalsByStage,
   };
+}
+
+const bump = (map: Record<string, number>, key: string, add: number) => {
+  if (!key) return;
+  map[key] = (map[key] ?? 0) + add;
+};
+
+export function buildFinanceStats(
+  orders: OrderBase[],
+  invoices: Invoice[],
+  expenses: Expense[]
+) {
+  // 1) Per-stage -> per-date counters (Map for perf)
+  const plannedIncome: Record<string, number> = {};
+  const actualIncome: Record<string, number> = {};
+  const plannedExpenses: Record<string, number> = {};
+  const actualExpenses: Record<string, number> = {};
+
+  for (const o of orders) {
+    const k = fmt(o.created_at);
+    bump(plannedIncome, k, Number(o.amount));
+    const costSum =
+      Number(o.modeling_cost) +
+      Number(o.printing_cost) +
+      Number(o.milling_cost);
+    bump(plannedExpenses, k, costSum);
+  }
+
+  for (const inv of invoices) {
+    if (!inv.paid_at) continue;
+    const k = fmt(inv.paid_at);
+    bump(actualIncome, k, Number(inv.amount_paid));
+  }
+
+  // actual expenses by expense.created_at
+  for (const ex of expenses) {
+    const k = fmt(ex.created_at);
+    bump(actualExpenses, k, Number(ex.amount));
+  }
+
+  const dateSet = new Set<string>([
+    ...Object.keys(plannedIncome),
+    ...Object.keys(plannedExpenses),
+    ...Object.keys(actualIncome),
+    ...Object.keys(actualExpenses),
+  ]);
+
+  const dates = Array.from(dateSet).sort();
+  const financeSeries: FinanceRow[] = dates.map((d) => ({
+    date: d,
+    plannedIncome: plannedIncome[d] ?? 0,
+    actualIncome: actualIncome[d] ?? 0,
+    plannedExpenses: plannedExpenses[d] ?? 0,
+    actualExpenses: actualExpenses[d] ?? 0,
+  }));
+
+  const toLine = (map: Record<string, number>) => {
+    const data = Object.entries(map)
+      .map(([date, amount]) => ({ date, amount }))
+      .sort((a, b) => (a.date < b.date ? -1 : 1));
+    const total = data.reduce((acc, x) => acc + Number(x.amount), 0);
+    return { total, data };
+  };
+
+  const lines = {
+    plannedIncome: toLine(plannedIncome),
+    actualIncome: toLine(actualIncome),
+    plannedExpenses: toLine(plannedExpenses),
+    actualExpenses: toLine(actualExpenses),
+  };
+
+  const totals = {
+    planedIncome: parseFloat(lines.plannedIncome.total.toFixed(2)),
+    actualIncome: parseFloat(lines.actualIncome.total.toFixed(2)),
+    planedExpenses: parseFloat(lines.plannedExpenses.total.toFixed(2)),
+    actualExpenses: parseFloat(lines.actualExpenses.total.toFixed(2)),
+  };
+
+  return { financeSeries, totals };
 }

@@ -2,7 +2,7 @@ import { Statistic } from "../types/statistic";
 import { OrderModel } from "../models/order-model";
 import { StatisticModel } from "../models/statistic-model";
 import { defineFromToDates } from "../utils/helpers";
-import { buildOrdersStats } from "../utils/statistic";
+import { buildFinanceStats, buildOrdersStats } from "../utils/statistic";
 
 export const StatisticService = {
   async getStatistic({
@@ -28,8 +28,23 @@ export const StatisticService = {
     const orderIds = orders.map((order) => order.id);
 
     const ordersStages = await OrderModel.getOrderStagesByOrderIds(orderIds);
+    const invoices = await StatisticModel.getInvoicesPaidInPeriod(
+      startFrom,
+      finishTo,
+      customer_id
+    );
+    const expenses = await StatisticModel.getExpensesPaidInPeriod(
+      startFrom,
+      finishTo,
+      performer_id
+    );
 
     const { series, totalsByStage } = buildOrdersStats(ordersStages);
+    const { financeSeries, totals } = buildFinanceStats(
+      orders,
+      invoices,
+      expenses
+    );
 
     const totalOrders = orders.length;
     const totalOrdersAmount = orders.reduce(
@@ -66,6 +81,8 @@ export const StatisticService = {
       averageProcessingPeriod: Math.round(averageProcessingPeriod),
       series,
       totalsByStage,
+      financeSeries,
+      financeTotals: totals,
     };
   },
 };

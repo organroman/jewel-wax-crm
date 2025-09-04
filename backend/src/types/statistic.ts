@@ -16,6 +16,14 @@ export type DayRow = {
   delivery: number;
   done: number;
 };
+
+export type FinanceRow = {
+  date: string;
+  plannedIncome: number;
+  actualIncome: number;
+  plannedExpenses: number;
+  actualExpenses: number;
+};
 export type TotalsByStage = {
   new: number;
   modeling: number;
@@ -25,6 +33,13 @@ export type TotalsByStage = {
   done: number;
 };
 
+export type TotalsFinance = {
+  planedIncome: number;
+  actualIncome: number;
+  planedExpenses: number;
+  actualExpenses: number;
+};
+
 export interface Statistic {
   totalOrders: number;
   totalOrdersAmount: number;
@@ -32,4 +47,6 @@ export interface Statistic {
   averageProcessingPeriod: number;
   series: DayRow[];
   totalsByStage: TotalsByStage;
+  financeSeries: FinanceRow[];
+  financeTotals: TotalsFinance;
 }
