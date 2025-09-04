@@ -32,6 +32,7 @@ import reportRoutes from "./routes/report-routes";
 import dashboardRoutes from "./routes/dashboard-routes";
 import chatRoutes from "./routes/chat-routes";
 import badgesRoutes from "./routes/badges-routes";
+import statisticRoutes from "./routes/statistic-routes";
 
 import { telegramAdapter } from "./providers/telegram-adapter";
 
@@ -101,6 +102,7 @@ app.use("/reports", reportRoutes);
 app.use("/dashboard", dashboardRoutes);
 app.use("/chat", chatRoutes);
 app.use("/badges", badgesRoutes);
+app.use("/statistic", statisticRoutes);
 
 app.use(errorHandler);
 

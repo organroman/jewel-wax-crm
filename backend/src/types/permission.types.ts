@@ -14,7 +14,8 @@ export type Module =
   | "ORDERS_REPORT"
   | "EXPENSES_REPORT"
   | "FINANCE_REPORT"
-  | "DASHBOARD";
+  | "DASHBOARD"
+  | "STATISTIC";
 export type Action = "VIEW" | "CREATE" | "UPDATE" | "DELETE";
 
 export type PermissionMap = Record<Module, Record<Action, PersonRole[]>>;
