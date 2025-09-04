@@ -162,7 +162,11 @@ const Header = () => {
                 option.patronymic
               )
             }
-            placeholder={t("statistic.all_customers")}
+            placeholder={
+              selectedCustomer
+                ? selectedCustomer.label
+                : t("statistic.all_customers")
+            }
             value={selectedCustomer}
             valueKey="id"
             label={t("statistic.customer")}
@@ -176,7 +180,9 @@ const Header = () => {
             popoverContentClassName="min-w-[240px] max-w-[240px] !border mt-1 !border-ui-border !shadow-md !rounded-sm"
           />
           <div className="flex flex-col gap-1">
-            <InfoLabel className="text-sm/3.5 font-medium">{t("statistic.performer")}</InfoLabel>
+            <InfoLabel className="text-sm/3.5 font-medium">
+              {t("statistic.performer")}
+            </InfoLabel>
             <FilterStaticCombobox
               open={open}
               handleOpenChange={() => setOpen((prev) => !prev)}

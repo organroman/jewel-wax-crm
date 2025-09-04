@@ -11,6 +11,7 @@ import IndicatorsList from "@/components/statistic/indicator-list";
 import { Separator } from "@/components/ui/separator";
 import Header from "@/components/statistic/header";
 import OrdersChart from "@/components/statistic/orders-chart";
+import FinanceChart from "@/components/statistic/finance-chart";
 
 import OrderIcon from "../../../assets/icons/orders.svg";
 import PeopleIcon from "../../../assets/icons/people.svg";
@@ -26,7 +27,6 @@ const StatisticClient = () => {
     query: `${params.toString()}`,
     enabled: true,
   });
-  console.log("🚀 ~ data:", data);
 
   const tabsOptions = [
     {
@@ -72,13 +72,22 @@ const StatisticClient = () => {
     return <div>something went wrong</div>;
   }
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col h-full">
       <CustomTabs tabsOptions={tabsOptions} selectedTab={tabsOptions[0]} />
       <Separator className="bg-ui-border h-0.5 data-[orientation=horizontal]:h-0.5" />
-      <div className="flex gap-6 h-full w-full flex-col">
+      <div className="flex gap-6 h-full w-full flex-col overflow-hidden">
         <Header />
-        <IndicatorsList indicatorsData={indicatorsData} />
-        <OrdersChart series={data.series} totalsByStage={data.totalsByStage} />
+        <div className="flex gap-6 h-full flex-col overflow-y-auto">
+          <IndicatorsList indicatorsData={indicatorsData} />
+          <OrdersChart
+            series={data.series}
+            totalsByStage={data.totalsByStage}
+          />
+          <FinanceChart
+            series={data.financeSeries}
+            totals={data.financeTotals}
+          />
+        </div>
       </div>
     </div>
   );

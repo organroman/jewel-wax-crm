@@ -1,10 +1,14 @@
-import { ControlItem, DayRow, TotalsByStage } from "@/types/statistic.types";
-import { Stage } from "@/types/order.types";
+import {
+  ControlItem,
+  FinanceIndicator,
+  FinanceRow,
+  TotalsFinance,
+} from "@/types/statistic.types";
 
-import { useState } from "react";
-import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
-import { useTranslation } from "react-i18next";
 import { useSearchParams } from "next/navigation";
+import { useState } from "react";
+import { useTranslation } from "react-i18next";
+import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
 import dayjs from "dayjs";
 
 import {
@@ -13,109 +17,90 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "../ui/chart";
-
 import InfoValue from "../shared/typography/info-value";
 import OrdersChartControl from "./orders-chart-control";
 
-interface OrdersChartProps {
-  series: DayRow[];
-  totalsByStage: TotalsByStage;
+interface FinanceChartProps {
+  series: FinanceRow[];
+  totals: TotalsFinance;
 }
-const OrdersChart = ({ series, totalsByStage }: OrdersChartProps) => {
+
+const FinanceChart = ({ series, totals }: FinanceChartProps) => {
   const { t } = useTranslation();
   const searchParams = useSearchParams();
 
-  const [selectedStage, setSelectedStage] = useState<Record<Stage, boolean>>({
-    new: true,
-    modeling: false,
-    milling: false,
-    printing: false,
-    delivery: false,
-    done: false,
+  const [selectedFinance, setSelectedFinance] = useState<
+    Record<FinanceIndicator, boolean>
+  >({
+    actualIncome: true,
+    planedIncome: false,
+    actualExpenses: true,
+    planedExpenses: false,
   });
 
   const from = searchParams.get("from");
   const to = searchParams.get("to");
 
-  const stages: ControlItem[] = [
+  const dataIndicators: ControlItem[] = [
     {
-      key: "new",
-      label: t(`order.stages.new`),
-      amount: totalsByStage.new,
+      key: "actualIncome",
+      label: t(`statistic.actual_income`),
+      amount: totals.actualIncome,
       color: "text-action-plus",
     },
     {
-      key: "modeling",
-      label: t(`order.stages.modeling`),
-      amount: totalsByStage.modeling,
-      color: "text-accent-blue",
-    },
-    {
-      key: "milling",
-      label: t(`order.stages.milling`),
-      amount: totalsByStage.milling,
-      color: "text-text-regular",
-    },
-    {
-      key: "printing",
-      label: t(`order.stages.printing`),
-      amount: totalsByStage.printing,
-      color: "text-accent-violet",
-    },
-    {
-      key: "delivery",
-      label: t(`order.stages.delivery`),
-      amount: totalsByStage.delivery,
-      color: "text-accent-red",
-    },
-    {
-      key: "done",
-      label: t(`order.stages.done`),
-      amount: totalsByStage.done,
+      key: "planedIncome",
+      label: t(`statistic.planed_income`),
+      amount: totals.plannedIncome,
       color: "text-brand-default",
+    },
+    {
+      key: "actualExpenses",
+      label: t(`statistic.actual_expenses`),
+      amount: totals.actualExpenses,
+      color: "text-action-minus",
+    },
+    {
+      key: "planedExpenses",
+      label: t(`statistic.planed_expenses`),
+      amount: totals.plannedExpenses,
+      color: "text-accent-violet",
     },
   ];
 
   const chartConfig = {
-    new: {
-      label: t("order.stages.new"),
+    actualIncome: {
+      label: t(`statistic.actual_income`),
       color: "var(--color-action-plus)",
     },
-    modeling: {
-      label: t("order.stages.modeling"),
-      color: "var(--color-accent-blue)",
-    },
-    milling: {
-      label: t("order.stages.milling"),
-      color: "var(--color-text-regular)",
-    },
-    printing: {
-      label: t("order.stages.printing"),
-      color: "var(--color-accent-violet)",
-    },
-    delivery: {
-      label: t("order.stages.delivery"),
-      color: "var(--color-accent-red)",
-    },
-    done: {
-      label: t("order.stages.done"),
+    planedIncome: {
+      label: t("statistic.planned_income"),
       color: "var(--color-brand-default)",
     },
+    actualExpenses: {
+      label: t("statistic.actual_expenses"),
+      color: "var(--color-action-minus)",
+    },
+    planedExpenses: {
+      label: t("statistic.planned_expenses"),
+      color: "var(--color-accent-violet)",
+    },
   } satisfies ChartConfig;
+
   return (
     <div className="flex flex-col gap-5 w-full bg-ui-sidebar border border-ui-border rounded-sm p-5">
       <div className="flex items-center justify-between">
         <InfoValue className="text-base/tight font-bold text-brand-dark">
-          {t("statistic.orders_dynamic")}
+          {t("statistic.finance_dynamic")}
         </InfoValue>
         <InfoValue className="text-base/tight  text-text-muted">
           {dayjs(from).format("DD.MM.YYYY")}-{dayjs(to).format("DD.MM.YYYY")}
         </InfoValue>
       </div>
       <OrdersChartControl
-        data={stages}
-        selectedItem={selectedStage}
-        setSelectedItem={setSelectedStage}
+        data={dataIndicators}
+        selectedItem={selectedFinance}
+        setSelectedItem={setSelectedFinance}
       />
       <ChartContainer config={chartConfig} className="max-h-[360px] w-full">
         <LineChart
@@ -141,8 +126,8 @@ const OrdersChart = ({ series, totalsByStage }: OrdersChartProps) => {
             cursor={false}
             content={<ChartTooltipContent hideLabel />}
           />
-          {(Object.keys(selectedStage) as Stage[])
-            .filter((s) => selectedStage[s])
+          {(Object.keys(selectedFinance) as FinanceIndicator[])
+            .filter((s) => selectedFinance[s])
             .map((s) => (
               <Line
                 key={s}
@@ -161,4 +146,4 @@ const OrdersChart = ({ series, totalsByStage }: OrdersChartProps) => {
   );
 };
 
-export default OrdersChart;
+export default FinanceChart;

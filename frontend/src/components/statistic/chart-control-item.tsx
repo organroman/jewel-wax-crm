@@ -1,19 +1,21 @@
-import { Stage } from "@/types/order.types";
+import { ControlItem, Dict } from "@/types/statistic.types";
+
 import { Switch } from "../ui/switch";
 import InfoValue from "../shared/typography/info-value";
+
 import { cn } from "@/lib/utils";
 
-interface ChartControlItemProps {
-  item: { key: Stage; amount: number; color: string; label: string };
-  selectedStage: Record<Stage, boolean>;
-  handleSwitch: (key: Stage) => void;
+interface ChartControlItemProps<K extends string> {
+  item: ControlItem<K>;
+  selectedStage: Dict<K>;
+  handleSwitch: (key: K) => void;
 }
 
-const ChartControlItem = ({
+const ChartControlItem = <K extends string>({
   item,
   selectedStage,
   handleSwitch,
-}: ChartControlItemProps) => {
+}: ChartControlItemProps<K>) => {
   return (
     <div className="flex items-center gap-2.5" key={item.key}>
       <Switch

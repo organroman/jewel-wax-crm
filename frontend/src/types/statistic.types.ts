@@ -17,6 +17,21 @@ export type TotalsByStage = {
   delivery: number;
   done: number;
 };
+
+export type FinanceRow = {
+  date: string;
+  plannedIncome: number;
+  actualIncome: number;
+  plannedExpenses: number;
+  actualExpenses: number;
+};
+export type TotalsFinance = {
+  plannedIncome: number;
+  actualIncome: number;
+  plannedExpenses: number;
+  actualExpenses: number;
+};
+
 export interface Statistic {
   totalOrders: number;
   totalOrdersAmount: number;
@@ -24,6 +39,8 @@ export interface Statistic {
   averageProcessingPeriod: number;
   series: DayRow[];
   totalsByStage: TotalsByStage;
+  financeSeries: FinanceRow[];
+  financeTotals: TotalsFinance;
 }
 
 export interface IndicatorData {
@@ -33,9 +50,17 @@ export interface IndicatorData {
   currencySign: boolean;
 }
 
-export interface ControlItem {
-  key: Stage;
+export type FinanceIndicator =
+  | "actualIncome"
+  | "planedIncome"
+  | "actualExpenses"
+  | "planedExpenses";
+
+export interface ControlItem<K extends string = string> {
+  key: K;
   amount: number;
   color: string;
   label: string;
 }
+
+export type Dict<K extends string> = Record<K, boolean>;

@@ -717,7 +717,12 @@
     "customer": "$t(dictionary.customer)",
     "performer": "Виконавець",
     "all_performers": "Всі виконавці",
-    "orders_dynamic": "Динаміка замовлень"
+    "orders_dynamic": "Динаміка замовлень",
+    "finance_dynamic": "Динаміка фінансів",
+    "actual_income": "Фактичний дохід",
+    "planed_income": "Запланований дохід",
+    "actual_expenses": "Фактичні витрати",
+    "planed_expenses": "Заплановані витрати"
   },
 
   "main_menu": {

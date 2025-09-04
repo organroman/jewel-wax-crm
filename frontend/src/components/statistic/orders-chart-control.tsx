@@ -1,25 +1,24 @@
-import { Stage } from "@/types/order.types";
-import { ControlItem } from "@/types/statistic.types";
+import { ControlItem, Dict } from "@/types/statistic.types";
 
 import React, { Dispatch, Fragment, SetStateAction } from "react";
 
 import ChartControlItem from "./chart-control-item";
 
-interface OrdersChartControlProps {
-  data: ControlItem[];
-  selectedStage: Record<Stage, boolean>;
-  setSelectedStage: Dispatch<SetStateAction<Record<Stage, boolean>>>;
+interface OrdersChartControlProps<K extends string> {
+  data: ControlItem<K>[];
+  selectedItem: Dict<K>;
+  setSelectedItem: Dispatch<SetStateAction<Record<K, boolean>>>;
 }
 
-const OrdersChartControl = ({
+const OrdersChartControl = <K extends string>({
   data,
-  selectedStage,
-  setSelectedStage,
-}: OrdersChartControlProps) => {
-  const handleSwitch = (stage: Stage) => {
-    setSelectedStage((prev) => ({
+  selectedItem,
+  setSelectedItem,
+}: OrdersChartControlProps<K>) => {
+  const handleSwitch = (key: K) => {
+    setSelectedItem((prev) => ({
       ...prev,
-      [stage]: !prev[stage],
+      [key]: !prev[key],
     }));
   };
   return (
@@ -28,7 +27,7 @@ const OrdersChartControl = ({
         <Fragment key={i.key}>
           <ChartControlItem
             item={i}
-            selectedStage={selectedStage}
+            selectedStage={selectedItem}
             handleSwitch={handleSwitch}
           />
         </Fragment>
