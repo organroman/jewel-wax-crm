@@ -1,6 +1,8 @@
 import { Statistic } from "../types/statistic";
+import { OrderModel } from "../models/order-model";
 import { StatisticModel } from "../models/statistic-model";
 import { defineFromToDates } from "../utils/helpers";
+import { buildOrdersStats } from "../utils/statistic";
 
 export const StatisticService = {
   async getStatistic({
@@ -22,6 +24,13 @@ export const StatisticService = {
       customer_id,
       performer_id,
     });
+
+    const orderIds = orders.map((order) => order.id);
+
+    const ordersStages = await OrderModel.getOrderStagesByOrderIds(orderIds);
+
+    const { series, totalsByStage } = buildOrdersStats(ordersStages);
+
     const totalOrders = orders.length;
     const totalOrdersAmount = orders.reduce(
       (acc, order) => acc + (Number(order.amount) || 0),
@@ -55,6 +64,8 @@ export const StatisticService = {
       totalOrdersAmount: Math.round(totalOrdersAmount),
       totalCustomers,
       averageProcessingPeriod: Math.round(averageProcessingPeriod),
+      series,
+      totalsByStage,
     };
   },
 };

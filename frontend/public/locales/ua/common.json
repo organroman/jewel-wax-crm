@@ -716,7 +716,8 @@
     "all_customers": "Всі замовники",
     "customer": "$t(dictionary.customer)",
     "performer": "Виконавець",
-    "all_performers": "Всі виконавці"
+    "all_performers": "Всі виконавці",
+    "orders_dynamic": "Динаміка замовлень"
   },
 
   "main_menu": {
