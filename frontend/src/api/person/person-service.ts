@@ -1,13 +1,12 @@
 import {
   CreatePersonSchema,
-  DeliveryAddress,
   Person,
-  Phone,
   UpdatePersonSchema,
   User,
 } from "@/types/person.types";
 import apiService from "../api-service";
 import { PaginatedResult } from "@/types/shared.types";
+import { OrderCustomer } from "@/types/order.types";
 
 export const personService = {
   getAll: async (query: string) => {
@@ -38,16 +37,9 @@ export const personService = {
     );
   },
   getCustomers: async (query: string) => {
-    return await apiService.get<
-      PaginatedResult<{
-        id: number;
-        first_name: string;
-        last_name: string;
-        patronymic?: string;
-        phones: Phone[];
-        delivery_addresses: DeliveryAddress[];
-      }>
-    >(`persons/byRole?${query}`);
+    return await apiService.get<PaginatedResult<OrderCustomer>>(
+      `persons/byRole?${query}`
+    );
   },
   getPaginatedPersonsByRole: async (query: string) => {
     return await apiService.get<

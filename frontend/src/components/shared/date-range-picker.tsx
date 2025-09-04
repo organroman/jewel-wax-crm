@@ -19,13 +19,15 @@ interface DateRangePicker {
   setDate: Dispatch<SetStateAction<DateRange>>;
   today: Date;
   startOfMonth: Date;
+  className?: string;
 }
 
 const DateRangePicker = ({
   date,
   today,
   startOfMonth,
-   setDate,
+  setDate,
+  className,
 }: DateRangePicker) => {
   const { t } = useTranslation();
   const currentLanguage = i18n.language || i18nextConfig.i18n.defaultLocale;
@@ -45,7 +47,8 @@ const DateRangePicker = ({
             id="date"
             className={cn(
               "w-full lg:w-fit justify-between font-normal text-sm rounded-xs",
-              date && "text-text-regular font-medium"
+              date && "text-text-regular font-medium",
+              className
             )}
           >
             <CalendarIcon />

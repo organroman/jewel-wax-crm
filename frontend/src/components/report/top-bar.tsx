@@ -20,7 +20,7 @@ import {
 import InfoLabel from "@/components/shared/typography/info-label";
 import InfoValue from "@/components/shared/typography/info-value";
 import AsyncCombobox from "@/components/shared/async-combobox";
-import DateRangePicker from "./date-range-picker";
+import DateRangePicker from "../shared/date-range-picker";
 
 import { cn, defineFromToDates } from "@/lib/utils";
 
