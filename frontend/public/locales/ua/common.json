@@ -62,7 +62,8 @@
     "dashboard": "Дашборд",
     "chat": "Чат JW",
     "requests": "Заявки",
-    "channel": "Джерело"
+    "channel": "Джерело",
+    "statistic": "Статистика"
   },
   "labels": {
     "main": "$t(dictionary.main)",
@@ -706,6 +707,17 @@
       "create_order": "Створити замовлення"
     }
   },
+  "statistic": {
+    "stat": "$t(dictionary.statistic)",
+    "total_orders": "Всього замовлень",
+    "total_orders_amount": "Замовлень на суму",
+    "total_customers": "Кількість замовників",
+    "average_days": "Середній час виконання, днів",
+    "all_customers": "Всі замовники",
+    "customer": "$t(dictionary.customer)",
+    "performer": "Виконавець",
+    "all_performers": "Всі виконавці"
+  },
 
   "main_menu": {
     "dashboard": "$t(dictionary.dashboard)",
@@ -713,7 +725,7 @@
     "orders": "Замовлення",
     "finance": "Фінанси",
     "reports": "Звіти",
-    "statistic": "Статистика",
+    "statistic": "$t(dictionary.statistic)",
     "persons": "$t(person.person_plural)"
   },
 
