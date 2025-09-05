@@ -1,6 +1,7 @@
 import { ExpenseCategory } from "../types/finance.type";
 import { FinanceReportDataType } from "../types/report.types";
 import { StageStatus } from "../types/order.types";
+import { PersonRole } from "../types/person.types";
 
 import { Request, Response, NextFunction } from "express";
 
@@ -41,7 +42,7 @@ export const ReportController = {
 
       const { page, limit, person_id, from, to } = req.query;
 
-      const data = await ReportService.getOrdersReport({
+      const data = await ReportService.getModellingReport({
         page: Number(page),
         limit: Number(limit),
         filters: {
@@ -49,6 +50,8 @@ export const ReportController = {
           from: from as string,
           to: to as string,
         },
+        user_id: Number(userId),
+        user_role: role as PersonRole,
       });
       res.status(200).json(data);
     } catch (error) {
