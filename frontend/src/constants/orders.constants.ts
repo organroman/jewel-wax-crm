@@ -5,6 +5,7 @@ import {
 } from "./enums.constants";
 
 export const ORDER_STAGES = ["all", ...ORDER_STAGE];
+export const STAGE_STATUSES = [...ORDER_STAGE_STATUS];
 
 export const STATIC_ORDER_FILTERS = [
   {

@@ -646,6 +646,33 @@
         "stage_status": "$t(dictionary.stage_status)"
       }
     },
+    "orders": {
+      "total": "Всього замовлень",
+      "total_short": "Замовлень",
+      "in_process": "В роботі",
+      "done": "$t(dictionary.done)",
+      "problem": "Проблемні",
+      "all_stage_statuses": "Всі статуси готовності",
+      "status": "Готовність",
+      "table_headers": {
+        "number": "$t(dictionary.order)",
+        "date": "$t(dictionary.date)",
+        "completed_at": "Дата виконання",
+        "media": "Фото",
+        "name": "Назва замовлення",
+        "customer": "$t(dictionary.customer)",
+        "stage": "Поточний етап",
+        "stage_status": "$t(dictionary.stage_status)",
+        "stage_days": {
+          "new": "Нове, днів",
+          "modeling": "Модел., днів",
+          "milling": "Фрезер., днів",
+          "printing": "3D друк, днів",
+          "delivery": "Доставка, днів"
+        },
+        "processing_days": "Днів у роботі"
+      }
+    },
     "expenses": {
       "total": "Сума витрат",
       "total_short": "Витрати",

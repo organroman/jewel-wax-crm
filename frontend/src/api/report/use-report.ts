@@ -28,6 +28,19 @@ export const useReport = {
       enabled,
     });
   },
+  getOrdersReport: ({
+    query,
+    enabled,
+  }: {
+    query: string;
+    enabled: boolean;
+  }) => {
+    return useQuery({
+      queryKey: ["orders-report", query],
+      queryFn: () => reportService.getOrdersReport(query),
+      enabled,
+    });
+  },
   getExpensesReport: ({
     query,
     enabled,

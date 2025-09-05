@@ -59,6 +59,29 @@ export interface ModellingReportRaw {
   last_payment_comment: string | null;
 }
 
+export type StagesDays = {
+  new: number;
+  modeling: number;
+  milling: number;
+  printing: number;
+  delivery: number;
+  processing_days: number;
+};
+
+export interface OrderReportRaw {
+  id: number;
+  number: number;
+  created_at: Date;
+  name: string;
+  completed_at: Date;
+  media: string | null;
+  customer: OrderPerson;
+  active_stage: Stage;
+  active_stage_status: StageStatus;
+  stagesDays: StagesDays;
+  processing_days: number;
+}
+
 export interface PaginatedModellingReportResult<T> extends PaginatedResult<T> {
   total_orders: number | null;
   total_modelling_cost: number | null;
@@ -66,6 +89,12 @@ export interface PaginatedModellingReportResult<T> extends PaginatedResult<T> {
   total_modelling_debt: number;
 }
 
+export interface PaginatedOrdersReportResult<T> extends PaginatedResult<T> {
+  total_orders: number;
+  total_done: number;
+  total_problem: number;
+  total_in_process: number;
+}
 export interface PaginatedExpensesReportResult<T> extends PaginatedResult<T> {
   total_expenses_amount: number | null;
   total_modelling_exp_amount: number | null;

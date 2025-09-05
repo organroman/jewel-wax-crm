@@ -12,6 +12,7 @@ import ClientsReport from "@/components/report/clients/clients-report";
 import ModelingReport from "@/components/report/modeling/modeling-report";
 import ExpensesReport from "@/components/report/expenses/expenses-report";
 import FinanceReport from "@/components/report/finance/finance-report";
+import OrdersReport from "@/components/report/orders/orders-report";
 
 import { REPORT_TYPE } from "@/constants/report.constants";
 
@@ -63,6 +64,7 @@ const ReportsClient = ({ role }: ReportsClientProps) => {
       <Separator className="bg-ui-border h-0.5 data-[orientation=horizontal]:h-0.5" />
       {selectedTab.value === "clients" && <ClientsReport role={role} />}
       {selectedTab.value === "modeling" && <ModelingReport role={role} />}
+      {selectedTab.value === "orders" && <OrdersReport role={role} />}
       {selectedTab.value === "expenses" && <ExpensesReport role={role} />}
       {selectedTab.value === "financial" && <FinanceReport role={role} />}
     </div>
