@@ -20,6 +20,13 @@ router.get(
 );
 
 router.get(
+  "/orders",
+  verifyToken,
+  checkPermission("ORDERS_REPORT", "VIEW"),
+  ReportController.getOrdersReport
+);
+
+router.get(
   "/expenses",
   verifyToken,
   checkPermission("EXPENSES_REPORT", "VIEW"),

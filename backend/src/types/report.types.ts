@@ -11,6 +11,7 @@ export interface GetAllReportOptions
     person_id?: number;
     expense_category?: ExpenseCategory;
     data_type?: FinanceReportDataType;
+    active_stage_status?: StageStatus;
   }> {}
 
 export interface PaginatedClientsReportResult<T> extends PaginatedResult<T> {

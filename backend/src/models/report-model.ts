@@ -5,7 +5,7 @@ import {
   GetAllReportOptions,
   ModelingReportOrder,
 } from "../types/report.types";
-import { OrderBase } from "../types/order.types";
+import { OrderBase, StageStatus } from "../types/order.types";
 import { Expense } from "../types/finance.type";
 import { PersonRole } from "../types/person.types";
 
@@ -179,6 +179,87 @@ export const ReportModel = {
     limit = 10,
     from,
     to,
+    active_stage_status,
+  }: {
+    page?: number;
+    limit?: number;
+    from: Date;
+    to: Date;
+    active_stage_status?: StageStatus;
+  }): Promise<PaginatedResult<OrderBase>> {
+    const baseQuery = db<OrderBase>("orders")
+      .whereBetween("orders.created_at", [from, to])
+      .modify((qb) => {
+        qb.select(
+          db.raw(`(
+         SELECT COALESCE(json_agg(m), '[]'::json)
+          FROM (
+            SELECT id, url, public_id, is_main
+              FROM order_media
+              WHERE order_media.order_id = orders.id
+              AND type = 'image'
+            ORDER BY 
+            CASE WHEN is_main THEN 0 ELSE 1 END,
+            order_media.created_at ASC
+        LIMIT 1
+        ) m
+      ) as media`)
+        );
+
+        qb.leftJoin(
+          db.raw(`LATERAL (
+            SELECT status
+            FROM order_stage_statuses
+            WHERE order_stage_statuses.order_id = orders.id
+              AND order_stage_statuses.stage = orders.active_stage::order_stage
+             ORDER BY order_stage_statuses.created_at DESC
+            LIMIT 1
+          ) as stage_statuses`),
+          db.raw("true")
+        );
+
+        qb.select("stage_statuses.status as active_stage_status");
+
+        const joins = ["customer"];
+        joins.forEach((role) => {
+          qb.leftJoin(
+            `persons as ${role}s`,
+            `${role}s.id`,
+            `orders.${role}_id`
+          ).select(
+            `${role}s.id as ${role}_id`,
+            `${role}s.last_name as ${role}_last_name`,
+            `${role}s.first_name as ${role}_first_name`,
+            `${role}s.patronymic as ${role}_patronymic`
+          );
+        });
+        qb.select(`orders.*`);
+      });
+
+    if (active_stage_status) {
+      baseQuery.whereRaw(
+        `(
+           SELECT status
+           FROM order_stage_statuses
+           WHERE order_stage_statuses.order_id = orders.id
+             AND order_stage_statuses.stage = orders.active_stage::order_stage
+            ORDER BY order_stage_statuses.created_at DESC
+           LIMIT 1
+        ) = ?`,
+        [active_stage_status]
+      );
+    }
+
+    return paginateQuery(baseQuery, {
+      page,
+      limit,
+    });
+  },
+  async getFinanceOrdersBase({
+    page = 1,
+    limit = 10,
+    from,
+    to,
   }: {
     page?: number;
     limit?: number;
@@ -201,6 +282,7 @@ export const ReportModel = {
             `${role}s.patronymic as ${role}_patronymic`
           );
         });
+
         qb.select(
           "orders.id",
           "orders.number",
@@ -212,7 +294,104 @@ export const ReportModel = {
         );
       });
 
-    return paginateQuery(baseQuery, { page, limit });
+    return paginateQuery(baseQuery, {
+      page,
+      limit,
+    });
+  },
+
+  async getOrdersIndicators({
+    from,
+    to,
+    active_stage_status,
+  }: {
+    from: Date;
+    to: Date;
+    active_stage_status?: StageStatus;
+  }): Promise<{
+    total_orders: number;
+    total_done: number;
+    total_problem: number;
+    total_in_process: number;
+  }> {
+    console.log(active_stage_status);
+    const baseOrdersQuery = db<OrderBase>("orders")
+      .whereBetween("orders.created_at", [from, to])
+      .joinRaw(
+        `
+    LEFT JOIN LATERAL (
+      SELECT status
+      FROM order_stage_statuses s
+      WHERE s.order_id = orders.id
+        AND s.stage = orders.active_stage::order_stage
+      ORDER BY s.created_at DESC
+      LIMIT 1
+    ) AS stage_statuses ON true
+  `
+      )
+      .select([
+        "orders.id as id",
+        "orders.active_stage as active_stage",
+        db.raw("stage_statuses.status as active_stage_status"),
+      ]);
+
+    if (active_stage_status) {
+      baseOrdersQuery.whereRaw(
+        `(
+      SELECT status FROM order_stage_statuses s
+      WHERE s.order_id = orders.id
+        AND s.stage = orders.active_stage::order_stage
+      ORDER BY s.created_at DESC
+      LIMIT 1
+    ) = ?`,
+        [active_stage_status]
+      );
+    }
+
+    const orders = await baseOrdersQuery.select("id", "active_stage");
+    const orderIds = orders.map((o) => o.id);
+
+    const stages = await OrderModel.getOrderStagesByOrderIds(orderIds);
+
+    const totalOrders = orders.length;
+
+    const ordersWithStatus = orders.map((o) => {
+      const status = stages.find(
+        (s) => s.stage === o.active_stage && o.id === s.order_id
+      );
+      return { ...o, status: status ?? null };
+    });
+
+    const totalDoneOrders = ordersWithStatus.filter(
+      (o) => o.status?.stage === "done"
+    ).length;
+
+    const ordersInNegotiation = ordersWithStatus.filter(
+      (o) =>
+        o.status?.status === "clarification" ||
+        o.status?.status === "negotiation"
+    );
+
+    const totalProblemOrders = ordersInNegotiation.filter((item) => {
+      if (!item?.status?.started_at) return false;
+
+      const startedAt = new Date(item.status.started_at);
+      const diffInDays =
+        (Date.now() - startedAt.getTime()) / (1000 * 60 * 60 * 24);
+
+      return diffInDays > 5;
+    }).length;
+
+    const totalInProcessOrders = ordersWithStatus.filter(
+      (o) => o.status?.status === "in_process"
+    ).length;
+
+    return {
+      total_orders: totalOrders,
+      total_done: totalDoneOrders,
+      total_problem: totalProblemOrders,
+      total_in_process: totalInProcessOrders,
+    };
   },
 
   async getFinanceReportIndicators({

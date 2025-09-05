@@ -11,6 +11,7 @@ import {
   PaginatedModellingReportResult,
 } from "../types/report.types";
 import { PaymentStatus } from "../types/finance.type";
+import { Stage } from "../types/order.types";
 
 import { PersonModel } from "../models/person/person-model";
 import { PersonPhoneModel } from "../models/person/phone-model";
@@ -64,7 +65,9 @@ export const ReportService = {
 
     const allPhones = await PersonPhoneModel.getPhonesByPersonIds(personIds);
     const allEmails = await PersonEmailModel.getEmailsByPersonIds(personIds);
-    const allLocations = await PersonLocationModel.getLocationsByPersonIds(personIds);
+    const allLocations = await PersonLocationModel.getLocationsByPersonIds(
+      personIds
+    );
     const allOrders = await OrderModel.getOrdersByCustomerIds({
       customerIds: personIds,
       from: startFrom,
@@ -289,6 +292,81 @@ export const ReportService = {
       total_modelling_debt: debt,
     };
   },
+  async getOrdersReport({ page, limit, filters }: GetAllReportOptions) {
+    const { startFrom, finishTo } = defineFromToDates(
+      filters?.from,
+      filters?.to
+    );
+    const indicators = await ReportModel.getOrdersIndicators({
+      from: startFrom,
+      to: finishTo,
+      active_stage_status: filters?.active_stage_status,
+    });
+
+    const orders = await ReportModel.getOrdersBase({
+      page,
+      limit,
+      from: startFrom,
+      to: finishTo,
+      active_stage_status: filters?.active_stage_status,
+    });
+
+    const orderIds = orders.data.map((o) => o.id);
+
+    const stages = await OrderModel.getOrderStagesByOrderIds(orderIds);
+
+    const enriched = orders.data.map((o) => {
+      const orderStages = stages.filter((s) => s.order_id === o.id);
+      const stage: Record<Stage, number | null> = {
+        new: null,
+        modeling: null,
+        milling: null,
+        printing: null,
+        delivery: null,
+        done: null,
+      };
+      orderStages.forEach((s) => {
+        const startedAt = s.started_at ? new Date(s.started_at) : null;
+        const completedAt = s.completed_at
+          ? new Date(s.completed_at)
+          : new Date();
+        if (startedAt) {
+          stage[s.stage] = Math.floor(
+            (completedAt.getTime() - startedAt.getTime()) /
+              (1000 * 60 * 60 * 24)
+          );
+        } else stage[s.stage] = null;
+      });
+
+      return {
+        id: o.id,
+        created_at: o.created_at,
+        number: o.number,
+        name: o.name,
+        completed_at:
+          orderStages.find((s) => s.stage === "done")?.completed_at ?? null,
+        media: o.media?.at(0)?.url ?? null,
+        customer: {
+          id: o.customer_id,
+          fullname: getFullName(
+            o.customer_first_name,
+            o.customer_last_name,
+            o.customer_patronymic
+          ),
+        },
+        active_stage: o.active_stage,
+        active_stage_status: o.active_stage_status,
+        stagesDays: stage,
+        processing_days:
+          o.processing_days ??
+          Math.ceil(
+            (Date.now() - new Date(o.created_at).getTime()) /
+              (1000 * 60 * 60 * 24)
+          ),
+      };
+    });
+    return { ...orders, data: enriched, ...indicators };
+  },
   async getExpensesReport({
     page,
     limit,
@@ -382,7 +460,7 @@ export const ReportService = {
       filters?.from,
       filters?.to
     );
-    const orders = await ReportModel.getOrdersBase({
+    const orders = await ReportModel.getFinanceOrdersBase({
       page,
       limit,
       from: startFrom,

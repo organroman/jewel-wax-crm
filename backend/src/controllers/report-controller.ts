@@ -1,6 +1,6 @@
-import { PersonRole } from "../types/person.types";
 import { ExpenseCategory } from "../types/finance.type";
 import { FinanceReportDataType } from "../types/report.types";
+import { StageStatus } from "../types/order.types";
 
 import { Request, Response, NextFunction } from "express";
 
@@ -41,7 +41,7 @@ export const ReportController = {
 
       const { page, limit, person_id, from, to } = req.query;
 
-      const orders = await ReportService.getModellingReport({
+      const data = await ReportService.getOrdersReport({
         page: Number(page),
         limit: Number(limit),
         filters: {
@@ -49,10 +49,30 @@ export const ReportController = {
           from: from as string,
           to: to as string,
         },
-        user_id: Number(userId),
-        user_role: role as PersonRole,
       });
-      res.status(200).json(orders);
+      res.status(200).json(data);
+    } catch (error) {
+      next(error);
+    }
+  },
+  async getOrdersReport(req: Request, res: Response, next: NextFunction) {
+    try {
+      const userId = req.user?.id;
+
+      if (!userId) throw new AppError(ERROR_MESSAGES.UNAUTHORIZED, 401);
+
+      const { page, limit, active_stage_status, from, to } = req.query;
+
+      const clients = await ReportService.getOrdersReport({
+        page: Number(page),
+        limit: Number(limit),
+        filters: {
+          active_stage_status: active_stage_status as StageStatus,
+          from: from as string,
+          to: to as string,
+        },
+      });
+      res.status(200).json(clients);
     } catch (error) {
       next(error);
     }
